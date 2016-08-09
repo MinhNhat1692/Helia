@@ -19,5 +19,15 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
-en:
-  hello: "Hello world 1234"
+vn:
+  hello: "Xin Chao"
+  activerecord:
+    attributes:
+      user:
+        name: "Ten Nguoi Dung"
+    errors:
+      models:
+        user:
+          attributes:
+            name:
+              blank: "Ko bo trong"
