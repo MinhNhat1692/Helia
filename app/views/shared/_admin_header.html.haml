@@ -1,0 +1,84 @@
+- if admin_logged_in?
+  %header.main-header
+    %a.logo{ href: admin_path(current_admin) }
+      %span.logo-mini
+        %b> M
+      %span.logo-lg
+        %b> M
+        amorea
+    %nav.navbar.navbar-static-top{ role: "navigation" }
+      %a.sidebar-toggle{ "data-toggle": "offcanvas", href: "#", role: "button" }
+        %span.sr-only Toggle navigation
+      .navbar-custom-menu
+        %ul.nav.navbar-nav
+          %li.dropdown.user.user-menu
+            %a.dropdown-toggle{ "data-toggle": "dropdown", href: "#"}
+              %img.user-image{ alt: "User Image", src: asset_path("default_admin.png") }
+                %span.hidden-xs #{current_admin.name}
+            %ul.dropdown-menu
+              %li.user-header
+                %img.img-circle{ alt: "User Image", src: asset_path("default_admin.png") }
+                  %p
+                    #{current_admin.name} - #{current_admin.role}
+                    %small #{current_admin.created_at}
+              %li.user-body
+                .pull-left
+                  %a.btn.btn-default.btn-flat{ href: admin_path(current_admin) } Profile
+                .pull-right
+                  = link_to "Sign out", admins_logout_path, method: :delete, class: "btn btn-default btn-flat"
+  %aside.main-sidebar
+    %section.sidebar
+      .user-panel
+        .pull-left.image
+          %img.img-circle{ alt: "User Image", src: asset_path("default_admin.png") }
+        .pull-left.info
+          %p #{ current_admin.name }
+          %a{ href: "#" }
+            %i.fa.fa-circle.text-success
+            #{ current_admin.role }
+      %ul.sidebar-menu
+        - if current_admin.role == "super_admin"
+          %li
+            %a{ href: admins_path }
+              %i.fa.fa-th
+              %span List admins
+        %li
+          %a{ href: admin_path(current_admin) }
+            %i.fa.fa-user
+            %span Profile
+        %li
+          %a{ href: admins_home_path }
+            %i.fa.fa-line-chart
+            %span Statistic
+        %li
+          %a{ href: admins_problems_path }
+            %i.fa.fa-bomb
+            %span All Problems
+        %li
+          %a{ href: admins_packages_path }
+            %i.fa.fa-shopping-cart
+            %span Packages
+        %li
+          %a{ href: admins_jobs_path }
+            %i.fa.fa-share-alt
+            %span Jobs
+        %li
+          %a{ href: admins_vouchers_path }
+            %i.fa.fa-gift
+            %span Vouchers
+        %li
+          %a{ href: admins_buzzer_vouchers_path }
+            %i.fa.fa-gift
+            %span Bundles
+        %li
+          %a{ href: admins_merchants_path }
+            %i.fa.fa-users
+            %span All Merchants
+        %li
+          %a{ href: admins_buzzers_path }
+            %i.fa.fa-user-plus
+            %span All Buzzers
+        %li
+          %a{ href: admins_blogs_path }
+            %i.fa.fa-user-plus
+            %span All Blogs

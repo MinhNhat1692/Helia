@@ -5,6 +5,8 @@ source 'https://rubygems.org'
 gem 'rails', '~> 5.0.0'
 gem 'bcrypt', '3.1.11'
 gem 'bootstrap-sass', '3.3.6'
+gem 'haml'
+gem 'haml-rails'
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.18', '< 0.5'
 # Use Puma as the app server
