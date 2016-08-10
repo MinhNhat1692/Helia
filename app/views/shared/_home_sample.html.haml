@@ -1,0 +1,769 @@
+%body#page-top
+  / Navigation
+  / Note: navbar-default and navbar-inverse are both supported with this theme.
+  %nav.navbar.navbar-inverse.navbar-fixed-top.navbar-expanded
+    .container
+      / Brand and toggle get grouped for better mobile display
+      .navbar-header
+        %button.navbar-toggle{"data-target" => "#bs-example-navbar-collapse-1", "data-toggle" => "collapse", :type => "button"}
+          %span.sr-only Toggle navigation
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
+        %a.navbar-brand.page-scroll{:href => "#page-top"}
+          %img.img-responsive{:alt => "", :src => "assets/preloader.gif"}/
+      / Collect the nav links, forms, and other content for toggling
+      #bs-example-navbar-collapse-1.collapse.navbar-collapse
+        %ul.nav.navbar-nav.navbar-right
+          %li.hidden
+            %a.page-scroll{:href => "#page-top"}
+          %li
+            %a.page-scroll{:href => "#about"} About
+          %li
+            %a.page-scroll{:href => "#process"} Process
+          %li
+            %a.page-scroll{:href => "#work"} Work
+          %li
+            %a.page-scroll{:href => "#pricing"} Pricing
+          %li
+            %a.page-scroll{:href => "#contact"} Contact
+      / /.navbar-collapse
+    / /.container
+  %header{:style => "background-image: url('assets/bg-header.jpg');"}
+    .intro-content
+      %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+      .brand-name Vitality
+      %hr.colored/
+      .brand-name-subtext by Start Bootstrap
+    .scroll-down
+      %a.btn.page-scroll{:href => "#about"}
+        %i.fa.fa-angle-down.fa-fw
+  %section#about
+    .container-fluid
+      .row.text-center
+        .col-lg-12.wow.fadeIn
+          %h1 A Theme for Creatives &amp; Agencies
+          %p Vitality is the perfect theme for a freelance professional or an agency.
+          %hr.colored/
+      .row.text-center.content-row
+        .col-md-3.col-sm-6.wow.fadeIn{"data-wow-delay" => ".2s"}
+          .about-content
+            %i.fa.fa-eye.fa-4x
+            %h3 Retina Ready
+            %p This theme includes the retina.js plugin for easy retina image support so your images and graphics will look great on mobile devices!
+        .col-md-3.col-sm-6.wow.fadeIn{"data-wow-delay" => ".4s"}
+          .about-content
+            %i.fa.fa-edit.fa-4x
+            %h3 Easy to Edit
+            %p Vitality is built using Bootstrap 3, and is easy to edit and customize. LESS files are included as well for deeper customization.
+        .col-md-3.col-sm-6.wow.fadeIn{"data-wow-delay" => ".6s"}
+          .about-content
+            %i.fa.fa-tablet.fa-4x
+            %h3 Responsive
+            %p When building this theme, we've paid close attention to how it looks on various screen sizes. Try it out on a phone or tablet!
+        .col-md-3.col-sm-6.wow.fadeIn{"data-wow-delay" => ".8s"}
+          .about-content
+            %i.fa.fa-heart.fa-4x
+            %h3 Built with Love
+            %p All of our themes are crafted with care, and we strive to make your experience as one of our customers the best as possible.
+  %section.bg-gray
+    .container.text-center.wow.fadeIn
+      .row
+        .col-lg-12
+          %h2 Our Team
+          %p We are a group of digital marketers with a passion for great art that serves a practical purpose.
+          %hr.colored/
+      .row.content-row
+        .col-lg-12
+          .about-carousel
+            .item
+              %img.img-responsive{:alt => "", :src => "assets/preloader.gif"}/
+              .caption
+                %h3 Patricia West
+                %hr.colored/
+                %p Marketing Director
+                %ul.list-inline.social
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-facebook.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-twitter.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-linkedin.fa-fw
+            .item
+              %img.img-responsive{:alt => "", :src => "assets/preloader.gif"}/
+              .caption
+                %h3 Howard Scott
+                %hr.colored/
+                %p Sales Manager
+                %ul.list-inline.social
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-facebook.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-twitter.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-linkedin.fa-fw
+            .item
+              %img.img-responsive{:alt => "", :src => "assets/preloader.gif"}/
+              .caption
+                %h3 Kate Williams
+                %hr.colored/
+                %p Creative Director
+                %ul.list-inline.social
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-facebook.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-twitter.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-linkedin.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-dribbble.fa-fw
+            .item
+              %img.img-responsive{:alt => "", :src => "assets/preloader.gif"}/
+              .caption
+                %h3 Amy Vanderbute
+                %hr.colored/
+                %p Graphic Artist
+                %ul.list-inline.social
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-facebook.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-twitter.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-linkedin.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-dribbble.fa-fw
+            .item
+              %img.img-responsive{:alt => "", :src => "assets/preloader.gif"}/
+              .caption
+                %h3 Jeremy Davidson
+                %hr.colored/
+                %p Web Developer
+                %ul.list-inline.social
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-facebook.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-twitter.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-linkedin.fa-fw
+                  %li
+                    %a{:href => "#"}
+                      %i.fa.fa-github.fa-fw
+  %aside.cta-quote{:style => "background-image: url('assets/preloader.gif');"}
+    .container.wow.fadeIn
+      .row
+        .col-md-10.col-md-offset-1
+          %span.quote
+            Good
+            %span.text-primary design
+            is finding that perfect balance between the way something
+            %span.text-primary looks
+            and how it
+            = succeed "." do
+              %span.text-primary functions
+          %hr.colored/
+          %a.btn.btn-outline-light.page-scroll{:href => "#contact"} Let's Find It
+  %section#process.services
+    .container
+      .row.text-center
+        .col-lg-12.wow.fadeIn
+          %h2 Our Process
+          %hr.colored/
+          %p Here is an overview of how we approach each new project.
+      .row.content-row
+        .col-md-4.wow.fadeIn{"data-wow-delay" => ".2s"}
+          .media
+            .pull-left
+              %i.fa.fa-clipboard
+            .media-body
+              %h3.media-heading Plan
+              %ul
+                %li Client interview
+                %li Gather consumer data
+                %li Create content strategy
+                %li Analyze research
+        .col-md-4.wow.fadeIn{"data-wow-delay" => ".4s"}
+          .media
+            .pull-left
+              %i.fa.fa-pencil
+            .media-body
+              %h3.media-heading Create
+              %ul
+                %li Build wireframe
+                %li Gather client feedback
+                %li Code development
+                %li Marketing review
+        .col-md-4.wow.fadeIn{"data-wow-delay" => ".6s"}
+          .media
+            .pull-left
+              %i.fa.fa-rocket
+            .media-body
+              %h3.media-heading Launch
+              %ul
+                %li Deploy website
+                %li Market product launch
+                %li Collect UX data
+                %li Quarterly maintenence
+  %section#work.bg-gray
+    .container.text-center.wow.fadeIn
+      %h2 Our Work
+      %hr.colored/
+      %p Examples of our work which represent our design and marketing capabilities.
+  %section.portfolio-carousel.wow.fadeIn
+    .item{:style => "background-image: url('assets/preloader.gif')"}
+      .container-fluid
+        .row
+          .col-md-4.col-md-push-8
+            .project-details
+              %img.img-responsive.client-logo{:alt => "", :src => "assets/preloader.gif"}/
+              %span.project-name Project Name
+              %span.project-description Branding, Website Design
+              %hr.colored/
+              %a.btn.btn-outline-light{"data-toggle" => "modal", :href => "#portfolioModal1"}
+                View Details
+                %i.fa.fa-long-arrow-right.fa-fw
+          .col-md-8.col-md-pull-4.hidden-xs
+            %img.img-responsive.portfolio-image{:alt => "", :src => "assets/preloader.gif"}/
+    .item{:style => "background-image: url('assets/preloader.gif')"}
+      .container-fluid
+        .row
+          .col-md-4.col-md-push-8
+            .project-details
+              %img.img-responsive.client-logo{:alt => "", :src => "assets/preloader.gif"}/
+              %span.project-name Project Name
+              %span.project-description Branding, Website Design
+              %hr.colored/
+              %a.btn.btn-outline-light{"data-toggle" => "modal", :href => "#portfolioModal2"}
+                View Details
+                %i.fa.fa-long-arrow-right.fa-fw
+          .col-md-8.col-md-pull-4.hidden-xs
+            %img.img-responsive.portfolio-image{:alt => "", :src => "assets/preloader.gif"}/
+    .item{:style => "background-image: url('assets/preloader.gif')"}
+      .container-fluid
+        .row
+          .col-md-4.col-md-push-8
+            .project-details
+              %img.img-responsive.client-logo{:alt => "", :src => "assets/preloader.gif"}/
+              %span.project-name Project Name
+              %span.project-description Branding, Website Design
+              %hr.colored/
+              %a.btn.btn-outline-light{"data-toggle" => "modal", :href => "#portfolioModal3"}
+                View Details
+                %i.fa.fa-long-arrow-right.fa-fw
+          .col-md-8.col-md-pull-4.hidden-xs
+            %img.img-responsive.portfolio-image{:alt => "", :src => "assets/preloader.gif"}/
+    .item{:style => "background-image: url('assets/preloader.gif')"}
+      .container-fluid
+        .row
+          .col-md-4.col-md-push-8
+            .project-details
+              %img.img-responsive.client-logo{:alt => "", :src => "assets/preloader.gif"}/
+              %span.project-name Project Name
+              %span.project-description Branding, Website Design
+              %hr.colored/
+              %a.btn.btn-outline-light{"data-toggle" => "modal", :href => "#portfolioModal4"}
+                View Details
+                %i.fa.fa-long-arrow-right.fa-fw
+          .col-md-8.col-md-pull-4.hidden-xs
+            %img.img-responsive.portfolio-image{:alt => "", :src => "assets/preloader.gif"}/
+  %section
+    .container.text-center.wow.fadeIn
+      %h2 Portfolio
+      %hr.colored/
+      %p Here are some other projects that we've worked on.
+      .row.content-row
+        .col-lg-12
+          .portfolio-filter
+            %ul#filters.clearfix
+              %li
+                %span.filter.active{"data-filter" => "identity graphic logo web"} All
+              %li
+                %span.filter{"data-filter" => "identity"} Identity
+              %li
+                %span.filter{"data-filter" => "graphic"} Graphic
+              %li
+                %span.filter{"data-filter" => "web"} Web
+      .row
+        .col-lg-12
+          #portfoliolist
+            .portfolio.identity{"data-cat" => "identity", "data-toggle" => "modal", :href => "#portfolioModal1"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Generic Inc.
+                    %span.text-category Brand Identity
+                  .caption-bg
+            .portfolio.web{"data-cat" => "web", "data-toggle" => "modal", :href => "#portfolioModal2"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Brands
+                    %span.text-category Web Development
+                  .caption-bg
+            .portfolio.graphic{"data-cat" => "graphic", "data-toggle" => "modal", :href => "#portfolioModal3"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Excellence
+                    %span.text-category Poster Design
+                  .caption-bg
+            .portfolio.web{"data-cat" => "web", "data-toggle" => "modal", :href => "#portfolioModal4"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title YouTV
+                    %span.text-category Web Development
+                  .caption-bg
+            .portfolio.graphic{"data-cat" => "graphic", "data-toggle" => "modal", :href => "#portfolioModal1"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Office Supplies
+                    %span.text-category Graphic Design
+                  .caption-bg
+            .portfolio.web{"data-cat" => "web", "data-toggle" => "modal", :href => "#portfolioModal2"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Fooder
+                    %span.text-category Mobile App
+                  .caption-bg
+            .portfolio.graphic{"data-cat" => "graphic", "data-toggle" => "modal", :href => "#portfolioModal3"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Mountain Tea
+                    %span.text-category Graphic Design
+                  .caption-bg
+            .portfolio.graphic{"data-cat" => "graphic", "data-toggle" => "modal", :href => "#portfolioModal4"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Checkmark
+                    %span.text-category Graphic Design
+                  .caption-bg
+            .portfolio.identity{"data-cat" => "identity", "data-toggle" => "modal", :href => "#portfolioModal1"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Demish
+                    %span.text-category Brand Identity
+                  .caption-bg
+            .portfolio.web{"data-cat" => "web", "data-toggle" => "modal", :href => "#portfolioModal2"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title OneRepublic
+                    %span.text-category Web Development
+                  .caption-bg
+            .portfolio.graphic{"data-cat" => "graphic", "data-toggle" => "modal", :href => "#portfolioModal3"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Postable
+                    %span.text-category Graphic Design
+                  .caption-bg
+            .portfolio.identity{"data-cat" => "identity", "data-toggle" => "modal", :href => "#portfolioModal4"}
+              .portfolio-wrapper
+                %img{:alt => "", :src => "assets/preloader.gif"}/
+                .caption
+                  .caption-text
+                    %a.text-title Simpli Nota
+                    %span.text-category Brand Identity
+                  .caption-bg
+  %section.testimonials.bg-gray
+    .container.wow.fadeIn
+      .row
+        .col-lg-10.col-lg-offset-1
+          .testimonials-carousel
+            .item
+              .row
+                .col-lg-12
+                  %p.lead "Working with Vitality was both a valuable and rewarding experience."
+                  %hr.colored/
+                  %p.quote Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit, temporibus, laborum, dignissimos doloremque corporis alias nostrum recusandae culpa id quisquam harum impedit sed sunt non obcaecati vero ipsam aut fugit?
+                  .testimonial-info
+                    .testimonial-img
+                      %img.img-circle.img-responsive{:alt => "", :src => "assets/preloader.gif"}/
+                    .testimonial-author
+                      %span.name Jim Walker
+                      %p.small CEO of GeneriCorp
+                      .stars
+                        %i.fa.fa-star
+                        %i.fa.fa-star
+                        %i.fa.fa-star
+                        %i.fa.fa-star
+                        %i.fa.fa-star
+            .item
+              .row
+                .col-lg-12
+                  %p.lead "Working with Vitality was both a valuable and rewarding experience."
+                  %hr.colored/
+                  %p.quote Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit, temporibus, laborum, dignissimos doloremque corporis alias nostrum recusandae culpa id quisquam harum impedit sed sunt non obcaecati vero ipsam aut fugit?
+                  .testimonial-info
+                    .testimonial-img
+                      %img.img-circle.img-responsive{:alt => "", :src => "assets/preloader.gif"}/
+                    .testimonial-author
+                      %span.name Jim Walker
+                      %p.small CEO of GeneriCorp
+                      .stars
+                        %i.fa.fa-star
+                        %i.fa.fa-star
+                        %i.fa.fa-star
+                        %i.fa.fa-star
+                        %i.fa.fa-star
+  %section#pricing.pricing{:style => "background-image: url('assets/preloader.gif')"}
+    .container.wow.fadeIn
+      .row.text-center
+        .col-lg-12
+          %h2 Pricing
+          %hr.colored/
+          %p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eum, quae, laborum, voluptate delectus odio doloremque error porro obcaecati nemo animi ducimus quaerat nostrum? Ab molestiae eaque et atque architecto reiciendis.
+      .row.content-row
+        .col-md-4
+          .pricing-item.featured-first
+            %h3 Basic
+            %hr.colored/
+            .price
+              %span.number
+                %sup> $
+                25
+              \/ month
+            %ul.list-group
+              %li.list-group-item 60 Users
+              %li.list-group-item Unlimited Forums
+              %li.list-group-item Unlimited Reports
+              %li.list-group-item 3,000 Entries per Month
+              %li.list-group-item 200 MB Storage
+              %li.list-group-item Unlimited Support
+            %a.btn.btn-outline-dark{:href => "#"} Sign Up
+        .col-md-4
+          .pricing-item.featured
+            %h3 Plus
+            %hr.colored/
+            .price
+              %span.number
+                %sup> $
+                50
+              \/ month
+            %ul.list-group
+              %li.list-group-item
+                %strong 60
+                Users
+              %li.list-group-item Unlimited Forums
+              %li.list-group-item Unlimited Reports
+              %li.list-group-item
+                %strong 3,000
+                Entries per Month
+              %li.list-group-item
+                %strong 200 MB
+                Storage
+              %li.list-group-item Unlimited Support
+            %a.btn.btn-outline-dark{:href => "#"} Sign Up
+        .col-md-4
+          .pricing-item.featured-last
+            %h3 Premium
+            %hr.colored/
+            .price
+              %span.number
+                %sup> $
+                150
+              \/ month
+            %ul.list-group
+              %li.list-group-item 60 Users
+              %li.list-group-item Unlimited Forums
+              %li.list-group-item Unlimited Reports
+              %li.list-group-item 3,000 Entries per Month
+              %li.list-group-item 200 MB Storage
+              %li.list-group-item Unlimited Support
+            %a.btn.btn-outline-dark{:href => "#"} Sign Up
+  %section.cta-form.bg-dark
+    .container.text-center
+      %h3 Subscribe to our newsletter!
+      %hr.colored/
+      .row
+        .col-lg-8.col-lg-offset-2
+          / MailChimp Signup Form
+          #mc_embed_signup
+            / Replace the form action in the line below with your MailChimp embed action! For more informatin on how to do this please visit the Docs!
+            %form#mc-embedded-subscribe-form{:action => "//startbootstrap.us3.list-manage.com/subscribe/post?u=531af730d8629808bd96cf489&id=afb284632f", :method => "post", :name => "mc-embedded-subscribe-form", :novalidate => "", :role => "form", :target => "_blank"}
+              .input-group.input-group-lg
+                %input#mce-EMAIL.form-control{:name => "EMAIL", :placeholder => "Email address...", :type => "email"}/
+                %span.input-group-btn
+                  %button#mc-embedded-subscribe.btn.btn-primary{:name => "subscribe", :type => "submit"} Subscribe!
+              #mce-responses
+                #mce-error-response.response{:style => "display:none"}
+                #mce-success-response.response{:style => "display:none"}
+          / End MailChimp Signup Form
+  %section#contact
+    .container.wow.fadeIn
+      .row
+        .col-lg-12.text-center
+          %h2 Contact Us
+          %hr.colored/
+          %p Please tell us about your next project and we will let you know what we can do to help you.
+      .row.content-row
+        .col-lg-8.col-lg-offset-2
+          %form#contactForm{:name => "sentMessage", :novalidate => ""}
+            .row.control-group
+              .form-group.col-xs-12.floating-label-form-group.controls
+                %label Name
+                %input#name.form-control{"data-validation-required-message" => "Please enter your name.", :placeholder => "Name", :required => "", :type => "text"}/
+                %p.help-block.text-danger
+            .row.control-group
+              .form-group.col-xs-12.floating-label-form-group.controls
+                %label Email Address
+                %input#email.form-control{"data-validation-required-message" => "Please enter your email address.", :placeholder => "Email Address", :required => "", :type => "email"}/
+                %p.help-block.text-danger
+            .row.control-group
+              .form-group.col-xs-12.floating-label-form-group.controls
+                %label Phone Number
+                %input#phone.form-control{"data-validation-required-message" => "Please enter your phone number.", :placeholder => "Phone Number", :required => "", :type => "tel"}/
+                %p.help-block.text-danger
+            .row.control-group
+              .form-group.col-xs-12.floating-label-form-group.controls
+                %label Message
+                %textarea#message.form-control{"data-validation-required-message" => "Please enter a message.", :placeholder => "Message", :required => "", :rows => "5"}
+                %p.help-block.text-danger
+            %br/
+            #success
+            .row
+              .form-group.col-xs-12
+                %button.btn.btn-outline-dark{:type => "submit"} Send
+  %a.btn.btn-block.btn-full-width{:href => "https://wrapbootstrap.com/theme/vitality-multipurpose-one-page-theme-WB02K3KK3"} Buy Vitality Now!
+  %footer.footer{:style => "background-image: url('assets/preloader.gif')"}
+    .container.text-center
+      .row
+        .col-md-4.contact-details
+          %h4
+            %i.fa.fa-phone
+            Call
+          %p 555-213-4567
+        .col-md-4.contact-details
+          %h4
+            %i.fa.fa-map-marker
+            Visit
+          %p
+            3481 Melrose Place
+            = succeed "Beverly" do
+              %br/
+        .col-md-4.contact-details
+          %h4
+            %i.fa.fa-envelope
+            Email
+          %p
+            %a{:href => "mailto:mail@example.com"} mail@example.com
+      .row.social
+        .col-lg-12
+          %ul.list-inline
+            %li
+              %a{:href => "#"}
+                %i.fa.fa-facebook.fa-fw.fa-2x
+            %li
+              %a{:href => "#"}
+                %i.fa.fa-twitter.fa-fw.fa-2x
+            %li
+              %a{:href => "#"}
+                %i.fa.fa-linkedin.fa-fw.fa-2x
+      .row.copyright
+        .col-lg-12
+          %p.small © 2015 Start Bootstrap Themes
+  / Portfolio Modals
+  / Example Modal 1
+  #portfolioModal1.portfolio-modal.modal.fade{"aria-hidden" => "true", :role => "dialog", :style => "background-image: url('assets/preloader.gif')", :tabindex => "-1"}
+    .modal-content
+      .close-modal{"data-dismiss" => "modal"}
+        .lr
+          .rl
+      .modal-body
+        .container
+          .row
+            .col-lg-8.col-lg-offset-2
+              %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+              %h2 Project Title
+              %hr.colored/
+              %p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos modi in tenetur vero voluptatum sapiente dolores eligendi nemo iste ea. Omnis, odio enim sint quam dolorum dolorem. Nostrum, minus, ad.
+            .col-lg-12
+              %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+            .col-lg-8.col-lg-offset-2
+              %ul.list-inline.item-details
+                %li
+                  Client:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} Start Bootstrap
+                %li
+                  Date:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} April 2015
+                %li
+                  Service:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} Web Development
+              %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"}
+                %i.fa.fa-times
+                Close
+  / Example Modal 2
+  #portfolioModal2.portfolio-modal.modal.fade{"aria-hidden" => "true", :role => "dialog", :style => "background-image: url('assets/preloader.gif')", :tabindex => "-1"}
+    .modal-content
+      .close-modal{"data-dismiss" => "modal"}
+        .lr
+          .rl
+      .modal-body
+        .container
+          .row
+            .col-lg-8.col-lg-offset-2
+              %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+              %h2 Project Title
+              %hr.colored/
+              %p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos modi in tenetur vero voluptatum sapiente dolores eligendi nemo iste ea. Omnis, odio enim sint quam dolorum dolorem. Nostrum, minus, ad.
+            .col-lg-12
+              %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+            .col-lg-8.col-lg-offset-2
+              %ul.list-inline.item-details
+                %li
+                  Client:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} Start Bootstrap
+                %li
+                  Date:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} April 2015
+                %li
+                  Service:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} Web Development
+              %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"}
+                %i.fa.fa-times
+                Close
+  / Example Modal 3
+  #portfolioModal3.portfolio-modal.modal.fade{"aria-hidden" => "true", :role => "dialog", :style => "background-image: url('assets/preloader.gif')", :tabindex => "-1"}
+    .modal-content
+      .close-modal{"data-dismiss" => "modal"}
+        .lr
+          .rl
+      .modal-body
+        .container
+          .row
+            .col-lg-8.col-lg-offset-2
+              %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+              %h2 Project Title
+              %hr.colored/
+              %p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos modi in tenetur vero voluptatum sapiente dolores eligendi nemo iste ea. Omnis, odio enim sint quam dolorum dolorem. Nostrum, minus, ad.
+            .col-lg-12
+              %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+            .col-lg-8.col-lg-offset-2
+              %ul.list-inline.item-details
+                %li
+                  Client:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} Start Bootstrap
+                %li
+                  Date:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} April 2015
+                %li
+                  Service:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} Web Development
+              %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"}
+                %i.fa.fa-times
+                Close
+  / Example Modal 4
+  #portfolioModal4.portfolio-modal.modal.fade{"aria-hidden" => "true", :role => "dialog", :style => "background-image: url('assets/preloader.gif')", :tabindex => "-1"}
+    .modal-content
+      .close-modal{"data-dismiss" => "modal"}
+        .lr
+          .rl
+      .modal-body
+        .container
+          .row
+            .col-lg-8.col-lg-offset-2
+              %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+              %h2 Project Title
+              %hr.colored/
+              %p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos modi in tenetur vero voluptatum sapiente dolores eligendi nemo iste ea. Omnis, odio enim sint quam dolorum dolorem. Nostrum, minus, ad.
+            .col-lg-12
+              %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
+            .col-lg-8.col-lg-offset-2
+              %ul.list-inline.item-details
+                %li
+                  Client:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} Start Bootstrap
+                %li
+                  Date:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} April 2015
+                %li
+                  Service:
+                  %strong
+                    %a{:href => "http://startbootstrap.com"} Web Development
+              %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"}
+                %i.fa.fa-times
+                Close
+  / Style Switcher - FOR DEMO PURPOSES ONLY
+  #style-switcher.close-style-switcher.animated.bounce
+    / Panel Button
+    %a.panel-button
+      %i.fa.fa-gear
+    / Colors
+    .segment
+      %h4 Theme Colors
+      %a.switcher.red-bg{:title => "vitality-red"}
+      %a.switcher.orange-bg{:title => "vitality-orange"}
+      %a.switcher.yellow-bg{:title => "vitality-yellow"}
+      %a.switcher.green-bg{:title => "vitality-green"}
+      %a.switcher.turquoise-bg{:title => "vitality-turquoise"}
+      %a.switcher.aqua-bg{:title => "vitality-aqua"}
+      %a.switcher.blue-bg{:title => "vitality-blue"}
+      %a.switcher.purple-bg{:title => "vitality-purple"}
+      %a.switcher.pink-bg{:title => "vitality-pink"}
+      %a.switcher.tan-bg{:title => "vitality-tan"}
+    .segment
+      %h4 Samples
+      %ul.list-unstyled
+        %li
+          %a{:href => "agency.html"} Agency
+        %li
+          %a{:href => "creative.html"}
+            Creative
+            %strong
+              %small (NEW)
+        %li
+          %a{:href => "culinary.html"} Culinary
+        %li
+          %a{:href => "fashion.html"} Fashion
+        %li
+          %a{:href => "legal.html"} Legal
+        %li
+          %a{:href => "video.html"} Video
+    .segment
+      %a{:href => "index.html"}
+        %small Back to Preview Page

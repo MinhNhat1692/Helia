@@ -1,0 +1,28 @@
+%nav.navbar.navbar-inverse.navbar-fixed-top.navbar-expanded
+  .container
+    / Brand and toggle get grouped for better mobile display
+    .navbar-header
+      %button.navbar-toggle{"data-target" => "#bs-example-navbar-collapse-1", "data-toggle" => "collapse", :type => "button"}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.navbar-brand.page-scroll{:href => "#page-top"}
+        %h3{:style => "margin-top:10px"} Helia
+    / Collect the nav links, forms, and other content for toggling
+    #bs-example-navbar-collapse-1.collapse.navbar-collapse
+      %ul.nav.navbar-nav.navbar-right
+        %li.hidden.active
+          %a.page-scroll{:href => "#page-top"}
+        %li
+          %a.page-scroll{:href => "#about"} About
+        %li
+          %a.page-scroll{:href => "#process"} Process
+        %li
+          %a.page-scroll{:href => "#work"} Work
+        %li
+          %a.page-scroll{:href => "#pricing"} Login
+        %li
+          %a.page-scroll{:href => "#contact"} Sign Up
+    / /.navbar-collapse
+  / /.container

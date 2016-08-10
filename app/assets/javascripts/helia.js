@@ -13,3 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require_tree .
+
+// Preloader //
+
+jQuery(document).ready(function($) {  
+    $(window).load(function(){
+        $('#preloader').fadeOut('slow',function(){$(this).remove();});
+    });
+});
