@@ -8,3 +8,7 @@
 //= require bootstrap
 //= require style
 //= require stroke-icons/style
+
+.field_with_errors .form-control{
+    border: 1px solid #DB524B !important;
+}
