@@ -1,0 +1,28 @@
+%body.blank
+.wrapper
+  / Main content
+  %section.content
+    .back-link
+      %a.btn.btn-accent{:href => "index.html"} Back to Dashboard
+    .container-center.animated.slideInDown
+      - flash.each do |message_type, message|
+        %div{:class => "alert alert-#{message_type}"}= message
+      .view-header
+        .header-icon
+          %i.pe.page-header-icon.pe-7s-unlock
+        .header-title
+          %h3 Login
+          %small
+            Please enter your credentials to login.
+      .panel.panel-filled
+        .panel-body
+          = form_for(:session, url: login_path) do |f|
+            .form-group
+              = f.label :email
+              = f.text_field :email, class: 'form-control', placeholder: 'Type your Email'
+            .form-group
+              = f.label :password
+              = f.password_field :password, class: 'form-control', placeholder: 'Type your Password'
+            %div
+              = f.submit "Đăng nhập", class: "btn btn-primary pull-right", style: "margin: 5px"
+              %a.btn.btn-default.pull-right{:href => signup_path, style: "margin: 5px"} Đăng ký
