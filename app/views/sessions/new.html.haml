@@ -23,6 +23,9 @@
             .form-group
               = f.label :password
               = f.password_field :password, class: 'form-control', placeholder: 'Type your Password'
+            = f.label :remember_me, class: "checkbox inline", style: "margin-left: 20px" do
+              = f.check_box :remember_me
+              %span Remember me on this computer
             %div
               = f.submit "Đăng nhập", class: "btn btn-primary pull-right", style: "margin: 5px"
               %a.btn.btn-default.pull-right{:href => signup_path, style: "margin: 5px"} Đăng ký
