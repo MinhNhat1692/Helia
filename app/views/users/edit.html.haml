@@ -1,0 +1,33 @@
+%body.blank
+  .wrapper
+    / Main content
+    %section.content
+      .back-link
+        %a.btn.btn-accent{:href => "index.html"} Back to Dashboard
+      .container-center.lg.animated.slideInDown
+        = render 'shared/error_messages'
+        .view-header
+          .header-icon
+            %i.pe.page-header-icon.pe-7s-add-user
+          .header-title
+            %h3 Register
+            %small
+              Please enter your data to register.
+        .panel.panel-filled
+          .panel-body
+            = form_for(@user) do |f|
+              .row
+                .form-group.col-lg-6
+                  = f.label :name
+                  = f.text_field :name, class: 'form-control', placeholder: 'Type your Username', 'data-placement': 'bottom'
+                .form-group.col-lg-6
+                  = f.label :email
+                  = f.text_field :email, class: 'form-control', placeholder: 'Type your Email', 'data-placement': 'bottom'
+                .form-group.col-lg-6
+                  = f.label :password
+                  = f.password_field :password, class: 'form-control', placeholder: 'Type your password', 'data-placement': 'bottom'
+                .form-group.col-lg-6
+                  = f.label :password_confirmation
+                  = f.password_field :password_confirmation, class: 'form-control', placeholder: 'Type your password again', 'data-placement': 'bottom'
+                = f.submit "Đăng ký", class: "btn btn-primary pull-right", style: "margin: 10px"
+            

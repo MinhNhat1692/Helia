@@ -45,6 +45,8 @@ GEM
     bootstrap-sass (3.3.6)
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
+    bootstrap-will_paginate (0.0.10)
+      will_paginate
     builder (3.2.2)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
@@ -162,6 +164,7 @@ GEM
     websocket-driver (0.6.4)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
+    will_paginate (3.1.0)
 
 PLATFORMS
   x86-mingw32
@@ -169,6 +172,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt (= 3.1.11)
   bootstrap-sass (= 3.3.6)
+  bootstrap-will_paginate (= 0.0.10)
   byebug
   coffee-rails (~> 4.2)
   haml
@@ -183,6 +187,7 @@ DEPENDENCIES
   tzinfo-data
   uglifier (>= 1.3.0)
   web-console
+  will_paginate (= 3.1.0)
 
 BUNDLED WITH
    1.12.5
