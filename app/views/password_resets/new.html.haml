@@ -1,0 +1,23 @@
+%body.blank
+.wrapper
+  / Main content
+  %section.content
+    .back-link
+      %a.btn.btn-accent{:href => "index.html"} Back to Dashboard
+    .container-center.animated.slideInDown
+      - flash.each do |message_type, message|
+        %div{:class => "alert alert-#{message_type}"}= message
+      .view-header
+        .header-icon
+          %i.pe.page-header-icon.pe-7s-unlock
+        .header-title
+          %h3 Đặt lại mật khẩu
+          %small
+            Mời bạn nhập vào thông tin yêu cầu.
+      .panel.panel-filled
+        .panel-body
+          = form_for(:password_reset, url: password_resets_path) do |f|
+            .form-group
+              = f.label :email
+              = f.email_field :email, class: 'form-control', placeholder: 'Nhập Email'
+              = f.submit "Đặt lại mật khẩu", class: "btn btn-primary pull-right", style: "margin: 5px"
