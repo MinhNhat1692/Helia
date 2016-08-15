@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  fname: MyString
+  lname: MyString
+  dob: 2016-08-15
+  gender: 1
+  country: 1
+  city: 1
+  province: 1
+  address: MyString
+  pnumber: MyString
+  noid: MyString
+  issue_date: 2016-08-15
+  issue_place: MyString
+  avatar: MyString
+
+two:
+  user: two
+  fname: MyString
+  lname: MyString
+  dob: 2016-08-15
+  gender: 1
+  country: 1
+  city: 1
+  province: 1
+  address: MyString
+  pnumber: MyString
+  noid: MyString
+  issue_date: 2016-08-15
+  issue_place: MyString
+  avatar: MyString

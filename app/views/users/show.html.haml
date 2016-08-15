@@ -1,6 +1,30 @@
 - provide(:title, @user.name)
-.row
-  %aside.col-md-4
-    %section.user_info
-      %h1
-        = @user.name
+%body.blank
+  .wrapper
+    / Main content
+    %section.content
+      .back-link
+        %a.btn.btn-accent{:href => "index.html"} Back to Dashboard
+      .container-center.lg.animated.slideInDown
+        .row
+          %a{:href => profile_path}
+            .col-md-4.hvr-float-shadow
+              .panel.panel-filled{style: "height: 200px; text-align: justify; line-height: 140px"}
+                .panel-heading
+                .panel-body
+                  Khởi tạo hồ sơ khám bệnh
+                .panel-footer
+          %a{:href => "#"}
+            .col-md-4.hvr-float-shadow
+              .panel.panel-filled{style: "height: 200px; text-align: justify; line-height: 140px"}
+                .panel-heading 
+                .panel-body
+                  Khởi tạo cơ sở y tế
+                .panel-footer
+          %a{:href => "#"}
+            .col-md-4.hvr-float-shadow
+              .panel.panel-filled{style: "height: 200px; text-align: justify; line-height: 140px"}
+                .panel-heading 
+                .panel-body
+                  Khởi tạo bác sỹ
+                .panel-footer

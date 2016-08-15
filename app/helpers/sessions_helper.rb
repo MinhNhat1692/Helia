@@ -30,6 +30,16 @@ module SessionsHelper
         end
     end
     
+    def current_profile
+        if (user_id = session[:user_id])
+            @current_profile ||= Profile.find_by(user_id: user_id)
+        end
+    end
+    
+    def has_profile?
+        !current_profile.nil?
+    end
+    
     # Returns true if the user is logged in, false otherwise
     def logged_in?
         !current_user.nil?
