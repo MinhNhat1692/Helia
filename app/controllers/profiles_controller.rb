@@ -3,6 +3,7 @@ class ProfilesController < ApplicationController
 
   def new
 		if has_profile?
+			@pro = Profile.find_by(user_id: current_user.id)
 			render 'show'
 		else
 			@profile = Profile.new
@@ -19,8 +20,9 @@ class ProfilesController < ApplicationController
 		if has_profile?
 			render 'show'	
 		else
-			@profile = Profile.new(profile_params(current_user))
+			@profile = Profile.new(user_id: current_user.id, fname: params[:profile][:fname], lname: params[:profile][:lname], dob: params[:profile][:dob], gender: params[:profile][:gender], country: params[:profile][:country], city: params[:profile][:city], province: params[:profile][:province], address: params[:profile][:address], pnumber: params[:profile][:pnumber], noid: params[:profile][:noid], issue_date: params[:profile][:issue_date], issue_place: params[:profile][:issue_place], avatar: params[:profile][:avatar])
 			if @profile.save
+				@pro = @profile
 				render 'show'
 			else
 				render 'new'
@@ -29,10 +31,6 @@ class ProfilesController < ApplicationController
   end
   
   private
-		def profile_params(user)
-  		params.require(:profile).permit(user.id, :fname, :lname, :dob, :gender, :country, :city, :province, :address, :pnumber, :noid, :issue_date, :issue_place, :avatar)
-		end
-  
   	# Confirms a logged-in user.
 		def logged_in_user
 			unless logged_in?
