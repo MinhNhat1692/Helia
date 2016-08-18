@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  customer_record: one
+  service: one
+  status: 1
+
+two:
+  customer_record: two
+  service: two
+  status: 1

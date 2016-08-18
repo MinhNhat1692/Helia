@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  station: one
+  room: one
+  pname: MyString
+  lang: MyString
+  description: MyString
+  file: MyString
+
+two:
+  station: two
+  room: two
+  pname: MyString
+  lang: MyString
+  description: MyString
+  file: MyString

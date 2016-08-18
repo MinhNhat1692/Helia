@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  employee: one
+  position: one
+  time_end: 2016-08-18 13:04:16
+
+two:
+  employee: two
+  position: two
+  time_end: 2016-08-18 13:04:16

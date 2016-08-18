@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  station: one
+  customer_id: 1
+  cname: MyString
+  dob: 2016-08-18
+  gender: 1
+  country: 1
+  city: 1
+  province: 1
+  address: MyString
+  pnumber: MyString
+  noid: MyString
+  issue_date: 2016-08-18
+  issue_place: MyString
+
+two:
+  station: two
+  customer_id: 1
+  cname: MyString
+  dob: 2016-08-18
+  gender: 1
+  country: 1
+  city: 1
+  province: 1
+  address: MyString
+  pnumber: MyString
+  noid: MyString
+  issue_date: 2016-08-18
+  issue_place: MyString
