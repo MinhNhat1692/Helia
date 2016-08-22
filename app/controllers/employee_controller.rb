@@ -4,7 +4,7 @@ class EmployeeController < ApplicationController
   def create
     if has_station?
 			@station = Station.find_by(user_id: current_user.id)
-			@employee = Employee.new(user_id: params[:employee][:id], station_id: @station.id, sname: params[:employee][:ename], country: params[:employee][:country], city: params[:employee][:city], province: params[:employee][:province], address: params[:employee][:address], pnumber: params[:employee][:pnumber], avatar: params[:employee][:avatar], gender: params[:employee][:gender], noid: params[:employee][:noid])
+			@employee = Employee.new(station_id: @station.id, ename: params[:record][:ename])
       if @employee.save
         render json: @employee
       else

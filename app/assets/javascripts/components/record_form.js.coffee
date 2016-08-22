@@ -4,39 +4,29 @@
       date: ''
       amount: ''
     valid: ->
-      @state.title && @state.date && @state.amount
+      @state.ename
+    handleChange: (e) ->
+      name = e.target.name
+      @setState "#{ name }": e.target.value
+    handleSubmit: (e) ->
+      e.preventDefault()
+      $.post '/employee', { record: @state }, (data) =>
+        @props.handleNewRecord data
+        @setState @getInitialState()
+      , 'JSON'
     render: ->
       React.DOM.form
         className: 'form-inline'
+        onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group'
           React.DOM.input
             type: 'text'
             className: 'form-control'
             style: {margin: '5px'}
-            placeholder: 'Date'
-            name: 'date'
-            value: @state.date
-            onChange: @handleChange
-        React.DOM.div
-          className: 'form-group'
-          React.DOM.input
-            type: 'text'
-            className: 'form-control'
-            style: {margin: '5px'}
-            placeholder: 'Title'
-            name: 'title'
-            value: @state.title
-            onChange: @handleChange
-        React.DOM.div
-          className: 'form-group'
-          React.DOM.input
-            type: 'number'
-            className: 'form-control'
-            placeholder: 'Amount'
-            style: {margin: '5px'}
-            name: 'amount'
-            value: @state.amount
+            placeholder: 'Name'
+            name: 'ename'
+            value: @state.ename
             onChange: @handleChange
         React.DOM.button
           type: 'submit'
