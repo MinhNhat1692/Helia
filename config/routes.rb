@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'employee/create'
+
+  get 'employee/edit'
+
+  get 'employee/update'
+
   get '/station', to: 'station#new'
   post '/station',   to: 'station#create'
   get '/profiles', to: 'profiles#new'

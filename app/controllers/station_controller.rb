@@ -5,6 +5,7 @@ class StationController < ApplicationController
 		if has_station?
 			@station = Station.find_by(user_id: current_user.id)
 			@user = current_user
+			@records = Employee.all
 			render 'show'
 		else
       @station = Station.new
