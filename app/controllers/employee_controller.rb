@@ -1,5 +1,5 @@
 class EmployeeController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :create, :update]
+  before_action :logged_in_user, only: [:edit, :create, :update, :destroy]
   
   def create
     if has_station?
@@ -19,6 +19,18 @@ class EmployeeController < ApplicationController
   end
 
   def update
+		@employee = Employee.find(params[:record][:id])
+    if @employee.update(ename: params[:record][:ename])
+      render json: @employee
+    else
+      render json: @employee.errors, status: :unprocessable_entity
+    end
+  end
+  
+  def destroy
+    @employee = Employee.find(params[:id])
+    @employee.destroy
+    head :no_content
   end
   
   private

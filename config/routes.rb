@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   post '/employee', to: 'employee#create'
+  delete '/employee', to: 'employee#destroy'
+  put '/employee', to: 'employee#update'
   get '/station', to: 'station#new'
   post '/station',   to: 'station#create'
   get '/profiles', to: 'profiles#new'
