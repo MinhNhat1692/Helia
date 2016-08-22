@@ -1,0 +1,20 @@
+// Place all the styles related to the station controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+//= require animate
+//= require font-awesome
+//= require helper
+//= require pe-icon-7-stroke
+//= require bootstrap
+//= require style
+//= require stroke-icons/style
+//= require bootstrap-datetimepicker
+.datepicker {
+  background-color: rgba(0,0,0,0.2);
+  border-color: rgba(0,0,0,0.2);
+  color: #000;
+}
+
+.datepicker th{
+  color: #000000;
+}

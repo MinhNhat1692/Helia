@@ -34,7 +34,7 @@
                       });
                     });
                 .form-group.col-lg-3
-                  = f.collection_select :dob, Gender.where(lang: "vi"), :id, :name, {prompt: "Giới tính"}, {class: "form-control"}
+                  = f.collection_select :gender, Gender.where(lang: "vi"), :id, :name, {prompt: "Giới tính"}, {class: "form-control"}
                 .form-group.col-lg-3
                   = f.collection_select :country, Nation.where(lang: "vi"), :id, :name, {prompt: "Địa chỉ"}, {class: "form-control"}
                 .form-group.col-lg-3

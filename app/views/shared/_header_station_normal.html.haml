@@ -1,0 +1,26 @@
+/ Header
+%nav.navbar.navbar-default.navbar-fixed-top
+  .container-fluid
+    .navbar-header
+      #mobile-menu
+        .left-nav-toggle
+          %a{:href => "#"}
+            %i.stroke-hamburgermenu
+      %a.navbar-brand{:href => root_path}
+        HELIA
+        %span v.1.0
+    #navbar.navbar-collapse.collapse
+      .left-nav-toggle
+        %a{:href => ""}
+          %i.stroke-hamburgermenu
+      %form.navbar-form.navbar-left
+        %input.form-control{:placeholder => "Search data for analysis", :style => "width: 175px", :type => "text"}/
+      %ul.nav.navbar-nav.navbar-right  
+        %li.profil-link
+          %a{:href => logout_path}
+            %i.fa.fa-sign-out
+        %li.profil-link
+          %a{:href => "login.html"}
+            %span.profile-address= @user.name
+            %img.img-circle{:alt => "", :src => @station.logo.url}/
+/ End header
