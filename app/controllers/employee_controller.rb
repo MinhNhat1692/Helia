@@ -4,12 +4,12 @@ class EmployeeController < ApplicationController
   def create
     if has_station?
 			@station = Station.find_by(user_id: current_user.id)
-			@employee = Employee.new(station_id: @station.id, ename: params[:record][:ename])
-      if @employee.save
+			@employee = Employee.new(station_id: @station.id, ename: params[:ename], address: params[:address], pnumber: params[:pnumber], avatar: params[:avatar], gender: params[:gender], noid: params[:noid])
+			if @employee.save
         render json: @employee
       else
         render json: @employee.errors, status: :unprocessable_entity
-      end
+			end
 		else
       redirect_to root_path
     end
@@ -19,8 +19,8 @@ class EmployeeController < ApplicationController
   end
 
   def update
-		@employee = Employee.find(params[:record][:id])
-    if @employee.update(ename: params[:record][:ename])
+		@employee = Employee.find(params[:id])
+    if @employee.update(ename: params[:ename])
       render json: @employee
     else
       render json: @employee.errors, status: :unprocessable_entity

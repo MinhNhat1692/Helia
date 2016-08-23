@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  post '/country/list', to: 'nation#list'
   post '/employee', to: 'employee#create'
   delete '/employee', to: 'employee#destroy'
   put '/employee', to: 'employee#update'

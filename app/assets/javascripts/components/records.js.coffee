@@ -38,7 +38,8 @@
           React.createElement AmountBox, amount: @debits(), text: 'Total'
           React.createElement AmountBox, amount: @balance(), text: 'Total - Total'
           React.createElement AmountBox, amount: @debits(), text: 'Total'
-        React.createElement RecordForm, handleNewRecord: @addRecord
+        React.createElement RecordForm, handleEmployeeRecord: @addRecord
+        React.createElement ModalButton, data: {type: 'employee'}, handleEmployeeRecord: @addRecord
         React.DOM.hr null
         React.DOM.table
           className: 'table table-bordered'
