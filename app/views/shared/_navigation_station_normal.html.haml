@@ -7,14 +7,14 @@
         %a{:href => "#", onclick: "load(1)"} Báo cáo tổng hợp
       %li.nav-category
         Hạng mục quản lý
-      %li
+      %li.active
         %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#extras"}
-          Basic
+          Nhân viên
           %span.sub-nav-icon
             %i.stroke-arrow
-        %ul#extras.nav.nav-second.collapse
-          %li
-            %a{:href => "profile.html"} Profile
+        %ul#extras.nav.nav-second.collapse.in
+          %li.active
+            %a{:href => "#"} Danh sách nhân viên
           %li
             %a{:href => "support.html"} Support
           %li
@@ -37,44 +37,6 @@
             %a{:href => "nestableList.html"} List
           %li
             %a{:href => "timeline.html"} Timeline
-      %li
-        %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#common"}
-          Common
-          %span.sub-nav-icon
-            %i.stroke-arrow
-        %ul#common.nav.nav-second.collapse
-          %li
-            %a{:href => "login.html"} Login
-          %li
-            %a{:href => "register.html"} Register
-          %li
-            %a{:href => "forgotPassword.html"} Forgot password
-          %li
-            %a{:href => "error.html"} Error page
-      %li.active
-        %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#uielements"}
-          General
-          %span.sub-nav-icon
-            %i.stroke-arrow
-        %ul#uielements.nav.nav-second.collapse.in
-          %li
-            %a{:href => "panels.html"} Panels
-          %li
-            %a{:href => "typography.html"} Typography
-          %li.active
-            %a{:href => "icons.html"} Icons
-          %li
-            %a{:href => "buttons.html"} Buttons
-          %li
-            %a{:href => "tabs.html"} Tabs
-          %li
-            %a{:href => "modals.html"} Modals
-          %li
-            %a{:href => "alerts.html"} Alerts
-          %li
-            %a{:href => "gridSystem.html"} Grid system
-          %li
-            %a{:href => "draggable.html"} Draggable
       %li
         %a{:href => "versions.html"}
           %span.badge.pull-right 2
