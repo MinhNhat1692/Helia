@@ -6,6 +6,8 @@
     %section.content
       .container-fluid
         .row
-          .col-lg-12
-            = react_component 'Records', { data: @records }
+          .col-lg-12#main_content
+            :javascript
+              var APP = {}
+            = react_component 'MainApp', { data: @records }
             

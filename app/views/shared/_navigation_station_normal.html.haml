@@ -14,9 +14,9 @@
             %i.stroke-arrow
         %ul#extras.nav.nav-second.collapse.in
           %li.active
-            %a{:href => "#"} Danh sách nhân viên
+            %a{style: "cursor: pointer", onClick: "$(APP).trigger('employee')" } Danh sách nhân viên
           %li
-            %a{:href => "support.html"} Support
+            %a{:href => "#"} Chức vụ
           %li
             %a{:href => "nestableList.html"} List
           %li

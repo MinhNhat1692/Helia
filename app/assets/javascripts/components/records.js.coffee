@@ -23,7 +23,7 @@
       records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
     getInitialState: ->
-      records: @props.data
+      records: @props.records
     getDefaultProps: ->
       records: []
     render: ->
