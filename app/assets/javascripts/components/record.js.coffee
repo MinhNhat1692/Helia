@@ -105,14 +105,13 @@
       @setState edit: !@state.edit
     handleDelete: (e) ->
       e.preventDefault()
-      # yeah... jQuery doesn't have a $.delete shortcut method
       $.ajax
         method: 'DELETE'
-        url: "/employee"
+        url: "/rooms"
         dataType: 'JSON'
         data: {id: @props.record.id}
         success: () =>
-          @props.handleDeleteRecord @props.record
+          @props.handleDeleteRoom @props.record
     recordForm: ->
       React.DOM.tr null,
         React.DOM.td null,
@@ -152,6 +151,7 @@
           React.DOM.a
             href: @props.record.map
             className: 'btn btn-default'
+            target: '_blank'
             style: {margin: '5px'}
             'Map'
         React.DOM.td null,

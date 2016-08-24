@@ -108,15 +108,11 @@
     handleSubmit: (e) ->
       e.preventDefault()
       formData = new FormData
-      formData.append 'ename', $('#employee_quick_ename').val()
-      formData.append 'email', $('#employee_quick_email').val()
-      formData.append 'address', $('#employee_quick_address').val()
-      formData.append 'pnumber', $('#employee_quick_pnumber').val()
-      formData.append 'noid', $('#employee_quick_noid').val()
-      formData.append 'gender', $('#employee_quick_gender').val()
-      formData.append 'avatar', $('#employee_quick_avatar')[0].files[0]
+      formData.append 'name', $('#room_quick_name').val()
+      formData.append 'lang', $('#room_quick_lang').val()
+      formData.append 'map', $('#room_quick_map')[0].files[0]
       $.ajax
-        url: '/employee'
+        url: '/rooms'
         type: 'POST'
         data: formData
         async: false
@@ -124,7 +120,7 @@
         contentType: false
         processData: false
         success: ((result) ->
-          @props.handleEmployeeRecord result
+          @props.handleRoomAdd result
           @setState @getInitialState()
           return
         ).bind(this)

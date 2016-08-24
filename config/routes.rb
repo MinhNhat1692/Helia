@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  post '/rooms', to: 'room#create'
+  delete '/rooms', to: 'room#destroy'
   post '/rooms/list', to: 'room#list'
   post '/positions/list', to: 'position#list'
   post '/country/list', to: 'nation#list'

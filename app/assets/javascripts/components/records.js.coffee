@@ -77,7 +77,6 @@
           className: 'title'
           'Room'
         React.createElement RoomForm, handleRoomAdd: @addRecord
-        React.createElement ModalButton, data: {type: 'room'}, handleRoomAdd: @addRecord
         React.DOM.hr null
         React.DOM.table
           className: 'table table-bordered'

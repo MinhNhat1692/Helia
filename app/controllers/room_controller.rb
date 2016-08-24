@@ -2,13 +2,34 @@ class RoomController < ApplicationController
   before_action :logged_in_user, only: [:destroy, :create, :update, :list]
   
   def create
+    if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			@room = Room.new(station_id: @station.id, name: params[:name], lang: params[:lang], map: params[:map])
+			if @room.save
+        render json: @room
+      else
+        render json: @room.errors, status: :unprocessable_entity
+			end
+		else
+      redirect_to root_path
+    end
   end
 
   def update
   end
 
   def destroy
-  end
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			@room = Room.find(params[:id])
+			if @room.station_id == @station.id
+				@room.destroy
+				head :no_content
+			end
+		else
+			redirect_to root_path
+		end
+	end
 
   def list
     if has_station?

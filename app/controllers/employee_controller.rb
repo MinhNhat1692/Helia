@@ -28,10 +28,17 @@ class EmployeeController < ApplicationController
   end
   
   def destroy
-    @employee = Employee.find(params[:id])
-    @employee.destroy
-    head :no_content
-  end
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			@employee = Employee.find(params[:id])
+			if @employee.station_id == @station.id
+				@employee.destroy
+				head :no_content
+			end
+		else
+			redirect_to root_path
+		end
+	end
   
   private
   	# Confirms a logged-in user.
