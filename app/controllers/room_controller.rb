@@ -1,5 +1,5 @@
-class PositionController < ApplicationController
-  before_action :logged_in_user, only: [:list, :create, :update, :destroy]
+class RoomController < ApplicationController
+  before_action :logged_in_user, only: [:destroy, :create, :update, :list]
   
   def create
   end
@@ -9,11 +9,11 @@ class PositionController < ApplicationController
 
   def destroy
   end
-  
+
   def list
     if has_station?
 			@station = Station.find_by(user_id: current_user.id)
-			render json: Position.where(station_id: @station.id)
+			render json: Room.where(station_id: @station.id)
 		else
       redirect_to root_path
     end

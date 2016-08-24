@@ -34,4 +34,4 @@
               React.DOM.th null, 'Actions'
           React.DOM.tbody null,
             for record in @state.records
-              React.createElement Record, key: record.id, record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord
+              React.createElement PositionRecord, key: record.id, record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord

@@ -9,12 +9,14 @@
         Hạng mục quản lý
       %li.active
         %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#extras"}
-          Nhân viên
+          Nhập dữ liệu gốc
           %span.sub-nav-icon
             %i.stroke-arrow
         %ul#extras.nav.nav-second.collapse.in
           %li.active
             %a{style: "cursor: pointer", onClick: "$(APP).trigger('employee')" } Danh sách nhân viên
+          %li
+            %a{style: "cursor: pointer", onClick: "$(APP).trigger('room')" } Danh sách phòng
           %li
             %a{style: "cursor: pointer", onClick: "$(APP).trigger('position')" } Chức vụ
           %li

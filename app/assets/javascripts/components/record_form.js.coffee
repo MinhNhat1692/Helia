@@ -101,3 +101,71 @@
           className: 'btn btn-primary'
           'Create record'
     
+
+ @RoomForm = React.createClass
+    getInitialState: ->
+      type: 1
+    handleSubmit: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      formData.append 'ename', $('#employee_quick_ename').val()
+      formData.append 'email', $('#employee_quick_email').val()
+      formData.append 'address', $('#employee_quick_address').val()
+      formData.append 'pnumber', $('#employee_quick_pnumber').val()
+      formData.append 'noid', $('#employee_quick_noid').val()
+      formData.append 'gender', $('#employee_quick_gender').val()
+      formData.append 'avatar', $('#employee_quick_avatar')[0].files[0]
+      $.ajax
+        url: '/employee'
+        type: 'POST'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
+          @props.handleEmployeeRecord result
+          @setState @getInitialState()
+          return
+        ).bind(this)
+    render: ->
+      React.DOM.form
+        id: 'room_quick'
+        encType: 'multipart/form-data'
+        className: 'form-horizontal row'
+        onSubmit: @handleSubmit
+        React.DOM.div
+          className: 'form-group col-lg-6 col-sm-12'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'room_quick_name'
+              type: 'text'
+              className: 'form-control'
+              placeholder: 'Tên phòng'
+              name: 'name'
+        React.DOM.div
+          className: 'form-group col-lg-2 col-sm-6'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'room_quick_lang'
+              type: 'text'
+              className: 'form-control'
+              placeholder: 'Ngôn ngữ hiển thị'
+              name: 'lang'
+              value: 'vi'
+        React.DOM.div
+          className: 'form-group col-lg-3 col-sm-6'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'room_quick_map'
+              type: 'file'
+              className: 'form-control'
+              name: 'map'
+        React.DOM.button
+          type: 'submit'
+          className: 'btn btn-primary'
+          'Create record'
+    

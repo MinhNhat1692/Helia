@@ -47,6 +47,25 @@
           @setState @getInitialState()
           return
         ).bind(this)
+    handleSubmitRoom: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      formData.append 'name', $('#room_form_name').val()
+      formData.append 'lang', $('#room_form_lang').val()
+      formData.append 'map', $('#room_form_map')[0].files[0]
+      $.ajax
+        url: '/rooms'
+        type: 'POST'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
+          @props.handleRoomAdd result
+          @setState @getInitialState()
+          return
+        ).bind(this)
     employeeForm: ->
       React.DOM.div
         className: 'modal fade'
@@ -268,9 +287,88 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    roomForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Room Form'
+              React.DOM.small
+                'Description'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-lg-12'
+                  React.DOM.p null, 'Detail for this modal - short'
+                  React.DOM.form
+                    id: 'room_form'
+                    encType: 'multipart/form-data'
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmitRoom
+                    React.DOM.hr null
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Tên phòng'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'room_form_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Hãy nhập vào tên phòng'
+                          name: 'name'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Ngôn ngữ hiển thị'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'room_form_lang'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Hãy nhập vào ngôn ngữ hiển thị của chức vụ này'
+                          name: 'address'
+                          value: 'vi'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Bản đồ đính kèm'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'room_form_map'
+                          type: 'file'
+                          className: 'form-control'
+                          name: 'map'
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee'
         @employeeForm()
       else if @state.type == 'position'
         @positionForm()
+      else if @state.type == 'room'
+        @roomForm()

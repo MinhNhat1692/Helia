@@ -1,10 +1,6 @@
 Rails.application.routes.draw do
-  get 'position/create'
-
-  get 'position/update'
-
-  get 'position/destroy'
-
+  post '/rooms/list', to: 'room#list'
+  post '/positions/list', to: 'position#list'
   post '/country/list', to: 'nation#list'
   post '/employee', to: 'employee#create'
   delete '/employee', to: 'employee#destroy'
