@@ -1,4 +1,4 @@
- @Record = React.createClass
+  @Record = React.createClass
     getInitialState: ->
       edit: false
     handleEdit: (e) ->
@@ -88,18 +88,25 @@
       edit: false
     handleEdit: (e) ->
       e.preventDefault()
-      data =
-        id: @props.record.id
-        ename: @refs.ename.value
-      # jQuery doesn't have a $.put shortcut method either
+      formData = new FormData
+      formData.append 'id', @props.record.id
+      formData.append 'name', $('#room_edit_name').val()
+      formData.append 'lang', $('#room_edit_lang').val()
+      formData.append 'map', $('#room_edit_map')[0].files[0]
       $.ajax
-        method: 'PUT'
-        url: "/employee"
-        dataType: 'JSON'
-        data: data
-        success: (record) =>
+        url: '/rooms'
+        type: 'PUT'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
           @setState edit: false
-          @props.handleEditRecord @props.record, record
+          @props.handleEditRoom @props.record, result
+          return
+        ).bind(this)
+      # jQuery doesn't have a $.put shortcut method either
     handleToggle: (e) ->
       e.preventDefault()
       @setState edit: !@state.edit
@@ -119,19 +126,19 @@
             className: 'form-control'
             type: 'text'
             defaultValue: @props.record.name
-            ref: 'name'
+            id: 'room_edit_name'
         React.DOM.td null,
           React.DOM.input
             className: 'form-control'
             type: 'text'
             defaultValue: @props.record.lang
-            ref: 'lang'
+            id: 'room_edit_lang'
         React.DOM.td null,
           React.DOM.input
             className: 'form-control'
             type: 'file'
             defaultValue: @props.record.map
-            ref: 'map'
+            id: 'room_edit_map'
         React.DOM.td null,
           React.DOM.a
             className: 'btn btn-default'

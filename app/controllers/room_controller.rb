@@ -16,6 +16,17 @@ class RoomController < ApplicationController
   end
 
   def update
+    if has_station?
+      @station = Station.find_by(user_id: current_user.id)
+			@room = Room.find(params[:id])
+			if @room.update(name: params[:name],lang: params[:lang],map: params[:map])
+        render json: @room
+      else
+        render json: @room.errors, status: :unprocessable_entity
+      end
+    else
+      redirect_to root_path
+    end
   end
 
   def destroy
