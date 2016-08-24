@@ -32,3 +32,6 @@
               React.DOM.th null, 'description'
               React.DOM.th null, 'file'
               React.DOM.th null, 'Actions'
+          React.DOM.tbody null,
+            for record in @state.records
+              React.createElement Record, key: record.id, record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord
