@@ -20,16 +20,54 @@
 }
 
 .contact-box.center-version {
-    border: 0px solid #e7eaec;
+    border: 1px solid rgba(0, 0, 0, .2);
     padding: 0;
 }
 
 .contact-box {
     background-color: #21242a;
-    border: 0px solid #e7eaec;
-    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    border: 1px solid rgba(0, 0, 0, .2);
+    -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+    box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 4px;
+}
+
+.contact-box.center-version > .over {
+    display: block;
+    background-color: #21242a;
+    padding: 20px;
+    text-align: center;
+}
+
+.contact-box > .over {
+    color: inherit;
+}
+
+.contact-box.center-version > .over img {
+    width: 80px;
+    height: 80px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.over > h3{
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+.over > h3 {
+    font-size: 16px;
+}
+
+.contact-box.center-version address {
+    margin-bottom: 0;
+}
+
+.contact-box .contact-box-footer {
+    background-color: #1d1f24;
+    text-align: center;
+    border-top: 1px solid #3d404c;
+    padding: 15px 20px;
 }

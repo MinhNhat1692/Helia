@@ -372,36 +372,39 @@
         className: 'col-lg-3'
         React.DOM.div
           className: 'contact-box center-version'
-          React.DOM.img
-            alt: 'image'
-            className: 'img-circle'
-            src: @state.record.avatar
-          React.DOM.h3
-            className: 'm-b-xs'
-            React.DOM.strong null, @state.record.ename
           React.DOM.div
-            className: 'font-bold'
-            'Chuc vu'
-          React.DOM.address
-            className: 'm-t-md'
-            React.DOM.strong null, 'Ten phong kham'
-            React.DOM.br
-            'Address'
-            React.DOM.br
-            'Ma so NV'
-            React.DOM.abbr
-              title: 'Phone'
-              'SDT: '
-            '01234568790'
-        React.DOM.div
-          className: 'contact-box-footer'
+            className: 'over'
+            React.DOM.img
+              alt: 'image'
+              className: 'img-circle'
+              src: @state.record.avatar
+            React.DOM.h3
+              className: 'm-b-xs'
+              React.DOM.strong null, @state.record.ename
+            React.DOM.div
+              className: 'font-bold'
+              'Chuc vu'
+            React.DOM.address
+              className: 'm-t-md'
+              React.DOM.strong null, 'Ten phong kham'
+                React.DOM.br null,
+              'Address'
+                React.DOM.br null,
+              'Ma so NV'
+                React.DOM.br null,
+              React.DOM.abbr
+                title: 'Phone'
+                'SDT: '
+              '01234568790'
           React.DOM.div
-            className: 'm-t-xs btn-group'
-            React.DOM.a
-              className: 'btn btn-xs btn-white'
-              React.DOM.i
-                className: 'fa fa-phone'
-              'Edit'
+            className: 'contact-box-footer'
+            React.DOM.div
+              className: 'm-t-xs btn-group'
+              React.DOM.a
+                className: 'btn btn-default btn-xs'
+                React.DOM.i
+                  className: 'fa fa-pencil-square-o'
+                ' Edit'
     render: ->
       if @state.edit
         @recordForm()
