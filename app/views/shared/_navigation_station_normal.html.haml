@@ -8,17 +8,27 @@
       %li.nav-category
         Hạng mục quản lý
       %li.active
-        %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#extras"}
+        %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#datainput"}
           Nhập dữ liệu gốc
           %span.sub-nav-icon
             %i.stroke-arrow
-        %ul#extras.nav.nav-second.collapse.in
+        %ul#datainput.nav.nav-second.collapse.in
           %li.active
             %a{style: "cursor: pointer", onClick: "$(APP).trigger('employee')" } Danh sách nhân viên
           %li
             %a{style: "cursor: pointer", onClick: "$(APP).trigger('room')" } Danh sách phòng
           %li
-            %a{style: "cursor: pointer", onClick: "$(APP).trigger('position')" } Chức vụ
+            %a{style: "cursor: pointer", onClick: "$(APP).trigger('position')" } Danh sách chức vụ
+      %li
+        %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#datalink"}
+          Liên kết dữ liệu
+          %span.sub-nav-icon
+            %i.stroke-arrow
+        %ul#datalink.nav.nav-second.collapse
+          %li
+            %a{:href => "profile.html"} Profile
+          %li
+            %a{:href => "support.html"} Support
           %li
             %a{:href => "nestableList.html"} List
           %li

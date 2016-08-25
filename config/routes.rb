@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   post '/rooms', to: 'room#create'
   delete '/rooms', to: 'room#destroy'
   post '/rooms/list', to: 'room#list'
+  put '/positions', to: 'position#update'
+  delete '/positions', to: 'position#destroy'
+  post '/positions', to: 'position#create'
   post '/positions/list', to: 'position#list'
   post '/country/list', to: 'nation#list'
   post '/employee', to: 'employee#create'
@@ -21,6 +24,7 @@ Rails.application.routes.draw do
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
+  get '/logout',  to: 'sessions#destroy'
   
   resources :users
   resources :account_activations, only: [:edit]

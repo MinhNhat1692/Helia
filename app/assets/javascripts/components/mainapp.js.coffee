@@ -34,7 +34,7 @@
     Employee: ->
       React.createElement Records, records: @state.data 
     Position: ->
-      React.createElement PositionRecords, records: @state.data
+      React.createElement Positions, data: @state.data
     Room: ->
       React.createElement Rooms, records: @state.data 
     render: ->

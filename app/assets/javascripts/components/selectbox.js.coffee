@@ -1,19 +1,32 @@
 @SelectBox = React.createClass
     getInitialState: ->
-      href: '../country/list'
+      id: @props.id
+      text: @props.text
+      records: @props.records
+      type: @props.type
+    getDefaultProps: ->
+      records: []
       type: 1
-      text: 'dafuq'
-    handleLoad: (e) ->
-      @setState records: []
-      e.preventDefault()
-      $.post @state.href, { type: @state.type }, (data) =>
-        @setState records: data
-        console.log(@state.records)
-      , 'JSON'
-    render: ->
+    roomListSelectBox: ->
       React.DOM.select
         className: 'form-control'
-        onChange: @handleLoad
-        React.DOM.option null,'1'
-        React.DOM.option null,'2'
-        React.DOM.option null,'3'
+        id: @state.id
+        React.DOM.option
+          value: ""
+          @state.text
+        for record in @state.records
+          React.createElement OptionSelect, value: record.id, text: record.name
+    render: ->
+      if @state.type == 1
+        @roomListSelectBox()
+        
+@OptionSelect = React.createClass
+    getInitialState: ->
+        value: @props.value
+        text: @props.text
+    renderOption: ->
+        React.DOM.option
+            value: @state.value
+            @state.text
+    render: ->
+        @renderOption()

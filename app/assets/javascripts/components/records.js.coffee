@@ -79,7 +79,7 @@
         React.createElement RoomForm, handleRoomAdd: @addRecord
         React.DOM.hr null
         React.DOM.table
-          className: 'table table-bordered'
+          className: 'table table-striped'
           React.DOM.thead null,
             React.DOM.tr null,
               React.DOM.th null, 'Tên phòng'
@@ -89,3 +89,44 @@
           React.DOM.tbody null,
             for record in @state.records
               React.createElement Room, key: record.id, record: record, handleDeleteRoom: @deleteRecord, handleEditRoom: @updateRecord
+      
+              
+@Positions = React.createClass
+    updateRecord: (record, data) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+      @replaceState records: records
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @replaceState records: records
+    addRecord: (record) ->
+      records = React.addons.update(@state.records, { $push: [record] })
+      @setState records: records
+    getInitialState: ->
+      records: @props.data[0]
+      rooms: @props.data[1]
+    getDefaultProps: ->
+      records: []
+      rooms: []
+    render: ->
+      React.DOM.div
+        className: 'position'
+        React.DOM.h2
+          className: 'title'
+          'Position'
+        React.createElement PositionForm, rooms: @state.rooms, handlePositionAdd: @addRecord
+        React.DOM.hr null
+        React.DOM.table
+          className: 'table table-striped'
+          React.DOM.thead null,
+            React.DOM.tr null,
+              React.DOM.th null, 'Room'
+              React.DOM.th null, 'name'
+              React.DOM.th null, 'lang'
+              React.DOM.th null, 'description'
+              React.DOM.th null, 'file'
+              React.DOM.th null, 'Actions'
+          React.DOM.tbody null,
+            for record in @state.records
+              React.createElement Position, key: record.id, record: record, rooms: @state.rooms, handleDeletePosition: @deleteRecord, handleEditPosition: @updateRecord
