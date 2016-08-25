@@ -286,3 +286,124 @@
         @recordForm()
       else
         @recordRow()
+
+
+  @AppViewsEmployee = React.createClass
+    getInitialState: ->
+      edit: false
+      record: @props.record
+      rooms: @props.rooms
+      position: @props.positions
+    handleEdit: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      formData.append 'id', @props.record.id
+      formData.append 'room', $('#position_edit_room').val()
+      formData.append 'pname', $('#position_edit_pname').val()
+      formData.append 'lang', $('#position_edit_lang').val()
+      formData.append 'description', $('#position_edit_description').val()
+      formData.append 'file', $('#position_edit_file')[0].files[0]
+      $.ajax
+        url: '/positions'
+        type: 'PUT'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
+          @setState edit: false
+          @props.handleEditPosition @props.record, result
+          return
+        ).bind(this)
+    handleToggle: (e) ->
+      e.preventDefault()
+      @setState edit: !@state.edit
+    handleDelete: (e) ->
+      e.preventDefault()
+      $.ajax
+        method: 'DELETE'
+        url: "/positions"
+        dataType: 'JSON'
+        data: {id: @props.record.id}
+        success: () =>
+          @props.handleDeletePosition @props.record
+    recordForm: ->
+      React.DOM.tr null,
+        React.DOM.td null,
+          React.createElement SelectBox, records: @state.rooms, type: 1, id: 'position_edit_room', text: 'Tên phòng'
+        React.DOM.td null,
+          React.DOM.input
+            className: 'form-control'
+            type: 'text'
+            defaultValue: @props.record.pname
+            id: 'position_edit_pname'
+        React.DOM.td null,
+          React.DOM.input
+            className: 'form-control'
+            type: 'text'
+            defaultValue: @props.record.lang
+            id: 'position_edit_lang'
+        React.DOM.td null,
+          React.DOM.input
+            className: 'form-control'
+            type: 'text'
+            defaultValue: @props.record.description
+            id: 'position_edit_description'
+        React.DOM.td null,
+          React.DOM.input
+            className: 'form-control'
+            type: 'file'
+            defaultValue: @props.record.file
+            id: 'position_edit_file'
+        React.DOM.td null,
+          React.DOM.a
+            className: 'btn btn-default'
+            style: {margin: '5px'}
+            onClick: @handleEdit
+            'Update'
+          React.DOM.a
+            className: 'btn btn-danger'
+            style: {margin: '5px'}
+            onClick: @handleToggle
+            'Cancel'
+    recordBlock: ->
+      React.DOM.div
+        className: 'col-lg-3'
+        React.DOM.div
+          className: 'contact-box center-version'
+          React.DOM.img
+            alt: 'image'
+            className: 'img-circle'
+            src: @state.record.avatar
+          React.DOM.h3
+            className: 'm-b-xs'
+            React.DOM.strong null, @state.record.ename
+          React.DOM.div
+            className: 'font-bold'
+            'Chuc vu'
+          React.DOM.address
+            className: 'm-t-md'
+            React.DOM.strong null, 'Ten phong kham'
+            React.DOM.br
+            'Address'
+            React.DOM.br
+            'Ma so NV'
+            React.DOM.abbr
+              title: 'Phone'
+              'SDT: '
+            '01234568790'
+        React.DOM.div
+          className: 'contact-box-footer'
+          React.DOM.div
+            className: 'm-t-xs btn-group'
+            React.DOM.a
+              className: 'btn btn-xs btn-white'
+              React.DOM.i
+                className: 'fa fa-phone'
+              'Edit'
+    render: ->
+      if @state.edit
+        @recordForm()
+      else
+        @recordBlock()

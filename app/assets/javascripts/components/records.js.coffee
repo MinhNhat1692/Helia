@@ -130,3 +130,29 @@
           React.DOM.tbody null,
             for record in @state.records
               React.createElement Position, key: record.id, record: record, rooms: @state.rooms, handleDeletePosition: @deleteRecord, handleEditPosition: @updateRecord
+
+
+@AppViewsEmployees = React.createClass
+    updateRecord: (record, data) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+      @replaceState records: records
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @replaceState records: records
+    addRecord: (record) ->
+      records = React.addons.update(@state.records, { $push: [record] })
+      @setState records: records
+    getInitialState: ->
+      records: @props.data[0]
+      rooms: @props.data[1]
+      positions: @props.data[2]
+    getDefaultProps: ->
+      records: []
+      rooms: []
+    render: ->
+      React.DOM.div
+        className: 'row'
+        for record in @state.records
+          React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions

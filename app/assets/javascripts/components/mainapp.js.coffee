@@ -31,12 +31,20 @@
           link: '/rooms/list'
         @handleGetdata(data)
       ).bind(this)
+      $(APP).on 'linkep', ((e) ->
+        data =
+          task: 4
+          link: '/position_mapping/list'
+        @handleGetdata(data)
+      ).bind(this)
     Employee: ->
       React.createElement Records, records: @state.data 
     Position: ->
       React.createElement Positions, data: @state.data
     Room: ->
       React.createElement Rooms, records: @state.data 
+    AppViewEmployee: ->
+      React.createElement AppViewsEmployees, data: @state.data
     render: ->
       if @state.task == 1
         @Employee()
@@ -44,3 +52,5 @@
         @Position()
       else if @state.task == 3
         @Room()
+      else if @state.task == 4
+        @AppViewEmployee()
