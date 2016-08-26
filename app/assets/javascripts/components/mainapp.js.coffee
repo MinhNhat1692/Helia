@@ -62,3 +62,5 @@
         @Room()
       else if @state.task == 4
         @AppViewEmployee()
+      else if @state.task == 5
+        @Service()

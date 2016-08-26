@@ -276,7 +276,7 @@
         React.DOM.td null, @props.record.description
         React.DOM.td null,
           React.DOM.a
-            href: @props.record.map
+            href: @props.record.file
             className: 'btn btn-default'
             target: '_blank'
             style: {margin: '5px'}
@@ -311,7 +311,7 @@
       formData.append 'pname', $('#position_edit_pname').val()
       formData.append 'lang', $('#position_edit_lang').val()
       formData.append 'description', $('#position_edit_description').val()
-      if $('#position_edit_file')[0].files[0] 1= undefined
+      if $('#position_edit_file')[0].files[0] != undefined
         formData.append 'file', $('#position_edit_file')[0].files[0]
       $.ajax
         url: '/positions'

@@ -201,7 +201,7 @@
         className: 'form-horizontal row'
         onSubmit: @handleSubmit
         React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
+          className: 'form-group col-lg-4 col-sm-8'
           React.DOM.div
             className: 'col-sm-12'
             React.DOM.input
@@ -211,7 +211,7 @@
               placeholder: 'Tên dịch vụ'
               name: 'sname'
         React.DOM.div
-          className: 'form-group col-lg-2 col-sm-6'
+          className: 'form-group col-lg-2 col-sm-4'
           React.DOM.div
             className: 'col-sm-12'
             React.DOM.input
@@ -222,7 +222,7 @@
               name: 'lang'
               value: 'vi'
         React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
+          className: 'form-group col-lg-3 col-sm-3'
           React.DOM.div
             className: 'col-sm-12'
             React.DOM.input
@@ -232,18 +232,18 @@
               placeholder: 'Giá dịch vụ'
               name: 'price'
         React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
+          className: 'form-group col-lg-3 col-sm-3'
           React.DOM.div
             className: 'col-sm-12'
             React.DOM.input
               id: 'service_quick_currency'
-              type: 'number'
+              type: 'text'
               className: 'form-control'
               placeholder: 'Đơn vị giá'
               value: 'VND'
               name: 'currency'
         React.DOM.div
-          className: 'form-group col-lg-5 col-sm-8'
+          className: 'form-group col-lg-8 col-sm-6'
           React.DOM.div
             className: 'col-lg-12'
             React.DOM.textarea
@@ -253,18 +253,18 @@
               placeholder: 'Mô tả ngắn dịch vụ'
               name: 'description'
         React.DOM.div
-          className: 'form-group col-lg-3 col-sm-6'
+          className: 'form-group col-lg-4 col-sm-4'
           React.DOM.div
-            className: 'col-sm-12'
+            className: 'col-sm-6'
             React.DOM.input
               id: 'service_quick_file'
               type: 'file'
               className: 'form-control'
               name: 'file'
-        React.DOM.button
-          type: 'submit'
-          className: 'btn btn-primary'
-          'Create record'
+          React.DOM.button
+            type: 'submit'
+            className: 'btn btn-primary col-sm-6'
+            'Create record'
 
 
   @PositionForm = React.createClass
