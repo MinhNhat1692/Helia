@@ -40,6 +40,22 @@ class PositionMappingController < ApplicationController
 						else
 							render json: @employee.errors, status: :unprocessable_entity
 						end
+					elsif params.has_key?(:posmap)
+						@pos = PositionMapping.find_by(station_id: @station.id, employee_id: @employee.id)
+						if @pos.nil?
+							@pos = PositionMapping.new(station_id: @station.id, employee_id: @employee.id, position_id: params[:posmap])
+							if @pos.save
+								render json: @pos
+							else
+								render json: @pos.errors, status: :unprocessable_entity
+							end
+						else
+							if @pos.update(position_id: params[:posmap])
+								render json: @pos
+							else
+								render json: @pos.errors, status: :unprocessable_entity
+							end
+						end
 					end
 				end
 			end

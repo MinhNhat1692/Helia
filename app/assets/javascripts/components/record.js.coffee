@@ -297,6 +297,7 @@
       positions: @props.positions
       positionmap: @props.positionmap
       station: @props.station
+      positionName: 'Chua co chuc vu'
     handleEdit: (e) ->
       e.preventDefault()
       formData = new FormData
@@ -311,6 +312,8 @@
         formData.append 'noid', $('#quick_edit_noid').val()
       else if @state.type == 5
         formData.append 'pnumber', $('#quick_edit_pnumber').val() 
+      else if @state.type == 10
+        formData.append 'posmap', $('#quick_edit_posmap').val() 
       if @state.type != 10
         $.ajax
           url: '/position_mapping'
@@ -322,6 +325,22 @@
           processData: false
           success: ((result) ->
             @props.handleEditAppMap @props.record, result
+            @setState
+              type: 0
+              edit: false
+            return
+          ).bind(this)
+      else
+        $.ajax
+          url: '/position_mapping'
+          type: 'PUT'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.handleEditPosMap result
             @setState
               type: 0
               edit: false
@@ -351,6 +370,11 @@
       e.preventDefault()
       @setState
         type: 5
+        edit: !@state.edits
+    handleTogglePosMap: (e) ->
+      e.preventDefault()
+      @setState
+        type: 10
         edit: !@state.edits
     recordForm: ->
       React.DOM.div
@@ -385,20 +409,23 @@
                 React.DOM.strong
                   @props.record.ename  
             check = false
-            for map in @state.positionmap
-              if map.employee_id == @props.record.id
+            if @state.type == 10
+              React.createElement SelectBox, records: @props.positions, type: 2, id: 'quick_edit_posmap', text: 'Tên Position', blurOut: @handleEdit
+            else
+              for map in @state.positionmap
+                if map.employee_id == @props.record.id
+                  React.DOM.div
+                    className: 'font-bold'
+                    for pos in @props.positions
+                      if pos.id == map.position_id
+                        pos.pname
+                        break
+                  check = true
+                  break
+              if check == false
                 React.DOM.div
                   className: 'font-bold'
-                  for pos in @props.positions
-                    if pos.id == map.position_id
-                      pos.pname
-                      break
-                check = true
-                break
-            if check == false
-              React.DOM.div
-                className: 'font-bold'
-                'Chua co chuc vu'
+                  'Chua co chuc vu'
             React.DOM.address
               className: 'm-t-md'
               React.DOM.strong null, @state.station.sname
@@ -467,21 +494,17 @@
               React.DOM.strong
                 onClick: @handleToggleName
                 @props.record.ename
-            check = false
-            for map in @state.positionmap
+            for map in @props.positionmap
               if map.employee_id == @props.record.id
-                React.DOM.div
-                  className: 'font-bold'
-                  for pos in @props.positions
-                    if pos.id == map.position_id
-                      pos.pname
-                      break
-                check = true
+                for pos in @props.positions
+                  if pos.id == map.position_id
+                    @state.positionName = pos.pname
+                    break
                 break
-            if check == false
-              React.DOM.div
-                className: 'font-bold'
-                'Chua co chuc vu'
+            React.DOM.div
+              onClick: @handleTogglePosMap
+              className: 'font-bold'
+              @state.positionName
             React.DOM.address
               className: 'm-t-md'
               React.DOM.strong null, @state.station.sname

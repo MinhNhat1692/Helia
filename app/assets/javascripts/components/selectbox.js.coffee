@@ -16,9 +16,21 @@
           @state.text
         for record in @state.records
           React.createElement OptionSelect, value: record.id, text: record.name
+    positionListSelectBox: ->
+      React.DOM.select
+        className: 'form-control'
+        id: @state.id
+        onBlur: @props.blurOut
+        React.DOM.option
+          value: ""
+          @state.text
+        for record in @state.records
+          React.createElement OptionSelect, value: record.id, text: record.pname
     render: ->
       if @state.type == 1
         @roomListSelectBox()
+      else if @state.type == 2
+        @positionListSelectBox()
         
 @OptionSelect = React.createClass
     getInitialState: ->

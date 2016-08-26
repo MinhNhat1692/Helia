@@ -136,14 +136,19 @@
     updateRecord: (record, data) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-      @replaceState records: records
-    deleteRecord: (record) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
-      @replaceState records: records
-    addRecord: (record) ->
-      records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
+    updateMap: (data) ->
+      check = true
+      for map in @state.positionmap
+        if map.id == data.id
+          index = @state.positionmap.indexOf map
+          listposmap = React.addons.update(@state.positionmap, { $splice: [[index, 1, data]] })
+          @setState positionmap: listposmap
+          check = false
+          break
+      if check
+        listposmap = React.addons.update(@state.positionmap, { $push: [data] })
+        @setState positionmap: listposmap
     getInitialState: ->
       records: @props.data[0]
       rooms: @props.data[1]
@@ -157,4 +162,4 @@
       React.DOM.div
         className: 'row'
         for record in @state.records
-          React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions, positionmap: @state.positionmap, station: @state.station, handleEditAppMap: @updateRecord
+          React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions, positionmap: @state.positionmap, station: @state.station, handleEditAppMap: @updateRecord, handleEditPosMap: @updateMap
