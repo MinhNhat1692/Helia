@@ -661,3 +661,242 @@
         @recordForm()
       else
         @recordBlock()
+    
+        
+  @AppViewsService = React.createClass
+    getInitialState: ->
+      edit: false
+      type: 0
+      record: @props.record
+      rooms: @props.rooms
+      servicemap: @props.servicemap
+      roomName: 'Chưa định phòng khám'
+    handleEdit: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      formData.append 'id', @props.record.id
+      if @state.type == 1
+        formData.append 'ename', $('#quick_edit_ename').val()
+      else if @state.type == 2
+        formData.append 'address', $('#quick_edit_address').val()
+      else if @state.type == 3
+        if $('#quick_edit_avatar')[0].files[0] != undefined
+          formData.append 'avatar', $('#quick_edit_avatar')[0].files[0]
+      else if @state.type == 4
+        formData.append 'noid', $('#quick_edit_noid').val()
+      else if @state.type == 5
+        formData.append 'pnumber', $('#quick_edit_pnumber').val() 
+      else if @state.type == 10
+        formData.append 'posmap', $('#quick_edit_posmap').val() 
+      if @state.type != 10
+        $.ajax
+          url: '/position_mapping'
+          type: 'PUT'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.handleEditAppMap @props.record, result
+            @setState
+              type: 0
+              edit: false
+            return
+          ).bind(this)
+      else
+        $.ajax
+          url: '/position_mapping'
+          type: 'PUT'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.handleEditPosMap result
+            @setState
+              type: 0
+              edit: false
+            return
+          ).bind(this)
+    handleToggleName: (e) ->
+      e.preventDefault()
+      @setState
+        type: 1
+        edit: !@state.edit
+    handleToggleAddress: (e) ->
+      e.preventDefault()
+      @setState
+        type: 2
+        edit: !@state.edit
+    handleToggleAvatar: (e) ->
+      e.preventDefault()
+      @setState
+        type: 3
+        edit: !@state.edit
+    handleToggleNoid: (e) ->
+      e.preventDefault()
+      @setState
+        type: 4
+        edit: !@state.edit
+    handleTogglePnumber: (e) ->
+      e.preventDefault()
+      @setState
+        type: 5
+        edit: !@state.edits
+    handleTogglePosMap: (e) ->
+      e.preventDefault()
+      @setState
+        type: 10
+        edit: !@state.edits
+    recordForm: ->
+      React.DOM.div
+        className: 'col-lg-3'
+        React.DOM.div
+          className: 'contact-box center-version'
+          React.DOM.div
+            className: 'over'
+            if @state.type == 3
+              React.DOM.input
+                className: 'form-control'
+                type: 'file'
+                onBlur: @handleEdit
+                id: 'quick_edit_file'
+            else
+              React.DOM.img
+                alt: 'image'
+                className: 'img-circle'
+                src: @props.record.avatar
+            if @state.type == 1  
+              React.DOM.input
+                className: 'form-control'
+                type: 'text'
+                defaultValue: @props.record.ename
+                onBlur: @handleEdit
+                placeholder: 'Type name'
+                id: 'quick_edit_ename'
+            else
+              React.DOM.h3
+                className: 'm-b-xs'
+                React.DOM.strong
+                  @props.record.ename  
+            check = false
+            if @state.type == 10
+              React.createElement SelectBox, records: @props.positions, type: 2, id: 'quick_edit_posmap', text: 'Tên Position', blurOut: @handleEdit
+            else
+              for map in @state.positionmap
+                if map.employee_id == @props.record.id
+                  React.DOM.div
+                    className: 'font-bold'
+                    for pos in @props.positions
+                      if pos.id == map.position_id
+                        pos.pname
+                        break
+                  check = true
+                  break
+              if check == false
+                React.DOM.div
+                  className: 'font-bold'
+                  'Chua co chuc vu'
+            React.DOM.address
+              className: 'm-t-md'
+              React.DOM.strong null, @state.station.sname
+                React.DOM.br null,
+              if @state.type == 2
+                React.DOM.input
+                  className: 'form-control'
+                  type: 'text'
+                  defaultValue: @props.record.address
+                  onBlur: @handleEdit
+                  placeholder: 'Type address'
+                  id: 'quick_edit_address'
+              else
+                React.DOM.p null,
+                  @state.record.address
+                    React.DOM.br null,
+              if @state.type == 4
+                React.DOM.input
+                  className: 'form-control'
+                  type: 'text'
+                  defaultValue: @props.record.noid
+                  onBlur: @handleEdit
+                  placeholder: 'Type noid'
+                  id: 'quick_edit_noid'
+              else
+                React.DOM.p null,
+                  @state.record.noid
+                    React.DOM.br null,
+              if @state.type == 5
+                React.DOM.input
+                  className: 'form-control'
+                  type: 'text'
+                  defaultValue: @props.record.pnumber
+                  onBlur: @handleEdit
+                  placeholder: 'Type pnumber'
+                  id: 'quick_edit_pnumber'
+              else
+                React.DOM.abbr
+                  title: 'Phone'
+                  'SDT: '
+                React.DOM.i null,
+                  @props.record.pnumber
+          React.DOM.div
+            className: 'contact-box-footer'
+            React.DOM.div
+              className: 'm-t-xs btn-group'
+              React.DOM.a
+                className: 'btn btn-default btn-xs'
+                React.DOM.i
+                  className: 'fa fa-pencil-square-o'
+                ' Edit'
+    recordBlock: ->
+      React.DOM.div
+        className: 'col-lg-3'
+        React.DOM.div
+          className: 'contact-box center-version'
+          React.DOM.div
+            className: 'over'
+            React.DOM.img
+              alt: 'image'
+              className: 'img-circle'
+              onClick: @handleToggleLogo
+              src: @props.record.file
+            React.DOM.h3
+              className: 'm-b-xs'
+              React.DOM.strong
+                onClick: @handleToggleName
+                @props.record.sname
+            for map in @props.servicemap
+              if map.service_id == @props.record.id
+                for room in @props.rooms
+                  if room.id == map.room_id
+                    @state.roomName = room.name
+                    break
+                break
+            React.DOM.div
+              onClick: @handleTogglesSerMap
+              className: 'font-bold'
+              @state.roomName
+            React.DOM.address
+              className: 'm-t-md'
+              React.DOM.strong null, @state.record.price + ' ' + @state.record.currency
+                React.DOM.br null,
+              React.DOM.p
+                onClick: @handleToggleDescription
+                @props.record.description
+                React.DOM.br null,
+          React.DOM.div
+            className: 'contact-box-footer'
+            React.DOM.div
+              className: 'm-t-xs btn-group'
+              React.DOM.a
+                className: 'btn btn-default btn-xs'
+                React.DOM.i
+                  className: 'fa fa-pencil-square-o'
+                  ' Edit'
+    render: ->
+      if @state.edit
+        @recordForm()
+      else
+        @recordBlock()

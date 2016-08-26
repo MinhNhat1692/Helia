@@ -203,3 +203,22 @@
         className: 'row'
         for record in @state.records
           React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions, positionmap: @state.positionmap, station: @state.station, handleEditAppMap: @updateRecord, handleEditPosMap: @updateMap
+          
+@AppViewsServices = React.createClass
+    updateRecord: (record, data) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+      @setState records: records
+    getInitialState: ->
+      records: @props.data[0]
+      rooms: @props.data[1]
+      servicemap: @props.data[2]
+    getDefaultProps: ->
+      records: []
+      rooms: []
+      servicemap: []
+    render: ->
+      React.DOM.div
+        className: 'row'
+        for record in @state.records
+          React.createElement AppViewsService, key: record.id, record: record, rooms: @state.rooms, servicemap: @state.servicemap, handleEditAppSer: @updateRecord
