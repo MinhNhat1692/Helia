@@ -90,6 +90,46 @@
             for record in @state.records
               React.createElement Room, key: record.id, record: record, handleDeleteRoom: @deleteRecord, handleEditRoom: @updateRecord
       
+
+@Services = React.createClass
+    updateRecord: (record, data) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+      @setState records: records
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @setState records: records
+    addRecord: (record) ->
+      records = React.addons.update(@state.records, { $push: [record] })
+      @setState records: records
+    getInitialState: ->
+      records: @props.records
+    getDefaultProps: ->
+      records: []
+    render: ->
+      React.DOM.div
+        className: 'services'
+        React.DOM.h2
+          className: 'title'
+          'Service'
+        React.createElement ServiceForm, handleServiceAdd: @addRecord
+        React.DOM.hr null
+        React.DOM.table
+          className: 'table table-striped'
+          React.DOM.thead null,
+            React.DOM.tr null,
+              React.DOM.th null, 'Tên dịch vụ'
+              React.DOM.th null, 'Ngôn ngữ'
+              React.DOM.th null, 'Giá'
+              React.DOM.th null, 'Đơn vị tiền'
+              React.DOM.th null, 'Mô tả dịch vụ'
+              React.DOM.th null, 'Logo dịch vụ'
+              React.DOM.th null, 'Hành động'
+          React.DOM.tbody null,
+            for record in @state.records
+              React.createElement Service, key: record.id, record: record, handleDeleteService: @deleteRecord, handleEditService: @updateRecord
+
               
 @Positions = React.createClass
     updateRecord: (record, data) ->

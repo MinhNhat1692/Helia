@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  put '/services', to: 'service#update'
+  post '/services', to: 'service#create'
+  delete '/services', to: 'service#destroy'
+  post '/services/list', to: 'service#list'
   put '/position_mapping', to: 'position_mapping#update'
   post '/position_mapping/list', to: 'position_mapping#list'
   put '/rooms', to: 'room#update'

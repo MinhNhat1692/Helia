@@ -5,11 +5,20 @@ class PositionController < ApplicationController
     if has_station?
 			@station = Station.find_by(user_id: current_user.id)
 		  if Room.find_by(params[:room]).station_id == @station.id	
-				@position = Position.new(station_id: @station.id, room_id: params[:room], pname: params[:pname], lang: params[:lang], description: params[:description], file: params[:file])
-				if @position.save
-					render json: @position
+				if params.has_key?(:file)
+					@position = Position.new(station_id: @station.id, room_id: params[:room], pname: params[:pname], lang: params[:lang], description: params[:description], file: params[:file])
+					if @position.save
+						render json: @position
+					else
+						render json: @position.errors, status: :unprocessable_entity
+					end
 				else
-					render json: @position.errors, status: :unprocessable_entity
+					@position = Position.new(station_id: @station.id, room_id: params[:room], pname: params[:pname], lang: params[:lang], description: params[:description])
+					if @position.save
+						render json: @position
+					else
+						render json: @position.errors, status: :unprocessable_entity
+					end
 				end
 			end
 		else
@@ -21,11 +30,19 @@ class PositionController < ApplicationController
     if has_station?
       @station = Station.find_by(user_id: current_user.id)
 			@position = Position.find(params[:id])
-			if @position.update(room_id: params[:room], pname: params[:pname],lang: params[:lang], description: params[:description], file: params[:file])
-        render json: @position
-      else
-        render json: @position.errors, status: :unprocessable_entity
-      end
+			if params.has_key?(:file)
+				if @position.update(room_id: params[:room], pname: params[:pname],lang: params[:lang], description: params[:description], file: params[:file])
+				  render json: @position
+				else
+				  render json: @position.errors, status: :unprocessable_entity
+				end
+			else
+				if @position.update(room_id: params[:room], pname: params[:pname],lang: params[:lang], description: params[:description])
+				  render json: @position
+				else
+				  render json: @position.errors, status: :unprocessable_entity
+				end
+			end
     else
       redirect_to root_path
     end

@@ -1,4 +1,4 @@
- @RecordForm = React.createClass
+  @RecordForm = React.createClass
     getInitialState: ->
       title: ''
       date: ''
@@ -12,7 +12,8 @@
       formData.append 'pnumber', $('#employee_quick_pnumber').val()
       formData.append 'noid', $('#employee_quick_noid').val()
       formData.append 'gender', $('#employee_quick_gender').val()
-      formData.append 'avatar', $('#employee_quick_avatar')[0].files[0]
+      if $('#employee_quick_avatar')[0].files[0] != undefined
+        formData.append 'avatar', $('#employee_quick_avatar')[0].files[0]
       $.ajax
         url: '/employee'
         type: 'POST'
@@ -102,7 +103,7 @@
           'Create record'
     
 
- @RoomForm = React.createClass
+  @RoomForm = React.createClass
     getInitialState: ->
       type: 1
     handleSubmit: (e) ->
@@ -110,7 +111,8 @@
       formData = new FormData
       formData.append 'name', $('#room_quick_name').val()
       formData.append 'lang', $('#room_quick_lang').val()
-      formData.append 'map', $('#room_quick_map')[0].files[0]
+      if $('#room_quick_map')[0].files[0] != undefined
+        formData.append 'map', $('#room_quick_map')[0].files[0]
       $.ajax
         url: '/rooms'
         type: 'POST'
@@ -164,7 +166,106 @@
           type: 'submit'
           className: 'btn btn-primary'
           'Create record'
+  
           
+  @ServiceForm = React.createClass
+    getInitialState: ->
+      type: 1
+    handleSubmit: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      formData.append 'sname', $('#service_quick_sname').val()
+      formData.append 'lang', $('#service_quick_lang').val()
+      formData.append 'price', $('#service_quick_price').val()
+      formData.append 'currency', $('#service_quick_currency').val()
+      formData.append 'description', $('#service_quick_description').val()
+      if $('#service_quick_file')[0].files[0] != undefined
+        formData.append 'file', $('#service_quick_file')[0].files[0]
+      $.ajax
+        url: '/services'
+        type: 'POST'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
+          @props.handleServiceAdd result
+          @setState @getInitialState()
+          return
+        ).bind(this)
+    render: ->
+      React.DOM.form
+        id: 'service_quick'
+        encType: 'multipart/form-data'
+        className: 'form-horizontal row'
+        onSubmit: @handleSubmit
+        React.DOM.div
+          className: 'form-group col-lg-6 col-sm-12'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'service_quick_sname'
+              type: 'text'
+              className: 'form-control'
+              placeholder: 'Tên dịch vụ'
+              name: 'sname'
+        React.DOM.div
+          className: 'form-group col-lg-2 col-sm-6'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'service_quick_lang'
+              type: 'text'
+              className: 'form-control'
+              placeholder: 'Ngôn ngữ hiển thị'
+              name: 'lang'
+              value: 'vi'
+        React.DOM.div
+          className: 'form-group col-lg-6 col-sm-12'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'service_quick_price'
+              type: 'number'
+              className: 'form-control'
+              placeholder: 'Giá dịch vụ'
+              name: 'price'
+        React.DOM.div
+          className: 'form-group col-lg-6 col-sm-12'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'service_quick_currency'
+              type: 'number'
+              className: 'form-control'
+              placeholder: 'Đơn vị giá'
+              value: 'VND'
+              name: 'currency'
+        React.DOM.div
+          className: 'form-group col-lg-5 col-sm-8'
+          React.DOM.div
+            className: 'col-lg-12'
+            React.DOM.textarea
+              className: 'form-control col-lg-12'
+              rows: 3
+              id: 'service_quick_description'
+              placeholder: 'Mô tả ngắn dịch vụ'
+              name: 'description'
+        React.DOM.div
+          className: 'form-group col-lg-3 col-sm-6'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'service_quick_file'
+              type: 'file'
+              className: 'form-control'
+              name: 'file'
+        React.DOM.button
+          type: 'submit'
+          className: 'btn btn-primary'
+          'Create record'
+
 
   @PositionForm = React.createClass
     getInitialState: ->
@@ -177,7 +278,8 @@
       formData.append 'pname', $('#position_quick_pname').val()
       formData.append 'lang', $('#position_quick_lang').val()
       formData.append 'description', $('#position_quick_description').val()
-      formData.append 'file', $('#position_quick_file')[0].files[0]
+      if $('#position_quick_file')[0].files[0] != undefined
+        formData.append 'file', $('#position_quick_file')[0].files[0]
       $.ajax
         url: '/positions'
         type: 'POST'

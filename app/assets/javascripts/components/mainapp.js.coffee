@@ -37,6 +37,12 @@
           link: '/position_mapping/list'
         @handleGetdata(data)
       ).bind(this)
+      $(APP).on 'service', ((e) ->
+        data =
+          task: 5
+          link: '/services/list'
+        @handleGetdata(data)
+      ).bind(this)
     Employee: ->
       React.createElement Records, records: @state.data 
     Position: ->
@@ -45,6 +51,8 @@
       React.createElement Rooms, records: @state.data 
     AppViewEmployee: ->
       React.createElement AppViewsEmployees, data: @state.data
+    Service: ->
+      React.createElement Services, records: @state.data
     render: ->
       if @state.task == 1
         @Employee()

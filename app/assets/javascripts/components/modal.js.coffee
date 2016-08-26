@@ -1,4 +1,4 @@
-@Modal = React.createClass
+  @Modal = React.createClass
     getInitialState: ->
       type: @props.data.type
     componentDidMount: ->
@@ -13,7 +13,8 @@
       formData.append 'pnumber', $('#employee_form_pnumber').val()
       formData.append 'noid', $('#employee_form_noid').val()
       formData.append 'gender', $('#employee_form_gender').val()
-      formData.append 'avatar', $('#employee_form_avatar')[0].files[0]
+      if $('#employee_form_avatar')[0].files[0] != undefined
+        formData.append 'avatar', $('#employee_form_avatar')[0].files[0]
       $.ajax
         url: '/employee'
         type: 'POST'
@@ -33,7 +34,8 @@
       formData.append 'pname', $('#position_form_pname').val()
       formData.append 'lang', $('#position_form_lang').val()
       formData.append 'description', $('#position_form_description').val()
-      formData.append 'file', $('#position_form_file')[0].files[0]
+      if $('#position_form_file')[0].files[0] != undefined
+        formData.append 'file', $('#position_form_file')[0].files[0]
       $.ajax
         url: '/positions'
         type: 'POST'
@@ -52,7 +54,8 @@
       formData = new FormData
       formData.append 'name', $('#room_form_name').val()
       formData.append 'lang', $('#room_form_lang').val()
-      formData.append 'map', $('#room_form_map')[0].files[0]
+      if $('#room_form_map')[0].files[0] != undefined
+        formData.append 'map', $('#room_form_map')[0].files[0]
       $.ajax
         url: '/rooms'
         type: 'POST'

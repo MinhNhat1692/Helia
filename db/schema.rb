@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160825083020) do
+ActiveRecord::Schema.define(version: 20160826073913) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -240,12 +240,16 @@ ActiveRecord::Schema.define(version: 20160825083020) do
     t.integer  "station_id"
     t.string   "sname"
     t.string   "lang"
-    t.float    "price",       limit: 24
+    t.float    "price",             limit: 24
     t.string   "currency"
     t.string   "description"
     t.string   "file"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
     t.index ["station_id"], name: "index_services_on_station_id", using: :btree
   end
 

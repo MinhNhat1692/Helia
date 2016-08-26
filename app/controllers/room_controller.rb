@@ -4,11 +4,20 @@ class RoomController < ApplicationController
   def create
     if has_station?
 			@station = Station.find_by(user_id: current_user.id)
-			@room = Room.new(station_id: @station.id, name: params[:name], lang: params[:lang], map: params[:map])
-			if @room.save
-        render json: @room
-      else
-        render json: @room.errors, status: :unprocessable_entity
+			if params.has_key?(:map)
+				@room = Room.new(station_id: @station.id, name: params[:name], lang: params[:lang], map: params[:map])
+				if @room.save
+				  render json: @room
+				else
+				  render json: @room.errors, status: :unprocessable_entity
+				end
+			else
+				@room = Room.new(station_id: @station.id, name: params[:name], lang: params[:lang])
+				if @room.save
+				  render json: @room
+				else
+				  render json: @room.errors, status: :unprocessable_entity
+				end
 			end
 		else
       redirect_to root_path
@@ -20,10 +29,18 @@ class RoomController < ApplicationController
       @station = Station.find_by(user_id: current_user.id)
 			@room = Room.find(params[:id])
 			if @station.id == @room.station_id
-				if @room.update(name: params[:name],lang: params[:lang],map: params[:map])
-					render json: @room
+				if params.has_key?(:map)
+					if @room.update(name: params[:name],lang: params[:lang],map: params[:map])
+						render json: @room
+					else
+						render json: @room.errors, status: :unprocessable_entity
+					end
 				else
-					render json: @room.errors, status: :unprocessable_entity
+					if @room.update(name: params[:name],lang: params[:lang])
+						render json: @room
+					else
+						render json: @room.errors, status: :unprocessable_entity
+					end
 				end
 			end
     else
