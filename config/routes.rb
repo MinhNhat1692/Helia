@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  put '/position_mapping', to: 'position_mapping#update'
   post '/position_mapping/list', to: 'position_mapping#list'
   put '/rooms', to: 'room#update'
   post '/rooms', to: 'room#create'

@@ -148,6 +148,8 @@
       records: @props.data[0]
       rooms: @props.data[1]
       positions: @props.data[2]
+      positionmap: @props.data[3]
+      station: @props.data[4]
     getDefaultProps: ->
       records: []
       rooms: []
@@ -155,4 +157,4 @@
       React.DOM.div
         className: 'row'
         for record in @state.records
-          React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions
+          React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions, positionmap: @state.positionmap, station: @state.station, handleEditAppMap: @updateRecord
