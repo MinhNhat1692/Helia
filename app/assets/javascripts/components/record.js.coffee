@@ -89,11 +89,6 @@
             style: {margin: '5px'}
             onClick: @handleDelete
             'Delete'
-          React.DOM.a
-            className: 'btn btn-danger'
-            style: {margin: '5px'}
-            onClick: @handleLink
-            'Link'
     render: ->
       if @state.edit
         @recordForm()

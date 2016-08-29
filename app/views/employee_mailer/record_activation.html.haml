@@ -1,0 +1,6 @@
+%h1 Sample App
+%p
+  Hi #{@user.name},
+%p
+  Welcome to the Helia, Station #{@station.sname} below added you as thier employee:
+= link_to "Activate", employee_activation_url(token: @employee.activation_token)
