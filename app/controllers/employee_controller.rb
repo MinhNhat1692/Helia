@@ -40,6 +40,18 @@ class EmployeeController < ApplicationController
 		end
 	end
   
+  def list
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			@data = []
+			@data[0] = Employee.where(station_id: @station.id)
+			@data[1] = Gender.where(lang: 'vi')
+			render json: @data
+		else
+      redirect_to root_path
+    end
+	end
+  
   private
   	# Confirms a logged-in user.
 		def logged_in_user

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   delete '/positions', to: 'position#destroy'
   post '/positions', to: 'position#create'
   post '/positions/list', to: 'position#list'
+  post '/employees/list', to: 'employee#list'
   post '/country/list', to: 'nation#list'
   post '/employee', to: 'employee#create'
   delete '/employee', to: 'employee#destroy'

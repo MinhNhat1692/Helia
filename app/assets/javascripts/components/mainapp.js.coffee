@@ -17,7 +17,10 @@
         ).bind(this)
     componentWillMount: ->
       $(APP).on 'employee', ((e) ->
-        @change(1)
+        data =
+          task: 1
+          link: '/employees/list'
+        @handleGetdata(data)
       ).bind(this)
       $(APP).on 'position', ((e) ->
         data =
@@ -50,7 +53,7 @@
         @handleGetdata(data)
       ).bind(this)
     Employee: ->
-      React.createElement Records, records: @state.data 
+      React.createElement Records, data: @state.data 
     Position: ->
       React.createElement Positions, data: @state.data
     Room: ->

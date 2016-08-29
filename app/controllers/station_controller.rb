@@ -5,7 +5,9 @@ class StationController < ApplicationController
 		if has_station?
 			@station = Station.find_by(user_id: current_user.id)
 			@user = current_user
-			@records = Employee.all
+			@records = []
+			@records[0] = Employee.where(station_id: @station.id)
+			@records[1] = Gender.where(lang: 'vi')
 			render 'show'
 		else
       @station = Station.new

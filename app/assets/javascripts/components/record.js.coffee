@@ -1,12 +1,13 @@
   @Record = React.createClass
     getInitialState: ->
       edit: false
+      genderlist: @props.gender
+      gender: "Not set"
     handleEdit: (e) ->
       e.preventDefault()
       data =
         id: @props.record.id
         ename: @refs.ename.value
-      # jQuery doesn't have a $.put shortcut method either
       $.ajax
         method: 'PUT'
         url: "/employee"
@@ -62,9 +63,21 @@
             'Cancel'
     recordRow: ->
       React.DOM.tr null,
-        React.DOM.td null, @props.record.station_id
         React.DOM.td null, @props.record.ename
-        React.DOM.td null, "Stm"
+        React.DOM.td null, @props.record.address
+        React.DOM.td null, @props.record.pnumber
+        React.DOM.td null, @props.record.noid
+        for gender in @state.genderlist
+            if @props.record.gender == gender.id
+              @state.gender = gender.name
+              break
+        React.DOM.td null, @state.gender
+        React.DOM.td null,
+          React.DOM.a
+            className: 'btn btn-default'
+            style: {margin: '5px'}
+            href: @props.record.avatar
+            'Avatar'
         React.DOM.td null,
           React.DOM.a
             className: 'btn btn-default'
@@ -76,6 +89,11 @@
             style: {margin: '5px'}
             onClick: @handleDelete
             'Delete'
+          React.DOM.a
+            className: 'btn btn-danger'
+            style: {margin: '5px'}
+            onClick: @handleLink
+            'Link'
     render: ->
       if @state.edit
         @recordForm()

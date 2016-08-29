@@ -77,6 +77,7 @@
           className: 'form-group col-lg-4 col-sm-6'
           React.DOM.div
             className: 'col-sm-6'
+            style: {'margin-bottom': '15px'}
             React.DOM.select
               id: 'employee_quick_gender'
               className: 'form-control'
@@ -91,7 +92,7 @@
                 value: '2'
                 'Nữ'
           React.DOM.div
-            className: 'col-sm-6'
+            className: 'col-sm-5'
             React.DOM.input
               id: 'employee_quick_avatar'
               type: 'file'
@@ -99,7 +100,7 @@
               name: 'avatar'
         React.DOM.button
           type: 'submit'
-          className: 'btn btn-primary'
+          className: 'btn btn-primary col-lg-1 col-md-4 col-sm-6'
           'Create record'
     
 
