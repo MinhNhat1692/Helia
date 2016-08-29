@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  put '/service_mapping', to: 'service_mapping#update'
+  post '/service_mapping/list', to: 'service_mapping#list'
   put '/services', to: 'service#update'
   post '/services', to: 'service#create'
   delete '/services', to: 'service#destroy'

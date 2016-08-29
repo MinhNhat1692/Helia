@@ -204,11 +204,24 @@
         for record in @state.records
           React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions, positionmap: @state.positionmap, station: @state.station, handleEditAppMap: @updateRecord, handleEditPosMap: @updateMap
           
+
 @AppViewsServices = React.createClass
     updateRecord: (record, data) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
       @setState records: records
+    updateMap: (data) ->
+      check = true
+      for map in @state.servicemap
+        if map.id == data.id
+          index = @state.servicemap.indexOf map
+          listsermap = React.addons.update(@state.servicemap, { $splice: [[index, 1, data]] })
+          @setState servicemap: listsermap
+          check = false
+          break
+      if check
+        listsermap = React.addons.update(@state.servicemap, { $push: [data] })
+        @setState servicemap: listsermap
     getInitialState: ->
       records: @props.data[0]
       rooms: @props.data[1]
@@ -221,4 +234,4 @@
       React.DOM.div
         className: 'row'
         for record in @state.records
-          React.createElement AppViewsService, key: record.id, record: record, rooms: @state.rooms, servicemap: @state.servicemap, handleEditAppSer: @updateRecord
+          React.createElement AppViewsService, key: record.id, record: record, rooms: @state.rooms, servicemap: @state.servicemap, handleEditSerMap: @updateMap, handleEditSer: @updateRecord

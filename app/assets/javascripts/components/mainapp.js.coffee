@@ -43,7 +43,7 @@
           link: '/services/list'
         @handleGetdata(data)
       ).bind(this)
-      $(APP).on 'servicemap', ((e) ->
+      $(APP).on 'linksr', ((e) ->
         data =
           task: 6
           link: '/service_mapping/list'
@@ -60,7 +60,7 @@
     Service: ->
       React.createElement Services, records: @state.data
     ServiceMap: ->
-      React.createElement AppViewsServices, records: @state.data
+      React.createElement AppViewsServices, data: @state.data
     render: ->
       if @state.task == 1
         @Employee()
