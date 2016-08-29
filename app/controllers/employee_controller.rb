@@ -52,11 +52,26 @@ class EmployeeController < ApplicationController
 
   
   def update
-		@employee = Employee.find(params[:id])
-    if @employee.update(ename: params[:ename])
-      render json: @employee
+		if has_station?
+      @station = Station.find_by(user_id: current_user.id)
+			@employee = Employee.find(params[:id])
+			if @employee.station_id == @station.id
+				if params.has_key?(:avatar)
+					if @employee.update(ename: params[:ename],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender],avatar: params[:avatar])
+						render json: @employee
+					else
+						render json: @employee.errors, status: :unprocessable_entity
+					end
+				else
+					if @employee.update(ename: params[:ename],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender])
+						render json: @employee
+					else
+						render json: @employee.errors, status: :unprocessable_entity
+					end
+				end
+			end
     else
-      render json: @employee.errors, status: :unprocessable_entity
+      redirect_to root_path
     end
   end
   

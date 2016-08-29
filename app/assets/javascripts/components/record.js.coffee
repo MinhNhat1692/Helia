@@ -5,18 +5,28 @@
       gender: "Not set"
     handleEdit: (e) ->
       e.preventDefault()
-      data =
-        id: @props.record.id
-        ename: @refs.ename.value
+      formData = new FormData
+      formData.append 'id', @props.record.id
+      formData.append 'ename', $('#employee_edit_ename').val()
+      formData.append 'address', $('#employee_edit_address').val()
+      if $('#employee_edit_avatar')[0].files[0] != undefined
+        formData.append 'avatar', $('#employee_edit_avatar')[0].files[0]
+      formData.append 'pnumber', $('#employee_edit_pnumber').val()
+      formData.append 'gender', $('#employee_edit_gender').val()
+      formData.append 'noid', $('#employee_edit_noid').val() 
       $.ajax
-        method: 'PUT'
-        url: "/employee"
-        dataType: 'JSON'
-        data:
-          record: data
-        success: (data) =>
+        url: '/employee'
+        type: 'PUT'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
+          @props.handleEditRecord @props.record, result
           @setState edit: false
-          @props.handleEditRecord @props.record, data
+          return
+        ).bind(this)
     handleToggle: (e) ->
       e.preventDefault()
       @setState edit: !@state.edit
@@ -36,20 +46,33 @@
           React.DOM.input
             className: 'form-control'
             type: 'text'
-            defaultValue: @props.record.station_id
-            ref: 'station_id'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
             defaultValue: @props.record.ename
-            ref: 'ename'
+            id: 'employee_edit_ename'
         React.DOM.td null,
           React.DOM.input
             className: 'form-control'
             type: 'text'
-            defaultValue: 'smt'
-            ref: ''
+            defaultValue: @props.record.address
+            id: 'employee_edit_address'
+        React.DOM.td null,
+          React.DOM.input
+            className: 'form-control'
+            type: 'text'
+            defaultValue: @props.record.pnumber
+            id: 'employee_edit_pnumber'
+        React.DOM.td null,
+          React.DOM.input
+            className: 'form-control'
+            type: 'text'
+            defaultValue: @props.record.noid
+            id: 'employee_edit_noid'
+        React.DOM.td null,
+          React.createElement SelectBox, records: @props.gender, type: 1, id: 'employee_edit_gender', text: 'Gender'
+        React.DOM.td null,
+          React.DOM.input
+            className: 'form-control'
+            type: 'file'
+            id: 'employee_edit_avatar'
         React.DOM.td null,
           React.DOM.a
             className: 'btn btn-default'
