@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  post '/customer_record', to: 'customer_record#create'
   post '/customer_record/list', to: 'customer_record#list'
   put '/service_mapping', to: 'service_mapping#update'
   post '/service_mapping/list', to: 'service_mapping#list'

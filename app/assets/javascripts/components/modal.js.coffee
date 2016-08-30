@@ -1,9 +1,14 @@
   @Modal = React.createClass
     getInitialState: ->
-      type: @props.data.type
+      type: @props.type
     componentDidMount: ->
       $(ReactDOM.findDOMNode(this)).modal 'show'
       $(ReactDOM.findDOMNode(this)).on 'hidden.bs.modal', @props.handleHideModal
+    take_snapshot: ->
+      Webcam.snap (data_uri) ->
+        document.getElementById('results').innerHTML = '<h2>Here is your large image:</h2>' + '<img id="webcamout" src="' + data_uri + '"/>'
+        return
+      return
     handleSubmit: (e) ->
       e.preventDefault()
       formData = new FormData
@@ -24,20 +29,25 @@
         contentType: false
         processData: false
         success: ((result) ->
-          @props.handleEmployeeRecord result
+          @props.trigger result
           @setState @getInitialState()
           return
         ).bind(this)
-    handleSubmitPosition: (e) ->
+    handleSubmitCustomerRecord: (e) ->
       e.preventDefault()
       formData = new FormData
-      formData.append 'pname', $('#position_form_pname').val()
-      formData.append 'lang', $('#position_form_lang').val()
-      formData.append 'description', $('#position_form_description').val()
-      if $('#position_form_file')[0].files[0] != undefined
-        formData.append 'file', $('#position_form_file')[0].files[0]
+      formData.append 'name', $('#customer_form_name').val()
+      formData.append 'dob', $('#customer_form_dob').val()
+      formData.append 'address', $('#customer_form_address').val()
+      formData.append 'pnumber', $('#customer_form_pnumber').val()
+      formData.append 'noid', $('#customer_form_noid').val()
+      formData.append 'gender', $('#customer_form_gender').val()
+      if $('#customer_form_avatar')[0].files[0] != undefined
+        formData.append 'avatar', $('#customer_form_avatar')[0].files[0]
+      else if $('#webcamout') != undefined
+        formData.append 'avatar', $('#webcamout').attr('src')
       $.ajax
-        url: '/positions'
+        url: '/customer_record'
         type: 'POST'
         data: formData
         async: false
@@ -45,28 +55,6 @@
         contentType: false
         processData: false
         success: ((result) ->
-          @props.handlePositionRecord result
-          @setState @getInitialState()
-          return
-        ).bind(this)
-    handleSubmitRoom: (e) ->
-      e.preventDefault()
-      formData = new FormData
-      formData.append 'name', $('#room_form_name').val()
-      formData.append 'lang', $('#room_form_lang').val()
-      if $('#room_form_map')[0].files[0] != undefined
-        formData.append 'map', $('#room_form_map')[0].files[0]
-      $.ajax
-        url: '/rooms'
-        type: 'POST'
-        data: formData
-        async: false
-        cache: false
-        contentType: false
-        processData: false
-        success: ((result) ->
-          @props.handleRoomAdd result
-          @setState @getInitialState()
           return
         ).bind(this)
     employeeForm: ->
@@ -202,7 +190,7 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
-    positionForm: ->
+    customerForm: ->
       React.DOM.div
         className: 'modal fade'
         React.DOM.div
@@ -213,7 +201,7 @@
               className: 'modal-header text-center'
               React.DOM.h4
                 className: 'modal-title'
-                'Position Form'
+                'Customer Record Form'
               React.DOM.small
                 'Description'
             React.DOM.div
@@ -221,145 +209,135 @@
               React.DOM.div
                 className: 'row'
                 React.DOM.div
-                  className: 'col-lg-12'
+                  className: 'col-md-8'
                   React.DOM.p null, 'Detail for this modal - short'
                   React.DOM.form
-                    id: 'position_form'
+                    id: 'customer_record_form'
                     encType: 'multipart/form-data'
                     className: 'form-horizontal'
-                    onSubmit: @handleSubmitPosition
-                    React.DOM.hr null
+                    onSubmit: @handleSubmitCustomerRecord
                     React.DOM.div
                       className: 'form-group'
                       React.DOM.label
                         className: 'col-sm-2 control-label'
-                        'Tên chức vụ'
+                        'Họ và Tên'
                       React.DOM.div
                         className: 'col-sm-10'
                         React.DOM.input
-                          id: 'position_form_pname'
+                          id: 'customer_form_name'
                           type: 'text'
                           className: 'form-control'
-                          placeholder: 'Hãy nhập vào tên chức vụ'
-                          name: 'pname'
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Ngôn ngữ hiển thị'
-                      React.DOM.div
-                        className: 'col-sm-10'
-                        React.DOM.input
-                          id: 'position_form_lang'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Hãy nhập vào ngôn ngữ hiển thị của chức vụ này'
-                          name: 'address'
-                          value: 'vi'
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Mô tả công việc'
-                      React.DOM.textarea
-                        className: 'form-control col-sm-10'
-                        rows: 3
-                        id: 'position_form_description'
-                        placeholder: 'Hãy nhập vào tóm tắt mô tả công việc'
-                        name: 'description'
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'File đính kèm'
-                      React.DOM.div
-                        className: 'col-sm-4'
-                        React.DOM.input
-                          id: 'position_form_file'
-                          type: 'file'
-                          className: 'form-control'
-                          name: 'file'
-                    React.DOM.button
-                      type: 'submit'
-                      className: 'btn btn-default pull-right'
-                      'Lưu'
-            React.DOM.div
-              className: 'modal-footer'
-              React.DOM.button
-                className: 'btn btn-default'
-                'data-dismiss': 'modal'
-                type: 'button'
-                'Close'
-    roomForm: ->
-      React.DOM.div
-        className: 'modal fade'
-        React.DOM.div
-          className: 'modal-dialog modal-lg'
-          React.DOM.div
-            className: 'modal-content'
-            React.DOM.div
-              className: 'modal-header text-center'
-              React.DOM.h4
-                className: 'modal-title'
-                'Room Form'
-              React.DOM.small
-                'Description'
-            React.DOM.div
-              className: 'modal-body'
-              React.DOM.div
-                className: 'row'
-                React.DOM.div
-                  className: 'col-lg-12'
-                  React.DOM.p null, 'Detail for this modal - short'
-                  React.DOM.form
-                    id: 'room_form'
-                    encType: 'multipart/form-data'
-                    className: 'form-horizontal'
-                    onSubmit: @handleSubmitRoom
-                    React.DOM.hr null
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Tên phòng'
-                      React.DOM.div
-                        className: 'col-sm-10'
-                        React.DOM.input
-                          id: 'room_form_name'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Hãy nhập vào tên phòng'
+                          placeholder: 'Họ và tên'
                           name: 'name'
                     React.DOM.div
                       className: 'form-group'
                       React.DOM.label
                         className: 'col-sm-2 control-label'
-                        'Ngôn ngữ hiển thị'
+                        'Ngày sinh'
                       React.DOM.div
                         className: 'col-sm-10'
                         React.DOM.input
-                          id: 'room_form_lang'
+                          id: 'customer_form_dob'
                           type: 'text'
+                          dataContainer: "body"
                           className: 'form-control'
-                          placeholder: 'Hãy nhập vào ngôn ngữ hiển thị của chức vụ này'
-                          name: 'address'
-                          value: 'vi'
+                          placeholder: '31/01/1990'
+                          name: 'dob'
                     React.DOM.div
                       className: 'form-group'
                       React.DOM.label
                         className: 'col-sm-2 control-label'
-                        'Bản đồ đính kèm'
+                        'Địa chỉ'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'customer_form_address'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Địa chỉ'
+                          name: 'address'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Số ĐT'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'customer_form_pnumber'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Số ĐT'
+                          name: 'pnumber'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'CMTND'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'customer_form_noid'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'SốCMTND'
+                          name: 'noid'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Giới tính'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.select
+                          id: 'customer_form_gender'
+                          className: 'form-control'
+                          name: 'gender'
+                          React.DOM.option
+                            value: ''
+                            'Giới tính'
+                          React.DOM.option
+                            value: '1'
+                            'Nam'
+                          React.DOM.option
+                            value: '2'
+                            'Nữ'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Ảnh đại diện'
                       React.DOM.div
                         className: 'col-sm-4'
                         React.DOM.input
-                          id: 'room_form_map'
+                          id: 'customer_form_avatar'
                           type: 'file'
                           className: 'form-control'
-                          name: 'map'
+                          name: 'avatar'  
                     React.DOM.button
-                      type: 'submit'
+                      onClick: @handleSubmitCustomerRecord
                       className: 'btn btn-default pull-right'
                       'Lưu'
+                React.DOM.div
+                  className: 'col-md-4'
+                  React.DOM.div
+                    id: 'results'
+                    'Your captured image will appear here...'
+                  React.DOM.div
+                    id: 'my_camera'
+                    Webcam.set
+                      width: 320
+                      height: 240
+                      dest_width: 320
+                      dest_height: 240
+                      crop_width: 240
+                      crop_height: 240
+                      image_format: 'jpeg'
+                      jpeg_quality: 90
+                    Webcam.attach '#my_camera'
+                  React.DOM.button
+                    type: 'button'
+                    value: 'take Large Snapshot'
+                    onClick: @take_snapshot
+                    name: 'close'
             React.DOM.div
               className: 'modal-footer'
               React.DOM.button
@@ -371,7 +349,5 @@
     render: ->
       if @state.type == 'employee'
         @employeeForm()
-      else if @state.type == 'position'
-        @positionForm()
-      else if @state.type == 'room'
-        @roomForm()
+      else if @state.type == 'customer_record'
+        @customerForm()

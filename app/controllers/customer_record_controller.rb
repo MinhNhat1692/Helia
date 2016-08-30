@@ -2,6 +2,13 @@ class CustomerRecordController < ApplicationController
   before_action :logged_in_user, only: [:edit, :create, :update, :destroy]
   
   def create
+    @station = Station.find_by(user_id: current_user.id)
+    @record = CustomerRecord.new(station_id: @station.id, avatar: params[:avatar])
+		if @record.save
+			render json: @record
+		else
+		  render json: @record.errors, status: :unprocessable_entity
+		end
   end
 
   def update

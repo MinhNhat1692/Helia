@@ -20,8 +20,9 @@
         React.DOM.h2
           className: 'title'
           'Employee'
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 2, trigger: @addRecord, datatype: 'employee'
+        React.DOM.hr null
         React.createElement RecordForm, handleEmployeeRecord: @addRecord
-        React.createElement ModalButton, data: {type: 'employee'}, handleEmployeeRecord: @addRecord
         React.DOM.hr null
         React.DOM.div
           className: 'table-responsive'
@@ -233,7 +234,7 @@
     buttonRender: ->
       React.DOM.div
         className: 'row'
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 2, trigger: @trigger, datatype: 'customer_record'
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger

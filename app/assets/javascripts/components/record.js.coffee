@@ -955,7 +955,7 @@
       React.DOM.tr null,
         React.DOM.td null, @props.record.cname
         React.DOM.td null, @props.record.dob
-        React.DOM.td null, getAge(@props.record.dob).years
+        React.DOM.td null, @props.record.dob
         for gender in @state.genderlist
             if @props.record.gender == gender.id
               @state.gender = gender.name
