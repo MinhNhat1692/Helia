@@ -32,6 +32,16 @@
           %li
             %a{style: "cursor: pointer", onClick: "$(APP).trigger('linksr')" } Liên kết dịch vụ
       %li.nav-category
+        Bệnh nhân
+      %li
+        %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#patient"}
+          Thông tin bệnh nhân
+          %span.sub-nav-icon
+            %i.stroke-arrow
+        %ul#patient.nav.nav-second.collapse
+          %li
+            %a{style: "cursor: pointer", onClick: "$(APP).trigger('patientgeneral')" } Nhập thông tin
+      %li.nav-category
         App Pages
       %li
         %a{"aria-expanded" => "false", "data-toggle" => "collapse", :href => "#extras"}

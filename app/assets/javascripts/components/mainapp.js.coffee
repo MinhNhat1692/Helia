@@ -52,6 +52,9 @@
           link: '/service_mapping/list'
         @handleGetdata(data)
       ).bind(this)
+      $(APP).on 'patientgeneral', ((e) ->
+        @setState task: 7
+      ).bind(this)
     Employee: ->
       React.createElement Records, data: @state.data 
     Position: ->
@@ -64,6 +67,8 @@
       React.createElement Services, records: @state.data
     ServiceMap: ->
       React.createElement AppViewsServices, data: @state.data
+    PatientGeneral: ->
+      React.createElement PatientGeneral, data: @state.data
     render: ->
       if @state.task == 1
         @Employee()
@@ -77,3 +82,5 @@
         @Service()
       else if @state.task == 6
         @ServiceMap()
+      else if @state.task == 7
+        @PatientGeneral()

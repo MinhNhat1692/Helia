@@ -77,7 +77,7 @@
           className: 'form-group col-lg-4 col-sm-6'
           React.DOM.div
             className: 'col-sm-6'
-            style: {'margin-bottom': '15px'}
+            style: {'marginBottom': '15px'}
             React.DOM.select
               id: 'employee_quick_gender'
               className: 'form-control'
@@ -266,6 +266,102 @@
             type: 'submit'
             className: 'btn btn-primary col-sm-6'
             'Create record'
+
+  
+  @PatientForm = React.createClass
+    getInitialState: ->
+      type: 1
+    handleSubmit: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      formData.append 'sname', $('#service_quick_sname').val()
+      formData.append 'lang', $('#service_quick_lang').val()
+      formData.append 'price', $('#service_quick_price').val()
+      formData.append 'currency', $('#service_quick_currency').val()
+      formData.append 'description', $('#service_quick_description').val()
+      if $('#service_quick_file')[0].files[0] != undefined
+        formData.append 'file', $('#service_quick_file')[0].files[0]
+      $.ajax
+        url: '/services'
+        type: 'POST'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
+          @props.handleServiceAdd result
+          @setState @getInitialState()
+          return
+        ).bind(this)
+    render: ->
+      React.DOM.form
+        id: 'patient_quick'
+        className: 'form-horizontal row'
+        onSubmit: @handleSubmit
+        React.DOM.div
+          className: 'form-group col-lg-12'
+          React.DOM.label
+            className: 'col-sm-2 control-label'
+            style: {'textAlign': 'left'}
+            'Email'
+          React.DOM.div
+            className: 'col-sm-10'
+            React.DOM.input
+              type: 'email'
+              className: 'form-control'
+              id: 'patient_quick_email'
+              placeholder: 'Email'
+        React.DOM.hr null
+        React.DOM.div
+          className: 'form-group col-lg-3 col-sm-8'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'patient_quick_name'
+              type: 'text'
+              className: 'form-control'
+              placeholder: 'Tên BN'
+              name: 'name'
+        React.DOM.div
+          className: 'form-group col-lg-3 col-sm-4'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'patient_quick_dob'
+              type: 'date'
+              className: 'form-control'
+              placeholder: 'DOB'
+              name: 'dob'
+        React.DOM.div
+          className: 'form-group col-lg-2 col-sm-6'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'patient_quick_noid'
+              type: 'text'
+              className: 'form-control'
+              placeholder: 'CMTND'
+              name: 'noid'
+        React.DOM.div
+          className: 'form-group col-lg-3 col-sm-6'
+          React.DOM.div
+            className: 'col-sm-12'
+            React.DOM.input
+              id: 'patient_quick_pnumber'
+              type: 'text'
+              className: 'form-control'
+              placeholder: 'SDT'
+              name: 'pnumber'
+        React.DOM.button
+          type: 'submit'
+          className: 'btn btn-primary'
+          style: {'marginRight': '5px'}
+          'Filter'
+        React.DOM.button
+          type: 'button'
+          className: 'btn btn-primary'
+          'Clear'
 
 
   @PositionForm = React.createClass

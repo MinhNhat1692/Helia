@@ -222,3 +222,29 @@
         className: 'row'
         for record in @state.records
           React.createElement AppViewsService, key: record.id, record: record, rooms: @state.rooms, servicemap: @state.servicemap, handleEditSerMap: @updateMap, handleEditSer: @updateRecord
+
+@PatientGeneral = React.createClass
+    getInitialState: ->
+      records: @props.data
+    getDefaultProps: ->
+      records: []
+    trigger: ->
+      console.log(1)
+    buttonRender: ->
+      React.DOM.div
+        className: 'row'
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.DOM.hr null
+        React.DOM.div
+            className: 'row'
+            style: {'padding': '10px'}
+            React.createElement PatientForm, handleOnchange: @checkrecord, handleRecordAdd: @addRecord
+    render: ->
+      @buttonRender()
+      
