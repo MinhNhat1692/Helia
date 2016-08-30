@@ -53,7 +53,10 @@
         @handleGetdata(data)
       ).bind(this)
       $(APP).on 'patientgeneral', ((e) ->
-        @setState task: 7
+        data =
+          task: 7
+          link: '/customer_record/list'
+        @handleGetdata(data)
       ).bind(this)
     Employee: ->
       React.createElement Records, data: @state.data 

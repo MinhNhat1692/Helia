@@ -911,3 +911,68 @@
         @recordForm()
       else
         @recordBlock()
+       
+        
+  @PatientRecord = React.createClass
+    getInitialState: ->
+      select: false
+      genderlist: @props.gender
+      gender: "Not set"
+    handleEdit: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      formData.append 'id', @props.record.id
+      formData.append 'name', $('#room_edit_name').val()
+      formData.append 'lang', $('#room_edit_lang').val()
+      if $('#room_edit_map')[0].files[0] != undefined
+        formData.append 'map', $('#room_edit_map')[0].files[0]
+      $.ajax
+        url: '/rooms'
+        type: 'PUT'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
+          @setState edit: false
+          @props.handleEditRoom @props.record, result
+          return
+        ).bind(this)
+    handleToggle: (e) ->
+      e.preventDefault()
+      @setState edit: !@state.edit
+    handleDelete: (e) ->
+      e.preventDefault()
+      $.ajax
+        method: 'DELETE'
+        url: "/rooms"
+        dataType: 'JSON'
+        data: {id: @props.record.id}
+        success: () =>
+          @props.handleDeleteRoom @props.record
+    recordRow: ->
+      React.DOM.tr null,
+        React.DOM.td null, @props.record.cname
+        React.DOM.td null, @props.record.dob
+        React.DOM.td null, getAge(@props.record.dob).years
+        for gender in @state.genderlist
+            if @props.record.gender == gender.id
+              @state.gender = gender.name
+              break
+        React.DOM.td null, @state.gender
+        React.DOM.td null, @props.record.address
+        React.DOM.td null, @props.record.pnumber
+        React.DOM.td null, @props.record.noid
+        React.DOM.td null, @props.record.issue_date
+        React.DOM.td null, @props.record.issue_place
+        React.DOM.td null,
+          React.DOM.a
+            href: @props.record.avatar
+            className: 'btn btn-default'
+            target: '_blank'
+            style: {margin: '5px'}
+            'Avatar'
+    render: ->
+      if !@state.select
+        @recordRow()

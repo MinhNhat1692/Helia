@@ -225,7 +225,7 @@
 
 @PatientGeneral = React.createClass
     getInitialState: ->
-      records: @props.data
+      records: @props.data[0]
     getDefaultProps: ->
       records: []
     trigger: ->
@@ -242,9 +242,33 @@
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
         React.DOM.hr null
         React.DOM.div
-            className: 'row'
-            style: {'padding': '10px'}
-            React.createElement PatientForm, handleOnchange: @checkrecord, handleRecordAdd: @addRecord
+          className: 'row'
+          style: {'padding': '10px'}
+          React.createElement PatientForm, handleOnchange: @checkrecord, handleRecordAdd: @addRecord
+        React.DOM.hr null
+        React.DOM.div
+          className: 'row'
+          React.DOM.div
+            className: 'table-responsive col-md-9'
+            React.DOM.table
+              className: 'table table-bordered'
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Name'
+                  React.DOM.th null, 'DOB'
+                  React.DOM.th null, 'Age'
+                  React.DOM.th null, 'Gender'
+                  React.DOM.th null, 'Address'
+                  React.DOM.th null, 'Pnumber'
+                  React.DOM.th null, 'Noid'
+                  React.DOM.th null, 'datei'
+                  React.DOM.th null, 'placei'
+                  React.DOM.th null, 'avatar'
+                  React.DOM.th null, 'created_at'
+                  React.DOM.th null, 'updated_at'
+              React.DOM.tbody null,
+                for record in @state.records
+                  React.createElement PatientRecord, key: record.id, gender: @props.data[1], record: record
     render: ->
       @buttonRender()
       

@@ -1,0 +1,2 @@
+module CustomerRecordHelper
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160829042447) do
+ActiveRecord::Schema.define(version: 20160830065511) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -35,8 +35,12 @@ ActiveRecord::Schema.define(version: 20160829042447) do
     t.string   "noid"
     t.date     "issue_date"
     t.string   "issue_place"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
     t.index ["station_id"], name: "index_customer_records_on_station_id", using: :btree
   end
 
