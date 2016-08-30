@@ -4,9 +4,24 @@
     componentDidMount: ->
       $(ReactDOM.findDOMNode(this)).modal 'show'
       $(ReactDOM.findDOMNode(this)).on 'hidden.bs.modal', @props.handleHideModal
+    setup_webcam: ->
+      $('#webcamout').remove()
+      Webcam.set
+        width: 320
+        height: 240
+        dest_width: 320
+        dest_height: 240
+        crop_width: 240
+        crop_height: 240
+        image_format: 'jpeg'
+        jpeg_quality: 100
+      Webcam.attach '#my_camera'
+      $('#my_camera').css('width':'100%')
     take_snapshot: ->
       Webcam.snap (data_uri) ->
-        document.getElementById('results').innerHTML = '<h2>Here is your large image:</h2>' + '<img id="webcamout" src="' + data_uri + '"/>'
+        document.getElementById('results').innerHTML = '<img id="webcamout" class="img-circle" src="' + data_uri + '"/>'
+        Webcam.reset()
+        $('#my_camera').css('height':'0px')
         return
       return
     handleSubmit: (e) ->
@@ -318,26 +333,25 @@
                       'Lưu'
                 React.DOM.div
                   className: 'col-md-4'
+                  style: {'alignContent': 'center'}
                   React.DOM.div
                     id: 'results'
-                    'Your captured image will appear here...'
                   React.DOM.div
                     id: 'my_camera'
-                    Webcam.set
-                      width: 320
-                      height: 240
-                      dest_width: 320
-                      dest_height: 240
-                      crop_width: 240
-                      crop_height: 240
-                      image_format: 'jpeg'
-                      jpeg_quality: 90
-                    Webcam.attach '#my_camera'
                   React.DOM.button
                     type: 'button'
+                    className: 'btn btn-default'
+                    value: 'take Large Snapshot'
+                    onClick: @setup_webcam
+                    name: 'close'
+                    'Setup'
+                  React.DOM.button
+                    type: 'button'
+                    className: 'btn btn-default'
                     value: 'take Large Snapshot'
                     onClick: @take_snapshot
                     name: 'close'
+                    'Capture'
             React.DOM.div
               className: 'modal-footer'
               React.DOM.button

@@ -973,6 +973,8 @@
             target: '_blank'
             style: {margin: '5px'}
             'Avatar'
+        React.DOM.td null, @props.record.created_at
+        React.DOM.td null, @props.record.updated_at
     render: ->
       if !@state.select
         @recordRow()

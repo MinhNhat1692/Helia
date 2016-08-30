@@ -224,6 +224,7 @@
         for record in @state.records
           React.createElement AppViewsService, key: record.id, record: record, rooms: @state.rooms, servicemap: @state.servicemap, handleEditSerMap: @updateMap, handleEditSer: @updateRecord
 
+
 @PatientGeneral = React.createClass
     getInitialState: ->
       records: @props.data[0]
@@ -252,7 +253,7 @@
           React.DOM.div
             className: 'table-responsive col-md-9'
             React.DOM.table
-              className: 'table table-bordered'
+              className: 'table table-bordered table-hover'
               React.DOM.thead null,
                 React.DOM.tr null,
                   React.DOM.th null, 'Name'
