@@ -238,10 +238,25 @@
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
       @setState records: records
-    deleteRecord: (record) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
-      @setState records: records
+    deleteRecord: (e) ->
+      if @state.record != null
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'id', @state.record.id
+        $.ajax
+          url: '/customer_record'
+          type: 'DELETE'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            index = @state.records.indexOf @state.record
+            records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+            @setState records: records
+            return
+          ).bind(this)
     addRecord: (record) ->
       records = React.addons.update([record], { $push: @state.records })
       @setState records: records
@@ -251,12 +266,12 @@
       @setState
         record: record
         selected: record.id
-      @forceUpdate()
     buttonRender: ->
       React.DOM.div
         className: 'row'
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus fa-2x', text: 'Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record'
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-2x', text: 'Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_edit_record', record: @state.record
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o fa-2x', text: 'Delete', type: 1, Clicked: @deleteRecord
         React.DOM.hr null
         React.DOM.div
           className: 'row'

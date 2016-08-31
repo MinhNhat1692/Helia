@@ -64,7 +64,17 @@ class CustomerRecordController < ApplicationController
   end
 
   def destroy
-  end
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			@customer = CustomerRecord.find(params[:id])
+			if @customer.station_id == @station.id
+				@customer.destroy
+				head :no_content
+			end
+		else
+			redirect_to root_path
+		end
+	end
 
   def list
 		if has_station?

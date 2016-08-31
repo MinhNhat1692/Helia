@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  delete '/customer_record', to: 'customer_record#destroy'
   put '/customer_record', to: 'customer_record#update'
   post '/customer_record', to: 'customer_record#create'
   post '/customer_record/list', to: 'customer_record#list'
