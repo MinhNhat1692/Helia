@@ -233,21 +233,17 @@
     getDefaultProps: ->
       records: []
     trigger: ->
-      console.log(1)
+      console.log(6)
     SelectHandle: (record) ->
       @setState
         record: record
         selected: record.id
+      @forceUpdate()
     buttonRender: ->
       React.DOM.div
         className: 'row'
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 2, trigger: @trigger, datatype: 'customer_record'
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 1, Clicked: @trigger
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus fa-3x', text: 'Add Record', type: 2, trigger: @trigger, datatype: 'customer_record'
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-shield fa-3x', text: 'Edit', type: 2, trigger: @trigger, datatype: 'customer_edit_record', record: @state.record
         React.DOM.hr null
         React.DOM.div
           className: 'row'

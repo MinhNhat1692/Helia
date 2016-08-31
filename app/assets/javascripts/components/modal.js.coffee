@@ -254,7 +254,6 @@
                         React.DOM.input
                           id: 'customer_form_dob'
                           type: 'text'
-                          dataContainer: "body"
                           className: 'form-control'
                           placeholder: '31/01/1990'
                           name: 'dob'
@@ -359,9 +358,170 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    customerEditForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Customer Record Form'
+              React.DOM.small
+                'Description'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-8'
+                  React.DOM.p null, 'Detail for this modal - short'
+                  React.DOM.form
+                    id: 'customer_record_form'
+                    encType: 'multipart/form-data'
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmitCustomerEditRecord
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Họ và Tên'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'customer_form_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Họ và tên'
+                          name: 'name'
+                          defaultValue: @props.record.cname
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Ngày sinh'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'customer_form_dob'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: '31/01/1990'
+                          name: 'dob'
+                          defaultValue: @props.record.dob
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Địa chỉ'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'customer_form_address'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Địa chỉ'
+                          name: 'address'
+                          defaultValue: @props.record.address
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Số ĐT'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'customer_form_pnumber'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Số ĐT'
+                          name: 'pnumber'
+                          defaultValue: @props.record.pnumber
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'CMTND'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'customer_form_noid'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'SốCMTND'
+                          name: 'noid'
+                          defaultValue: @props.record.noid
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Giới tính'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.select
+                          id: 'customer_form_gender'
+                          className: 'form-control'
+                          name: 'gender'
+                          defaultValue: @props.record.gender
+                          React.DOM.option
+                            value: ''
+                            'Giới tính'
+                          React.DOM.option
+                            value: '1'
+                            'Nam'
+                          React.DOM.option
+                            value: '2'
+                            'Nữ'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label'
+                        'Ảnh đại diện'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'customer_form_avatar'
+                          type: 'file'
+                          className: 'form-control'
+                          name: 'avatar'  
+                    React.DOM.button
+                      onClick: @handleSubmitCustomerEditRecord
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+                React.DOM.div
+                  className: 'col-md-4'
+                  style: {'alignContent': 'center'}
+                  React.DOM.div
+                    id: 'results'
+                  React.DOM.div
+                    id: 'my_camera'
+                  React.DOM.button
+                    type: 'button'
+                    className: 'btn btn-default'
+                    value: 'take Large Snapshot'
+                    onClick: @setup_webcam
+                    name: 'close'
+                    'Setup'
+                  React.DOM.button
+                    type: 'button'
+                    className: 'btn btn-default'
+                    value: 'take Large Snapshot'
+                    onClick: @take_snapshot
+                    name: 'close'
+                    'Capture'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee'
         @employeeForm()
       else if @state.type == 'customer_record'
         @customerForm()
+      else if @state.type == 'customer_edit_record'
+        @customerEditForm()
