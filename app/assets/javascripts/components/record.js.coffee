@@ -915,7 +915,6 @@
         
   @PatientRecord = React.createClass
     getInitialState: ->
-      select: false
       genderlist: @props.gender
       gender: "Not set"
     handleEdit: (e) ->
@@ -951,8 +950,37 @@
         data: {id: @props.record.id}
         success: () =>
           @props.handleDeleteRoom @props.record
+    handleSelect: (e) ->
+      @props.TriggerSelect @props.record
     recordRow: ->
-      React.DOM.tr null,
+      React.DOM.tr
+        onClick: @handleSelect
+        React.DOM.td null, @props.record.cname
+        React.DOM.td null, @props.record.dob
+        React.DOM.td null, @props.record.dob
+        for gender in @state.genderlist
+            if @props.record.gender == gender.id
+              @state.gender = gender.name
+              break
+        React.DOM.td null, @state.gender
+        React.DOM.td null, @props.record.address
+        React.DOM.td null, @props.record.pnumber
+        React.DOM.td null, @props.record.noid
+        React.DOM.td null, @props.record.issue_date
+        React.DOM.td null, @props.record.issue_place
+        React.DOM.td null,
+          React.DOM.a
+            href: @props.record.avatar
+            className: 'btn btn-default'
+            target: '_blank'
+            style: {margin: '5px'}
+            'Avatar'
+        React.DOM.td null, @props.record.created_at
+        React.DOM.td null, @props.record.updated_at
+    recordRowSelected: ->
+      React.DOM.tr
+        style: {'backgroundColor': '#494b54'}
+        onClick: @handleSelect
         React.DOM.td null, @props.record.cname
         React.DOM.td null, @props.record.dob
         React.DOM.td null, @props.record.dob
@@ -976,5 +1004,7 @@
         React.DOM.td null, @props.record.created_at
         React.DOM.td null, @props.record.updated_at
     render: ->
-      if !@state.select
+      if !@props.select
         @recordRow()
+      else
+        @recordRowSelected()

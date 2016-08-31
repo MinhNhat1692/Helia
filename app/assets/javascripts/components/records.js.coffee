@@ -228,10 +228,16 @@
 @PatientGeneral = React.createClass
     getInitialState: ->
       records: @props.data[0]
+      selected: null
+      record: null
     getDefaultProps: ->
       records: []
     trigger: ->
       console.log(1)
+    SelectHandle: (record) ->
+      @setState
+        record: record
+        selected: record.id
     buttonRender: ->
       React.DOM.div
         className: 'row'
@@ -246,31 +252,89 @@
         React.DOM.div
           className: 'row'
           style: {'padding': '10px'}
-          React.createElement PatientForm, handleOnchange: @checkrecord, handleRecordAdd: @addRecord
-        React.DOM.hr null
-        React.DOM.div
-          className: 'row'
           React.DOM.div
-            className: 'table-responsive col-md-9'
-            React.DOM.table
-              className: 'table table-bordered table-hover'
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Name'
-                  React.DOM.th null, 'DOB'
-                  React.DOM.th null, 'Age'
-                  React.DOM.th null, 'Gender'
-                  React.DOM.th null, 'Address'
-                  React.DOM.th null, 'Pnumber'
-                  React.DOM.th null, 'Noid'
-                  React.DOM.th null, 'datei'
-                  React.DOM.th null, 'placei'
-                  React.DOM.th null, 'avatar'
-                  React.DOM.th null, 'created_at'
-                  React.DOM.th null, 'updated_at'
-              React.DOM.tbody null,
-                for record in @state.records
-                  React.createElement PatientRecord, key: record.id, gender: @props.data[1], record: record
+            className: 'col-md-9'
+            React.createElement PatientForm, handleOnchange: @checkrecord, handleRecordAdd: @addRecord
+            React.DOM.hr null
+            React.DOM.div
+              className: 'row'
+              React.DOM.div
+                className: 'table-responsive col-md-12'
+                React.DOM.table
+                  className: 'table table-condensed table-striped table-hover'
+                  React.DOM.thead null,
+                    React.DOM.tr null,
+                      React.DOM.th null, 'Name'
+                      React.DOM.th null, 'DOB'
+                      React.DOM.th null, 'Age'
+                      React.DOM.th null, 'Gender'
+                      React.DOM.th null, 'Address'
+                      React.DOM.th null, 'Pnumber'
+                      React.DOM.th null, 'Noid'
+                      React.DOM.th null, 'datei'
+                      React.DOM.th null, 'placei'
+                      React.DOM.th null, 'avatar'
+                      React.DOM.th null, 'created_at'
+                      React.DOM.th null, 'updated_at'
+                  React.DOM.tbody null,
+                    for record in @state.records
+                      if record.id == @state.selected
+                        React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: true, record: record, TriggerSelect: @SelectHandle
+                      else
+                        React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @SelectHandle  
+          React.DOM.div
+            className: 'col-md-3'
+            if @state.record != null
+              React.DOM.div
+                className: "background1 animated flipInY"
+                React.DOM.div
+                  className: "pmo-pic"
+                  React.DOM.div
+                    className: 'p-relative'
+                    React.DOM.a null,
+                      React.DOM.img
+                        className: 'img-responsive'
+                        alt: ''
+                        src: "http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/profile-pic-2.jpg"
+                    React.DOM.a
+                      className: 'pmop-edit'
+                      React.DOM.i
+                        className: 'fa fa-camera'
+                      React.DOM.span
+                        className: 'hidden-xs'
+                        'Update Picture'
+                  React.DOM.div
+                    className: 'pmo-stat'
+                    React.DOM.h2 null, @state.record.name
+                    '18 YearsOld'
+                React.DOM.div
+                  className: 'pmo-block pmo-contact hidden-xs'
+                  React.DOM.h2 null, "Contact"
+                  React.DOM.ul null,
+                    React.DOM.li null,
+                      React.DOM.i
+                        className: 'fa fa-mobile'
+                      '00971123456789'
+                    React.DOM.li null,
+                      React.DOM.i
+                        className: 'fa fa-mobile'
+                      '00971 12345678 9'
+                    React.DOM.li null,
+                      React.DOM.i
+                        className: 'fa fa-mobile'
+                      '00971 12345678 9'
+                    React.DOM.li null,
+                      React.DOM.i
+                        className: 'fa fa-mobile'
+                      '00971 12345678 9'
+                    React.DOM.li null,
+                      React.DOM.i
+                        className: 'fa fa-mobile'
+                      '00971 12345678 9'
+            else
+              React.DOM.div
+                id: '#patient-info-1'
+                className: "background1 animated flipOutX"
     render: ->
       @buttonRender()
       
