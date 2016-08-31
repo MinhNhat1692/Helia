@@ -10,7 +10,10 @@
     handleHideModal: ->
       @setState showModal: false
     trigger: (record) ->
+      console.log(2) 
       @props.trigger record
+    trigger2: (record,data) ->
+      @props.trigger2 record, data
     buttonNormal: ->
       React.DOM.button
         className: @props.className
@@ -39,9 +42,9 @@
               @state.text
         if @state.showModal
           if @props.record != undefined
-            React.createElement Modal, trigger: @trigger, type: @props.datatype, record: @props.record, handleHideModal: @handleHideModal
+            React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: @props.record, handleHideModal: @handleHideModal
           else
-            React.createElement Modal, trigger: @trigger, type: @props.datatype, handleHideModal: @handleHideModal
+            React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, handleHideModal: @handleHideModal
         else
           null
     render: ->

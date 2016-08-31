@@ -232,6 +232,19 @@
       record: null
     getDefaultProps: ->
       records: []
+    updateRecord: (record, data) ->
+      console.log(record)
+      console.log(data)
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+      @setState records: records
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @setState records: records
+    addRecord: (record) ->
+      records = React.addons.update([record], { $push: @state.records })
+      @setState records: records
     trigger: ->
       console.log(6)
     SelectHandle: (record) ->
@@ -242,8 +255,8 @@
     buttonRender: ->
       React.DOM.div
         className: 'row'
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus fa-3x', text: 'Add Record', type: 2, trigger: @trigger, datatype: 'customer_record'
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-shield fa-3x', text: 'Edit', type: 2, trigger: @trigger, datatype: 'customer_edit_record', record: @state.record
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus fa-2x', text: 'Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record'
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-2x', text: 'Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_edit_record', record: @state.record
         React.DOM.hr null
         React.DOM.div
           className: 'row'
@@ -257,7 +270,7 @@
               React.DOM.div
                 className: 'table-responsive col-md-12'
                 React.DOM.table
-                  className: 'table table-condensed table-striped table-hover'
+                  className: 'table table-condensed table-hover'
                   React.DOM.thead null,
                     React.DOM.tr null,
                       React.DOM.th null, 'Name'

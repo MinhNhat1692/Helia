@@ -51,7 +51,7 @@
     handleSubmitCustomerRecord: (e) ->
       e.preventDefault()
       formData = new FormData
-      formData.append 'name', $('#customer_form_name').val()
+      formData.append 'cname', $('#customer_form_name').val()
       formData.append 'dob', $('#customer_form_dob').val()
       formData.append 'address', $('#customer_form_address').val()
       formData.append 'pnumber', $('#customer_form_pnumber').val()
@@ -59,7 +59,7 @@
       formData.append 'gender', $('#customer_form_gender').val()
       if $('#customer_form_avatar')[0].files[0] != undefined
         formData.append 'avatar', $('#customer_form_avatar')[0].files[0]
-      else if $('#webcamout') != undefined
+      else if $('#webcamout').attr('src') != undefined
         formData.append 'avatar', $('#webcamout').attr('src')
       $.ajax
         url: '/customer_record'
@@ -70,6 +70,33 @@
         contentType: false
         processData: false
         success: ((result) ->
+          @props.trigger result
+          return
+        ).bind(this)
+    handleSubmitCustomerEditRecord: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      formData.append 'id', @props.record.id
+      formData.append 'cname', $('#customer_form_name').val()
+      formData.append 'dob', $('#customer_form_dob').val()
+      formData.append 'address', $('#customer_form_address').val()
+      formData.append 'pnumber', $('#customer_form_pnumber').val()
+      formData.append 'noid', $('#customer_form_noid').val()
+      formData.append 'gender', $('#customer_form_gender').val()
+      if $('#customer_form_avatar')[0].files[0] != undefined
+        formData.append 'avatar', $('#customer_form_avatar')[0].files[0]
+      else if $('#webcamout').attr('src') != undefined
+        formData.append 'avatar', $('#webcamout').attr('src')
+      $.ajax
+        url: '/customer_record'
+        type: 'PUT'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((result) ->
+          @props.trigger2 @props.record, result
           return
         ).bind(this)
     employeeForm: ->
