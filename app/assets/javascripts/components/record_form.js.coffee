@@ -300,20 +300,6 @@
         className: 'form-horizontal row'
         onSubmit: @handleSubmit
         React.DOM.div
-          className: 'form-group col-lg-12'
-          React.DOM.label
-            className: 'col-sm-2 control-label'
-            style: {'textAlign': 'left'}
-            'Email'
-          React.DOM.div
-            className: 'col-sm-10'
-            React.DOM.input
-              type: 'email'
-              className: 'form-control'
-              id: 'patient_quick_email'
-              placeholder: 'Email'
-        React.DOM.hr null
-        React.DOM.div
           className: 'form-group col-lg-3 col-sm-8'
           React.DOM.div
             className: 'col-sm-12'

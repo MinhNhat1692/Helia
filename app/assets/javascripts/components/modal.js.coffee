@@ -11,15 +11,14 @@
         height: 240
         dest_width: 320
         dest_height: 240
-        crop_width: 240
+        crop_width: 320
         crop_height: 240
         image_format: 'jpeg'
         jpeg_quality: 100
       Webcam.attach '#my_camera'
-      $('#my_camera').css('width':'100%')
     take_snapshot: ->
       Webcam.snap (data_uri) ->
-        document.getElementById('results').innerHTML = '<img id="webcamout" class="img-circle" src="' + data_uri + '"/>'
+        document.getElementById('results').innerHTML = '<img id="webcamout" class="" src="' + data_uri + '"/>'
         Webcam.reset()
         $('#my_camera').css('height':'0px')
         return
@@ -251,7 +250,7 @@
               React.DOM.div
                 className: 'row'
                 React.DOM.div
-                  className: 'col-md-8'
+                  className: 'col-md-7'
                   React.DOM.p null, 'Detail for this modal - short'
                   React.DOM.form
                     id: 'customer_record_form'
@@ -358,7 +357,7 @@
                       className: 'btn btn-default pull-right'
                       'Lưu'
                 React.DOM.div
-                  className: 'col-md-4'
+                  className: 'col-md-5'
                   style: {'alignContent': 'center'}
                   React.DOM.div
                     id: 'results'
@@ -404,7 +403,7 @@
               React.DOM.div
                 className: 'row'
                 React.DOM.div
-                  className: 'col-md-8'
+                  className: 'col-md-7'
                   React.DOM.p null, 'Detail for this modal - short'
                   React.DOM.form
                     id: 'customer_record_form'
@@ -517,7 +516,7 @@
                       className: 'btn btn-default pull-right'
                       'Lưu'
                 React.DOM.div
-                  className: 'col-md-4'
+                  className: 'col-md-5'
                   style: {'alignContent': 'center'}
                   React.DOM.div
                     id: 'results'

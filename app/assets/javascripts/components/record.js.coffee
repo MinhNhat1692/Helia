@@ -1008,3 +1008,63 @@
         @recordRow()
       else
         @recordRowSelected()
+        
+  
+  @PatientProfile = React.createClass
+    getInitialState: ->
+      genderlist: @props.gender
+      gender: "Not set"
+      record: @props.record
+    normalStyle: ->
+      React.DOM.div
+        className: "background1 animated flipInY"
+        React.DOM.div
+          className: "pmo-pic"
+          React.DOM.div
+            className: 'p-relative'
+            React.DOM.a null,
+              React.DOM.img
+                className: 'img-responsive'
+                alt: ''
+                src:
+                  if @props.record.avatar != "/avatars/original/missing.png"
+                    @props.record.avatar
+                  else
+                    'https://www.twomargins.com/images/noavatar.jpg'
+            React.DOM.a
+              className: 'pmop-edit'
+              React.DOM.i
+                className: 'fa fa-camera'
+              React.DOM.span
+                className: 'hidden-xs'
+                'Update Picture'
+            React.DOM.div
+              className: 'pmo-stat'
+              React.DOM.h2 null, @props.record.cname
+              '18 YearsOld'
+        React.DOM.div
+          className: 'pmo-block pmo-contact hidden-xs'
+          React.DOM.h2 null, "Contact"
+          React.DOM.ul null,
+            React.DOM.li null,
+              React.DOM.i
+                className: 'fa fa-mobile'
+              '00971123456789'
+            React.DOM.li null,
+              React.DOM.i
+                className: 'fa fa-mobile'
+              '00971 12345678 9'
+            React.DOM.li null,
+              React.DOM.i
+                className: 'fa fa-mobile'
+              '00971 12345678 9'
+            React.DOM.li null,
+              React.DOM.i
+                className: 'fa fa-mobile'
+              '00971 12345678 9'
+            React.DOM.li null,
+              React.DOM.i
+                className: 'fa fa-mobile'
+              '00971 12345678 9'
+    render: ->
+      @normalStyle()

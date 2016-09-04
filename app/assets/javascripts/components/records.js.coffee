@@ -230,6 +230,7 @@
       records: @props.data[0]
       selected: null
       record: null
+      classSideBar: 'sidebar'
     getDefaultProps: ->
       records: []
     updateRecord: (record, data) ->
@@ -262,6 +263,11 @@
       @setState records: records
     trigger: ->
       console.log(6)
+    toggleSideBar: ->
+      if @state.classSideBar == 'sidebar'
+        @setState classSideBar: 'sidebar toggled'
+      else
+        @setState classSideBar: 'sidebar'
     SelectHandle: (record) ->
       @setState
         record: record
@@ -269,9 +275,69 @@
     buttonRender: ->
       React.DOM.div
         className: 'row'
+        React.DOM.aside
+          id: 'chat'
+          className: @state.classSideBar
+          React.DOM.div
+            className: "chat-search"
+            React.DOM.div
+              className: "fg-line"
+              React.DOM.input
+                type: "text"
+                className: "form-control"
+                placeholder: "Search People"
+              React.DOM.i
+                className: 'fa fa-search'
+          React.DOM.div
+            className: "background1 animated flipInY"
+            React.DOM.div
+              className: "pmo-pic"
+              React.DOM.div
+                className: 'p-relative'
+                React.DOM.a null,
+                  React.DOM.img
+                    className: 'img-responsive'
+                    alt: ''
+                    src: "http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/profile-pic-2.jpg"
+                React.DOM.a
+                  className: 'pmop-edit'
+                  React.DOM.i
+                    className: 'fa fa-camera'
+                  React.DOM.span
+                    className: 'hidden-xs'
+                    'Update Picture'
+              React.DOM.div
+                className: 'pmo-stat'
+                React.DOM.h2 null, 'asdfasf'
+                '18 YearsOld'
+            React.DOM.div
+              className: 'pmo-block pmo-contact'
+              React.DOM.h2 null, "Contact"
+                React.DOM.ul null,
+                  React.DOM.li null,
+                    React.DOM.i
+                      className: 'fa fa-mobile'
+                    '00971123456789'
+                  React.DOM.li null,
+                    React.DOM.i
+                      className: 'fa fa-mobile'
+                    '00971 12345678 9'
+                  React.DOM.li null,
+                    React.DOM.i
+                      className: 'fa fa-mobile'
+                    '00971 12345678 9'
+                React.DOM.div
+                  className: 'row'
+                  React.DOM.button
+                    className: 'btn btn-default col-md-6'
+                    'Link'
+                  React.DOM.button
+                    className: 'btn btn-default col-md-6'
+                    'ADD'  
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus fa-2x', text: 'Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record'
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-2x', text: 'Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_edit_record', record: @state.record
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o fa-2x', text: 'Delete', type: 1, Clicked: @deleteRecord
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o fa-2x', text: 'Toggle Sidebar', type: 1, Clicked: @toggleSideBar
         React.DOM.hr null
         React.DOM.div
           className: 'row'
@@ -309,56 +375,7 @@
           React.DOM.div
             className: 'col-md-3'
             if @state.record != null
-              React.DOM.div
-                className: "background1 animated flipInY"
-                React.DOM.div
-                  className: "pmo-pic"
-                  React.DOM.div
-                    className: 'p-relative'
-                    React.DOM.a null,
-                      React.DOM.img
-                        className: 'img-responsive'
-                        alt: ''
-                        src: "http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/profile-pic-2.jpg"
-                    React.DOM.a
-                      className: 'pmop-edit'
-                      React.DOM.i
-                        className: 'fa fa-camera'
-                      React.DOM.span
-                        className: 'hidden-xs'
-                        'Update Picture'
-                  React.DOM.div
-                    className: 'pmo-stat'
-                    React.DOM.h2 null, @state.record.name
-                    '18 YearsOld'
-                React.DOM.div
-                  className: 'pmo-block pmo-contact hidden-xs'
-                  React.DOM.h2 null, "Contact"
-                  React.DOM.ul null,
-                    React.DOM.li null,
-                      React.DOM.i
-                        className: 'fa fa-mobile'
-                      '00971123456789'
-                    React.DOM.li null,
-                      React.DOM.i
-                        className: 'fa fa-mobile'
-                      '00971 12345678 9'
-                    React.DOM.li null,
-                      React.DOM.i
-                        className: 'fa fa-mobile'
-                      '00971 12345678 9'
-                    React.DOM.li null,
-                      React.DOM.i
-                        className: 'fa fa-mobile'
-                      '00971 12345678 9'
-                    React.DOM.li null,
-                      React.DOM.i
-                        className: 'fa fa-mobile'
-                      '00971 12345678 9'
-            else
-              React.DOM.div
-                id: '#patient-info-1'
-                className: "background1 animated flipOutX"
+              React.createElement PatientProfile, gender: @props.data[1], record: @state.record
     render: ->
       @buttonRender()
       
