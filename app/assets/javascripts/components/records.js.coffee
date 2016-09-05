@@ -231,11 +231,12 @@
       selected: null
       record: null
       classSideBar: 'sidebar'
+      existed: false
+      searchRecord: null
+      userlink: null
     getDefaultProps: ->
       records: []
     updateRecord: (record, data) ->
-      console.log(record)
-      console.log(data)
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
       @setState records: records
@@ -268,76 +269,98 @@
         @setState classSideBar: 'sidebar toggled'
       else
         @setState classSideBar: 'sidebar'
+    changeSearchRecord: (data) ->
+      @state.userlink = data[2]
+      if data[1] != null
+        index = -1
+        for record in @state.records
+          if data[1].id == record.id
+            index = @state.records.indexOf record
+            break
+        if index < 0
+          @addRecord(data[1])
+          @SelectHandle(data[1])
+        else
+          @SelectHandle(data[1])
+        @setState existed: true
+      else
+        @setState existed: false
+      @setState searchRecord: data[0]   
     SelectHandle: (record) ->
       @setState
         record: record
         selected: record.id
+    addRecordAlt: ->
+      if @state.searchRecord != null
+        formData = new FormData
+        formData.append 'id', @state.searchRecord.user_id
+        $.ajax
+          url: '/customer_record/add_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @addRecord(result)
+            return
+          ).bind(this)
+    updateRecordAlt: ->
+      if @state.searchRecord != null && @state.record != null
+        formData = new FormData
+        formData.append 'id', @state.searchRecord.user_id
+        formData.append 'idrecord', @state.record.id
+        $.ajax
+          url: '/customer_record/update_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            return
+          ).bind(this)
+    linkRecordAlt: ->
+      if @state.searchRecord != null && @state.record != null
+        formData = new FormData
+        formData.append 'id', @state.searchRecord.user_id
+        formData.append 'idrecord', @state.record.id
+        $.ajax
+          url: '/customer_record/link_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            return
+          ).bind(this)
+    ClearlinkRecordAlt: ->
+      if @state.record != null
+        formData = new FormData
+        formData.append 'idrecord', @state.record.id
+        $.ajax
+          url: '/customer_record/clear_link_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            return
+          ).bind(this)
     buttonRender: ->
       React.DOM.div
         className: 'row'
-        React.DOM.aside
-          id: 'chat'
-          className: @state.classSideBar
-          React.DOM.div
-            className: "chat-search"
-            React.DOM.div
-              className: "fg-line"
-              React.DOM.input
-                type: "text"
-                className: "form-control"
-                placeholder: "Search People"
-              React.DOM.i
-                className: 'fa fa-search'
-          React.DOM.div
-            className: "background1 animated flipInY"
-            React.DOM.div
-              className: "pmo-pic"
-              React.DOM.div
-                className: 'p-relative'
-                React.DOM.a null,
-                  React.DOM.img
-                    className: 'img-responsive'
-                    alt: ''
-                    src: "http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/profile-pic-2.jpg"
-                React.DOM.a
-                  className: 'pmop-edit'
-                  React.DOM.i
-                    className: 'fa fa-camera'
-                  React.DOM.span
-                    className: 'hidden-xs'
-                    'Update Picture'
-              React.DOM.div
-                className: 'pmo-stat'
-                React.DOM.h2 null, 'asdfasf'
-                '18 YearsOld'
-            React.DOM.div
-              className: 'pmo-block pmo-contact'
-              React.DOM.h2 null, "Contact"
-                React.DOM.ul null,
-                  React.DOM.li null,
-                    React.DOM.i
-                      className: 'fa fa-mobile'
-                    '00971123456789'
-                  React.DOM.li null,
-                    React.DOM.i
-                      className: 'fa fa-mobile'
-                    '00971 12345678 9'
-                  React.DOM.li null,
-                    React.DOM.i
-                      className: 'fa fa-mobile'
-                    '00971 12345678 9'
-                React.DOM.div
-                  className: 'row'
-                  React.DOM.button
-                    className: 'btn btn-default col-md-6'
-                    'Link'
-                  React.DOM.button
-                    className: 'btn btn-default col-md-6'
-                    'ADD'  
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus fa-2x', text: 'Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record'
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-2x', text: 'Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_edit_record', record: @state.record
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o fa-2x', text: 'Delete', type: 1, Clicked: @deleteRecord
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o fa-2x', text: 'Toggle Sidebar', type: 1, Clicked: @toggleSideBar
+        React.createElement AsideMenu, key: 'Aside', record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleCustomerSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record'
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o', text: ' Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_edit_record', record: @state.record
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Delete', type: 1, Clicked: @deleteRecord
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-exchange', text: ' Toggle Sidebar', type: 1, Clicked: @toggleSideBar
         React.DOM.hr null
         React.DOM.div
           className: 'row'
@@ -375,7 +398,7 @@
           React.DOM.div
             className: 'col-md-3'
             if @state.record != null
-              React.createElement PatientProfile, gender: @props.data[1], record: @state.record
+              React.createElement PatientProfile, gender: @props.data[1], record: @state.record, style: 'normal', clearLinkListener: @ClearlinkRecordAlt
     render: ->
       @buttonRender()
       

@@ -950,6 +950,38 @@
         data: {id: @props.record.id}
         success: () =>
           @props.handleDeleteRoom @props.record
+    calAge: (dob, style) ->
+      now = new Date
+      today = new Date(now.getYear(), now.getMonth(), now.getDate())
+      yearNow = now.getYear()
+      monthNow = now.getMonth()
+      dateNow = now.getDate()
+      if style == 1
+        dob = new Date(dob.substring(6, 10), dob.substring(3, 5) - 1, dob.substring(0, 2))
+      else
+        dob = new Date(dob.substring(0, 4), dob.substring(5, 7) - 1, dob.substring(8, 10))
+      yearDob = dob.getYear()
+      monthDob = dob.getMonth()
+      dateDob = dob.getDate()
+      yearAge = yearNow - yearDob
+      if monthNow >= monthDob
+        monthAge = monthNow - monthDob
+      else
+        yearAge--
+        monthAge = 12 + monthNow - monthDob
+      if dateNow >= dateDob
+        dateAge = dateNow - dateDob
+      else
+        monthAge--
+        dateAge = 31 + dateNow - dateDob
+        if monthAge < 0
+          monthAge = 11
+          yearAge--
+      age =
+        years: yearAge
+        months: monthAge
+        days: dateAge
+      return age
     handleSelect: (e) ->
       @props.TriggerSelect @props.record
     recordRow: ->
@@ -957,7 +989,7 @@
         onClick: @handleSelect
         React.DOM.td null, @props.record.cname
         React.DOM.td null, @props.record.dob
-        React.DOM.td null, @props.record.dob
+        React.DOM.td null, @calAge(@props.record.dob,2).years
         for gender in @state.genderlist
             if @props.record.gender == gender.id
               @state.gender = gender.name
@@ -983,7 +1015,7 @@
         onClick: @handleSelect
         React.DOM.td null, @props.record.cname
         React.DOM.td null, @props.record.dob
-        React.DOM.td null, @props.record.dob
+        React.DOM.td null, @calAge(@props.record.dob,2).years
         for gender in @state.genderlist
             if @props.record.gender == gender.id
               @state.gender = gender.name
@@ -1015,6 +1047,46 @@
       genderlist: @props.gender
       gender: "Not set"
       record: @props.record
+    calAge: (dob, style) ->
+      now = new Date
+      today = new Date(now.getYear(), now.getMonth(), now.getDate())
+      yearNow = now.getYear()
+      monthNow = now.getMonth()
+      dateNow = now.getDate()
+      if style == 1
+        dob = new Date(dob.substring(6, 10), dob.substring(3, 5) - 1, dob.substring(0, 2))
+      else
+        dob = new Date(dob.substring(0, 4), dob.substring(5, 7) - 1, dob.substring(8, 10))
+      yearDob = dob.getYear()
+      monthDob = dob.getMonth()
+      dateDob = dob.getDate()
+      yearAge = yearNow - yearDob
+      if monthNow >= monthDob
+        monthAge = monthNow - monthDob
+      else
+        yearAge--
+        monthAge = 12 + monthNow - monthDob
+      if dateNow >= dateDob
+        dateAge = dateNow - dateDob
+      else
+        monthAge--
+        dateAge = 31 + dateNow - dateDob
+        if monthAge < 0
+          monthAge = 11
+          yearAge--
+      age =
+        years: yearAge
+        months: monthAge
+        days: dateAge
+      return age
+    addListener: (e) ->
+      @props.addListener e
+    linkListener: (e) ->
+      @props.linkListener e
+    updateListener: (e) ->
+      @props.updateListener e
+    clearLinkListener: (e) ->
+      @props.clearLinkListener e
     normalStyle: ->
       React.DOM.div
         className: "background1 animated flipInY"
@@ -1041,30 +1113,149 @@
             React.DOM.div
               className: 'pmo-stat'
               React.DOM.h2 null, @props.record.cname
-              '18 YearsOld'
+              @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + "Tháng"
         React.DOM.div
           className: 'pmo-block pmo-contact hidden-xs'
-          React.DOM.h2 null, "Contact"
+          React.DOM.h2 null, "Thông tin cơ bản"
           React.DOM.ul null,
             React.DOM.li null,
               React.DOM.i
-                className: 'fa fa-mobile'
-              '00971123456789'
+                className: 'fa fa-birthday-cake'
+              @props.record.dob
             React.DOM.li null,
               React.DOM.i
-                className: 'fa fa-mobile'
-              '00971 12345678 9'
+                className: 'fa fa-map-marker'
+              @props.record.address
             React.DOM.li null,
               React.DOM.i
-                className: 'fa fa-mobile'
-              '00971 12345678 9'
+                className: 'fa fa-barcode'
+              @props.record.noid
             React.DOM.li null,
               React.DOM.i
-                className: 'fa fa-mobile'
-              '00971 12345678 9'
+                className: 'fa fa-phone'
+              @props.record.pnumber
+          if @props.record.customer_id != null
+            React.DOM.div
+              className: "pmo-block pmo-contact row"
+              React.createElement ButtonGeneral, className: 'btn btn-default col-md-12', icon: 'fa fa-link', text: ' Clear Link Record', type: 1, Clicked: @clearLinkListener
+    advanceStyle: ->
+      React.DOM.div
+        className: "animated flipInY"
+        React.DOM.div
+          className: "pmo-pic"
+          React.DOM.div
+            className: 'p-relative'
+            React.DOM.a null,
+              React.DOM.img
+                className: 'img-responsive'
+                alt: ''
+                src:
+                  if @props.record.avatar != "/avatars/original/missing.png"
+                    @props.record.avatar
+                  else
+                    'https://www.twomargins.com/images/noavatar.jpg'
+            React.DOM.a
+              className: 'pmop-edit'
+              React.DOM.i
+                className: 'fa fa-camera'
+              React.DOM.span
+                className: 'hidden-xs'
+                'Update Picture'
+            React.DOM.div
+              className: 'pmo-stat'
+              React.DOM.h2 null, @props.record.lname + " " + @props.record.fname
+              @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + " Tháng"
+        React.DOM.div
+          className: 'pmo-block pmo-contact hidden-xs'
+          React.DOM.h2 null, "Thông tin cơ bản"
+          React.DOM.ul null,
             React.DOM.li null,
               React.DOM.i
-                className: 'fa fa-mobile'
-              '00971 12345678 9'
+                className: 'fa fa-birthday-cake'
+              @props.record.dob
+            React.DOM.li null,
+              React.DOM.i
+                className: 'fa fa-map-marker'
+              @props.record.address
+            React.DOM.li null,
+              React.DOM.i
+                className: 'fa fa-barcode'
+              @props.record.noid
+            React.DOM.li null,
+              React.DOM.i
+                className: 'fa fa-phone'
+              @props.record.pnumber
+          if @props.existed
+            React.DOM.div
+              className: "pmo-block pmo-contact row"
+              React.createElement ButtonGeneral, className: 'btn btn-default col-md-12', icon: 'fa fa-pencil-square-o', text: ' Update Record', type: 1, Clicked: @updateListener
+          else
+            React.DOM.div
+              className: "pmo-block pmo-contact row"
+              React.createElement ButtonGeneral, className: 'btn btn-default col-md-12', icon: 'fa fa-plus', text: ' Add Record', type: 1, Clicked: @addListener
+              React.createElement ButtonGeneral, className: 'btn btn-default col-md-12', icon: 'fa fa-link', text: ' Connect to Your Record', type: 1, Clicked: @linkListener
+    render: ->
+      if @props.style == 'normal'
+        @normalStyle()
+      else
+        @advanceStyle()
+        
+        
+  @AsideMenu = React.createClass
+    getInitialState: ->
+      genderlist: @props.gender
+      gender: "Not set"
+    handleSubmit: (e) ->
+      if e.keyCode == 13
+        $('#customer_record_search_email').blur()
+        formData = new FormData
+        formData.append 'email', $('#customer_record_search_email').val()
+        $.ajax
+          url: '/customer_record/find_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.handleCustomerSearch result
+            return
+          ).bind(this)
+    addListener: (e) ->
+      @props.addListener e
+    linkListener: (e) ->
+      @props.linkListener e
+    updateListener: (e) ->
+      @props.updateListener e
+    normalStyle: ->
+      React.DOM.aside
+        id: 'chat'
+        className: @props.className
+        React.DOM.div
+          className: "chat-search"
+          React.DOM.div
+            className: "fg-line"
+            React.DOM.input
+              type: "text"
+              id: "customer_record_search_email"
+              className: "form-control"
+              placeholder: "Search People"
+              onKeyUp: @handleSubmit
+            React.DOM.i
+              className: 'fa fa-search'
+        React.DOM.hr null
+        if @props.record != null
+          React.createElement PatientProfile, className: 'btn btn-default col-md-12', existed: @props.existed, record: @props.record, gender: @props.gender, style: "advance", addListener: @addListener, linkListener: @linkListener, updateListener: @updateListener
+        else
+          if @props.userlink != null
+            React.DOM.div
+              className: "animated flipInY"
+              React.DOM.div
+                className: "pmo-block pmo-contact row"
+                React.DOM.p
+                  style: {'textAlign': 'justify'}
+                  "This user havent made thier Patient Profile yet but you still can link your record to thier account. Once they make thier Patient Profile, you will be able to update thier infomation into your record automatically"
+                React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'fa fa-link', text: ' Connect to Your Record', type: 1, Clicked: @linkListener
     render: ->
       @normalStyle()

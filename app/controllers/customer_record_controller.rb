@@ -88,6 +88,125 @@ class CustomerRecordController < ApplicationController
     end
 	end
   
+  
+  def find_record
+		if has_station?
+      @station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:email)
+				@customer = User.find_by(email: params[:email])
+				if @customer != nil
+					@profile = Profile.find_by(user_id: @customer.id)
+				else
+					@profile = nil
+				end
+				if @profile == nil
+				  @record = nil
+				else
+					@record = CustomerRecord.find_by(customer_id: @customer.id, station_id: @station.id)
+			  end
+			  @data = []
+			  @data[0] = @profile
+			  @data[1] = @record
+			  if @customer == nil
+					@data[2] = nil
+				else
+					@data[2] = @customer.id
+			  end
+			  render json: @data
+			end
+    else
+      redirect_to root_path
+		end
+	end
+	
+	def add_record
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:id)
+				@customeruser = User.find(params[:id])
+				if @customeruser != nil
+					@profile = Profile.find_by(user_id: @customeruser.id)
+					if @profile != nil
+					  @record = CustomerRecord.find_by(customer_id: params[:id], station_id: @station.id)
+				    if @record == nil
+					    @record = CustomerRecord.new(customer_id: @customeruser.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, dob: @profile.dob, gender: @profile.gender, country: @profile.country, city: @profile.city, province: @profile.province, address: @profile.address, pnumber: @profile.pnumber, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, avatar: @profile.avatar)
+							if @record.save
+								render json: @record
+							else
+								render json: @record.errors, status: :unprocessable_entity
+							end
+						end
+				  end
+				end
+			end
+	  else
+			redirect_to root_path
+		end
+	end
+	
+	def link_record
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:id) && params.has_key?(:idrecord)
+				@customeruser = User.find(params[:id])
+				if @customeruser != nil
+					@record = CustomerRecord.find_by(id: params[:idrecord], customer_id: nil, station_id: @station.id)
+				  if @record != nil
+					  if @record.update(customer_id: @customeruser.id)
+							render json: @record
+						else
+							render json: @record.errors, status: :unprocessable_entity
+						end
+				  end
+				end
+			end
+	  else
+			redirect_to root_path
+		end
+	end
+	
+	def clear_link_record
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:idrecord)
+				@record = CustomerRecord.find_by(id: params[:idrecord], station_id: @station.id)
+				if @record != nil
+				  if @record.update(customer_id: nil)
+						render json: @record
+					else
+						render json: @record.errors, status: :unprocessable_entity
+					end
+				end
+			end
+	  else
+			redirect_to root_path
+		end
+	end
+	
+	def update_record
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:id) && params.has_key?(:idrecord)
+				@customeruser = User.find(params[:id])
+				if @customeruser != nil
+					@profile = Profile.find_by(user_id: @customeruser.id)
+					if @profile != nil
+						@record = CustomerRecord.find_by(id: params[:idrecord], customer_id: @customeruser.id, station_id: @station.id)
+						if @record != nil
+					    if @record.update(customer_id: @customeruser.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, dob: @profile.dob, gender: @profile.gender, country: @profile.country, city: @profile.city, province: @profile.province, address: @profile.address, pnumber: @profile.pnumber, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, avatar: @profile.avatar)
+							  render json: @record
+						  else
+							  render json: @record.errors, status: :unprocessable_entity
+						  end
+					  end
+				  end
+				end
+			end
+	  else
+			redirect_to root_path
+		end
+	end
+	
   private
   	# Confirms a logged-in user.
 		def logged_in_user
