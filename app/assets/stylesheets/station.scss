@@ -6,9 +6,334 @@
 //= require helper
 //= require pe-icon-7-stroke
 //= require bootstrap
-//= require style
-//= require stroke-icons/style
 //= require bootstrap-datetimepicker
+//= require material-design-iconic-font
+
+// FontFace
+@import 'https://fonts.googleapis.com/css?family=Roboto';
+
+// Body CSS
+html:not(.ie9) body {
+    overflow-y: scroll;
+}
+body, html {
+    min-height: 100vh;
+}
+
+body {
+    position: relative;
+}
+
+.close, body {
+    font-weight: 400;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: rgba(255,255,255,.7);
+    background-color: #222c32;
+}
+
+body, figure {
+    margin: 0;
+}
+
+#header {
+    background-color: #1E262B;
+    min-height: 70px;
+    box-shadow: 0 2px 5px rgba(0,0,0,.3);
+    user-select: none;
+    position: fixed;
+    z-index: 11;
+    width: 100%;
+    left: 0;
+    top: 0;
+    padding: 0 20px;
+}
+#header, .toggle-switch {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+}
+#header, .waves-effect {
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+#header, .btn, .toggle-switch {
+    -webkit-touch-callout: none;
+}
+
+.h-inner {
+    list-style: none;
+    padding: 17px 0;
+    margin-bottom: 0;
+}
+
+#main, .h-inner, .hi-trigger, body {
+    position: relative;
+}
+ol, ul {
+    margin-bottom: 9px;
+}
+dl, ol, ul {
+    margin-top: 0;
+}
+
+.h-inner>li:not(.pull-right) {
+    float: left;
+}
+.hi-trigger {
+    cursor: pointer;
+    margin-left: -5px;
+    display: none;
+}
+#main, .h-inner, .hi-trigger, body {
+    position: relative;
+}
+
+.h-inner>li:not(.pull-right) {
+    float: left;
+}
+
+#header .hi-logo a {
+    padding: 5px 10px;
+    text-transform: uppercase;
+}
+.hi-logo a {
+    color: #D8DADA;
+    display: block;
+    font-size: 20px;
+}
+
+.hi-menu {
+    list-style: none;
+}
+
+.hi-menu, .hi-menu>li .dropdown-menu-lg {
+    padding: 0;
+}
+
+.hi-menu>li {
+    display: inline-block;
+    margin: 0 1px;
+    vertical-align: top;
+    min-width: 50px;
+}
+
+.hi-menu>li>a {
+    color: #D8DADA;
+    display: block;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+.hi-menu>li>a>.him-icon {
+    font-size: 24px;
+    line-height: 36px;
+}
+
+.hi-menu>li>a>.him-label {
+    line-height: 35px;
+    white-space: nowrap;
+    padding: 0 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.hi-menu>li:hover{
+    background-color: #2b343a;
+    -moz-transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+}
+
+.h-search-wrap {
+    top: -65px;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: #1E262B;
+    transition: all;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    z-index: 10;
+}
+#header .ma-backdrop, .h-search-wrap {
+    position: absolute;
+}
+
+.h-search-wrap .hsw-close {
+    position: absolute;
+    top: 15px;
+    font-size: 23px;
+    font-style: normal;
+    width: 45px;
+    text-align: center;
+    border-radius: 2px 0 0 2px;
+    cursor: pointer;
+    left: 15px;
+    height: 40px;
+    padding-top: 9px;
+    color: #1E262B;
+}
+
+.h-search-wrap input[type=text] {
+    border: 0;
+    height: 40px;
+    padding: 0 10px 0 55px;
+    font-size: 18px;
+    border-radius: 2px;
+    background-color: #fff;
+    width: 100%;
+    color: #2b343a;
+}
+
+#header.search-toggled .h-search-wrap {
+    top: 0;
+    opacity: 1;
+}
+
+.hsw-inner {
+    position: relative;
+    padding: 15px;
+    max-width: 700px;
+    display: block;
+    margin: 0 auto;
+}
+
+.h-search-wrap .hsw-close:hover {
+    background-color: #eee;
+}
+
+//Page-Loader
+.page-loader {
+    background: #1E262B;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+.page-loader .preloader {
+    width: 60px;
+    position: absolute;
+    left: 50%;
+    margin-left: -25px;
+    top: 50%;
+    margin-top: -55px;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.page-loader .preloader p {
+    white-space: nowrap;
+    position: relative;
+    left: -10px;
+    top: 15px;
+    color: rgba(255,255,255,.3);
+}
+
+.preloader {
+    position: relative;
+    margin: 0 auto;
+    display: inline-block;
+}
+
+.preloader:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+}
+
+.preloader.pls-white .plc-path {
+    stroke: #fff;
+}
+
+.preloader[class*=pls-] .plc-path {
+    animation: dash 1.5s ease-in-out infinite;
+}
+
+.preloader:not([class*=pls-]) .plc-path {
+    animation: dash 1.5s ease-in-out infinite,color 6s ease-in-out infinite;
+}
+
+.plc-path {
+    stroke-dasharray: 1,200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    fill: none;
+}
+
+.pl-circular {
+    animation: rotate 2s linear infinite;
+    transform-origin: center center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    margin: auto;
+}
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+
+
+// KeyFrame List
+@keyframes dash{
+    0% {
+        stroke-dasharray: 1,200;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 89,200;
+        stroke-dashoffset: -35px;
+    }
+
+    100% {
+        stroke-dasharray: 89,200;
+        stroke-dashoffset: -124px;
+    }
+}
+
+@keyframes rotate{
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes color{
+    0%, 100% {
+        stroke: #F44336;
+    }
+    40% {
+        stroke: #2196F3;
+    }
+
+    66% {
+        stroke: #4CAF50;
+    }
+    80%, 90% {
+        stroke: #FFC107;
+    }
+}
 
 #chat.toggled {
     right: 0;
