@@ -545,6 +545,11 @@ a{
     cursor: pointer
 }
 
+tbody>.toggled{
+    background-color: rgba(255,255,255,.1) !important;
+    cursor: pointer
+}
+
 .table-responsive{
     border: 0px solid #ddd !important;
 }

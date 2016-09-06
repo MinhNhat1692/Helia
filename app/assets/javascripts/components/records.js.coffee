@@ -10,8 +10,11 @@
     addRecord: (record) ->
       records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
+    selectRecord: (record) ->
+      @setState record: record
     getInitialState: ->
       records: @props.data[0]
+      record: null
     getDefaultProps: ->
       records: []
     render: ->
@@ -44,8 +47,13 @@
                   React.DOM.th null, 'Anh'
               React.DOM.tbody null,
                 for record in @state.records
-                  React.createElement Record, key: record.id, gender: @props.data[1], record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord
-
+                  if @state.record != null
+                    if record.id == @state.record.id
+                      React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: true, selectRecord: @selectRecord
+                    else
+                      React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: false,selectRecord: @selectRecord
+                  else
+                    React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: false,selectRecord: @selectRecord
 
 @Rooms = React.createClass
     updateRecord: (record, data) ->

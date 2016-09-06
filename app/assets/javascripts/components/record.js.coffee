@@ -1,91 +1,30 @@
   @Record = React.createClass
     getInitialState: ->
-      edit: false
       genderlist: @props.gender
       gender: "Not set"
-    handleEdit: (e) ->
-      e.preventDefault()
-      formData = new FormData
-      formData.append 'id', @props.record.id
-      formData.append 'ename', $('#employee_edit_ename').val()
-      formData.append 'address', $('#employee_edit_address').val()
-      if $('#employee_edit_avatar')[0].files[0] != undefined
-        formData.append 'avatar', $('#employee_edit_avatar')[0].files[0]
-      formData.append 'pnumber', $('#employee_edit_pnumber').val()
-      formData.append 'gender', $('#employee_edit_gender').val()
-      formData.append 'noid', $('#employee_edit_noid').val() 
-      $.ajax
-        url: '/employee'
-        type: 'PUT'
-        data: formData
-        async: false
-        cache: false
-        contentType: false
-        processData: false
-        success: ((result) ->
-          @props.handleEditRecord @props.record, result
-          @setState edit: false
-          return
-        ).bind(this)
-    handleToggle: (e) ->
-      e.preventDefault()
-      @setState edit: !@state.edit
-    handleDelete: (e) ->
-      e.preventDefault()
-      # yeah... jQuery doesn't have a $.delete shortcut method
-      $.ajax
-        method: 'DELETE'
-        url: "/employee"
-        dataType: 'JSON'
-        data: {id: @props.record.id}
-        success: () =>
-          @props.handleDeleteRecord @props.record
-    recordForm: ->
-      React.DOM.tr null,
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.ename
-            id: 'employee_edit_ename'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.address
-            id: 'employee_edit_address'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.pnumber
-            id: 'employee_edit_pnumber'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.noid
-            id: 'employee_edit_noid'
-        React.DOM.td null,
-          React.createElement SelectBox, records: @props.gender, type: 1, id: 'employee_edit_gender', text: 'Gender'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'file'
-            id: 'employee_edit_avatar'
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default'
-            style: {margin: '5px'}
-            onClick: @handleEdit
-            'Update'
-          React.DOM.a
-            className: 'btn btn-danger'
-            style: {margin: '5px'}
-            onClick: @handleToggle
-            'Cancel'
+    selectRecord: (e) ->
+      @props.selectRecord @props.record
     recordRow: ->
-      React.DOM.tr null,
+      React.DOM.tr
+        onClick: @selectRecord
+        React.DOM.td null, @props.record.ename
+        React.DOM.td null, @props.record.address
+        React.DOM.td null, @props.record.pnumber
+        React.DOM.td null, @props.record.noid
+        for gender in @state.genderlist
+            if @props.record.gender == gender.id
+              @state.gender = gender.name
+              break
+        React.DOM.td null, @state.gender
+        React.DOM.td null,
+          React.DOM.a
+            className: 'btn btn-default btn-xs'
+            style: {margin: '5px'}
+            href: @props.record.avatar
+            'AVATAR'
+    SelectedRecordRow: ->
+      React.DOM.tr
+        className: "toggled"
         React.DOM.td null, @props.record.ename
         React.DOM.td null, @props.record.address
         React.DOM.td null, @props.record.pnumber
@@ -102,8 +41,8 @@
             href: @props.record.avatar
             'AVATAR'
     render: ->
-      if @state.edit
-        @recordForm()
+      if @props.selected
+        @SelectedRecordRow()
       else
         @recordRow()
 
