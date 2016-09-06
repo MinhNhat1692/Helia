@@ -1,6 +1,8 @@
 @Section = React.createClass
     getInitialState: ->
       type: 1
+      data: @props.data
+      task: 1 #1 - employee
       profile:
         type: 0
         active: false
@@ -51,7 +53,34 @@
             active: false
             name: 'Bottom'
           }
-        ] 
+        ]
+      DataInput:
+        type: 2
+        className: 'zmdi zmdi-view-list'
+        active: true
+        name: "Nhập dữ liệu gốc"
+        records: [
+          {
+            code: 11 #employee
+            active: true
+            name: 'Danh sách nhân viên'
+          }
+          {
+            code: 12 #room
+            active: false
+            name: 'Danh sách phòng'
+          }
+          {
+            code: 13 #position
+            active: false
+            name: 'Danh sách chức vụ'
+          }
+          {
+            code: 14 #service
+            active: false
+            name: 'Danh sách dịch vụ'
+          }
+        ]
     Trigger: (code) ->
       if code == 1
         @setState homeMenu:
@@ -255,6 +284,173 @@
               name: 'Log Out'
             }
           ]
+      if code == 11 #employee
+        data =
+          task: 1
+          link: '/employees/list'
+        @handleGetdata(data)
+        @setState DataInput:
+          type: 2
+          className: 'zmdi zmdi-view-list'
+          active: true
+          name: "Nhập dữ liệu gốc"
+          records: [
+            {
+              code: 11 #employee
+              active: true
+              name: 'Danh sách nhân viên'
+            }
+            {
+              code: 12 #room
+              active: false
+              name: 'Danh sách phòng'
+            }
+            {
+              code: 13 #position
+              active: false
+              name: 'Danh sách chức vụ'
+            }
+            {
+              code: 14 #service
+              active: false
+              name: 'Danh sách dịch vụ'
+            }
+          ]
+      else if code == 12 #room
+        data =
+          task: 3
+          link: '/rooms/list'
+        @handleGetdata(data)
+        @setState DataInput:
+          type: 2
+          className: 'zmdi zmdi-view-list'
+          active: true
+          name: "Nhập dữ liệu gốc"
+          records: [
+            {
+              code: 11 #employee
+              active: false
+              name: 'Danh sách nhân viên'
+            }
+            {
+              code: 12 #room
+              active: true
+              name: 'Danh sách phòng'
+            }
+            {
+              code: 13 #position
+              active: false
+              name: 'Danh sách chức vụ'
+            }
+            {
+              code: 14 #service
+              active: false
+              name: 'Danh sách dịch vụ'
+            }
+          ]
+      else if code == 13 #position
+        data =
+          task: 2
+          link: '/positions/list'
+        @handleGetdata(data)
+        @setState DataInput:
+          type: 2
+          className: 'zmdi zmdi-view-list'
+          active: true
+          name: "Nhập dữ liệu gốc"
+          records: [
+            {
+              code: 11 #employee
+              active: false
+              name: 'Danh sách nhân viên'
+            }
+            {
+              code: 12 #room
+              active: false
+              name: 'Danh sách phòng'
+            }
+            {
+              code: 13 #position
+              active: true
+              name: 'Danh sách chức vụ'
+            }
+            {
+              code: 14 #service
+              active: false
+              name: 'Danh sách dịch vụ'
+            }
+          ]
+      else if code == 14 #service
+        data =
+          task: 5
+          link: '/services/list'
+        @handleGetdata(data)
+        @setState DataInput:
+          type: 2
+          className: 'zmdi zmdi-view-list'
+          active: true
+          name: "Nhập dữ liệu gốc"
+          records: [
+            {
+              code: 11 #employee
+              active: false
+              name: 'Danh sách nhân viên'
+            }
+            {
+              code: 12 #room
+              active: false
+              name: 'Danh sách phòng'
+            }
+            {
+              code: 13 #position
+              active: false
+              name: 'Danh sách chức vụ'
+            }
+            {
+              code: 14 #service
+              active: true
+              name: 'Danh sách dịch vụ'
+            }
+          ]
+      else
+        @setState DataInput:
+          type: 2
+          className: 'zmdi zmdi-view-list'
+          active: false
+          name: "Nhập dữ liệu gốc"
+          records: [
+            {
+              code: 11 #employee
+              active: false
+              name: 'Danh sách nhân viên'
+            }
+            {
+              code: 12 #room
+              active: false
+              name: 'Danh sách phòng'
+            }
+            {
+              code: 13 #position
+              active: false
+              name: 'Danh sách chức vụ'
+            }
+            {
+              code: 14 #service
+              active: false
+              name: 'Danh sách dịch vụ'
+            }
+          ]
+    handleGetdata: (data) ->
+      $.ajax
+        url: data.link
+        type: 'POST'
+        dataType: 'JSON'
+        success: ((result) ->
+          @setState
+            data: result
+            task: data.task
+          return
+        ).bind(this)
     normalRender: ->
       React.DOM.section
         id: 'main'
@@ -266,5 +462,9 @@
             React.createElement MenuAside, submenu: @state.profile, Trigger: @Trigger      
             React.createElement MenuAside, submenu: @state.homeMenu, Trigger: @Trigger 
             React.createElement MenuAside, submenu: @state.Header, Trigger: @Trigger
+            React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
+        React.DOM.section
+          id: 'content'
+          React.createElement MainApp, data: @state.data, task: @state.task
     render: ->
       @normalRender()

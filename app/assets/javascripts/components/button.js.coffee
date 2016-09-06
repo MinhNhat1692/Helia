@@ -17,29 +17,23 @@
     buttonNormal: ->
       React.DOM.button
         className: @props.className
-        style: {'marginRight': '5px', 'borderRadius' : '0px'}
         type: 'button'
         onClick: @props.Clicked
         React.DOM.i
           className: @props.icon
         if @state.text.length > 0
-          React.DOM.span
-            className: 'bold'
-            @state.text
+          @state.text
     buttonModal: ->
       React.DOM.div
         style: {'display': 'inline-block'}
         React.DOM.button
           className: @props.className
-          style: {'marginRight': '5px', 'borderRadius' : '0px'}
           type: 'button'
           onClick: @handleToggleModal
           React.DOM.i
             className: @props.icon
           if @state.text.length > 0
-            React.DOM.span
-              className: 'bold'
-              @state.text
+            @state.text
         if @state.showModal
           if @props.record != undefined
             React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: @props.record, handleHideModal: @handleHideModal

@@ -16,30 +16,35 @@
       records: []
     render: ->
       React.DOM.div
-        className: 'records'
-        React.DOM.h2
-          className: 'title'
-          'Employee'
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o fa-3x', text: '', type: 2, trigger: @addRecord, datatype: 'employee'
-        React.DOM.hr null
-        React.createElement RecordForm, handleEmployeeRecord: @addRecord
-        React.DOM.hr null
+        className: 'container'
         React.DOM.div
-          className: 'table-responsive'
-          React.DOM.table
-            className: 'table table-bordered'
-            React.DOM.thead null,
-              React.DOM.tr null,
-                React.DOM.th null, 'Name'
-                React.DOM.th null, 'Address'
-                React.DOM.th null, 'Phone Number'
-                React.DOM.th null, 'Ma NV'
-                React.DOM.th null, 'Gioi tinh'
-                React.DOM.th null, 'Anh'
-                React.DOM.th null, 'Hanh dong'
-            React.DOM.tbody null,
-              for record in @state.records
-                React.createElement Record, key: record.id, gender: @props.data[1], record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord
+          className: 'block-header'
+          React.DOM.h2 null, 'Nhân viên'
+        React.DOM.div
+          className: 'card'
+          React.DOM.div
+            className: 'card-header'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'employee'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 1
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement RecordForm, handleEmployeeRecord: @addRecord
+          React.DOM.div
+            className: 'card-body table-responsive'
+            React.DOM.table
+              className: 'table table-hover'
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Name'
+                  React.DOM.th null, 'Address'
+                  React.DOM.th null, 'Phone Number'
+                  React.DOM.th null, 'Ma NV'
+                  React.DOM.th null, 'Gioi tinh'
+                  React.DOM.th null, 'Anh'
+              React.DOM.tbody null,
+                for record in @state.records
+                  React.createElement Record, key: record.id, gender: @props.data[1], record: record, handleDeleteRecord: @deleteRecord, handleEditRecord: @updateRecord
 
 
 @Rooms = React.createClass

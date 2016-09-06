@@ -97,21 +97,10 @@
         React.DOM.td null, @state.gender
         React.DOM.td null,
           React.DOM.a
-            className: 'btn btn-default'
+            className: 'btn btn-default btn-xs'
             style: {margin: '5px'}
             href: @props.record.avatar
-            'Avatar'
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default'
-            style: {margin: '5px'}
-            onClick: @handleToggle
-            'Edit'
-          React.DOM.a
-            className: 'btn btn-danger'
-            style: {margin: '5px'}
-            onClick: @handleDelete
-            'Delete'
+            'AVATAR'
     render: ->
       if @state.edit
         @recordForm()

@@ -100,8 +100,10 @@
               name: 'avatar'
         React.DOM.button
           type: 'submit'
-          className: 'btn btn-primary col-lg-1 col-md-4 col-sm-6'
-          'Create record'
+          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
+          React.DOM.i
+            className: 'zmdi zmdi-plus'
+          ' Thêm'
     
 
   @RoomForm = React.createClass
