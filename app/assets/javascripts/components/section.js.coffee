@@ -3,6 +3,7 @@
       type: 1
       data: @props.data
       task: 1 #1 - employee
+      toggled: false
       profile:
         type: 0
         active: false
@@ -451,12 +452,20 @@
             task: data.task
           return
         ).bind(this)
+    componentWillMount: ->
+      $(APP).on 'toggle', ((e) ->
+        @setState toggled: !@state.toggled
+      ).bind(this)
     normalRender: ->
       React.DOM.section
         id: 'main'
         React.DOM.aside
           id: 'sidebar'
-          className: 'sidebar'
+          className:
+            if @state.toggled
+              'sidebar'
+            else
+              'sidebar toggled'
           React.DOM.ul
             className: 'main-menu'
             React.createElement MenuAside, submenu: @state.profile, Trigger: @Trigger      

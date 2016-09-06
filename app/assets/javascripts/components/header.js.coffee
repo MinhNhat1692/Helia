@@ -7,6 +7,8 @@
         @setState headerClassName: 'clearfix search-toggled'
       else
         @setState headerClassName: 'clearfix'
+    toggleAside: ->
+      $(APP).trigger('toggle')
     NormalRender: ->
       React.DOM.header
         id: 'header'
@@ -15,6 +17,7 @@
           className: 'h-inner'
           React.DOM.li
             className: 'hi-trigger ma-trigger'
+            onClick: @toggleAside
             React.DOM.div
               className: "line-wrap"
               React.DOM.div

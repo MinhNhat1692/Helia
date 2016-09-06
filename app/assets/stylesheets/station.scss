@@ -415,11 +415,17 @@ a{
 }
 
 @media (max-width: 1279px){
+  #sidebar.toggled {
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+  }
+  
   #sidebar {
     -webkit-transform: translate3d(-268px,0,0);
     transform: translate3d(-268px,0,0);
     box-shadow: 0 0 30px #0E1215;
   }
+  
   #header .hi-trigger {
     display: inline-block;
   }

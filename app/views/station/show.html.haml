@@ -1,4 +1,6 @@
 %body
   = react_component 'Header', { type: 1 }
   = react_component 'Section', { station: @station, username: @name, data: @records }
+  :javascript
+    var APP = {}
   = render "shared/preloader"        
