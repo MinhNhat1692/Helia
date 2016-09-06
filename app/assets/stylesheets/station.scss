@@ -40,6 +40,8 @@ body, figure {
     margin: 0;
 }
 
+
+// Header Code
 #header {
     background-color: #1E262B;
     min-height: 70px;
@@ -208,6 +210,165 @@ dl, ol, ul {
 
 .h-search-wrap .hsw-close:hover {
     background-color: #eee;
+}
+
+//Section code
+#main {
+    padding-bottom: 110px;
+    padding-top: 100px;
+    min-height: 100vh;
+}
+#main {
+    position: relative;
+}
+section{
+    display: block;
+}
+
+#sidebar {
+    width: 268px;
+}
+
+.main-menu {
+    list-style: none;
+    padding-left: 0;
+}
+
+.media-heading, .media:first-child, .panel-title {
+    margin-top: 0;
+}
+.main-menu>li>a {
+    display: block;
+    position: relative;
+    color: rgba(255,255,255,.65);
+}
+
+.submenu>a {
+    position: relative;
+}
+.submenu a {
+    color: rgba(255,255,255,.4);
+}
+.mm-profile>a {
+    display: block;
+    padding: 20px;
+    color: #fff;
+}
+.main-menu a {
+    -webkit-transition: color;
+    -o-transition: color;
+    transition: color;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+}
+.media {
+    overflow: visible;
+}
+.media, .media-body {
+    zoom: 1;
+    overflow: hidden;
+}
+.media {
+    margin-top: 15px;
+}
+
+.main-menu>li.active>a, .main-menu>li>a:hover {
+    background-color: rgba(255,255,255,.04);
+}
+.main-menu .active>a, .main-menu a.active, .main-menu a:hover {
+    color: #fff;
+}
+
+.mm-profile>a>img {
+    width: 30px;
+    height: 30px;
+    padding-right: 0!important;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.13);
+    margin-top: 3px;
+    float: left;
+}
+
+.mm-profile .media-body {
+    padding: 2px 10px 0 15px;
+}
+
+.media-body {
+    zoom: 1;
+    display: block;
+    width: auto;
+}
+
+.mm-profile .media-body small {
+    display: block;
+    color: rgba(255,255,255,.35);
+}
+
+.small, small {
+    font-size: 92%;
+}
+
+.submenu-plus, .submenu-minus {
+    position: absolute;
+    top: 50%;
+    margin-top: -11px;
+    font-size: 17px;
+    right: 15px;
+    -webkit-transition: all;
+    -o-transition: all;
+    transition: all;
+    -webkit-transition-duration: 250ms;
+    transition-duration: 250ms;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    filter: alpha(opacity=0);
+    opacity: 0;
+}
+
+li:not(.toggled) > a:hover > .submenu-plus, .toggled > a:hover > .submenu-minus {
+  opacity: 1;
+}
+
+.submenu > ul{
+  list-style: none;
+  padding: 0;
+  -webkit-transition: ease-in-out, max-height 0.5s ease-in-out;
+  transition: ease-in-out, max-height 0.5s ease-in-out;
+  max-height: 0px;
+  overflow: hidden;
+}
+
+.toggled > ul{
+  max-height: 300px;
+}
+
+.submenu ul > li:first-child > a {
+  padding-top: 14px;
+}
+
+.submenu ul > li > a {
+  padding: 8px 20px 8px 65px;
+  display: block;
+  cursor: pointer;
+}
+
+.main-menu>li:not(.mm-profile)>a {
+    padding: 14px 20px 14px 65px;
+}
+
+.main-menu>li>a>i {
+    position: absolute;
+    left: 25px;
+    font-size: 20px;
+    top: 0;
+    width: 25px;
+    text-align: center;
+    padding: 13px 0;
+}
+
+a{
+    cursor: pointer;
 }
 
 //Page-Loader
@@ -399,8 +560,8 @@ svg:not(:root) {
 .sidebar {
     position: fixed;
     background: #2b343a;
-    height: calc(100% - 55px);
-    top: 60px;
+    height: calc(100% - 65px);
+    top: 70px;
     -webkit-transition: all;
     -o-transition: all;
     transition: all;

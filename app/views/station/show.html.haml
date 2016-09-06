@@ -1,3 +1,4 @@
 %body
-  = react_component 'Header', { station: @station }
+  = react_component 'Header', { type: 1 }
+  = react_component 'Section', { station: @station, username: @name }
   = render "shared/preloader"        
