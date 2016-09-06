@@ -33,7 +33,7 @@
           React.DOM.div
             className: 'card-body table-responsive'
             React.DOM.table
-              className: 'table table-hover'
+              className: 'table table-hover table-condensed'
               React.DOM.thead null,
                 React.DOM.tr null,
                   React.DOM.th null, 'Name'

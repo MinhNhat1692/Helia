@@ -371,6 +371,28 @@ a{
     cursor: pointer;
 }
 
+.line-wrap {
+    width: 18px;
+    height: 12px;
+    margin: 12px 17px;
+    cursor: pointer;
+}
+
+.line-wrap .line {
+    width: 18px;
+    height: 2px;
+    background-color: #fff;
+    -webkit-transition: all;
+    -o-transition: all;
+    transition: all;
+    -webkit-transition-duration: .5s;
+    transition-duration: .5s;
+}
+
+.line-wrap .line.center {
+    margin: 3px 0;
+}
+
 //Content
 
 .block-header {
@@ -392,6 +414,25 @@ a{
   }
 }
 
+@media (max-width: 1279px){
+  #sidebar {
+    -webkit-transform: translate3d(-268px,0,0);
+    transform: translate3d(-268px,0,0);
+    box-shadow: 0 0 30px #0E1215;
+  }
+  #header .hi-trigger {
+    display: inline-block;
+  }
+  .h-inner>li:not(.pull-right) {
+    float: left;
+  }
+  .hi-trigger {
+    cursor: pointer;
+    margin-left: -5px;
+    display: none;
+  }
+}
+
 @media (min-width: 1200px) {
   .container {
     width: 100%;
@@ -409,6 +450,7 @@ a{
     padding: 0 22px;
   }
 }
+
 
 .card {
     position: relative;
@@ -497,9 +539,13 @@ a{
     cursor: pointer
 }
 
+.table-responsive{
+    border: 0px solid #ddd !important;
+}
 
-
-
+.table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {
+    padding: 10px;
+}
 
 
 
