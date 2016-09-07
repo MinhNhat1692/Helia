@@ -415,6 +415,10 @@
           
 
 @AppViewsServices = React.createClass
+    getInitialState: ->
+      records: @props.data[0]
+      rooms: @props.data[1]
+      servicemap: @props.data[2]
     updateRecord: (record, data) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
@@ -431,19 +435,21 @@
       if check
         listsermap = React.addons.update(@state.servicemap, { $push: [data] })
         @setState servicemap: listsermap
-    getInitialState: ->
-      records: @props.data[0]
-      rooms: @props.data[1]
-      servicemap: @props.data[2]
-    getDefaultProps: ->
-      records: []
-      rooms: []
-      servicemap: []
     render: ->
       React.DOM.div
-        className: 'row'
-        for record in @state.records
-          React.createElement AppViewsService, key: record.id, record: record, rooms: @state.rooms, servicemap: @state.servicemap, handleEditSerMap: @updateMap, handleEditSer: @updateRecord
+        className: 'container container-alt'
+        React.DOM.div
+          className: "text-center"
+          React.DOM.h2
+            className: "f-400"
+            "DANH SÁCH DỊCH VỤ"
+          React.DOM.p
+            className: "c-gray m-t-20 m-b-20"
+            "Click vào thông tin phòng để định phòng cho từng dịch vụ"
+        React.DOM.div
+          className: "row m-t-25"
+          for record in @state.records
+            React.createElement AppViewsService, key: record.id, record: record, rooms: @state.rooms, ownerMode: true, className: "col-sm-4", servicemap: @state.servicemap, handleEditSerMap: @updateMap, handleEditSer: @updateRecord
 
 
 @PatientGeneral = React.createClass

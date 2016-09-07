@@ -439,6 +439,78 @@ a{
   }
 }
 
+.container.container-alt {
+    max-width: 1170px;
+}
+
+.f-400 {
+    font-weight: 400!important;
+}
+.h2, h2 {
+    font-size: 27px;
+}
+
+.c-gray {
+    color: #9E9E9E!important;
+}
+.m-b-20 {
+    margin-bottom: 20px!important;
+}
+.m-t-20 {
+    margin-top: 20px!important;
+}
+
+.m-t-25 {
+    margin-top: 25px!important;
+}
+
+.pt-inner .pti-header {
+    padding: 45px 10px 70px;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.pt-inner .pti-header>h2 {
+    margin: 0;
+    line-height: 100%;
+    font-weight: 100;
+    font-size: 50px;
+}
+
+.pt-inner .pti-header>h2 small {
+    letter-spacing: 0;
+    vertical-align: top;
+    font-size: 16px;
+    font-weight: 100;
+}
+
+.pt-inner .pti-header .ptih-title {
+    background-color: rgba(255,255,255,.04);
+    padding: 8px 10px 9px;
+    text-transform: uppercase;
+    margin: 0 -10px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+.pt-inner .pti-body {
+    padding: 0 23px;
+}
+
+.pt-inner .pti-body .ptib-item:not(:last-child) {
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.pt-inner .pti-body .ptib-item {
+    padding: 15px 0;
+    font-weight: 400;
+}
+
+.pt-inner .pti-footer {
+    padding: 10px 20px 30px;
+    margin-top: 20px;
+}
+
 @media (min-width: 1200px) {
   .container {
     width: 100%;

@@ -580,21 +580,20 @@
                 ' Edit'
     recordBlock: ->
       React.DOM.div
-        className: 'col-lg-3'
+        className: @props.className
         React.DOM.div
-          className: 'contact-box center-version'
+          className: 'card text-center pt-inner'
           React.DOM.div
-            className: 'over'
-            React.DOM.img
-              alt: 'image'
-              className: 'img-circle'
-              onClick: @handleToggleLogo
-              src: @props.record.file
-            React.DOM.h3
-              className: 'm-b-xs'
-              React.DOM.strong
-                onClick: @handleToggleName
-                @props.record.sname
+            className: 'pti-header'
+            React.DOM.h2
+              onClick: @handleTogglePrice
+              @props.record.price
+              React.DOM.small null,
+                @props.record.currency
+            React.DOM.div
+              className: "ptih-title"
+              onClick: @handleToggleName
+              @props.record.sname
             for map in @props.servicemap
               if map.service_id == @props.record.id
                 for room in @props.rooms
@@ -602,29 +601,23 @@
                     @state.roomName = room.name
                     break
                 break
-            React.DOM.div
-              onClick: @handleToggleSerMap
-              className: 'font-bold'
-              @state.roomName
-            React.DOM.address
-              className: 'm-t-md'
-              React.DOM.p
-                onClick: @handleToggleDescription
-                @props.record.description
-                React.DOM.br null,
-              React.DOM.p
-                onClick: @handleTogglePrice
-                @props.record.price + ' ' + @props.record.currency
-                React.DOM.br null,
           React.DOM.div
-            className: 'contact-box-footer'
+            className: "pti-body"
             React.DOM.div
-              className: 'm-t-xs btn-group'
-              React.DOM.a
-                className: 'btn btn-default btn-xs'
-                React.DOM.i
-                  className: 'fa fa-pencil-square-o'
-                ' Edit'
+              className: 'ptib-item'
+              onClick: @handleToggleDescription
+              @props.record.description
+            React.DOM.div
+              className: 'ptib-item'
+              onClick: @handleToggleSerMap
+              @state.roomName
+          React.DOM.div
+            className: "pti-footer"
+            React.DOM.a
+              className: 'btn btn-default'
+              React.DOM.i
+                className: 'fa fa-pencil-square-o'
+                ' Check'
     render: ->
       if @state.edit
         @recordForm()
