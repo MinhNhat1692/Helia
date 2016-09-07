@@ -83,94 +83,12 @@
 
   @Service = React.createClass
     getInitialState: ->
-      edit: false
-    handleEdit: (e) ->
-      e.preventDefault()
-      formData = new FormData
-      formData.append 'id', @props.record.id
-      formData.append 'sname', $('#service_edit_sname').val()
-      formData.append 'lang', $('#service_edit_lang').val()
-      formData.append 'price', $('#service_edit_price').val()
-      formData.append 'currency', $('#service_edit_currency').val()
-      formData.append 'description', $('#service_edit_description').val()
-      if $('#service_edit_file')[0].files[0] != undefined
-        formData.append 'file', $('#service_edit_file')[0].files[0]
-      $.ajax
-        url: '/services'
-        type: 'PUT'
-        data: formData
-        async: false
-        cache: false
-        contentType: false
-        processData: false
-        success: ((result) ->
-          @setState edit: false
-          @props.handleEditService @props.record, result
-          return
-        ).bind(this)
-    handleToggle: (e) ->
-      e.preventDefault()
-      @setState edit: !@state.edit
-    handleDelete: (e) ->
-      e.preventDefault()
-      $.ajax
-        method: 'DELETE'
-        url: "/services"
-        dataType: 'JSON'
-        data: {id: @props.record.id}
-        success: () =>
-          @props.handleDeleteService @props.record
-    recordForm: ->
-      React.DOM.tr null,
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.sname
-            id: 'service_edit_sname'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.lang
-            id: 'service_edit_lang'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'number'
-            defaultValue: @props.record.price
-            id: 'service_edit_price'    
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.currency
-            id: 'service_edit_currency'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.description
-            id: 'service_edit_description'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'file'
-            defaultValue: @props.record.file
-            id: 'service_edit_file'
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default'
-            style: {margin: '5px'}
-            onClick: @handleEdit
-            'Update'
-          React.DOM.a
-            className: 'btn btn-danger'
-            style: {margin: '5px'}
-            onClick: @handleToggle
-            'Cancel'
+      type: 1
+    selectRecord: (e) ->
+      @props.selectRecord @props.record
     recordRow: ->
-      React.DOM.tr null,
+      React.DOM.tr
+        onClick: @selectRecord
         React.DOM.td null, @props.record.sname
         React.DOM.td null, @props.record.lang
         React.DOM.td null, @props.record.price
@@ -178,109 +96,39 @@
         React.DOM.td null, @props.record.description
         React.DOM.td null,
           React.DOM.a
-            href: @props.record.file
-            className: 'btn btn-default'
-            target: '_blank'
+            className: 'btn btn-default btn-xs'
             style: {margin: '5px'}
-            'Map'
+            href: @props.record.file
+            'Logo'
+    SelectedRecordRow: ->
+      React.DOM.tr
+        className: "toggled"
+        React.DOM.td null, @props.record.sname
+        React.DOM.td null, @props.record.lang
+        React.DOM.td null, @props.record.price
+        React.DOM.td null, @props.record.currency
+        React.DOM.td null, @props.record.description
         React.DOM.td null,
           React.DOM.a
-            className: 'btn btn-default'
+            className: 'btn btn-default btn-xs'
             style: {margin: '5px'}
-            onClick: @handleToggle
-            'Edit'
-          React.DOM.a
-            className: 'btn btn-danger'
-            style: {margin: '5px'}
-            onClick: @handleDelete
-            'Delete'
+            href: @props.record.file
+            'Logo'
     render: ->
-      if @state.edit
-        @recordForm()
+      if @props.selected
+        @SelectedRecordRow()
       else
         @recordRow()
 
 
   @Position = React.createClass
     getInitialState: ->
-      edit: false
       rooms: @props.rooms
-    handleEdit: (e) ->
-      e.preventDefault()
-      formData = new FormData
-      formData.append 'id', @props.record.id
-      formData.append 'room', $('#position_edit_room').val()
-      formData.append 'pname', $('#position_edit_pname').val()
-      formData.append 'lang', $('#position_edit_lang').val()
-      formData.append 'description', $('#position_edit_description').val()
-      if $('#position_edit_file')[0].files[0] != undefined
-        formData.append 'file', $('#position_edit_file')[0].files[0]
-      $.ajax
-        url: '/positions'
-        type: 'PUT'
-        data: formData
-        async: false
-        cache: false
-        contentType: false
-        processData: false
-        success: ((result) ->
-          @setState edit: false
-          @props.handleEditPosition @props.record, result
-          return
-        ).bind(this)
-    handleToggle: (e) ->
-      e.preventDefault()
-      @setState edit: !@state.edit
-    handleDelete: (e) ->
-      e.preventDefault()
-      $.ajax
-        method: 'DELETE'
-        url: "/positions"
-        dataType: 'JSON'
-        data: {id: @props.record.id}
-        success: () =>
-          @props.handleDeletePosition @props.record
-    recordForm: ->
-      React.DOM.tr null,
-        React.DOM.td null,
-          React.createElement SelectBox, records: @props.rooms, type: 1, id: 'position_edit_room', text: 'Tên phòng'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.pname
-            id: 'position_edit_pname'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.lang
-            id: 'position_edit_lang'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'text'
-            defaultValue: @props.record.description
-            id: 'position_edit_description'
-        React.DOM.td null,
-          React.DOM.input
-            className: 'form-control'
-            type: 'file'
-            defaultValue: @props.record.file
-            id: 'position_edit_file'
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default'
-            style: {margin: '5px'}
-            onClick: @handleEdit
-            'Update'
-          React.DOM.a
-            className: 'btn btn-danger'
-            style: {margin: '5px'}
-            onClick: @handleToggle
-            'Cancel'
+    selectRecord: (e) ->
+      @props.selectRecord @props.record
     recordRow: ->
-      React.DOM.tr null,
+      React.DOM.tr
+        onClick: @selectRecord
         React.DOM.td null,
           for room in @state.rooms
             if room.id == @props.record.room_id
@@ -290,24 +138,29 @@
         React.DOM.td null, @props.record.description
         React.DOM.td null,
           React.DOM.a
-            className: 'btn btn-default'
+            className: 'btn btn-default btn-xs'
             style: {margin: '5px'}
-            href: @props.record.file.url
+            href: @props.record.file
             'File'
+    SelectedRecordRow: ->
+      React.DOM.tr
+        className: "toggled"
+        React.DOM.td null,
+          for room in @state.rooms
+            if room.id == @props.record.room_id
+              room.name
+        React.DOM.td null, @props.record.pname
+        React.DOM.td null, @props.record.lang
+        React.DOM.td null, @props.record.description
         React.DOM.td null,
           React.DOM.a
-            className: 'btn btn-default'
+            className: 'btn btn-default btn-xs'
             style: {margin: '5px'}
-            onClick: @handleToggle
-            'Edit'
-          React.DOM.a
-            className: 'btn btn-danger'
-            style: {margin: '5px'}
-            onClick: @handleDelete
-            'Delete'
+            href: @props.record.file
+            'File'
     render: ->
-      if @state.edit
-        @recordForm()
+      if @props.selected
+        @SelectedRecordRow()
       else
         @recordRow()
 

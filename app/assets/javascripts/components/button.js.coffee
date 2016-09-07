@@ -35,9 +35,15 @@
             @state.text
         if @state.showModal
           if @props.record != undefined
-            React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: @props.record, handleHideModal: @handleHideModal
+            if @props.extra != undefined
+              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: @props.record, extra: @props.extra, handleHideModal: @handleHideModal
+            else
+              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: @props.record, handleHideModal: @handleHideModal
           else
-            React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: null, handleHideModal: @handleHideModal
+            if @props.extra != undefined
+              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: null, extra: @props.extra, handleHideModal: @handleHideModal
+            else
+              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: null, handleHideModal: @handleHideModal
         else
           null
     render: ->

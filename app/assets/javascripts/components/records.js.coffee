@@ -238,84 +238,147 @@
 
 
 @Services = React.createClass
-    updateRecord: (record, data) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-      @setState records: records
-    deleteRecord: (record) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
-      @setState records: records
-    addRecord: (record) ->
-      records = React.addons.update(@state.records, { $push: [record] })
-      @setState records: records
     getInitialState: ->
       records: @props.records
-    getDefaultProps: ->
-      records: []
-    render: ->
-      React.DOM.div
-        className: 'services'
-        React.DOM.h2
-          className: 'title'
-          'Service'
-        React.createElement ServiceForm, handleServiceAdd: @addRecord
-        React.DOM.hr null
-        React.DOM.table
-          className: 'table table-striped'
-          React.DOM.thead null,
-            React.DOM.tr null,
-              React.DOM.th null, 'Tên dịch vụ'
-              React.DOM.th null, 'Ngôn ngữ'
-              React.DOM.th null, 'Giá'
-              React.DOM.th null, 'Đơn vị tiền'
-              React.DOM.th null, 'Mô tả dịch vụ'
-              React.DOM.th null, 'Logo dịch vụ'
-              React.DOM.th null, 'Hành động'
-          React.DOM.tbody null,
-            for record in @state.records
-              React.createElement Service, key: record.id, record: record, handleDeleteService: @deleteRecord, handleEditService: @updateRecord
-
-              
-@Positions = React.createClass
+      selected: null
+      record: null
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
     updateRecord: (record, data) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-      @replaceState records: records
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
     deleteRecord: (record) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1]] })
-      @replaceState records: records
+      @setState records: records
     addRecord: (record) ->
       records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/services"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
+    render: ->
+      React.DOM.div
+        className: 'container'
+        React.DOM.div
+          className: 'block-header'
+          React.DOM.h2 null, 'Dịch vụ'
+        React.DOM.div
+          className: 'card'
+          React.DOM.div
+            className: 'card-header'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'service_add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'service_edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement ServiceForm, handleServiceAdd: @addRecord
+          React.DOM.div
+            className: 'card-body table-responsive'
+            React.DOM.table
+              className: 'table table-hover table-condensed'
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên dịch vụ'
+                  React.DOM.th null, 'Ngôn ngữ'
+                  React.DOM.th null, 'Giá'
+                  React.DOM.th null, 'Đơn vị tiền'
+                  React.DOM.th null, 'Mô tả dịch vụ'
+                  React.DOM.th null, 'Logo dịch vụ'
+              React.DOM.tbody null,
+                for record in @state.records
+                  if @state.selected != null
+                    if record.id == @state.selected
+                      React.createElement Service, key: record.id, record: record, selected: true, selectRecord: @selectRecord
+                    else
+                      React.createElement Service, key: record.id, record: record, selected: false, selectRecord: @selectRecord
+                  else
+                    React.createElement Service, key: record.id, record: record, selected: false, selectRecord: @selectRecord
+      
+      
+@Positions = React.createClass
     getInitialState: ->
       records: @props.data[0]
       rooms: @props.data[1]
-    getDefaultProps: ->
-      records: []
-      rooms: []
+      selected: null
+      record: null
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
+    updateRecord: (record, data) ->
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @setState records: records
+    addRecord: (record) ->
+      records = React.addons.update(@state.records, { $push: [record] })
+      @setState records: records
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/positions"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
     render: ->
       React.DOM.div
-        className: 'position'
-        React.DOM.h2
-          className: 'title'
-          'Position'
-        React.createElement PositionForm, rooms: @state.rooms, handlePositionAdd: @addRecord
-        React.DOM.hr null
-        React.DOM.table
-          className: 'table table-striped'
-          React.DOM.thead null,
-            React.DOM.tr null,
-              React.DOM.th null, 'Room'
-              React.DOM.th null, 'name'
-              React.DOM.th null, 'lang'
-              React.DOM.th null, 'description'
-              React.DOM.th null, 'file'
-              React.DOM.th null, 'Actions'
-          React.DOM.tbody null,
-            for record in @state.records
-              React.createElement Position, key: record.id, record: record, rooms: @state.rooms, handleDeletePosition: @deleteRecord, handleEditPosition: @updateRecord
+        className: 'container'
+        React.DOM.div
+          className: 'block-header'
+          React.DOM.h2 null, 'Chức vụ'
+        React.DOM.div
+          className: 'card'
+          React.DOM.div
+            className: 'card-header'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'position_add', extra: @state.rooms
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'position_edit', extra: @state.rooms, record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement PositionForm, rooms: @state.rooms, handlePositionAdd: @addRecord
+          React.DOM.div
+            className: 'card-body table-responsive'
+            React.DOM.table
+              className: 'table table-hover table-condensed'
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên phòng'
+                  React.DOM.th null, 'Tên vị trí'
+                  React.DOM.th null, 'Ngôn ngữ'
+                  React.DOM.th null, 'Miêu tả ngắn'
+                  React.DOM.th null, 'File đính kèm'
+              React.DOM.tbody null,
+                for record in @state.records
+                  if @state.selected != null
+                    if record.id == @state.selected
+                      React.createElement Position, key: record.id, record: record, rooms: @state.rooms, selected: true, selectRecord: @selectRecord
+                    else
+                      React.createElement Position, key: record.id, record: record, rooms: @state.rooms, selected: false, selectRecord: @selectRecord
+                  else
+                    React.createElement Position, key: record.id, record: record, rooms: @state.rooms, selected: false, selectRecord: @selectRecord
 
 
 @AppViewsEmployees = React.createClass

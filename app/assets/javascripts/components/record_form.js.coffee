@@ -223,7 +223,7 @@
               className: 'form-control'
               placeholder: 'Ngôn ngữ hiển thị'
               name: 'lang'
-              value: 'vi'
+              defaultValue: 'vi'
         React.DOM.div
           className: 'form-group col-lg-3 col-sm-3'
           React.DOM.div
@@ -243,7 +243,7 @@
               type: 'text'
               className: 'form-control'
               placeholder: 'Đơn vị giá'
-              value: 'VND'
+              defaultValue: 'VND'
               name: 'currency'
         React.DOM.div
           className: 'form-group col-lg-8 col-sm-6'
@@ -409,7 +409,7 @@
               className: 'form-control'
               placeholder: 'Ngôn ngữ hiển thị'
               name: 'lang'
-              value: 'vi'
+              defaultValue: 'vi'
         React.DOM.div
           className: 'form-group col-lg-5 col-sm-8'
           React.DOM.div
