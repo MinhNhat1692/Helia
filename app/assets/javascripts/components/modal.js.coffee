@@ -50,29 +50,31 @@
             return
           ).bind(this)
       else if @props.type == 'employee_edit'
-        e.preventDefault()
-        formData = new FormData
-        formData.append 'ename', $('#employee_form_ename').val()
-        formData.append 'address', $('#employee_form_address').val()
-        formData.append 'pnumber', $('#employee_form_pnumber').val()
-        formData.append 'noid', $('#employee_form_noid').val()
-        formData.append 'gender', $('#employee_form_gender').val()
-        if $('#employee_form_avatar')[0].files[0] != undefined
-          formData.append 'avatar', $('#employee_form_avatar')[0].files[0]
-        else if $('#webcamout').attr('src') != undefined
-          formData.append 'avatar', $('#webcamout').attr('src')
-        $.ajax
-          url: '/employees'
-          type: 'PUT'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.trigger result
-            return
-          ).bind(this)
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'ename', $('#employee_form_ename').val()
+          formData.append 'address', $('#employee_form_address').val()
+          formData.append 'pnumber', $('#employee_form_pnumber').val()
+          formData.append 'noid', $('#employee_form_noid').val()
+          formData.append 'gender', $('#employee_form_gender').val()
+          if $('#employee_form_avatar')[0].files[0] != undefined
+            formData.append 'avatar', $('#employee_form_avatar')[0].files[0]
+          else if $('#webcamout').attr('src') != undefined
+            formData.append 'avatar', $('#webcamout').attr('src')
+          $.ajax
+            url: '/employee'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
       else if @props.type == 'customer_record'
         e.preventDefault()
         formData = new FormData
@@ -143,7 +145,7 @@
               React.DOM.div
                 className: 'row'
                 React.DOM.div
-                  className: 'col-lg-12'
+                  className: 'col-md-7'
                   React.DOM.form
                     id: 'employee_form'
                     encType: 'multipart/form-data'
@@ -152,10 +154,10 @@
                     React.DOM.div
                       className: 'form-group'
                       React.DOM.label
-                        className: 'col-sm-2 control-label'
+                        className: 'col-sm-4 control-label'
                         'Họ và Tên'
                       React.DOM.div
-                        className: 'col-sm-10'
+                        className: 'col-sm-8'
                         React.DOM.input
                           id: 'employee_form_ename'
                           type: 'text'
@@ -170,10 +172,10 @@
                     React.DOM.div
                       className: 'form-group'
                       React.DOM.label
-                        className: 'col-sm-2 control-label'
+                        className: 'col-sm-4 control-label'
                         'Địa chỉ'
                       React.DOM.div
-                        className: 'col-sm-10'
+                        className: 'col-sm-8'
                         React.DOM.input
                           id: 'employee_form_address'
                           type: 'text'
@@ -188,10 +190,10 @@
                     React.DOM.div
                       className: 'form-group'
                       React.DOM.label
-                        className: 'col-sm-2 control-label'
+                        className: 'col-sm-4 control-label'
                         'Số ĐT'
                       React.DOM.div
-                        className: 'col-sm-10'
+                        className: 'col-sm-8'
                         React.DOM.input
                           id: 'employee_form_pnumber'
                           type: 'number'
@@ -206,10 +208,10 @@
                     React.DOM.div
                       className: 'form-group'
                       React.DOM.label
-                        className: 'col-sm-2 control-label'
+                        className: 'col-sm-4 control-label'
                         'CMTND'
                       React.DOM.div
-                        className: 'col-sm-10'
+                        className: 'col-sm-8'
                         React.DOM.input
                           id: 'employee_form_noid'
                           type: 'number'
@@ -224,10 +226,10 @@
                     React.DOM.div
                       className: 'form-group'
                       React.DOM.label
-                        className: 'col-sm-2 control-label'
+                        className: 'col-sm-3 control-label'
                         'Giới tính'
                       React.DOM.div
-                        className: 'col-sm-4'
+                        className: 'col-sm-3'
                         React.DOM.select
                           id: 'employee_form_gender'
                           className: 'form-control'
@@ -247,10 +249,10 @@
                             value: '2'
                             'Nữ'
                       React.DOM.label
-                        className: 'col-sm-2 control-label'
+                        className: 'col-sm-3 control-label'
                         'Ảnh đại diện'
                       React.DOM.div
-                        className: 'col-sm-4'
+                        className: 'col-sm-3'
                         React.DOM.input
                           id: 'employee_form_avatar'
                           type: 'file'
@@ -260,6 +262,36 @@
                       type: 'submit'
                       className: 'btn btn-default pull-right'
                       'Lưu'
+                React.DOM.div
+                  className: 'col-md-5'
+                  style: {'alignContent': 'center'}
+                  React.DOM.div
+                    id: 'results'
+                    React.DOM.img
+                      style: {'maxWidth': '100%', 'maxHeight': '240px'}
+                      src:
+                        if @props.record != null
+                          if @props.record.avatar != "/avatars/original/missing.png"
+                            @props.record.avatar
+                          else
+                            'https://www.twomargins.com/images/noavatar.jpg'
+                        else
+                          'https://www.twomargins.com/images/noavatar.jpg'
+                  React.DOM.div
+                    id: 'my_camera'
+                  React.DOM.button
+                    type: 'button'
+                    className: 'btn btn-default'
+                    onClick: @setup_webcam
+                    name: 'close'
+                    'Setup'
+                  React.DOM.button
+                    type: 'button'
+                    className: 'btn btn-default'
+                    value: 'take Large Snapshot'
+                    onClick: @take_snapshot
+                    name: 'close'
+                    'Capture'
             React.DOM.div
               className: 'modal-footer'
               React.DOM.button
@@ -435,6 +467,8 @@
                             @props.record.avatar
                           else
                             'https://www.twomargins.com/images/noavatar.jpg'
+                        else
+                          'https://www.twomargins.com/images/noavatar.jpg'
                   React.DOM.div
                     id: 'my_camera'
                   React.DOM.button

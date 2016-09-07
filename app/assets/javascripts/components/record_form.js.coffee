@@ -155,7 +155,7 @@
               className: 'form-control'
               placeholder: 'Ngôn ngữ hiển thị'
               name: 'lang'
-              value: 'vi'
+              defaultValue: 'vi'
         React.DOM.div
           className: 'form-group col-lg-3 col-sm-6'
           React.DOM.div

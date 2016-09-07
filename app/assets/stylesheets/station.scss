@@ -558,9 +558,28 @@ tbody>.toggled{
     padding: 10px;
 }
 
+//modal
+.modal .modal-content {
+    box-shadow: 0 5px 20px rgba(0,0,0,.31);
+    border: 0;
+}
 
+.modal-header, .modal-footer {
+    background-color: #2b343a;
+    border: 0px solid #000000;
+}
+
+.modal-body{
+    background: #1E262B;
+}
 
 //BTN
+select option {
+    background: #2b343a;
+    color:#fff;
+    text-shadow:0 1px 0 rgba(0,0,0,0.4);
+}
+
 .btn[class*=bg-]:not(.bg-white) {
     color: #fff;
 }

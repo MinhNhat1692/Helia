@@ -52,7 +52,7 @@
         formData = new FormData
         formData.append 'id', @state.searchRecord.user_id
         $.ajax
-          url: '/employees/add_record'
+          url: '/employee/add_record'
           type: 'POST'
           data: formData
           async: false
@@ -69,7 +69,7 @@
         formData.append 'id', @state.searchRecord.user_id
         formData.append 'idrecord', @state.record.id
         $.ajax
-          url: '/employees/update_record'
+          url: '/employee/update_record'
           type: 'POST'
           data: formData
           async: false
@@ -87,7 +87,7 @@
         formData.append 'id', @state.searchRecord.user_id
         formData.append 'idrecord', @state.record.id
         $.ajax
-          url: '/employees/link_record'
+          url: '/employee/link_record'
           type: 'POST'
           data: formData
           async: false
@@ -104,7 +104,7 @@
         formData = new FormData
         formData.append 'idrecord', @state.record.id
         $.ajax
-          url: '/employees/clear_link_record'
+          url: '/employee/clear_link_record'
           type: 'POST'
           data: formData
           async: false
@@ -139,7 +139,7 @@
             className: 'card-header'
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-link', text: ' Liên kết', type: 1, Clicked: @toggleSideBar
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'employee'
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger: @updateRecord, datatype: 'employee_edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'employee_edit', record: @state.record
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-flash-off', text: ' Bỏ liên kết', type: 1, Clicked: @ClearlinkRecordAlt
             React.DOM.br null
@@ -167,42 +167,75 @@
                   else
                     React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: false, selectRecord: @selectRecord
 
+
 @Rooms = React.createClass
+    getInitialState: ->
+      records: @props.records
+      selected: null
+      record: null
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
     updateRecord: (record, data) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-      @replaceState records: records
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
     deleteRecord: (record) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1]] })
-      @replaceState records: records
+      @setState records: records
     addRecord: (record) ->
       records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
-    getInitialState: ->
-      records: @props.records
-    getDefaultProps: ->
-      records: []
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/rooms"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
     render: ->
       React.DOM.div
-        className: 'rooms'
-        React.DOM.h2
-          className: 'title'
-          'Room'
-        React.createElement RoomForm, handleRoomAdd: @addRecord
-        React.DOM.hr null
-        React.DOM.table
-          className: 'table table-striped'
-          React.DOM.thead null,
-            React.DOM.tr null,
-              React.DOM.th null, 'Tên phòng'
-              React.DOM.th null, 'Ngôn ngữ'
-              React.DOM.th null, 'Bản đồ'
-              React.DOM.th null, 'Hành động'
-          React.DOM.tbody null,
-            for record in @state.records
-              React.createElement Room, key: record.id, record: record, handleDeleteRoom: @deleteRecord, handleEditRoom: @updateRecord
-      
+        className: 'container'
+        React.DOM.div
+          className: 'block-header'
+          React.DOM.h2 null, 'Phòng'
+        React.DOM.div
+          className: 'card'
+          React.DOM.div
+            className: 'card-header'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'employee'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'employee_edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement RoomForm, handleRoomAdd: @addRecord
+          React.DOM.div
+            className: 'card-body table-responsive'
+            React.DOM.table
+              className: 'table table-hover table-condensed'
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên phòng'
+                  React.DOM.th null, 'Ngôn ngữ'
+                  React.DOM.th null, 'Bản đồ'
+              React.DOM.tbody null,
+                for record in @state.records
+                  if @state.selected != null
+                    if record.id == @state.selected
+                      React.createElement Room, key: record.id, record: record, selected: true, selectRecord: @selectRecord
+                    else
+                      React.createElement Room, key: record.id, record: record, selected: false, selectRecord: @selectRecord
+                  else
+                    React.createElement Room, key: record.id, record: record, selected: false, selectRecord: @selectRecord      
+
 
 @Services = React.createClass
     updateRecord: (record, data) ->
