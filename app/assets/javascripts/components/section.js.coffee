@@ -82,6 +82,23 @@
             name: 'Danh sách dịch vụ'
           }
         ]
+      DataLink:
+        type: 2
+        className: 'fa fa-link'
+        active: false
+        name: "Liên kết dữ liệu"
+        records: [
+          {
+            code: 21 #employee link
+            active: false
+            name: 'Liên kết chức vụ'
+          }
+          {
+            code: 22 #service link
+            active: false
+            name: 'Liên kết dịch vụ'
+          }
+        ]
     Trigger: (code) ->
       if code == 1
         @setState homeMenu:
@@ -441,6 +458,68 @@
               name: 'Danh sách dịch vụ'
             }
           ]
+      if code == 21 #employee link
+        data =
+          task: 4
+          link: '/position_mapping/list'
+        @handleGetdata(data)
+        @setState DataLink:
+          type: 2
+          className: 'fa fa-link'
+          active: true
+          name: "Liên kết dữ liệu"
+          records: [
+            {
+              code: 21 #employee link
+              active: true
+              name: 'Liên kết chức vụ'
+            }
+            {
+              code: 22 #service link
+              active: false
+              name: 'Liên kết dịch vụ'
+            }
+          ]
+      else if code == 22 #service link
+        data =
+          task: 6
+          link: '/service_mapping/list'
+        @handleGetdata(data)
+        @setState DataLink:
+          type: 2
+          className: 'fa fa-link'
+          active: true
+          name: "Liên kết dữ liệu"
+          records: [
+            {
+              code: 21 #employee link
+              active: false
+              name: 'Liên kết chức vụ'
+            }
+            {
+              code: 22 #service link
+              active: true
+              name: 'Liên kết dịch vụ'
+            }
+          ]
+      else
+        @setState DataLink:
+          type: 2
+          className: 'fa fa-link'
+          active: false
+          name: "Liên kết dữ liệu"
+          records: [
+            {
+              code: 21 #employee link
+              active: false
+              name: 'Liên kết chức vụ'
+            }
+            {
+              code: 22 #service link
+              active: false
+              name: 'Liên kết dịch vụ'
+            }
+          ]
     handleGetdata: (data) ->
       $.ajax
         url: data.link
@@ -472,6 +551,7 @@
             React.createElement MenuAside, submenu: @state.homeMenu, Trigger: @Trigger 
             React.createElement MenuAside, submenu: @state.Header, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
+            React.createElement MenuAside, submenu: @state.DataLink, Trigger: @Trigger
         React.DOM.section
           id: 'content'
           React.createElement MainApp, data: @state.data, task: @state.task
