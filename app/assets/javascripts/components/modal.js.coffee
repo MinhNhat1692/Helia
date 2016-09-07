@@ -126,6 +126,46 @@
             @props.trigger2 @props.record, result
             return
           ).bind(this)
+      else if @props.type == 'room_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'name', $('#room_form_name').val()
+          formData.append 'lang', $('#room_form_lang').val()
+          if $('#room_form_map')[0].files[0] != undefined
+            formData.append 'map', $('#room_form_map')[0].files[0]
+          $.ajax
+            url: '/rooms'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
+      else if @props.type == 'room_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'name', $('#room_form_name').val()
+        formData.append 'lang', $('#room_form_lang').val()
+        if $('#room_form_map')[0].files[0] != undefined
+          formData.append 'map', $('#room_form_map')[0].files[0]
+        $.ajax
+          url: '/rooms'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)      
     employeeForm: ->
       React.DOM.div
         className: 'modal fade'
@@ -491,6 +531,90 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    roomForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Mẫu thông tin phòng'
+              React.DOM.small
+                'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-12'
+                  React.DOM.form
+                    id: 'employee_form'
+                    encType: 'multipart/form-data'
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmit
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-4 control-label'
+                        'Tên phòng'
+                      React.DOM.div
+                        className: 'col-sm-8'
+                        React.DOM.input
+                          id: 'room_form_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Tên phòng'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.name
+                            else
+                              ""
+                          name: 'name'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-4 control-label'
+                        'Ngôn ngữ'
+                      React.DOM.div
+                        className: 'col-sm-8'
+                        React.DOM.input
+                          id: 'room_form_lang'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Ngôn ngữ'
+                          name: 'lang'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.lang
+                            else
+                              "vi"
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-4 control-label'
+                        'Bản đồ'
+                      React.DOM.div
+                        className: 'col-sm-8'
+                        React.DOM.input
+                          id: 'room_form_map'
+                          type: 'file'
+                          className: 'form-control'
+                          name: 'map'
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee'
@@ -501,3 +625,7 @@
         @customerForm()
       else if @state.type == 'customer_edit_record'
         @customerForm()
+      else if @state.type == 'room_add'
+        @roomForm()
+      else if @state.type == 'room_edit'
+        @roomForm()
