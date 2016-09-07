@@ -111,6 +111,124 @@ class EmployeeController < ApplicationController
 		end
 	end
   
+  def find_record
+		if has_station?
+      @station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:email)
+				@doctor = User.find_by(email: params[:email])
+				if @doctor != nil
+					@profile = DoctorProfile.find_by(user_id: @doctor.id)
+				else
+					@profile = nil
+				end
+				if @profile == nil
+				  @record = nil
+				else
+					@record = Employee.find_by(user_id: @doctor.id, station_id: @station.id)
+			  end
+			  @data = []
+			  @data[0] = @profile
+			  @data[1] = @record
+			  if @doctor == nil
+					@data[2] = nil
+				else
+					@data[2] = @doctor.id
+			  end
+			  render json: @data
+			end
+    else
+      redirect_to root_path
+		end
+	end
+  
+  def add_record
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:id)
+				@customeruser = User.find(params[:id])
+				if @customeruser != nil
+					@profile = DoctorProfile.find_by(user_id: @customeruser.id)
+					if @profile != nil
+					  @record = Employee.find_by(user_id: params[:id], station_id: @station.id)
+				    if @record == nil
+					    @record = Employee.new(user_id: @customeruser.id, station_id: @station.id, ename: @profile.lname + " " + @profile.fname, gender: @profile.gender, country: @profile.country, city: @profile.city, province: @profile.province, address: @profile.address, pnumber: @profile.pnumber, noid: @profile.noid, avatar: @profile.avatar)
+							if @record.save
+								render json: @record
+							else
+								render json: @record.errors, status: :unprocessable_entity
+							end
+						end
+				  end
+				end
+			end
+	  else
+			redirect_to root_path
+		end
+	end
+	
+	def link_record
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:id) && params.has_key?(:idrecord)
+				@customeruser = User.find(params[:id])
+				if @customeruser != nil
+					@record = Employee.find_by(id: params[:idrecord], user_id: nil, station_id: @station.id)
+				  if @record != nil
+					  if @record.update(user_id: @customeruser.id)
+							render json: @record
+						else
+							render json: @record.errors, status: :unprocessable_entity
+						end
+				  end
+				end
+			end
+	  else
+			redirect_to root_path
+		end
+	end
+	
+	def clear_link_record
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:idrecord)
+				@record = Employee.find_by(id: params[:idrecord], station_id: @station.id)
+				if @record != nil
+				  if @record.update(user_id: nil)
+						render json: @record
+					else
+						render json: @record.errors, status: :unprocessable_entity
+					end
+				end
+			end
+	  else
+			redirect_to root_path
+		end
+	end
+	
+	def update_record
+		if has_station?
+			@station = Station.find_by(user_id: current_user.id)
+			if params.has_key?(:id) && params.has_key?(:idrecord)
+				@customeruser = User.find(params[:id])
+				if @customeruser != nil
+					@profile = DoctorProfile.find_by(user_id: @customeruser.id)
+					if @profile != nil
+						@record = Employee.find_by(id: params[:idrecord], user_id: @customeruser.id, station_id: @station.id)
+						if @record != nil
+					    if @record.update(user_id: @customeruser.id, station_id: @station.id, ename: @profile.lname + " " + @profile.fname, gender: @profile.gender, country: @profile.country, city: @profile.city, province: @profile.province, address: @profile.address, pnumber: @profile.pnumber, noid: @profile.noid, avatar: @profile.avatar)
+							  render json: @record
+						  else
+							  render json: @record.errors, status: :unprocessable_entity
+						  end
+					  end
+				  end
+				end
+			end
+	  else
+			redirect_to root_path
+		end
+	end
+  
   private
   	# Confirms a logged-in user.
 		def logged_in_user

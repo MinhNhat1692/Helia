@@ -1043,7 +1043,7 @@
               React.DOM.h2 null, @props.record.cname
               @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + "Tháng"
         React.DOM.div
-          className: 'pmo-block pmo-contact hidden-xs'
+          className: 'pmo-block pmo-contact'
           React.DOM.h2 null, "Thông tin cơ bản"
           React.DOM.ul null,
             React.DOM.li null,
@@ -1094,7 +1094,7 @@
               React.DOM.h2 null, @props.record.lname + " " + @props.record.fname
               @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + " Tháng"
         React.DOM.div
-          className: 'pmo-block pmo-contact hidden-xs'
+          className: 'pmo-block pmo-contact'
           React.DOM.h2 null, "Thông tin cơ bản"
           React.DOM.ul null,
             React.DOM.li null,
@@ -1150,6 +1150,23 @@
             @props.handleCustomerSearch result
             return
           ).bind(this)
+    handleSubmitEmployee: (e) ->
+      if e.keyCode == 13
+        $('#employee_search_email').blur()
+        formData = new FormData
+        formData.append 'email', $('#employee_search_email').val()
+        $.ajax
+          url: '/employees/find_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.handleSearch result
+            return
+          ).bind(this)
     addListener: (e) ->
       @props.addListener e
     linkListener: (e) ->
@@ -1185,5 +1202,36 @@
                   style: {'textAlign': 'justify'}
                   "This user havent made thier Patient Profile yet but you still can link your record to thier account. Once they make thier Patient Profile, you will be able to update thier infomation into your record automatically"
                 React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'fa fa-link', text: ' Connect to Your Record', type: 1, Clicked: @linkListener
+    employeeStyle: ->
+      React.DOM.aside
+        id: 'chat'
+        className: @props.className
+        React.DOM.div
+          className: "chat-search"
+          React.DOM.div
+            className: "fg-line"
+            React.DOM.input
+              type: "text"
+              id: "employee_search_email"
+              className: "form-control"
+              placeholder: "Search People"
+              onKeyUp: @handleSubmitEmployee
+            React.DOM.i
+              className: 'fa fa-search'
+        if @props.record != null
+          React.createElement PatientProfile, className: 'btn btn-default col-md-12', existed: @props.existed, record: @props.record, gender: @props.gender, style: "advance", addListener: @addListener, linkListener: @linkListener, updateListener: @updateListener
+        else
+          if @props.userlink != null
+            React.DOM.div
+              className: "animated flipInY"
+              React.DOM.div
+                className: "pmo-block pmo-contact row"
+                React.DOM.p
+                  style: {'textAlign': 'justify'}
+                  "This user havent made thier Doctor Profile yet but you still can link your record to thier account. Once they make thier Patient Profile, you will be able to update thier infomation into your record automatically"
+                React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'fa fa-link', text: ' Connect to Your Record', type: 1, Clicked: @linkListener
     render: ->
-      @normalStyle()
+      if @props.style == 1
+        @normalStyle()
+      else if @props.style == 2
+        @employeeStyle()

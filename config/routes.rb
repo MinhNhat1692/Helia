@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  post '/employees/add_record', to: 'employee#add_record'
+  post '/employees/link_record', to: 'employee#link_record'
+  post '/employees/update_record', to: 'employee#update_record'
+  post '/employees/clear_link_record', to: 'employee#clear_link_record'
+  post '/employees/find_record', to: 'employee#find_record'
   delete '/customer_record', to: 'customer_record#destroy'
   put '/customer_record', to: 'customer_record#update'
   post '/customer_record', to: 'customer_record#create'

@@ -1,8 +1,41 @@
 @Records = React.createClass
+    getInitialState: ->
+      records: @props.data[0]
+      selected: null
+      record: null
+      classSideBar: 'sidebar'
+      existed: false
+      searchRecord: null
+      userlink: null
+    changeSearchRecord: (data) ->
+      @state.userlink = data[2]
+      if data[1] != null
+        index = -1
+        for record in @state.records
+          if data[1].id == record.id
+            index = @state.records.indexOf record
+            break
+        if index < 0
+          @addRecord(data[1])
+          @selectRecord(data[1])
+        else
+          @selectRecord(data[1])
+        @setState existed: true
+      else
+        @setState existed: false
+      @setState searchRecord: data[0]   
+    toggleSideBar: ->
+      if @state.classSideBar == 'sidebar'
+        @setState classSideBar: 'sidebar toggled'
+      else
+        @setState classSideBar: 'sidebar'
     updateRecord: (record, data) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-      @setState records: records
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
     deleteRecord: (record) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1]] })
@@ -10,26 +43,105 @@
     addRecord: (record) ->
       records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
-    selectRecord: (record) ->
-      @setState record: record
-    getInitialState: ->
-      records: @props.data[0]
-      record: null
-    getDefaultProps: ->
-      records: []
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
+    addRecordAlt: ->
+      if @state.searchRecord != null
+        formData = new FormData
+        formData.append 'id', @state.searchRecord.user_id
+        $.ajax
+          url: '/employees/add_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @addRecord(result)
+            return
+          ).bind(this)
+    updateRecordAlt: ->
+      if @state.searchRecord != null && @state.record != null
+        formData = new FormData
+        formData.append 'id', @state.searchRecord.user_id
+        formData.append 'idrecord', @state.record.id
+        $.ajax
+          url: '/employees/update_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @updateRecord(@state.record,result)
+            @setState record: result
+            return
+          ).bind(this)
+    linkRecordAlt: ->
+      if @state.searchRecord != null && @state.record != null
+        formData = new FormData
+        formData.append 'id', @state.searchRecord.user_id
+        formData.append 'idrecord', @state.record.id
+        $.ajax
+          url: '/employees/link_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @updateRecord(@state.record,result)
+            @setState record: result
+            return
+          ).bind(this)
+    ClearlinkRecordAlt: ->
+      if @state.record != null
+        formData = new FormData
+        formData.append 'idrecord', @state.record.id
+        $.ajax
+          url: '/employees/clear_link_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @updateRecord(@state.record,result)
+            @setState record: result
+            return
+          ).bind(this)
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/employee"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
     render: ->
       React.DOM.div
         className: 'container'
         React.DOM.div
           className: 'block-header'
           React.DOM.h2 null, 'Nhân viên'
+        React.createElement AsideMenu, style: 2, record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
         React.DOM.div
           className: 'card'
           React.DOM.div
             className: 'card-header'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-link', text: ' Liên kết', type: 1, Clicked: @toggleSideBar
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'employee'
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger: @updateRecord, datatype: 'employee_edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-flash-off', text: ' Bỏ liên kết', type: 1, Clicked: @ClearlinkRecordAlt
             React.DOM.br null
             React.DOM.br null
             React.createElement RecordForm, handleEmployeeRecord: @addRecord
@@ -47,13 +159,13 @@
                   React.DOM.th null, 'Anh'
               React.DOM.tbody null,
                 for record in @state.records
-                  if @state.record != null
-                    if record.id == @state.record.id
+                  if @state.selected != null
+                    if record.id == @state.selected
                       React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: true, selectRecord: @selectRecord
                     else
-                      React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: false,selectRecord: @selectRecord
+                      React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: false, selectRecord: @selectRecord
                   else
-                    React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: false,selectRecord: @selectRecord
+                    React.createElement Record, key: record.id, gender: @props.data[1], record: record, selected: false, selectRecord: @selectRecord
 
 @Rooms = React.createClass
     updateRecord: (record, data) ->
@@ -247,8 +359,6 @@
       existed: false
       searchRecord: null
       userlink: null
-    getDefaultProps: ->
-      records: []
     updateRecord: (record, data) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
@@ -369,11 +479,11 @@
     buttonRender: ->
       React.DOM.div
         className: 'row'
-        React.createElement AsideMenu, key: 'Aside', record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleCustomerSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
+        React.createElement AsideMenu, key: 'Aside', style: 1, record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleCustomerSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
+        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-exchange', text: ' Toggle Sidebar', type: 1, Clicked: @toggleSideBar
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record'
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o', text: ' Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_edit_record', record: @state.record
         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Delete', type: 1, Clicked: @deleteRecord
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-exchange', text: ' Toggle Sidebar', type: 1, Clicked: @toggleSideBar
         React.DOM.hr null
         React.DOM.div
           className: 'row'
