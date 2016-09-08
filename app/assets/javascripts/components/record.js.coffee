@@ -420,7 +420,6 @@
         
   @AppViewsService = React.createClass
     getInitialState: ->
-      edit: false
       type: 0
       record: @props.record
       rooms: @props.rooms
@@ -434,9 +433,6 @@
         formData.append 'sname', $('#quick_edit_sname').val()
       else if @state.type == 2
         formData.append 'description', $('#quick_edit_description').val()
-      else if @state.type == 3
-        if $('#quick_edit_file')[0].files[0] != undefined
-          formData.append 'file', $('#quick_edit_file')[0].files[0]
       else if @state.type == 4
         formData.append 'price', $('#quick_edit_price').val()
       else if @state.type == 10
@@ -454,7 +450,6 @@
             @props.handleEditSer @props.record, result
             @setState
               type: 0
-              edit: false
             return
           ).bind(this)
       else
@@ -470,54 +465,50 @@
             @props.handleEditSerMap result
             @setState
               type: 0
-              edit: false
             return
           ).bind(this)
     handleToggleName: (e) ->
       e.preventDefault()
-      @setState
-        type: 1
-        edit: !@state.edit
+      if @props.ownerMode
+        @setState
+          type: 1
     handleToggleDescription: (e) ->
       e.preventDefault()
-      @setState
-        type: 2
-        edit: !@state.edit
-    handleToggleLogo: (e) ->
-      e.preventDefault()
-      @setState
-        type: 3
-        edit: !@state.edit
+      if @props.ownerMode
+        @setState
+          type: 2
     handleTogglePrice: (e) ->
       e.preventDefault()
-      @setState
-        type: 4
-        edit: !@state.edit
+      if @props.ownerMode
+        @setState
+          type: 4
     handleToggleSerMap: (e) ->
       e.preventDefault()
-      @setState
-        type: 10
-        edit: !@state.edits
-    recordForm: ->
+      if @props.ownerMode
+        @setState
+          type: 10
+    recordBlock: ->
       React.DOM.div
-        className: 'col-lg-3'
+        className: @props.className
         React.DOM.div
-          className: 'contact-box center-version'
+          className: 'card text-center pt-inner'
           React.DOM.div
-            className: 'over'
-            if @state.type == 3
+            className: 'pti-header'
+            if @state.type == 4 
               React.DOM.input
                 className: 'form-control'
-                type: 'file'
+                type: 'number'
+                defaultValue: @props.record.price
                 onBlur: @handleEdit
-                placeholder: 'File'
-                id: 'quick_edit_file'
+                placeholder: 'Type price'
+                id: 'quick_edit_price'
             else
-              React.DOM.img
-                alt: 'image'
-                className: 'img-circle'
-                src: @props.record.file
-            if @state.type == 1  
+              React.DOM.h2
+                onClick: @handleTogglePrice
+                @props.record.price
+                React.DOM.small null,
+                  @props.record.currency
+            if @state.type == 1
               React.DOM.input
                 className: 'form-control'
                 type: 'text'
@@ -526,74 +517,10 @@
                 placeholder: 'Type name'
                 id: 'quick_edit_sname'
             else
-              React.DOM.h3
-                className: 'm-b-xs'
-                React.DOM.strong
-                  @props.record.sname  
-            check = false
-            if @state.type == 10
-              React.createElement SelectBox, records: @props.rooms, type: 3, id: 'quick_edit_room', text: 'Tên Room', blurOut: @handleEdit
-            else
-              for map in @props.servicemap
-                if map.service_id == @props.record.id
-                  for room in @props.rooms
-                    if room.id == map.room_id
-                      @state.roomName = room.name
-                      break
-                  break
               React.DOM.div
-                className: 'font-bold'
-                @state.roomName
-            React.DOM.address
-              if @state.type == 2
-                React.DOM.input
-                  className: 'form-control'
-                  type: 'text'
-                  defaultValue: @props.record.description
-                  onBlur: @handleEdit
-                  placeholder: 'Type description'
-                  id: 'quick_edit_description'
-              else
-                React.DOM.p null,
-                  @state.record.description
-                    React.DOM.br null,
-              if @state.type == 4
-                React.DOM.input
-                  className: 'form-control'
-                  type: 'number'
-                  defaultValue: @props.record.price
-                  onBlur: @handleEdit
-                  placeholder: 'Type price'
-                  id: 'quick_edit_price'
-              else
-                React.DOM.p null,
-                  @props.record.price + ' ' + @props.record.currency
-                    React.DOM.br null,
-          React.DOM.div
-            className: 'contact-box-footer'
-            React.DOM.div
-              className: 'm-t-xs btn-group'
-              React.DOM.a
-                className: 'btn btn-default btn-xs'
-                React.DOM.i
-                  className: 'fa fa-pencil-square-o'
-                ' Edit'
-    recordBlock: ->
-      React.DOM.div
-        className: @props.className
-        React.DOM.div
-          className: 'card text-center pt-inner'
-          React.DOM.div
-            className: 'pti-header'
-            React.DOM.h2
-              onClick: @handleTogglePrice
-              @props.record.price
-              React.DOM.small null,
-                @props.record.currency
-            React.DOM.div
-              className: "ptih-title"
-              onClick: @handleToggleName
-              @props.record.sname
+                className: "ptih-title"
+                onClick: @handleToggleName
+                @props.record.sname
             for map in @props.servicemap
               if map.service_id == @props.record.id
                 for room in @props.rooms
@@ -603,26 +530,30 @@
                 break
           React.DOM.div
             className: "pti-body"
-            React.DOM.div
-              className: 'ptib-item'
-              onClick: @handleToggleDescription
-              @props.record.description
-            React.DOM.div
-              className: 'ptib-item'
-              onClick: @handleToggleSerMap
-              @state.roomName
+            if @state.type == 2
+              React.DOM.textarea
+                className: 'form-control'
+                type: 'text'
+                defaultValue: @props.record.description
+                onBlur: @handleEdit
+                placeholder: 'Type description'
+                id: 'quick_edit_description'
+            else
+              React.DOM.div
+                className: 'ptib-item'
+                onClick: @handleToggleDescription
+                @props.record.description
+            if @state.type == 10
+              React.createElement SelectBox, records: @props.rooms, type: 3, id: 'quick_edit_room', text: 'Tên phòng', blurOut: @handleEdit
+            else
+              React.DOM.div
+                className: 'ptib-item'
+                onClick: @handleToggleSerMap
+                @state.roomName
           React.DOM.div
             className: "pti-footer"
-            React.DOM.a
-              className: 'btn btn-default'
-              React.DOM.i
-                className: 'fa fa-pencil-square-o'
-                ' Check'
     render: ->
-      if @state.edit
-        @recordForm()
-      else
-        @recordBlock()
+      @recordBlock()
        
         
   @PatientRecord = React.createClass
