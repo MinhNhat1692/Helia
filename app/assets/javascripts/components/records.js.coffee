@@ -382,6 +382,12 @@
 
 
 @AppViewsEmployees = React.createClass
+    getInitialState: ->
+      records: @props.data[0]
+      rooms: @props.data[1]
+      positions: @props.data[2]
+      positionmap: @props.data[3]
+      station: @props.data[4]
     updateRecord: (record, data) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
@@ -398,20 +404,23 @@
       if check
         listposmap = React.addons.update(@state.positionmap, { $push: [data] })
         @setState positionmap: listposmap
-    getInitialState: ->
-      records: @props.data[0]
-      rooms: @props.data[1]
-      positions: @props.data[2]
-      positionmap: @props.data[3]
-      station: @props.data[4]
-    getDefaultProps: ->
-      records: []
-      rooms: []
     render: ->
       React.DOM.div
-        className: 'row'
-        for record in @state.records
-          React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions, positionmap: @state.positionmap, station: @state.station, handleEditAppMap: @updateRecord, handleEditPosMap: @updateMap
+        className: 'container'
+        React.DOM.div
+          className: "text-center"
+          React.DOM.h2
+            className: "f-400"
+            "DANH SÁCH NHÂN VIÊN"
+          React.DOM.p
+            className: "c-gray m-t-20 m-b-20"
+            "Click vào thông tin chức vụ của nhân viên để định chức vụ cho từng nhân viên. Tùy vào chức vụ được phân công mà nhân viên sẽ có quyền truy cập thông tin của từng dịch vụ khác nhau"
+        React.DOM.div
+          className: "row m-t-25 card"
+          React.DOM.div
+            className: "card-body card-padding"
+            for record in @state.records
+              React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions, positionmap: @state.positionmap, station: @state.station, ownerMode: true, className: "col-md-2 col-sm-4 col-xs-6", handleEditAppMap: @updateRecord, handleEditPosMap: @updateMap
           
 
 @AppViewsServices = React.createClass
@@ -578,52 +587,55 @@
           success: ((result) ->
             return
           ).bind(this)
-    buttonRender: ->
+    RecordsRender: ->
       React.DOM.div
-        className: 'row'
-        React.createElement AsideMenu, key: 'Aside', style: 1, record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleCustomerSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-exchange', text: ' Toggle Sidebar', type: 1, Clicked: @toggleSideBar
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record'
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o', text: ' Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_edit_record', record: @state.record
-        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Delete', type: 1, Clicked: @deleteRecord
-        React.DOM.hr null
+        className: 'container'
         React.DOM.div
-          className: 'row'
-          style: {'padding': '10px'}
+          className: 'block-header'
+          React.DOM.h2 null, 'Danh sách bệnh nhân'
+        React.createElement AsideMenu, key: 'Aside', style: 1, record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleCustomerSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
+        React.DOM.div
+          className: 'card col-md-9'
           React.DOM.div
-            className: 'col-md-9'
+            className: 'card-header'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-exchange', text: ' Toggle Sidebar', type: 1, Clicked: @toggleSideBar
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o', text: ' Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_edit_record', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Delete', type: 1, Clicked: @deleteRecord
+            React.DOM.br null
+            React.DOM.br null
             React.createElement PatientForm, handleOnchange: @checkrecord, handleRecordAdd: @addRecord
-            React.DOM.hr null
-            React.DOM.div
-              className: 'row'
-              React.DOM.div
-                className: 'table-responsive col-md-12'
-                React.DOM.table
-                  className: 'table table-condensed table-hover'
-                  React.DOM.thead null,
-                    React.DOM.tr null,
-                      React.DOM.th null, 'Name'
-                      React.DOM.th null, 'DOB'
-                      React.DOM.th null, 'Age'
-                      React.DOM.th null, 'Gender'
-                      React.DOM.th null, 'Address'
-                      React.DOM.th null, 'Pnumber'
-                      React.DOM.th null, 'Noid'
-                      React.DOM.th null, 'datei'
-                      React.DOM.th null, 'placei'
-                      React.DOM.th null, 'avatar'
-                      React.DOM.th null, 'created_at'
-                      React.DOM.th null, 'updated_at'
-                  React.DOM.tbody null,
-                    for record in @state.records
-                      if record.id == @state.selected
-                        React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: true, record: record, TriggerSelect: @SelectHandle
-                      else
-                        React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @SelectHandle  
           React.DOM.div
-            className: 'col-md-3'
-            if @state.record != null
-              React.createElement PatientProfile, gender: @props.data[1], record: @state.record, style: 'normal', clearLinkListener: @ClearlinkRecordAlt
+            className: 'card-body table-responsive'
+            React.DOM.table
+              className: 'table table-hover table-condensed'
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Họ và tên'
+                  React.DOM.th null, 'Ngày sinh'
+                  React.DOM.th null, 'Tuổi'
+                  React.DOM.th null, 'Giới tính'
+                  React.DOM.th null, 'Địa chỉ'
+                  React.DOM.th null, 'Số điện thoại'
+                  React.DOM.th null, 'CMTND'
+                  React.DOM.th null, 'Ngày cấp'
+                  React.DOM.th null, 'Nơi cấp'
+                  React.DOM.th null, 'Ảnh đại diện'
+                  React.DOM.th null, 'created_at'
+                  React.DOM.th null, 'updated_at'
+              React.DOM.tbody null,
+                for record in @state.records
+                  if @state.selected != null
+                    if record.id == @state.selected
+                      React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: true, record: record, TriggerSelect: @SelectHandle
+                    else
+                      React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @SelectHandle
+                  else
+                    React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @SelectHandle
+        React.DOM.div
+          className: 'col-md-3'
+          if @state.record != null
+            React.createElement PatientProfile, gender: @props.data[1], record: @state.record, style: 'normal', clearLinkListener: @ClearlinkRecordAlt
     render: ->
-      @buttonRender()
+      @RecordsRender()
       

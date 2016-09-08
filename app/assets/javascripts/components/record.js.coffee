@@ -167,14 +167,45 @@
 
   @AppViewsEmployee = React.createClass
     getInitialState: ->
-      edit: false
       type: 0
       record: @props.record
       rooms: @props.rooms
       positions: @props.positions
       positionmap: @props.positionmap
       station: @props.station
-      positionName: 'Chua co chuc vu'
+      positionName: 'Chưa có chức vụ'
+    calAge: (dob, style) ->
+      now = new Date
+      today = new Date(now.getYear(), now.getMonth(), now.getDate())
+      yearNow = now.getYear()
+      monthNow = now.getMonth()
+      dateNow = now.getDate()
+      if style == 1
+        dob = new Date(dob.substring(6, 10), dob.substring(3, 5) - 1, dob.substring(0, 2))
+      else
+        dob = new Date(dob.substring(0, 4), dob.substring(5, 7) - 1, dob.substring(8, 10))
+      yearDob = dob.getYear()
+      monthDob = dob.getMonth()
+      dateDob = dob.getDate()
+      yearAge = yearNow - yearDob
+      if monthNow >= monthDob
+        monthAge = monthNow - monthDob
+      else
+        yearAge--
+        monthAge = 12 + monthNow - monthDob
+      if dateNow >= dateDob
+        dateAge = dateNow - dateDob
+      else
+        monthAge--
+        dateAge = 31 + dateNow - dateDob
+        if monthAge < 0
+          monthAge = 11
+          yearAge--
+      age =
+        years: yearAge
+        months: monthAge
+        days: dateAge
+      return age    
     handleEdit: (e) ->
       e.preventDefault()
       formData = new FormData
@@ -205,7 +236,6 @@
             @props.handleEditAppMap @props.record, result
             @setState
               type: 0
-              edit: false
             return
           ).bind(this)
       else
@@ -221,46 +251,52 @@
             @props.handleEditPosMap result
             @setState
               type: 0
-              edit: false
             return
           ).bind(this)
     handleToggleName: (e) ->
       e.preventDefault()
-      @setState
-        type: 1
-        edit: !@state.edit
+      if @props.ownerMode
+        @setState
+          type: 1
     handleToggleAddress: (e) ->
       e.preventDefault()
-      @setState
-        type: 2
-        edit: !@state.edit
+      if @props.ownerMode
+        @setState
+          type: 2
     handleToggleAvatar: (e) ->
       e.preventDefault()
-      @setState
-        type: 3
-        edit: !@state.edit
+      if @props.ownerMode
+        @setState
+          type: 3
     handleToggleNoid: (e) ->
       e.preventDefault()
-      @setState
-        type: 4
-        edit: !@state.edit
+      if @props.ownerMode
+        @setState
+          type: 4
     handleTogglePnumber: (e) ->
       e.preventDefault()
-      @setState
-        type: 5
-        edit: !@state.edits
+      if @props.ownerMode
+        @setState
+          type: 5
     handleTogglePosMap: (e) ->
       e.preventDefault()
-      @setState
-        type: 10
-        edit: !@state.edits
-    recordForm: ->
+      if @props.ownerMode
+        @setState
+          type: 10
+    recordBlock: ->
       React.DOM.div
-        className: 'col-lg-3'
+        className: @props.className
+        for map in @props.positionmap
+          if map.employee_id == @props.record.id
+            for pos in @props.positions
+              if pos.id == map.position_id
+                @state.positionName = pos.pname
+                break
+            break
         React.DOM.div
-          className: 'contact-box center-version'
-          React.DOM.div
-            className: 'over'
+          className: "c-item animated flipInY"
+          React.DOM.a
+            className: "ci-avatar"
             if @state.type == 3
               React.DOM.input
                 className: 'form-control'
@@ -270,9 +306,15 @@
                 id: 'quick_edit_avatar'
             else
               React.DOM.img
-                alt: 'image'
-                className: 'img-circle'
-                src: @props.record.avatar
+                alt: ''
+                onClick: @handleToggleAvatar
+                src:
+                  if @props.record.avatar != "/avatars/original/missing.png"
+                    @props.record.avatar
+                  else
+                    'https://www.twomargins.com/images/noavatar.jpg'
+          React.DOM.div
+            className: "c-info"
             if @state.type == 1  
               React.DOM.input
                 className: 'form-control'
@@ -282,140 +324,57 @@
                 placeholder: 'Type name'
                 id: 'quick_edit_ename'
             else
-              React.DOM.h3
-                className: 'm-b-xs'
-                React.DOM.strong
-                  @props.record.ename  
-            check = false
-            if @state.type == 10
-              React.createElement SelectBox, records: @props.positions, type: 2, id: 'quick_edit_posmap', text: 'Tên Position', blurOut: @handleEdit
-            else
-              for map in @state.positionmap
-                if map.employee_id == @props.record.id
-                  React.DOM.div
-                    className: 'font-bold'
-                    for pos in @props.positions
-                      if pos.id == map.position_id
-                        pos.pname
-                        break
-                  check = true
-                  break
-              if check == false
-                React.DOM.div
-                  className: 'font-bold'
-                  'Chua co chuc vu'
-            React.DOM.address
-              className: 'm-t-md'
-              React.DOM.strong null, @state.station.sname
-                React.DOM.br null,
-              if @state.type == 2
-                React.DOM.input
-                  className: 'form-control'
-                  type: 'text'
-                  defaultValue: @props.record.address
-                  onBlur: @handleEdit
-                  placeholder: 'Type address'
-                  id: 'quick_edit_address'
-              else
-                React.DOM.p null,
-                  @state.record.address
-                    React.DOM.br null,
-              if @state.type == 4
-                React.DOM.input
-                  className: 'form-control'
-                  type: 'text'
-                  defaultValue: @props.record.noid
-                  onBlur: @handleEdit
-                  placeholder: 'Type noid'
-                  id: 'quick_edit_noid'
-              else
-                React.DOM.p null,
-                  @state.record.noid
-                    React.DOM.br null,
-              if @state.type == 5
-                React.DOM.input
-                  className: 'form-control'
-                  type: 'text'
-                  defaultValue: @props.record.pnumber
-                  onBlur: @handleEdit
-                  placeholder: 'Type pnumber'
-                  id: 'quick_edit_pnumber'
-              else
-                React.DOM.abbr
-                  title: 'Phone'
-                  'SDT: '
-                React.DOM.i null,
-                  @props.record.pnumber
-          React.DOM.div
-            className: 'contact-box-footer'
-            React.DOM.div
-              className: 'm-t-xs btn-group'
-              React.DOM.a
-                className: 'btn btn-default btn-xs'
-                React.DOM.i
-                  className: 'fa fa-pencil-square-o'
-                ' Edit'
-    recordBlock: ->
-      React.DOM.div
-        className: 'col-lg-3'
-        React.DOM.div
-          className: 'contact-box center-version'
-          React.DOM.div
-            className: 'over'
-            React.DOM.img
-              alt: 'image'
-              className: 'img-circle'
-              onClick: @handleToggleAvatar
-              src: @props.record.avatar
-            React.DOM.h3
-              className: 'm-b-xs'
               React.DOM.strong
                 onClick: @handleToggleName
                 @props.record.ename
-            for map in @props.positionmap
-              if map.employee_id == @props.record.id
-                for pos in @props.positions
-                  if pos.id == map.position_id
-                    @state.positionName = pos.pname
-                    break
-                break
-            React.DOM.div
-              onClick: @handleTogglePosMap
-              className: 'font-bold'
-              @state.positionName
-            React.DOM.address
-              className: 'm-t-md'
-              React.DOM.strong null, @state.station.sname
-                React.DOM.br null,
-              React.DOM.p
+            if @state.type == 10
+              React.createElement SelectBox, records: @props.positions, type: 2, id: 'quick_edit_posmap', text: 'Tên Position', blurOut: @handleEdit
+            else
+              React.DOM.small
+                onClick: @handleTogglePosMap
+                @state.positionName
+            React.DOM.small null, @calAge(@props.record.created_at,2).years + " Năm " + @calAge(@props.record.created_at,2).months + " Tháng " + @calAge(@props.record.created_at,2).days + " Ngày" 
+            if @state.type == 2
+              React.DOM.input
+                className: 'form-control'
+                type: 'text'
+                defaultValue: @props.record.address
+                onBlur: @handleEdit
+                placeholder: 'Type address'
+                id: 'quick_edit_address'
+            else
+              React.DOM.small
                 onClick: @handleToggleAddress
                 @props.record.address
-                React.DOM.br null,
-              React.DOM.p
+            if @state.type == 4
+              React.DOM.input
+                className: 'form-control'
+                type: 'text'
+                defaultValue: @props.record.noid
+                onBlur: @handleEdit
+                placeholder: 'Type noid'
+                id: 'quick_edit_noid'
+            else
+              React.DOM.small
                 onClick: @handleToggleNoid
-                @props.record.noid
-                React.DOM.br null,
-              React.DOM.abbr
-                title: 'Phone'
-                'SDT: '
-              React.DOM.p
-                style: {display: 'inline-block'}
+                @props.record.noid 
+            if @state.type == 5
+              React.DOM.input
+                className: 'form-control'
+                type: 'text'
+                defaultValue: @props.record.pnumber
+                onBlur: @handleEdit
+                placeholder: 'Type pnumber'
+                id: 'quick_edit_pnumber'
+            else  
+              React.DOM.small
                 onClick: @handleTogglePnumber
                 @props.record.pnumber
           React.DOM.div
-            className: 'contact-box-footer'
-            React.DOM.div
-              className: 'm-t-xs btn-group'
-              React.DOM.a
-                className: 'btn btn-default btn-xs'
-                React.DOM.i
-                  className: 'fa fa-pencil-square-o'
-                ' Edit'
+            className: "c-footer"
+            React.DOM.button null, " LIÊN LẠC"
     render: ->
-      if @state.edit
-        @recordForm()
-      else
-        @recordBlock()
+      @recordBlock()
     
         
   @AppViewsService = React.createClass
@@ -904,7 +863,6 @@
               onKeyUp: @handleSubmit
             React.DOM.i
               className: 'fa fa-search'
-        React.DOM.hr null
         if @props.record != null
           React.createElement PatientProfile, className: 'btn btn-default col-md-12', existed: @props.existed, record: @props.record, gender: @props.gender, style: "advance", addListener: @addListener, linkListener: @linkListener, updateListener: @updateListener
         else

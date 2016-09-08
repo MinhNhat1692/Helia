@@ -99,6 +99,18 @@
             name: 'Liên kết dịch vụ'
           }
         ]
+      Patient:
+        type: 2
+        className: 'zmdi zmdi-account'
+        active: false
+        name: "Bệnh nhân"
+        records: [
+          {
+            code: 31 #customer record
+            active: false
+            name: 'Danh sách bệnh nhân'
+          }
+        ]    
     Trigger: (code) ->
       if code == 1
         @setState homeMenu:
@@ -520,6 +532,36 @@
               name: 'Liên kết dịch vụ'
             }
           ]
+      if code == 31 #patient list
+        data =
+          task: 7
+          link: '/customer_record/list'
+        @handleGetdata(data)
+        @setState Patient:
+          type: 2
+          className: 'zmdi zmdi-account'
+          active: true
+          name: "Bệnh nhân"
+          records: [
+            {
+              code: 31 #customer record
+              active: true
+              name: 'Danh sách bệnh nhân'
+            }
+          ]
+      else
+        @setState Patient:
+          type: 2
+          className: 'zmdi zmdi-account'
+          active: false
+          name: "Bệnh nhân"
+          records: [
+            {
+              code: 31 #customer record
+              active: false
+              name: 'Danh sách bệnh nhân'
+            }
+          ]
     handleGetdata: (data) ->
       $.ajax
         url: data.link
@@ -552,6 +594,7 @@
             React.createElement MenuAside, submenu: @state.Header, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.DataLink, Trigger: @Trigger
+            React.createElement MenuAside, submenu: @state.Patient, Trigger: @Trigger
         React.DOM.section
           id: 'content'
           React.createElement MainApp, data: @state.data, task: @state.task

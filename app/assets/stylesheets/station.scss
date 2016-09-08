@@ -501,6 +501,7 @@ a{
 .pt-inner .pti-body .ptib-item:not(:last-child) {
     border-bottom: 1px solid rgba(255,255,255,.06);
 }
+
 .pt-inner .pti-body .ptib-item {
     padding: 15px 0;
     font-weight: 400;
@@ -543,6 +544,64 @@ a{
 .card .card-header {
     position: relative;
     padding: 23px 25px;
+}
+
+.card .card-body.card-padding {
+    padding: 25px 27px;
+}
+
+.c-item {
+    border-radius: 2px;
+    margin-bottom: 24px;
+    background-color: rgba(255,255,255,.04);
+}
+
+.c-item .ci-avatar {
+    display: block;
+    margin: -1px -1px 0;
+}
+
+.c-item .ci-avatar img {
+    width: 100%;
+    border-radius: 2px 2px 0 0;
+}
+
+.c-info {
+    text-align: center;
+    margin-top: 15px;
+    padding: 0 5px;
+}
+
+.c-info small, .c-info strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+.c-info strong {
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.c-info small {
+    margin-top: 3px;
+    color: rgba(255,255,255,.4);
+}
+
+.c-footer {
+    margin-top: 18px;
+}
+
+.c-footer>button {
+    padding: 7px 10px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: rgba(255,255,255,.04);
+    border: 0;
+    border-radius: 0;
 }
 
 .form-control:not(.fc-alt) {
@@ -1012,7 +1071,7 @@ svg:not(:root) {
   color: #2b343a!important;
   border-radius: 0 0 2px 2px;
   text-align: center;
-  padding: 15px 5px;
+  padding: 5px 5px;
   padding-bottom: 10px;
 }
 
@@ -1048,6 +1107,8 @@ svg:not(:root) {
 
 .pmo-pic .pmo-stat h2 {
   color: #2b343a!important;
+  margin-top: 5px;
+  text-transform: capitalize;
 }
 
 .pmo-pic {
