@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  station: one
+  name: MyString
+  minam: 1
+  price: 1.5
+  remark: MyText
+
+two:
+  station: two
+  name: MyString
+  minam: 1
+  price: 1.5
+  remark: MyText

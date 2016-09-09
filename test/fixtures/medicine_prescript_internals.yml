@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  station: one
+  code: MyString
+  customer_id: 1
+  employee_id: 1
+  result_id: 1
+  number_id: MyString
+  date: 2016-09-09
+  preparer: MyString
+  payer: MyString
+  tpayment: 1.5
+  discount: 1.5
+  tpayout: 1.5
+  pmethod: 1
+  remark: MyText
+
+two:
+  station: two
+  code: MyString
+  customer_id: 1
+  employee_id: 1
+  result_id: 1
+  number_id: MyString
+  date: 2016-09-09
+  preparer: MyString
+  payer: MyString
+  tpayment: 1.5
+  discount: 1.5
+  tpayout: 1.5
+  pmethod: 1
+  remark: MyText

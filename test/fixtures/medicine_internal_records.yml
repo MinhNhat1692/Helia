@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  station: one
+  customer_id: 1
+  script_id: 1
+  name: MyString
+  amount: 1
+  noid: MyString
+  signid: MyString
+  remark: MyText
+  company: MyString
+  price: 1.5
+  discount: 1.5
+  tpayment: 1.5
+  status: 1
+
+two:
+  station: two
+  customer_id: 1
+  script_id: 1
+  name: MyString
+  amount: 1
+  noid: MyString
+  signid: MyString
+  remark: MyText
+  company: MyString
+  price: 1.5
+  discount: 1.5
+  tpayment: 1.5
+  status: 1

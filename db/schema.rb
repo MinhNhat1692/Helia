@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830172040) do
+ActiveRecord::Schema.define(version: 20160909082653) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -104,6 +104,200 @@ ActiveRecord::Schema.define(version: 20160830172040) do
     t.string   "lang"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "medicine_bill_ins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "billcode"
+    t.date     "dayin"
+    t.string   "supplier"
+    t.date     "daybook"
+    t.integer  "pmethod"
+    t.float    "tpayment",   limit: 24
+    t.float    "discount",   limit: 24
+    t.float    "tpayout",    limit: 24
+    t.text     "remark",     limit: 65535
+    t.integer  "status"
+    t.integer  "station_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["station_id"], name: "index_medicine_bill_ins_on_station_id", using: :btree
+  end
+
+  create_table "medicine_bill_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.integer  "bill_id"
+    t.string   "name"
+    t.string   "company"
+    t.string   "noid"
+    t.string   "signid"
+    t.date     "expire"
+    t.integer  "pmethod"
+    t.integer  "qty"
+    t.float    "taxrate",    limit: 24
+    t.float    "price",      limit: 24
+    t.text     "remark",     limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["station_id"], name: "index_medicine_bill_records_on_station_id", using: :btree
+  end
+
+  create_table "medicine_companies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.string   "address"
+    t.string   "pnumber"
+    t.string   "noid"
+    t.string   "email"
+    t.string   "website"
+    t.string   "taxcode"
+    t.integer  "station_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["station_id"], name: "index_medicine_companies_on_station_id", using: :btree
+  end
+
+  create_table "medicine_external_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.integer  "customer_id"
+    t.integer  "script_id"
+    t.string   "name"
+    t.integer  "amount"
+    t.text     "remark",      limit: 65535
+    t.string   "company"
+    t.float    "price",       limit: 24
+    t.float    "total",       limit: 24
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["station_id"], name: "index_medicine_external_records_on_station_id", using: :btree
+  end
+
+  create_table "medicine_groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.text     "remark",     limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "medicine_internal_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.integer  "customer_id"
+    t.integer  "script_id"
+    t.string   "name"
+    t.integer  "amount"
+    t.string   "noid"
+    t.string   "signid"
+    t.text     "remark",      limit: 65535
+    t.string   "company"
+    t.float    "price",       limit: 24
+    t.float    "discount",    limit: 24
+    t.float    "tpayment",    limit: 24
+    t.integer  "status"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["station_id"], name: "index_medicine_internal_records_on_station_id", using: :btree
+  end
+
+  create_table "medicine_prescript_externals", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.string   "code"
+    t.integer  "customer_id"
+    t.integer  "employee_id"
+    t.integer  "result_id"
+    t.string   "number_id"
+    t.date     "date"
+    t.string   "address"
+    t.text     "remark",      limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["station_id"], name: "index_medicine_prescript_externals_on_station_id", using: :btree
+  end
+
+  create_table "medicine_prescript_internals", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.string   "code"
+    t.integer  "customer_id"
+    t.integer  "employee_id"
+    t.integer  "result_id"
+    t.string   "number_id"
+    t.date     "date"
+    t.string   "preparer"
+    t.string   "payer"
+    t.float    "tpayment",    limit: 24
+    t.float    "discount",    limit: 24
+    t.float    "tpayout",     limit: 24
+    t.integer  "pmethod"
+    t.text     "remark",      limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["station_id"], name: "index_medicine_prescript_internals_on_station_id", using: :btree
+  end
+
+  create_table "medicine_prices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.string   "name"
+    t.integer  "minam"
+    t.float    "price",      limit: 24
+    t.text     "remark",     limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["station_id"], name: "index_medicine_prices_on_station_id", using: :btree
+  end
+
+  create_table "medicine_samples", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "type"
+    t.string   "name"
+    t.integer  "group"
+    t.string   "company"
+    t.float    "price",      limit: 24
+    t.float    "weight",     limit: 24
+    t.text     "remark",     limit: 65535
+    t.integer  "expire"
+    t.integer  "station_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["station_id"], name: "index_medicine_samples_on_station_id", using: :btree
+  end
+
+  create_table "medicine_stock_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.integer  "type"
+    t.string   "name"
+    t.string   "noid"
+    t.string   "signid"
+    t.integer  "amount"
+    t.date     "expire"
+    t.string   "supplier"
+    t.integer  "internal_record_id"
+    t.integer  "bill_in_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["station_id"], name: "index_medicine_stock_records_on_station_id", using: :btree
+  end
+
+  create_table "medicine_suppliers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.string   "contactname"
+    t.string   "address1"
+    t.string   "address2"
+    t.string   "address3"
+    t.string   "spnumber"
+    t.string   "pnumber"
+    t.string   "noid"
+    t.string   "email"
+    t.string   "facebook"
+    t.string   "twitter"
+    t.string   "fax"
+    t.string   "taxcode"
+    t.integer  "station_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["station_id"], name: "index_medicine_suppliers_on_station_id", using: :btree
+  end
+
+  create_table "medicine_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.text     "remark",     limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "nations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -304,6 +498,17 @@ ActiveRecord::Schema.define(version: 20160830172040) do
   add_foreign_key "customer_records", "stations"
   add_foreign_key "doctor_profiles", "users"
   add_foreign_key "employees", "stations"
+  add_foreign_key "medicine_bill_ins", "stations"
+  add_foreign_key "medicine_bill_records", "stations"
+  add_foreign_key "medicine_companies", "stations"
+  add_foreign_key "medicine_external_records", "stations"
+  add_foreign_key "medicine_internal_records", "stations"
+  add_foreign_key "medicine_prescript_externals", "stations"
+  add_foreign_key "medicine_prescript_internals", "stations"
+  add_foreign_key "medicine_prices", "stations"
+  add_foreign_key "medicine_samples", "stations"
+  add_foreign_key "medicine_stock_records", "stations"
+  add_foreign_key "medicine_suppliers", "stations"
   add_foreign_key "numbers", "order_maps"
   add_foreign_key "numbers", "rooms"
   add_foreign_key "order_maps", "customer_records"

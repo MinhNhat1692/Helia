@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  station: one
+  bill_id: 1
+  name: MyString
+  company: MyString
+  noid: MyString
+  signid: MyString
+  expire: 2016-09-09
+  pmethod: 1
+  qty: 1
+  taxrate: 1.5
+  price: 1.5
+  remark: MyText
+
+two:
+  station: two
+  bill_id: 1
+  name: MyString
+  company: MyString
+  noid: MyString
+  signid: MyString
+  expire: 2016-09-09
+  pmethod: 1
+  qty: 1
+  taxrate: 1.5
+  price: 1.5
+  remark: MyText
