@@ -908,3 +908,46 @@
         @normalStyle()
       else if @props.style == 2
         @employeeStyle()
+        
+        
+  @RecordGeneral = React.createClass
+    getInitialState: ->
+      type: 0
+    selectRecord: (e) ->
+      @props.selectRecord @props.record
+    MedicineSupplier:
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.contactname
+          React.DOM.td null, @props.record.spnumber
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.address1
+          React.DOM.td null, @props.record.address2
+          React.DOM.td null, @props.record.address3
+          React.DOM.td null, @props.record.email
+          React.DOM.td null, @props.record.facebook
+          React.DOM.td null, @props.record.twitter
+          React.DOM.td null, @props.record.fax
+          React.DOM.td null, @props.record.taxcode
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.contactname
+          React.DOM.td null, @props.record.spnumber
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.address1
+          React.DOM.td null, @props.record.address2
+          React.DOM.td null, @props.record.address3
+          React.DOM.td null, @props.record.email
+          React.DOM.td null, @props.record.facebook
+          React.DOM.td null, @props.record.twitter
+          React.DOM.td null, @props.record.fax
+          React.DOM.td null, @props.record.taxcode
+    render: ->
+      if @props.datatype == "medicine_supplier"
+        @MedicineSupplier()

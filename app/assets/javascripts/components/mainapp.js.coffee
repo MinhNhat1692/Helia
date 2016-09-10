@@ -13,6 +13,8 @@
       React.createElement AppViewsServices, data: @props.data
     PatientGeneral: ->
       React.createElement PatientGeneral, data: @props.data
+    MedicineSupplier: ->
+      React.createElement MedicineSupplier, data: @props.data #task = code = 41
     render: ->
       if @props.task == 1
         @Employee()
@@ -28,3 +30,5 @@
         @ServiceMap()
       else if @props.task == 7
         @PatientGeneral()
+      else if @props.task == 41
+        @MedicineSupplier()

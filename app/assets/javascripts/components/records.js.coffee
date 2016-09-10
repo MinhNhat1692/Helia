@@ -638,4 +638,108 @@
             React.createElement PatientProfile, gender: @props.data[1], record: @state.record, style: 'normal', clearLinkListener: @ClearlinkRecordAlt
     render: ->
       @RecordsRender()
-      
+
+
+@MedicineSupplier = React.createClass
+    getInitialState: ->
+      records: @props.data[0]
+      selected: null
+      record: null
+    changeSearchRecord: (data) ->
+      @state.userlink = data[2]
+      if data[1] != null
+        index = -1
+        for record in @state.records
+          if data[1].id == record.id
+            index = @state.records.indexOf record
+            break
+        if index < 0
+          @addRecord(data[1])
+          @selectRecord(data[1])
+        else
+          @selectRecord(data[1])
+        @setState existed: true
+      else
+        @setState existed: false
+      @setState searchRecord: data[0]   
+    toggleSideBar: ->
+      if @state.classSideBar == 'sidebar'
+        @setState classSideBar: 'sidebar toggled'
+      else
+        @setState classSideBar: 'sidebar'
+    updateRecord: (record, data) ->
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @setState records: records
+    addRecord: (record) ->
+      records = React.addons.update(@state.records, { $push: [record] })
+      @setState records: records
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/employee"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
+    trigger: (e) ->
+      console.log(1)
+    render: ->
+      React.DOM.div
+        className: 'container'
+        React.DOM.div
+          className: 'block-header'
+          React.DOM.h2 null, 'Nguồn cấp thuốc'
+        React.DOM.div
+          className: 'card'
+          React.DOM.div
+            className: 'card-header'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            #React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'medicine_supplier'
+            #React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'medicine_supplier_edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: 'medicine_supplier', handleTrigger: @trigger
+          React.DOM.div
+            className: 'card-body table-responsive'
+            React.DOM.table
+              className: 'table table-hover table-condensed'
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Mã'
+                  React.DOM.th null, 'Tên nguồn'
+                  React.DOM.th null, 'Người liên lạc'
+                  React.DOM.th null, 'Số ĐT cố định'
+                  React.DOM.th null, 'Số ĐT di động'
+                  React.DOM.th null, 'Địa chỉ 1'
+                  React.DOM.th null, 'Địa chỉ 2'
+                  React.DOM.th null, 'Địa chỉ 3'
+                  React.DOM.th null, 'Email'
+                  React.DOM.th null, 'Link Facebook'
+                  React.DOM.th null, 'Twitter'
+                  React.DOM.th null, 'Số fax'
+                  React.DOM.th null, 'Mã số thuế'
+              #React.DOM.tbody null,
+              #  for record in @state.records
+              #    if @state.selected != null
+              #      if record.id == @state.selected
+              #        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: true, selectRecord: @selectRecord
+              #      else
+              #        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: false, selectRecord: @selectRecord
+              #    else
+              #      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: false, selectRecord: @selectRecord

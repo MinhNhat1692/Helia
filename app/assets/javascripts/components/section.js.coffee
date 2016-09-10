@@ -111,6 +111,68 @@
             name: 'Danh sách bệnh nhân'
           }
         ]    
+      Pharmacy:
+        type: 2
+        className: 'fa fa-medkit'
+        active: false
+        name: "Quản lý thuốc"
+        records: [
+          {
+            code: 41 #Supplier link
+            active: false
+            name: 'Nguồn cấp thuốc'
+          }
+          {
+            code: 42 #Company medicine
+            active: false
+            name: 'Doanh nghiệp sản xuất'
+          }
+          {
+            code: 43 #Medicine Sample
+            active: false
+            name: 'Mẫu thuốc'
+          }
+          {
+            code: 44 #Medicine Bill In
+            active: false
+            name: 'Hóa đơn nhập thuốc'
+          }
+          {
+            code: 45 #Medicine Sample
+            active: false
+            name: 'Thông tin thuốc nhập kho'
+          }
+          {
+            code: 46 #Medicine Price
+            active: false
+            name: 'Thông tin giá thuốc'
+          }
+          {
+            code: 47 #Medicine Prescript External
+            active: false
+            name: 'Đơn thuốc ngoài'
+          }
+          {
+            code: 48 #Medicine External Record
+            active: false
+            name: 'Thông tin thuốc kê ngoài'
+          }
+          {
+            code: 49 #Medicine Prescript Internal
+            active: false
+            name: 'Đơn thuốc trong'
+          }
+          {
+            code: 50 #Medicine Internal Record
+            active: false
+            name: 'Thông tin thuốc kê trong'
+          }
+          {
+            code: 51 #Medicine Stock Record
+            active: false
+            name: 'Thống kê kho thuốc'
+          }
+        ]
     Trigger: (code) ->
       if code == 1
         @setState homeMenu:
@@ -562,6 +624,136 @@
               name: 'Danh sách bệnh nhân'
             }
           ]
+      if code == 41 #Pharmacy list
+        data =
+          task: 41
+          link: '/customer_record/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: true
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: false
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
     handleGetdata: (data) ->
       $.ajax
         url: data.link
@@ -595,6 +787,7 @@
             React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.DataLink, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.Patient, Trigger: @Trigger
+            React.createElement MenuAside, submenu: @state.Pharmacy, Trigger: @Trigger
         React.DOM.section
           id: 'content'
           React.createElement MainApp, data: @state.data, task: @state.task

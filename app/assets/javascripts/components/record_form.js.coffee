@@ -436,3 +436,101 @@
     render: ->
       if @state.type == 1
         @positionFormRender()
+  
+  
+  @FilterForm = React.createClass
+    getInitialState: ->
+      type: 0
+    MedicineSupplier: ->
+      React.DOM.form
+        className: 'form-horizontal row'
+        onSubmit: @handleSubmit
+        React.DOM.div
+          className: 'form-group col-lg-6 col-sm-12'
+          React.DOM.div
+            className: 'col-sm-4'
+            style: {'marginBottom': '15px'}
+            React.DOM.select
+              id: 'filter_type_select'
+              className: 'form-control'
+              name: 'filterType'
+              React.DOM.option
+                value: ''
+                'Chọn tiêu chuẩn lọc'
+              React.DOM.option
+                value: '1'
+                'Mã'
+              React.DOM.option
+                value: '2'
+                'Tên nguồn'
+              React.DOM.option
+                value: '3'
+                'Người liên lạc'
+              React.DOM.option
+                value: '4'
+                'Số ĐT cố định'
+              React.DOM.option
+                value: '5'
+                'Số ĐT di động'
+              React.DOM.option
+                value: '6'
+                'Địa chỉ 1'
+              React.DOM.option
+                value: '7'
+                'Địa chỉ 2'
+              React.DOM.option
+                value: '8'
+                'Địa chỉ 3'
+              React.DOM.option
+                value: '9'
+                'Email'
+              React.DOM.option
+                value: '10'
+                'Link Facebook'
+              React.DOM.option
+                value: '11'
+                'Twitter'
+              React.DOM.option
+                value: '12'
+                'Fax'
+              React.DOM.option
+                value: '13'
+                'Mã số thuế'
+          React.DOM.div
+            className: 'col-sm-8'
+            React.DOM.input
+              id: 'filter_text'
+              type: 'text'
+              className: 'form-control'
+              defaultValue: ''
+              placeholder: 'Type here ...'
+              name: 'filterText'
+        React.DOM.button
+          type: 'submit'
+          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
+          React.DOM.i
+            className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button
+          type: 'submit'
+          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
+          React.DOM.i
+            className: 'zmdi zmdi-close'
+          ' Clear'
+        React.DOM.div
+          className: 'form-group col-lg-4 col-sm-12'
+          React.DOM.label
+            className: 'checkbox checkbox-inline m-r-20'
+            React.DOM.input
+              type: 'checkbox'
+              id: 'checkbox_db'
+            "Tìm tất cả"
+          React.DOM.label
+            className: 'checkbox checkbox-inline m-r-20'
+            React.DOM.input
+              type: 'checkbox'
+              id: 'checkbox_fast'
+            "Tìm nhanh"
+    render: ->
+      if @props.datatype == "medicine_supplier"
+        @MedicineSupplier()
