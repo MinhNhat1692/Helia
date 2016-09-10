@@ -645,6 +645,8 @@
       records: @props.data[0]
       selected: null
       record: null
+      autoComplete: null
+      filteredRecord: null
     changeSearchRecord: (data) ->
       @state.userlink = data[2]
       if data[1] != null
@@ -677,7 +679,9 @@
     deleteRecord: (record) ->
       index = @state.records.indexOf record
       records = React.addons.update(@state.records, { $splice: [[index, 1]] })
-      @setState records: records
+      @setState
+        records: records
+        record: null
     addRecord: (record) ->
       records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
@@ -690,13 +694,129 @@
       if @state.record != null
         $.ajax
           method: 'DELETE'
-          url: "/employee"
+          url: "/medicine_supplier"
           dataType: 'JSON'
           data: {id: @state.record.id}
           success: () =>
             @deleteRecord @state.record
     trigger: (e) ->
       console.log(1)
+    triggerInput: (text,type,check1) ->
+      if type != '' && text.length > 1
+        if !check1.option1
+          filtered = []
+          for record in @state.records
+            if @checkContain(type,text,record)
+              filtered.push record
+              @setState filteredRecord: filtered
+        else
+          formData = new FormData
+          switch Number(type)
+            when 1
+              formData.append 'noid', text.toLowerCase()
+            when 2
+              formData.append 'name', text.toLowerCase()
+            when 3
+              formData.append 'contactname', text.toLowerCase()
+            when 4
+              formData.append 'spnumber', text.toLowerCase()
+            when 5
+              formData.append 'pnumber', text.toLowerCase()
+            when 6
+              formData.append 'address1', text.toLowerCase()
+            when 7
+              formData.append 'address2', text.toLowerCase()
+            when 8
+              formData.append 'address3', text.toLowerCase()
+            when 9
+              formData.append 'email', text.toLowerCase()
+            when 10
+              formData.append 'facebook', text.toLowerCase()
+            when 11
+              formData.append 'twitter', text.toLowerCase()
+            when 12
+              formData.append 'fax', text.toLowerCase()
+            when 13
+              formData.append 'taxcode', text.toLowerCase()
+          $.ajax
+            url: '/medicine_supplier/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
+    checkContain: (type,text,record) ->
+      switch Number(type)
+        when 1
+          if record.noid.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 2
+          if record.name.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 3
+          if record.contactname.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 4
+          if record.spnumber.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 5
+          if record.pnumber.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 6
+          if record.address1.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 7
+          if record.address2.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 8
+          if record.address3.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 9
+          if record.email.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 10
+          if record.facebook.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 11
+          if record.twitter.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 12
+          if record.fax.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 13
+          if record.taxcode.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
     render: ->
       React.DOM.div
         className: 'container'
@@ -707,14 +827,12 @@
           className: 'card'
           React.DOM.div
             className: 'card-header'
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
-            #React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'medicine_supplier'
-            #React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'medicine_supplier_edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'medicine_supplier_add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'medicine_supplier_edit', record: @state.record
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
             React.DOM.br null
             React.DOM.br null
-            React.createElement FilterForm, datatype: 'medicine_supplier', handleTrigger: @trigger
+            React.createElement FilterForm, datatype: 'medicine_supplier', autoComplete: @state.autoComplete, triggerInput: @triggerInput
           React.DOM.div
             className: 'card-body table-responsive'
             React.DOM.table
@@ -734,12 +852,22 @@
                   React.DOM.th null, 'Twitter'
                   React.DOM.th null, 'Số fax'
                   React.DOM.th null, 'Mã số thuế'
-              #React.DOM.tbody null,
-              #  for record in @state.records
-              #    if @state.selected != null
-              #      if record.id == @state.selected
-              #        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: true, selectRecord: @selectRecord
-              #      else
-              #        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: false, selectRecord: @selectRecord
-              #    else
-              #      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: false, selectRecord: @selectRecord
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_supplier", selected: false, selectRecord: @selectRecord

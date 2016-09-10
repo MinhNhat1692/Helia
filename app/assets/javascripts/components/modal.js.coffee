@@ -256,6 +256,64 @@
             @props.trigger result
             return
           ).bind(this)
+      else if @props.type == 'medicine_supplier_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'noid', $('#medicine_supplier_noid').val()
+        formData.append 'name', $('#medicine_supplier_name').val()
+        formData.append 'contactname', $('#medicine_supplier_contact_name').val()
+        formData.append 'spnumber', $('#medicine_supplier_spnumber').val()
+        formData.append 'pnumber', $('#medicine_supplier_pnumber').val()
+        formData.append 'address1', $('#medicine_supplier_address1').val()
+        formData.append 'address2', $('#medicine_supplier_address2').val()
+        formData.append 'address3', $('#medicine_supplier_address3').val()
+        formData.append 'email', $('#medicine_supplier_email').val()
+        formData.append 'facebook', $('#medicine_supplier_facebook').val()
+        formData.append 'twitter', $('#medicine_supplier_twitter').val()
+        formData.append 'fax', $('#medicine_supplier_fax').val()
+        formData.append 'taxcode', $('#medicine_supplier_taxcode').val()
+        $.ajax
+          url: '/medicine_supplier'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_supplier_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'noid', $('#medicine_supplier_noid').val()
+          formData.append 'name', $('#medicine_supplier_name').val()
+          formData.append 'contactname', $('#medicine_supplier_contact_name').val()
+          formData.append 'spnumber', $('#medicine_supplier_spnumber').val()
+          formData.append 'pnumber', $('#medicine_supplier_pnumber').val()
+          formData.append 'address1', $('#medicine_supplier_address1').val()
+          formData.append 'address2', $('#medicine_supplier_address2').val()
+          formData.append 'address3', $('#medicine_supplier_address3').val()
+          formData.append 'email', $('#medicine_supplier_email').val()
+          formData.append 'facebook', $('#medicine_supplier_facebook').val()
+          formData.append 'twitter', $('#medicine_supplier_twitter').val()
+          formData.append 'fax', $('#medicine_supplier_fax').val()
+          formData.append 'taxcode', $('#medicine_supplier_taxcode').val()
+          $.ajax
+            url: '/medicine_supplier'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
     employeeForm: ->
       React.DOM.div
         className: 'modal fade'
@@ -268,7 +326,7 @@
               React.DOM.h4
                 className: 'modal-title'
                 'Mẫu thông tin nhân viên'
-              React.DOM.small
+              React.DOM.small null,
                 'Description'
             React.DOM.div
               className: 'modal-body'
@@ -441,7 +499,7 @@
               React.DOM.h4
                 className: 'modal-title'
                 'Customer Record Form'
-              React.DOM.small
+              React.DOM.small null,
                 'Description'
             React.DOM.div
               className: 'modal-body'
@@ -633,7 +691,7 @@
               React.DOM.h4
                 className: 'modal-title'
                 'Mẫu thông tin phòng'
-              React.DOM.small
+              React.DOM.small null,
                 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div
               className: 'modal-body'
@@ -717,7 +775,7 @@
               React.DOM.h4
                 className: 'modal-title'
                 'Mẫu thông tin chức vụ'
-              React.DOM.small
+              React.DOM.small null,
                 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div
               className: 'modal-body'
@@ -831,7 +889,7 @@
               React.DOM.h4
                 className: 'modal-title'
                 'Mẫu thông tin dịch vụ'
-              React.DOM.small
+              React.DOM.small null,
                 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div
               className: 'modal-body'
@@ -957,6 +1015,263 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    medicineSupplierForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg modal-sp-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Mẫu thông tin nguồn cấp thuốc'
+              React.DOM.small null,
+                'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-12'
+                  React.DOM.form
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmit
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Mã số'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_supplier_noid'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Mã số'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.noid
+                            else
+                              ""
+                          name: 'noid'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên nguồn'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_supplier_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Tên nguồn'
+                          name: 'supplier_name'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.name
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Người liên lạc'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_supplier_contact_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Tên nguồn'
+                          name: 'supplier_contact_name'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.contactname
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'SĐT cố định'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_supplier_spnumber'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'SĐT cố định'
+                          name: 'supplier_spnumber'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.spnumber
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'SĐT di động'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_supplier_pnumber'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'SĐT di động'
+                          name: 'supplier_pnumber'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.pnumber
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Địa chỉ 1'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input
+                          id: 'medicine_supplier_address1'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Địa chỉ 1'
+                          name: 'supplier_address1'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.address1
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Địa chỉ 2'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input
+                          id: 'medicine_supplier_address2'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Địa chỉ 2'
+                          name: 'supplier_address2'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.address2
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Địa chỉ 3'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input
+                          id: 'medicine_supplier_address3'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Địa chỉ 3'
+                          name: 'supplier_address3'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.address3
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-1 control-label hidden-xs'
+                        React.DOM.i
+                          className: "zmdi zmdi-email"
+                      React.DOM.div
+                        className: 'col-sm-3'
+                        React.DOM.input
+                          id: 'medicine_supplier_email'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Email'
+                          name: 'supplier_email'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.email
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-1 control-label hidden-xs'
+                        React.DOM.i
+                          className: "zmdi zmdi-facebook-box"
+                      React.DOM.div
+                        className: 'col-sm-3'
+                        React.DOM.input
+                          id: 'medicine_supplier_facebook'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Facebook Link'
+                          name: 'supplier_facebook'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.facebook
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-1 control-label hidden-xs'
+                        React.DOM.i
+                          className: "zmdi zmdi-twitter-box"
+                      React.DOM.div
+                        className: 'col-sm-3'
+                        React.DOM.input
+                          id: 'medicine_supplier_twitter'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Twitter Link'
+                          name: 'supplier_twitter'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.twitter
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Số fax'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_supplier_fax'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Fax'
+                          name: 'supplier_fax'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.fax
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Mã số thuế'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_supplier_taxcode'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Mã số thuế'
+                          name: 'supplier_taxcode'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.taxcode
+                            else
+                              ""
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee'
@@ -979,3 +1294,8 @@
         @serviceForm()
       else if @state.type == 'service_edit'
         @serviceForm()
+      else if @state.type == 'medicine_supplier_add'
+        @medicineSupplierForm()
+      else if @state.type == 'medicine_supplier_edit'
+        @medicineSupplierForm()
+      

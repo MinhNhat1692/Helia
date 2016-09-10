@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160909082653) do
+ActiveRecord::Schema.define(version: 20160910070202) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -240,6 +240,15 @@ ActiveRecord::Schema.define(version: 20160909082653) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.index ["station_id"], name: "index_medicine_prices_on_station_id", using: :btree
+  end
+
+  create_table "medicine_rights", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.integer  "user_id"
+    t.integer  "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["station_id"], name: "index_medicine_rights_on_station_id", using: :btree
   end
 
   create_table "medicine_samples", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -506,6 +515,7 @@ ActiveRecord::Schema.define(version: 20160909082653) do
   add_foreign_key "medicine_prescript_externals", "stations"
   add_foreign_key "medicine_prescript_internals", "stations"
   add_foreign_key "medicine_prices", "stations"
+  add_foreign_key "medicine_rights", "stations"
   add_foreign_key "medicine_samples", "stations"
   add_foreign_key "medicine_stock_records", "stations"
   add_foreign_key "medicine_suppliers", "stations"

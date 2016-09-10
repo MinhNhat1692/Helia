@@ -609,7 +609,7 @@ a{
 .auto-complete{
     position: absolute;
     top: 35px;
-    max-height: 200px;
+    max-height: 94px;
     width: calc(100% - 30px);
     overflow-x: hidden;
     overflow-y: auto;
@@ -621,6 +621,10 @@ a{
     margin-top: 10px;
 }
 
+.auto-complete>p:hover{
+    background-color: #222c32;
+    cursor: pointer;
+}
 
 
 .form-control:not(.fc-alt) {
@@ -719,10 +723,18 @@ tbody>.toggled{
     border: 0px solid #000000;
 }
 
+.modal-header small{
+    color: rgba(255,255,255,.4);   
+}
 .modal-body{
     background: #1E262B;
 }
 
+@media (min-width: 1200px){    
+  .modal-sp-lg{
+    width: 1200px;    
+  }
+}
 //BTN
 select option {
     background: #2b343a;

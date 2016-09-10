@@ -915,7 +915,7 @@
       type: 0
     selectRecord: (e) ->
       @props.selectRecord @props.record
-    MedicineSupplier:
+    MedicineSupplier: ->
       if @props.selected
         React.DOM.tr
           className: "toggled"

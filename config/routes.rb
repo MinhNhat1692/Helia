@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  delete '/medicine_supplier', to: 'medicine_supplier#destroy'
+  put '/medicine_supplier', to: 'medicine_supplier#update'
+  post '/medicine_supplier', to: 'medicine_supplier#create'
+  post '/medicine_supplier/list', to: 'medicine_supplier#list'
+  post '/medicine_supplier/search', to: 'medicine_supplier#search'
+
   post '/employee/add_record', to: 'employee#add_record'
   post '/employee/link_record', to: 'employee#link_record'
   post '/employee/update_record', to: 'employee#update_record'

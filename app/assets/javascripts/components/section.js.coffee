@@ -627,7 +627,7 @@
       if code == 41 #Pharmacy list
         data =
           task: 41
-          link: '/customer_record/list'
+          link: '/medicine_supplier/list'
         @handleGetdata(data)
         @setState Pharmacy:
           type: 2

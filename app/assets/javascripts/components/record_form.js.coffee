@@ -441,6 +441,40 @@
   @FilterForm = React.createClass
     getInitialState: ->
       type: 0
+    triggerAutoCompleteInput: (e) ->
+      e.preventDefault()
+      @props.triggerInput $('#filter_text').val(), $('#filter_type_select').val(), option1: $('#checkbox_db').is(':checked')
+    triggerAutoComplete: (record) ->
+      switch Number($('#filter_type_select').val())
+        when 1
+          $('#filter_text').val(record.noid)
+        when 2
+          $('#filter_text').val(record.name)
+        when 3
+          $('#filter_text').val(record.contactname)
+        when 4
+          $('#filter_text').val(record.spnumber)
+        when 5
+          $('#filter_text').val(record.pnumber)
+        when 6
+          $('#filter_text').val(record.address1)
+        when 7
+          $('#filter_text').val(record.address2)
+        when 8
+          $('#filter_text').val(record.address3)
+        when 9
+          $('#filter_text').val(record.mail)
+        when 10
+          $('#filter_text').val(record.facebook)
+        when 11
+          $('#filter_text').val(record.twitter)
+        when 12
+          $('#filter_text').val(record.fax)
+        when 13
+          $('#filter_text').val(record.taxcode)
+      
+    triggerChangeType: (e) ->
+      console.log(1)
     MedicineSupplier: ->
       React.DOM.form
         className: 'form-horizontal row'
@@ -454,47 +488,48 @@
               id: 'filter_type_select'
               className: 'form-control'
               name: 'filterType'
+              onChange: @triggerChangeType
               React.DOM.option
                 value: ''
                 'Chọn tiêu chuẩn lọc'
               React.DOM.option
-                value: '1'
+                value: 1
                 'Mã'
               React.DOM.option
-                value: '2'
+                value: 2
                 'Tên nguồn'
               React.DOM.option
-                value: '3'
+                value: 3
                 'Người liên lạc'
               React.DOM.option
-                value: '4'
+                value: 4
                 'Số ĐT cố định'
               React.DOM.option
-                value: '5'
+                value: 5
                 'Số ĐT di động'
               React.DOM.option
-                value: '6'
+                value: 6
                 'Địa chỉ 1'
               React.DOM.option
-                value: '7'
+                value: 7
                 'Địa chỉ 2'
               React.DOM.option
-                value: '8'
+                value: 8
                 'Địa chỉ 3'
               React.DOM.option
-                value: '9'
+                value: 9
                 'Email'
               React.DOM.option
-                value: '10'
+                value: 10
                 'Link Facebook'
               React.DOM.option
-                value: '11'
+                value: 11
                 'Twitter'
               React.DOM.option
-                value: '12'
+                value: 12
                 'Fax'
               React.DOM.option
-                value: '13'
+                value: 13
                 'Mã số thuế'
           React.DOM.div
             className: 'col-sm-8'
@@ -503,15 +538,39 @@
               type: 'text'
               className: 'form-control'
               defaultValue: ''
+              onChange: @triggerAutoCompleteInput
               placeholder: 'Type here ...'
               name: 'filterText'
             React.DOM.div
               className: "auto-complete"
-              React.DOM.p null, "Minh Hoang"
-              React.DOM.p null, "Minh Nhat"
-              React.DOM.p null, "Minh Vuong"
-              React.DOM.p null, "Minh Luong"
-              React.DOM.p null, "Minh Phuong"
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  if Number($('#filter_type_select').val()) == 1
+                    React.createElement AutoComplete, key: record.id, text: record.noid, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 2
+                    React.createElement AutoComplete, key: record.id, text: record.name, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 3
+                    React.createElement AutoComplete, key: record.id, text: record.contactname, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 4
+                    React.createElement AutoComplete, key: record.id, text: record.spnumber, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 5
+                    React.createElement AutoComplete, key: record.id, text: record.pnumber, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 6
+                    React.createElement AutoComplete, key: record.id, text: record.address1, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 7
+                    React.createElement AutoComplete, key: record.id, text: record.address2, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 8
+                    React.createElement AutoComplete, key: record.id, text: record.address3, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 9
+                    React.createElement AutoComplete, key: record.id, text: record.email, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 10
+                    React.createElement AutoComplete, key: record.id, text: record.facebook, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 11
+                    React.createElement AutoComplete, key: record.id, text: record.twitter, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 12
+                    React.createElement AutoComplete, key: record.id, text: record.fax, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 13
+                    React.createElement AutoComplete, key: record.id, text: record.taxcode, record: record, trigger: @triggerAutoComplete
         React.DOM.button
           type: 'submit'
           className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
@@ -531,13 +590,7 @@
             React.DOM.input
               type: 'checkbox'
               id: 'checkbox_db'
-            "Tìm tất cả"
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_fast'
-            "Tìm nhanh"
+            "Tìm kỹ (chậm và đầy đủ)"
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
