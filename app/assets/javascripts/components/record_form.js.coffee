@@ -505,6 +505,13 @@
               defaultValue: ''
               placeholder: 'Type here ...'
               name: 'filterText'
+            React.DOM.div
+              className: "auto-complete"
+              React.DOM.p null, "Minh Hoang"
+              React.DOM.p null, "Minh Nhat"
+              React.DOM.p null, "Minh Vuong"
+              React.DOM.p null, "Minh Luong"
+              React.DOM.p null, "Minh Phuong"
         React.DOM.button
           type: 'submit'
           className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'

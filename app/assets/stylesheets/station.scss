@@ -604,6 +604,25 @@ a{
     border-radius: 0;
 }
 
+//Auto Complete Design
+
+.auto-complete{
+    position: absolute;
+    top: 35px;
+    max-height: 200px;
+    width: calc(100% - 30px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-left: 10px;
+    background-color: #1E262B;
+}
+
+.auto-complete>p:first-child{
+    margin-top: 10px;
+}
+
+
+
 .form-control:not(.fc-alt) {
     border-left: 0;
     border-right: 0;
