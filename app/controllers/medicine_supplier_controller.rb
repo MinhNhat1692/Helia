@@ -1,5 +1,5 @@
 class MedicineSupplierController < ApplicationController
-  before_action :logged_in_user, only: [:list, :create, :update, :destroy]
+  before_action :logged_in_user, only: [:list, :create, :update, :destroy, :search, :find]
   
   def list
     if params.has_key?(:id_station)
@@ -63,11 +63,95 @@ class MedicineSupplierController < ApplicationController
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
         if params.has_key?(:noid)
-          @supplier = MedicineSupplier.where("noid LIKE ?" , "%#{params[:noid]}%").group(:noid).limit(3)
+          @supplier = MedicineSupplier.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id).group(:noid).limit(3)
 			    render json:@supplier
-        end
-        if params.has_key?(:contactname)
-				  @supplier = MedicineSupplier.where("contactname LIKE ?" , "%#{params[:contactname]}%").group(:contactname).limit(3)
+        elsif params.has_key?(:name)
+				  @supplier = MedicineSupplier.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id).group(:name).limit(3)
+			    render json:@supplier
+			  elsif params.has_key?(:contactname)
+				  @supplier = MedicineSupplier.where("contactname LIKE ? and station_id = ?" , "%#{params[:contactname]}%", @station.id).group(:contactname).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:spnumber)
+				  @supplier = MedicineSupplier.where("spnumber LIKE ? and station_id = ?" , "%#{params[:spnumber]}%", @station.id).group(:spnumber).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:pnumber)
+				  @supplier = MedicineSupplier.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id).group(:pnumber).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:address1)
+				  @supplier = MedicineSupplier.where("address1 LIKE ? and station_id = ?" , "%#{params[:address1]}%", @station.id).group(:address1).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:address2)
+				  @supplier = MedicineSupplier.where("address2 LIKE ? and station_id = ?" , "%#{params[:address2]}%", @station.id).group(:address2).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:address3)
+				  @supplier = MedicineSupplier.where("address3 LIKE ? and station_id = ?" , "%#{params[:address3]}%", @station.id).group(:address3).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:email)
+				  @supplier = MedicineSupplier.where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id).group(:email).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:facebook)
+				  @supplier = MedicineSupplier.where("facebook LIKE ? and station_id = ?" , "%#{params[:facebook]}%", @station.id).group(:facebook).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:twitter)
+				  @supplier = MedicineSupplier.where("twitter LIKE ? and station_id = ?" , "%#{params[:twitter]}%", @station.id).group(:twitter).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:fax)
+				  @supplier = MedicineSupplier.where("fax LIKE ? and station_id = ?" , "%#{params[:fax]}%", @station.id).group(:fax).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:taxcode)
+				  @supplier = MedicineSupplier.where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id).group(:taxcode).limit(3)
+			    render json:@supplier
+				end
+      else
+        redirect_to root_path
+      end
+    end
+  end
+
+  def find
+    if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:noid)
+          @supplier = MedicineSupplier.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
+			    render json:@supplier
+        elsif params.has_key?(:name)
+				  @supplier = MedicineSupplier.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+			    render json:@supplier
+			  elsif params.has_key?(:contactname)
+				  @supplier = MedicineSupplier.where("contactname LIKE ? and station_id = ?" , "%#{params[:contactname]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:spnumber)
+				  @supplier = MedicineSupplier.where("spnumber LIKE ? and station_id = ?" , "%#{params[:spnumber]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:pnumber)
+				  @supplier = MedicineSupplier.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:address1)
+				  @supplier = MedicineSupplier.where("address1 LIKE ? and station_id = ?" , "%#{params[:address1]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:address2)
+				  @supplier = MedicineSupplier.where("address2 LIKE ? and station_id = ?" , "%#{params[:address2]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:address3)
+				  @supplier = MedicineSupplier.where("address3 LIKE ? and station_id = ?" , "%#{params[:address3]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:email)
+				  @supplier = MedicineSupplier.where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:facebook)
+				  @supplier = MedicineSupplier.where("facebook LIKE ? and station_id = ?" , "%#{params[:facebook]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:twitter)
+				  @supplier = MedicineSupplier.where("twitter LIKE ? and station_id = ?" , "%#{params[:twitter]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:fax)
+				  @supplier = MedicineSupplier.where("fax LIKE ? and station_id = ?" , "%#{params[:fax]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:taxcode)
+				  @supplier = MedicineSupplier.where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
 			    render json:@supplier
 				end
       else

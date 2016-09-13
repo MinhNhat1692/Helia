@@ -441,6 +441,49 @@
   @FilterForm = React.createClass
     getInitialState: ->
       type: 0
+    handleSubmit: (e) ->
+      e.preventDefault()
+      formData = new FormData
+      if @props.datatype == "medicine_supplier"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'noid', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'name', $('#filter_text').val().toLowerCase()
+          when 3
+            formData.append 'contactname', $('#filter_text').val().toLowerCase()
+          when 4
+            formData.append 'spnumber', $('#filter_text').val().toLowerCase()
+          when 5
+            formData.append 'pnumber', $('#filter_text').val().toLowerCase()
+          when 6
+            formData.append 'address1', $('#filter_text').val().toLowerCase()
+          when 7
+            formData.append 'address2', $('#filter_text').val().toLowerCase()
+          when 8
+            formData.append 'address3', $('#filter_text').val().toLowerCase()
+          when 9
+            formData.append 'email', $('#filter_text').val().toLowerCase()
+          when 10
+            formData.append 'facebook', $('#filter_text').val().toLowerCase()
+          when 11
+            formData.append 'twitter', $('#filter_text').val().toLowerCase()
+          when 12
+            formData.append 'fax', $('#filter_text').val().toLowerCase()
+          when 13
+            formData.append 'taxcode', $('#filter_text').val().toLowerCase()
+        $.ajax
+          url: '/medicine_supplier/find'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.triggerSubmit result
+            return
+          ).bind(this)  
     triggerAutoCompleteInput: (e) ->
       e.preventDefault()
       @props.triggerInput $('#filter_text').val(), $('#filter_type_select').val(), option1: $('#checkbox_db').is(':checked')
@@ -472,9 +515,12 @@
           $('#filter_text').val(record.fax)
         when 13
           $('#filter_text').val(record.taxcode)
-      
+      @props.triggerInput $('#filter_text').val(), $('#filter_type_select').val(), option1: $('#checkbox_db').is(':checked')
     triggerChangeType: (e) ->
       console.log(1)
+    triggerClear: (e) ->
+      $('#filter_text').val("")
+      @props.triggerClear e
     MedicineSupplier: ->
       React.DOM.form
         className: 'form-horizontal row'
@@ -578,8 +624,9 @@
             className: 'zmdi zmdi-search'
           ' Tìm kiếm'
         React.DOM.button
-          type: 'submit'
+          type: 'button'
           className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
+          onClick: @triggerClear
           React.DOM.i
             className: 'zmdi zmdi-close'
           ' Clear'

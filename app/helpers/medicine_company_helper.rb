@@ -1,0 +1,2 @@
+module MedicineCompanyHelper
+end

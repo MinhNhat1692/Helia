@@ -817,6 +817,14 @@
             return true
           else
             return false
+    triggerSubmit: (result) ->
+      @setState
+        autoComplete: null
+        filteredRecord: result
+    triggerClear: (e) ->
+      @setState
+        autoComplete: null
+        filteredRecord: null
     render: ->
       React.DOM.div
         className: 'container'
@@ -832,7 +840,7 @@
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
             React.DOM.br null
             React.DOM.br null
-            React.createElement FilterForm, datatype: 'medicine_supplier', autoComplete: @state.autoComplete, triggerInput: @triggerInput
+            React.createElement FilterForm, datatype: 'medicine_supplier', autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear
           React.DOM.div
             className: 'card-body table-responsive'
             React.DOM.table

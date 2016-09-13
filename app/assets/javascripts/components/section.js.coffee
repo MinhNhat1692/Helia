@@ -691,6 +691,676 @@
               name: 'Thống kê kho thuốc'
             }
           ]
+      else if code == 42 #medicine company
+        data =
+          task: 42
+          link: '/medicine_company/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: true
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 43
+        data =
+          task: 43
+          link: '/medicine_sample/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: true
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 44
+        data =
+          task: 44
+          link: '/medicine_bill_in/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: true
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 45
+        data =
+          task: 45
+          link: '/medicine_bill_record/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: true
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Bill Record
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 46
+        data =
+          task: 46
+          link: '/medicine_price/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: true
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 47
+        data =
+          task: 47
+          link: '/medicine_prescript_external/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: true
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 48
+        data =
+          task: 48
+          link: '/medicine_external_record/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: true
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 49
+        data =
+          task: 49
+          link: '/medicine_prescript_internal/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: true
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 50
+        data =
+          task: 50
+          link: '/medicine_internal_record/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: true
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: false
+              name: 'Thống kê kho thuốc'
+            }
+          ]
+      else if code == 51
+        data =
+          task: 51
+          link: '/medicine_stock_record/list'
+        @handleGetdata(data)
+        @setState Pharmacy:
+          type: 2
+          className: 'fa fa-medkit'
+          active: true
+          name: "Quản lý thuốc"
+          records: [
+            {
+              code: 41 #Supplier link
+              active: false
+              name: 'Nguồn cấp thuốc'
+            }
+            {
+              code: 42 #Company medicine
+              active: false
+              name: 'Doanh nghiệp sản xuất'
+            }
+            {
+              code: 43 #Medicine Sample
+              active: false
+              name: 'Mẫu thuốc'
+            }
+            {
+              code: 44 #Medicine Bill In
+              active: false
+              name: 'Hóa đơn nhập thuốc'
+            }
+            {
+              code: 45 #Medicine Sample
+              active: false
+              name: 'Thông tin thuốc nhập kho'
+            }
+            {
+              code: 46 #Medicine Price
+              active: false
+              name: 'Thông tin giá thuốc'
+            }
+            {
+              code: 47 #Medicine Prescript External
+              active: false
+              name: 'Đơn thuốc ngoài'
+            }
+            {
+              code: 48 #Medicine External Record
+              active: false
+              name: 'Thông tin thuốc kê ngoài'
+            }
+            {
+              code: 49 #Medicine Prescript Internal
+              active: false
+              name: 'Đơn thuốc trong'
+            }
+            {
+              code: 50 #Medicine Internal Record
+              active: false
+              name: 'Thông tin thuốc kê trong'
+            }
+            {
+              code: 51 #Medicine Stock Record
+              active: true
+              name: 'Thống kê kho thuốc'
+            }
+          ]
       else
         @setState Pharmacy:
           type: 2
