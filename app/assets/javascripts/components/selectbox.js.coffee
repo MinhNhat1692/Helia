@@ -40,6 +40,17 @@
           @state.text
         for record in @state.records
           React.createElement OptionSelect, key: record.id, value: record.id, text: record.pname
+    selectBoxGeneral: ->
+      React.DOM.select
+        className: @props.className
+        id: @props.id
+        onChange: @props.Change
+        onBlur: @props.blurOut
+        React.DOM.option
+          defaultValue: ""
+          @state.text
+        for record in @props.records
+          React.createElement OptionSelect, key: record.id, value: record.id, text: record.name
     render: ->
       if @state.type == 1
         @roomListSelectBox()
@@ -47,6 +58,8 @@
         @positionListSelectBox()
       else if @state.type == 3
         @roomListSelectBox2()
+      else if @state.type == 4
+        @selectBoxGeneral()
         
 @OptionSelect = React.createClass
     getInitialState: ->

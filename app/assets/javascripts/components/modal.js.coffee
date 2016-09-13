@@ -1,6 +1,7 @@
   @Modal = React.createClass
     getInitialState: ->
       type: @props.type
+      autoComplete: null
     componentDidMount: ->
       $(ReactDOM.findDOMNode(this)).modal 'show'
       $(ReactDOM.findDOMNode(this)).on 'hidden.bs.modal', @props.handleHideModal
@@ -360,6 +361,80 @@
               @props.trigger2 @props.record, result
               return
             ).bind(this)
+      else if @props.type == 'medicine_sample_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'noid', $('#medicine_sample_noid').val()
+        formData.append 'name', $('#medicine_sample_name').val()
+        formData.append 'typemedicine', $('#medicine_sample_typemedicine').val()
+        formData.append 'groupmedicine', $('#medicine_sample_groupmedicine').val()
+        formData.append 'company', $('#medicine_sample_company').val()
+        formData.append 'price', $('#medicine_sample_price').val()
+        formData.append 'weight', $('#medicine_sample_weight').val()
+        formData.append 'remark', $('#medicine_sample_remark').val()
+        formData.append 'expire', $('#medicine_sample_expire').val()
+        $.ajax
+          url: '/medicine_sample'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_sample_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'noid', $('#medicine_sample_noid').val()
+          formData.append 'name', $('#medicine_sample_name').val()
+          formData.append 'typemedicine', $('#medicine_sample_typemedicine').val()
+          formData.append 'groupmedicine', $('#medicine_sample_groupmedicine').val()
+          formData.append 'company', $('#medicine_sample_company').val()
+          formData.append 'price', $('#medicine_sample_price').val()
+          formData.append 'weight', $('#medicine_sample_weight').val()
+          formData.append 'remark', $('#medicine_sample_remark').val()
+          formData.append 'expire', $('#medicine_sample_expire').val()
+          $.ajax
+            url: '/medicine_sample'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
+    triggerAutoCompleteInput: (e) ->
+      if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
+        if $('#medicine_sample_company').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_sample_company').val().toLowerCase()
+          $.ajax
+            url: '/medicine_company/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
+    triggerAutoComplete: (record) ->
+      if @state.type == 'medicine_sample_add'
+        $('#medicine_sample_company').val(record.name)
+        @setState autoComplete: null
+      else if @state.type == 'medicine_sample_edit'
+        $('medicine_sample_company').val(record.name)
+        @setState autoComplete: null
     employeeForm: ->
       React.DOM.div
         className: 'modal fade'
@@ -1475,6 +1550,183 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    medicineSampleForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg modal-sp-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Mẫu thông tin Mẫu thuốc'
+              React.DOM.small null,
+                'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-12'
+                  React.DOM.form
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmit
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Mã số'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_sample_noid'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Mã số'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.noid
+                            else
+                              ""
+                          name: 'noid'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên thuốc'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'medicine_sample_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Tên thuốc'
+                          name: 'name'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.name
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Loại thuốc'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.createElement SelectBox, id: 'medicine_sample_typemedicine', records: @props.extra[2], className: 'form-control', type: 4
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Nhóm thuốc'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.createElement SelectBox, id: 'medicine_sample_groupmedicine', records: @props.extra[1], className: 'form-control', type: 4
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Giá thuốc'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_sample_price'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Giá thuốc'
+                          name: 'price'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.price
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        "Ghi chú"
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.textarea
+                          id: 'medicine_sample_remark'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Ghi chú'
+                          name: 'remark'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.remark
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Khối lượng'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_sample_weight'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Khối lượng'
+                          name: 'weight'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.weight
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Hạn sử dụng'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_sample_expire'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Hạn sử dụng'
+                          name: 'expire'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.expire
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Công ty sản xuất'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input
+                          id: 'medicine_sample_company'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Công ty sản xuất'
+                          name: 'company'
+                          onChange: @triggerAutoCompleteInput
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.company
+                            else
+                              ""
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_sample_company_autocomplete"
+                          if @state.autoComplete != null
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.name, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee'
@@ -1505,4 +1757,8 @@
         @medicineCompanyForm()
       else if @state.type == 'medicine_company_edit'
         @medicineCompanyForm()
+      else if @state.type == 'medicine_sample_add'
+        @medicineSampleForm()
+      else if @state.type == 'medicine_sample_edit'
+        @medicineSampleForm()
       

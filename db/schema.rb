@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160910070202) do
+ActiveRecord::Schema.define(version: 20160913112259) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -252,23 +252,24 @@ ActiveRecord::Schema.define(version: 20160910070202) do
   end
 
   create_table "medicine_samples", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "type"
+    t.integer  "typemedicine"
     t.string   "name"
-    t.integer  "group"
+    t.integer  "groupmedicine"
     t.string   "company"
-    t.float    "price",      limit: 24
-    t.float    "weight",     limit: 24
-    t.text     "remark",     limit: 65535
+    t.float    "price",         limit: 24
+    t.float    "weight",        limit: 24
+    t.text     "remark",        limit: 65535
     t.integer  "expire"
     t.integer  "station_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "noid"
     t.index ["station_id"], name: "index_medicine_samples_on_station_id", using: :btree
   end
 
   create_table "medicine_stock_records", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "station_id"
-    t.integer  "type"
+    t.integer  "typerecord"
     t.string   "name"
     t.string   "noid"
     t.string   "signid"

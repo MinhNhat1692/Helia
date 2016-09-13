@@ -758,7 +758,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 43
+      else if code == 43 #medicine_sample
         data =
           task: 43
           link: '/medicine_sample/list'

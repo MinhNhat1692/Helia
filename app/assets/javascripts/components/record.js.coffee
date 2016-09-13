@@ -913,6 +913,8 @@
   @RecordGeneral = React.createClass
     getInitialState: ->
       type: 0
+      typeName: null
+      groupName: null
     selectRecord: (e) ->
       @props.selectRecord @props.record
     MedicineSupplier: ->
@@ -969,8 +971,43 @@
           React.DOM.td null, @props.record.email
           React.DOM.td null, @props.record.website
           React.DOM.td null, @props.record.taxcode
+    MedicineSample: ->
+      for typemedicine in @props.typelist
+        if @props.record.typemedicine == typemedicine.id
+          @state.typeName = typemedicine.name
+          break
+      for group in @props.grouplist
+        if @props.record.groupmedicine == group.id
+          @state.groupName = group.name
+          break
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @state.groupName
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.weight
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @props.record.expire
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @state.groupName
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.weight
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @props.record.expire
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
       else if @props.datatype == "medicine_company"
         @MedicineCompany()
+      else if @props.datatype == "medicine_sample"
+        @MedicineSample()
