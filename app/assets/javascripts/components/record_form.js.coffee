@@ -484,6 +484,34 @@
             @props.triggerSubmit result
             return
           ).bind(this)  
+      else if @props.datatype == "medicine_company"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'noid', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'name', $('#filter_text').val().toLowerCase()
+          when 3
+            formData.append 'pnumber', $('#filter_text').val().toLowerCase()
+          when 4
+            formData.append 'address', $('#filter_text').val().toLowerCase()
+          when 5
+            formData.append 'email', $('#filter_text').val().toLowerCase()
+          when 6
+            formData.append 'website', $('#filter_text').val().toLowerCase()
+          when 7
+            formData.append 'taxcode', $('#filter_text').val().toLowerCase()
+        $.ajax
+          url: '/medicine_company/find'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.triggerSubmit result
+            return
+          ).bind(this)
     triggerAutoCompleteInput: (e) ->
       e.preventDefault()
       @props.triggerInput $('#filter_text').val(), $('#filter_type_select').val(), option1: $('#checkbox_db').is(':checked')
@@ -638,6 +666,95 @@
               type: 'checkbox'
               id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
+    MedicineCompany: ->
+      React.DOM.form
+        className: 'form-horizontal row'
+        onSubmit: @handleSubmit
+        React.DOM.div
+          className: 'form-group col-lg-6 col-sm-12'
+          React.DOM.div
+            className: 'col-sm-4'
+            style: {'marginBottom': '15px'}
+            React.DOM.select
+              id: 'filter_type_select'
+              className: 'form-control'
+              name: 'filterType'
+              onChange: @triggerChangeType
+              React.DOM.option
+                value: ''
+                'Chọn tiêu chuẩn lọc'
+              React.DOM.option
+                value: 1
+                'Mã'
+              React.DOM.option
+                value: 2
+                'Tên doanh nghiệp'
+              React.DOM.option
+                value: 3
+                'Số ĐT'
+              React.DOM.option
+                value: 4
+                'Địa chỉ'
+              React.DOM.option
+                value: 5
+                'Email'
+              React.DOM.option
+                value: 6
+                'Website'
+              React.DOM.option
+                value: 7
+                'Mã số thuế'
+          React.DOM.div
+            className: 'col-sm-8'
+            React.DOM.input
+              id: 'filter_text'
+              type: 'text'
+              className: 'form-control'
+              defaultValue: ''
+              onChange: @triggerAutoCompleteInput
+              placeholder: 'Type here ...'
+              name: 'filterText'
+            React.DOM.div
+              className: "auto-complete"
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  if Number($('#filter_type_select').val()) == 1
+                    React.createElement AutoComplete, key: record.id, text: record.noid, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 2
+                    React.createElement AutoComplete, key: record.id, text: record.name, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 3
+                    React.createElement AutoComplete, key: record.id, text: record.pnumber, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 4
+                    React.createElement AutoComplete, key: record.id, text: record.address, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 5
+                    React.createElement AutoComplete, key: record.id, text: record.email, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 6
+                    React.createElement AutoComplete, key: record.id, text: record.website, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 7
+                    React.createElement AutoComplete, key: record.id, text: record.taxcode, record: record, trigger: @triggerAutoComplete
+        React.DOM.button
+          type: 'submit'
+          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
+          React.DOM.i
+            className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button
+          type: 'button'
+          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
+          onClick: @triggerClear
+          React.DOM.i
+            className: 'zmdi zmdi-close'
+          ' Clear'
+        React.DOM.div
+          className: 'form-group col-lg-4 col-sm-12'
+          React.DOM.label
+            className: 'checkbox checkbox-inline m-r-20'
+            React.DOM.input
+              type: 'checkbox'
+              id: 'checkbox_db'
+            "Tìm kỹ (chậm và đầy đủ)"
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
+      else if @props.datatype == "medicine_company"
+        @MedicineCompany()

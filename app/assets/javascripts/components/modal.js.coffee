@@ -314,6 +314,52 @@
               @props.trigger2 @props.record, result
               return
             ).bind(this)
+      else if @props.type == 'medicine_company_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'noid', $('#medicine_company_noid').val()
+        formData.append 'name', $('#medicine_company_name').val()
+        formData.append 'pnumber', $('#medicine_company_pnumber').val()
+        formData.append 'address', $('#medicine_company_address').val()
+        formData.append 'email', $('#medicine_company_email').val()
+        formData.append 'website', $('#medicine_company_website').val()
+        formData.append 'taxcode', $('#medicine_company_taxcode').val()
+        $.ajax
+          url: '/medicine_company'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_company_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'noid', $('#medicine_company_noid').val()
+          formData.append 'name', $('#medicine_company_name').val()
+          formData.append 'pnumber', $('#medicine_company_pnumber').val()
+          formData.append 'address', $('#medicine_company_address').val()
+          formData.append 'email', $('#medicine_company_email').val()
+          formData.append 'website', $('#medicine_company_website').val()
+          formData.append 'taxcode', $('#medicine_company_taxcode').val()
+          $.ajax
+            url: '/medicine_company'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
     employeeForm: ->
       React.DOM.div
         className: 'modal fade'
@@ -1272,6 +1318,163 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    medicineCompanyForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Mẫu thông tin Doanh nghiệp sản xuất thuốc'
+              React.DOM.small null,
+                'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-12'
+                  React.DOM.form
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmit
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Mã số'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_company_noid'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Mã số'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.noid
+                            else
+                              ""
+                          name: 'noid'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên doanh nghiệp'
+                      React.DOM.div
+                        className: 'col-sm-10'
+                        React.DOM.input
+                          id: 'medicine_company_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Tên doanh nghiệp sản xuất'
+                          name: 'name'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.name
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'SĐT'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_company_pnumber'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'SĐT'
+                          name: 'pnumber'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.pnumber
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Email'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_company_email'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Email'
+                          name: 'email'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.email
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Địa chỉ'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input
+                          id: 'medicine_company_address'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Địa chỉ'
+                          name: 'address'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.address
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        React.DOM.i
+                          className: "zmdi zmdi-link"
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_company_website'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Website'
+                          name: 'website'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.website
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Mã số thuế'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_company_taxcode'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Mã số thuế'
+                          name: 'taxcode'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.taxcode
+                            else
+                              ""
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee'
@@ -1298,4 +1501,8 @@
         @medicineSupplierForm()
       else if @state.type == 'medicine_supplier_edit'
         @medicineSupplierForm()
+      else if @state.type == 'medicine_company_add'
+        @medicineCompanyForm()
+      else if @state.type == 'medicine_company_edit'
+        @medicineCompanyForm()
       

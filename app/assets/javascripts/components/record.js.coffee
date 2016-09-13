@@ -948,6 +948,29 @@
           React.DOM.td null, @props.record.twitter
           React.DOM.td null, @props.record.fax
           React.DOM.td null, @props.record.taxcode
+    MedicineCompany: ->
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.email
+          React.DOM.td null, @props.record.website
+          React.DOM.td null, @props.record.taxcode
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.email
+          React.DOM.td null, @props.record.website
+          React.DOM.td null, @props.record.taxcode
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
+      else if @props.datatype == "medicine_company"
+        @MedicineCompany()
