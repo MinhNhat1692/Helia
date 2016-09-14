@@ -19,6 +19,8 @@
       React.createElement MedicineCompany, data: @props.data #task = code = 42
     MedicineSample: ->
       React.createElement MedicineSample, data: @props.data #task = code = 43
+    MedicineBillIn: ->
+      React.createElement MedicineBillIn, data: @props.data #task = code = 44
     render: ->
       if @props.task == 1
         @Employee()
@@ -40,3 +42,5 @@
         @MedicineCompany()
       else if @props.task == 43
         @MedicineSample()
+      else if @props.task == 44
+        @MedicineBillIn()

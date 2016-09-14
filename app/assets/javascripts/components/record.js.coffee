@@ -1004,6 +1004,63 @@
           React.DOM.td null, @props.record.weight
           React.DOM.td null, @props.record.remark
           React.DOM.td null, @props.record.expire
+    MedicineBillIn: ->
+      switch Number(@props.record.pmethod)
+        when 1
+          @state.typeName = "Tiền mặt"
+        when 2
+          @state.typeName = "Chuyển khoản"
+        when 3
+          @state.typeName = "Khác"
+      switch Number(@props.record.status)
+        when 1
+          @state.groupName = "Lưu kho"
+        when 2
+          @state.groupName = "Đang di chuyển"
+        when 3
+          @state.groupName = "Trả lại"
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.billcode
+          React.DOM.td null,
+            if @props.record.dayin != null
+              @props.record.dayin.substring(8, 10) + "/" + @props.record.dayin.substring(5, 7) + "/" + @props.record.dayin.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.supplier
+          React.DOM.td null,
+            if @props.record.daybook != null
+              @props.record.daybook.substring(8, 10) + "/" + @props.record.daybook.substring(5, 7) + "/" + @props.record.daybook.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @state.groupName
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.billcode
+          React.DOM.td null, 
+            if @props.record.dayin != null
+              @props.record.dayin.substring(8, 10) + "/" + @props.record.dayin.substring(5, 7) + "/" + @props.record.dayin.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.supplier
+          React.DOM.td null,
+            if @props.record.daybook != null
+              @props.record.daybook.substring(8, 10) + "/" + @props.record.daybook.substring(5, 7) + "/" + @props.record.daybook.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @state.groupName
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1011,3 +1068,5 @@
         @MedicineCompany()
       else if @props.datatype == "medicine_sample"
         @MedicineSample()
+      else if @props.datatype == "medicine_bill_in"
+        @MedicineBillIn()

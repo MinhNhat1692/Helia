@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
   
+  delete '/medicine_bill_in', to: 'medicine_bill_in#destroy'
+  put '/medicine_bill_in', to: 'medicine_bill_in#update'
+  post '/medicine_bill_in', to: 'medicine_bill_in#create'
+  post '/medicine_bill_in/list', to: 'medicine_bill_in#list'
+  post '/medicine_bill_in/search', to: 'medicine_bill_in#search'
+  post '/medicine_bill_in/find', to: 'medicine_bill_in#find'
+
   delete '/medicine_sample', to: 'medicine_sample#destroy'
   put '/medicine_sample', to: 'medicine_sample#update'
   post '/medicine_sample', to: 'medicine_sample#create'

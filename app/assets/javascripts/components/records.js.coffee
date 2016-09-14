@@ -1251,7 +1251,7 @@
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'medicine_sample_add', extra: @props.data
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'medicine_sample_edit', record: @state.record, extra: @props.data
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm công ty sản xuất', type: 2, trigger: @trigger, datatype: 'medicine_company_add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm công ty sản xuất', type: 2, datatype: 'medicine_company_add'
             React.DOM.br null
             React.DOM.br null
             React.createElement FilterForm, datatype: 'medicine_sample', grouplist: @props.data[1], typelist: @props.data[2], autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
@@ -1289,3 +1289,209 @@
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_sample", selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_sample", selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+                                         
+@MedicineBillIn = React.createClass
+    getInitialState: ->
+      records: @props.data[0]
+      selected: null
+      record: null
+      autoComplete: null
+      filteredRecord: null
+    changeSearchRecord: (data) ->
+      @state.userlink = data[2]
+      if data[1] != null
+        index = -1
+        for record in @state.records
+          if data[1].id == record.id
+            index = @state.records.indexOf record
+            break
+        if index < 0
+          @addRecord(data[1])
+          @selectRecord(data[1])
+        else
+          @selectRecord(data[1])
+        @setState existed: true
+      else
+        @setState existed: false
+      @setState searchRecord: data[0]   
+    toggleSideBar: ->
+      if @state.classSideBar == 'sidebar'
+        @setState classSideBar: 'sidebar toggled'
+      else
+        @setState classSideBar: 'sidebar'
+    updateRecord: (record, data) ->
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @setState
+        records: records
+        record: null
+    addRecord: (record) ->
+      records = React.addons.update(@state.records, { $push: [record] })
+      @setState records: records
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/medicine_bill_in"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
+    trigger: (e) ->
+      console.log(1)
+    triggerInput: (text,type,check1) ->
+      if type != '' && text.length > 1
+        if !check1.option1
+          filtered = []
+          for record in @state.records
+            if @checkContain(type,text,record)
+              filtered.push record
+              @setState filteredRecord: filtered
+        else
+          formData = new FormData
+          switch Number(type)
+            when 1
+              formData.append 'billcode', text.toLowerCase()
+            when 2
+              formData.append 'supplier', text.toLowerCase()
+            when 3
+              formData.append 'remark', text.toLowerCase()
+          $.ajax
+            url: '/medicine_bill_in/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
+    checkContain: (type,text,record) ->
+      switch Number(type)
+        when 1
+          if record.billcode.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 2
+          if record.supplier.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 3
+          if record.remark.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 4
+          if (record.dayin.toLowerCase().substring(8, 10) + "/" + record.dayin.toLowerCase().substring(5, 7) + "/" + record.dayin.toLowerCase().substring(0, 4)) == text.toLowerCase()
+            return true
+          else
+            return false
+        when 5
+          if (record.daybook.toLowerCase().substring(8, 10) + "/" + record.daybook.toLowerCase().substring(5, 7) + "/" + record.daybook.toLowerCase().substring(0, 4)) == text.toLowerCase()
+            return true
+          else
+            return false
+        when 6
+          if record.pmethod == Number(text)
+            return true
+          else
+            return false
+        when 7
+          if record.tpayment == Number(text)
+            return true
+          else
+            return false
+        when 8
+          if record.discount == Number(text)
+            return true
+          else
+            return false
+        when 9
+          if record.tpayout == Number(text)
+            return true
+          else
+            return false
+        when 10
+          if record.status == Number(text)
+            return true
+          else
+            return false
+    triggerSubmit: (result) ->
+      @setState
+        autoComplete: null
+        filteredRecord: result
+    triggerChose: (result) ->
+      @setState
+        autoComplete: null
+    triggerClear: (e) ->
+      @setState
+        autoComplete: null
+        filteredRecord: null
+    render: ->
+      React.DOM.div
+        className: 'container'
+        React.DOM.div
+          className: 'block-header'
+          React.DOM.h2 null, 'Hóa đơn nhập thuốc'
+        React.DOM.div
+          className: 'card'
+          React.DOM.div
+            className: 'card-header'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'medicine_bill_in_add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'medicine_bill_in_edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm thông tin thuốc nhập kho', type: 2, datatype: 'medicine_bill_record_add', billrecord: @state.record, record: null
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: 'medicine_bill_in', autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div
+            className: 'card-body table-responsive'
+            React.DOM.table
+              className: 'table table-hover table-condensed'
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Số hóa đơn'
+                  React.DOM.th null, 'Ngày nhập'
+                  React.DOM.th null, 'Người cung cấp'
+                  React.DOM.th null, 'Ngày đặt hàng'
+                  React.DOM.th null, 'Tổng giá hàng hóa'
+                  React.DOM.th null, 'Giảm giá'
+                  React.DOM.th null, 'Tổng giá thanh toán'
+                  React.DOM.th null, 'Cách thanh toán'
+                  React.DOM.th null, 'Ghi chú'
+                  React.DOM.th null, 'Tình trạng hóa đơn'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_bill_in", selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_bill_in", selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_bill_in", selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_bill_in", selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_bill_in", selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_bill_in", selected: false, selectRecord: @selectRecord

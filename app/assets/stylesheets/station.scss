@@ -615,13 +615,14 @@ a{
     overflow-y: auto;
     padding-left: 10px;
     background-color: #1E262B;
+    z-index: 10;
 }
 
-.auto-complete>p:first-child{
+.auto-complete>div:first-child{
     margin-top: 10px;
 }
 
-.auto-complete>p:hover{
+.auto-complete>div:hover{
     background-color: #222c32;
     cursor: pointer;
 }

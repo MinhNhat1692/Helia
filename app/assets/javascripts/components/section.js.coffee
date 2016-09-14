@@ -825,7 +825,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 44
+      else if code == 44 #medicine_bill_in
         data =
           task: 44
           link: '/medicine_bill_in/list'

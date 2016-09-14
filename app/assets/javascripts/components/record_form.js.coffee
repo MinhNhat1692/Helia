@@ -545,6 +545,40 @@
             @props.triggerSubmit result
             return
           ).bind(this)
+      else if @props.datatype == "medicine_bill_in"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'billcode', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'supplier', $('#filter_text').val().toLowerCase()
+          when 3
+            formData.append 'remark', $('#filter_text').val()
+          when 4
+            formData.append 'dayin', $('#filter_text').val()
+          when 5
+            formData.append 'daybook', $('#filter_text').val()
+          when 6
+            formData.append 'pmethod', Number($('#filter_text').val())
+          when 7
+            formData.append 'tpayment', $('#filter_text').val()
+          when 8
+            formData.append 'discount', $('#filter_text').val()
+          when 9
+            formData.append 'payout', $('#filter_text').val()
+          when 9
+            formData.append 'status', Number($('#filter_text').val())
+        $.ajax
+          url: '/medicine_bill_in/find'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.triggerSubmit result
+            return
+          ).bind(this)
     triggerAutoCompleteInput: (e) ->
       e.preventDefault()
       @props.triggerInput $('#filter_text').val(), $('#filter_type_select').val(), option1: $('#checkbox_db').is(':checked')
@@ -609,6 +643,14 @@
             $('#filter_text').val(record.remark)
           when 9
             $('#filter_text').val(record.expire)
+      else if @props.datatype == "medicine_bill_in"
+        switch Number($('#filter_type_select').val())
+          when 1
+            $('#filter_text').val(record.billcode)
+          when 2
+            $('#filter_text').val(record.supplier)
+          when 3
+            $('#filter_text').val(record.remark)
       @props.triggerChose record
     triggerChangeType: (e) ->
       if @props.datatype == "medicine_sample"
@@ -631,6 +673,54 @@
             @setState selectList: null
           when 9
             @setState selectList: null
+      else if @props.datatype == "medicine_bill_in"
+        switch Number($('#filter_type_select').val())
+          when 1
+            @setState selectList: null
+          when 2
+            @setState selectList: null
+          when 3
+            @setState selectList: null
+          when 4
+            @setState selectList: null
+          when 5
+            @setState selectList: null
+          when 6
+            @setState selectList: null
+          when 7
+            @setState selectList:[
+              {
+                id: 1
+                name: "Tiền mặt"
+              }
+              {
+                id: 2
+                name: "Chuyển khoản"
+              }
+              {
+                id: 3
+                name: "Khác"
+              }
+            ] 
+          when 8
+            @setState selectList: null
+          when 9
+            @setState selectList: null
+          when 10
+            @setState selectList:[
+              {
+                id: 1
+                name: "Lưu kho"
+              }
+              {
+                id: 2
+                name: "Đang di chuyển"
+              }
+              {
+                id: 3
+                name: "Trả lại"
+              }
+            ]
     triggerClear: (e) ->
       $('#filter_text').val("")
       @props.triggerClear e
@@ -894,7 +984,7 @@
                 placeholder: 'Type here ...'
                 name: 'filterText'
             else
-              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, records: @state.selectList, blurOut: @triggerAutoCompleteInput
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
             React.DOM.div
               className: "auto-complete"
               if @props.autoComplete != null
@@ -934,6 +1024,97 @@
               type: 'checkbox'
               id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
+    MedicineBillIn: ->
+      React.DOM.form
+        className: 'form-horizontal row'
+        onSubmit: @handleSubmit
+        React.DOM.div
+          className: 'form-group col-lg-6 col-sm-12'
+          React.DOM.div
+            className: 'col-sm-4'
+            style: {'marginBottom': '15px'}
+            React.DOM.select
+              id: 'filter_type_select'
+              className: 'form-control'
+              name: 'filterType'
+              onChange: @triggerChangeType
+              React.DOM.option
+                value: ''
+                'Chọn tiêu chuẩn lọc'
+              React.DOM.option
+                value: 1
+                'Số hóa đơn'
+              React.DOM.option
+                value: 2
+                'Người cung cấp'
+              React.DOM.option
+                value: 3
+                'Ghi chú'
+              React.DOM.option
+                value: 4
+                'Ngày nhập'
+              React.DOM.option
+                value: 5
+                'Ngày đặt hàng'
+              React.DOM.option
+                value: 6
+                'Cách thanh toán'
+              React.DOM.option
+                value: 7
+                'Tổng giá hàng hóa'
+              React.DOM.option
+                value: 8
+                'Giảm giá'
+              React.DOM.option
+                value: 9
+                'Tổng giá thanh toán'
+              React.DOM.option
+                value: 10
+                'Tình trạng hóa đơn'
+          React.DOM.div
+            className: 'col-sm-8'
+            if @state.selectList == null
+              React.DOM.input
+                id: 'filter_text'
+                type: 'text'
+                className: 'form-control'
+                defaultValue: ''
+                onChange: @triggerAutoCompleteInput
+                placeholder: 'Type here ...'
+                name: 'filterText'
+            else
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+            React.DOM.div
+              className: "auto-complete"
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  if Number($('#filter_type_select').val()) == 1
+                    React.createElement AutoComplete, key: record.id, text: record.billcode, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 2
+                    React.createElement AutoComplete, key: record.id, text: record.supplier, record: record, trigger: @triggerAutoComplete
+                  else if Number($('#filter_type_select').val()) == 3
+                    React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
+        React.DOM.button
+          type: 'submit'
+          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
+          React.DOM.i
+            className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button
+          type: 'button'
+          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
+          onClick: @triggerClear
+          React.DOM.i
+            className: 'zmdi zmdi-close'
+          ' Clear'
+        React.DOM.div
+          className: 'form-group col-lg-4 col-sm-12'
+          React.DOM.label
+            className: 'checkbox checkbox-inline m-r-20'
+            React.DOM.input
+              type: 'checkbox'
+              id: 'checkbox_db'
+            "Tìm kỹ (chậm và đầy đủ)"
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -941,3 +1122,5 @@
         @MedicineCompany()
       else if @props.datatype == "medicine_sample"
         @MedicineSample()
+      else if @props.datatype == "medicine_bill_in"
+        @MedicineBillIn()

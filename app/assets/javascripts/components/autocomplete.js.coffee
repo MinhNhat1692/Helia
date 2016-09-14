@@ -5,7 +5,7 @@
       e.preventDefault()
       @props.trigger @props.record
     autoCompleteMedicineSupplier: ->
-      React.DOM.p
+      React.DOM.div
         onClick: @trigger
         @props.text
     render: ->
