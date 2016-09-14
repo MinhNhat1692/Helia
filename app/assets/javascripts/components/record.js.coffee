@@ -1061,6 +1061,46 @@
           React.DOM.td null, @state.typeName
           React.DOM.td null, @props.record.remark
           React.DOM.td null, @state.groupName
+    MedicineBillRecord: ->
+      switch Number(@props.record.pmethod)
+        when 1
+          @state.typeName = "Hộp"
+        when 2
+          @state.typeName = "Lẻ"
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.signid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null,
+            if @props.record.expire != null
+              @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.qty
+          React.DOM.td null, @props.record.taxrate
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @state.typeName
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.signid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null,
+            if @props.record.expire != null
+              @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.qty
+          React.DOM.td null, @props.record.taxrate
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @state.typeName
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1070,3 +1110,5 @@
         @MedicineSample()
       else if @props.datatype == "medicine_bill_in"
         @MedicineBillIn()
+      else if @props.datatype == "medicine_bill_record"
+        @MedicineBillRecord()

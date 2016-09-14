@@ -59,7 +59,10 @@
           formData.append 'address', $('#employee_form_address').val()
           formData.append 'pnumber', $('#employee_form_pnumber').val()
           formData.append 'noid', $('#employee_form_noid').val()
-          formData.append 'gender', $('#employee_form_gender').val()
+          if $('#employee_form_gender').val() == 'Giới tính'
+            formdata.append 'gender', @props.record.gender
+          else
+            formData.append 'gender', $('#employee_form_gender').val()
           if $('#employee_form_avatar')[0].files[0] != undefined
             formData.append 'avatar', $('#employee_form_avatar')[0].files[0]
           else if $('#webcamout').attr('src') != undefined
@@ -110,7 +113,10 @@
         formData.append 'address', $('#customer_form_address').val()
         formData.append 'pnumber', $('#customer_form_pnumber').val()
         formData.append 'noid', $('#customer_form_noid').val()
-        formData.append 'gender', $('#customer_form_gender').val()
+        if $('#customer_form_gender').val() == "Giới tính"
+          formData.append 'gender', @props.record.gender
+        else
+          formData.append 'gender', $('#customer_form_gender').val()
         if $('#customer_form_avatar')[0].files[0] != undefined
           formData.append 'avatar', $('#customer_form_avatar')[0].files[0]
         else if $('#webcamout').attr('src') != undefined
@@ -392,8 +398,14 @@
           formData.append 'id', @props.record.id
           formData.append 'noid', $('#medicine_sample_noid').val()
           formData.append 'name', $('#medicine_sample_name').val()
-          formData.append 'typemedicine', $('#medicine_sample_typemedicine').val()
-          formData.append 'groupmedicine', $('#medicine_sample_groupmedicine').val()
+          if $('#medicine_sample_typemedicine').val() == ""
+            formData.append 'typemedicine', @props.record.typemedicine
+          else
+            formData.append 'typemedicine', $('#medicine_sample_typemedicine').val()
+          if $('#medicine_sample_groupmedicine').val() == ""
+            formData.append 'groupmedicine', @props.record.groupmedicine
+          else
+            formData.append 'groupmedicine', $('#medicine_sample_groupmedicine').val()
           formData.append 'company', $('#medicine_sample_company').val()
           formData.append 'price', $('#medicine_sample_price').val()
           formData.append 'weight', $('#medicine_sample_weight').val()
@@ -445,14 +457,76 @@
           formData.append 'supplier', $('#medicine_bill_in_supplier').val()
           formData.append 'dayin', $('#medicine_bill_in_dayin').val()
           formData.append 'daybook', $('#medicine_bill_in_daybook').val()
-          formData.append 'pmethod', $('#medicine_bill_in_pmethod').val()
+          if $('#medicine_bill_in_pmethod').val() == "Cách thanh toán"
+            formData.append 'pmethod', @props.record.pmethod
+          else
+            formData.append 'pmethod', $('#medicine_bill_in_pmethod').val()
           formData.append 'tpayment', $('#medicine_bill_in_tpayment').val()
           formData.append 'discount', $('#medicine_bill_in_discount').val()
           formData.append 'tpayout', $('#medicine_bill_in_tpayout').val()
           formData.append 'remark', $('#medicine_bill_in_remark').val()
-          formData.append 'status', $('#medicine_bill_in_status').val()
+          if $('#medicine_bill_in_status').val() == ""
+            formData.append 'status', @props.record.status
+          else
+            formData.append 'status', $('#medicine_bill_in_status').val()
           $.ajax
             url: '/medicine_bill_in'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
+      else if @props.type == 'medicine_bill_record_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'billcode', $('#medicine_bill_record_billcode').val()
+        formData.append 'name', $('#medicine_bill_record_name').val()
+        formData.append 'company', $('#medicine_bill_record_company').val()
+        formData.append 'noid', $('#medicine_bill_record_noid').val()
+        formData.append 'signid', $('#medicine_bill_record_signid').val()
+        formData.append 'remark', $('#medicine_bill_record_remark').val()
+        formData.append 'expire', $('#medicine_bill_record_expire').val()
+        formData.append 'pmethod', $('#medicine_bill_record_pmethod').val()
+        formData.append 'qty', $('#medicine_bill_record_qty').val()
+        formData.append 'taxrate', $('#medicine_bill_record_taxrate').val()
+        formData.append 'price', $('#medicine_bill_record_price').val()
+        $.ajax
+          url: '/medicine_bill_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_bill_record_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'name', $('#medicine_bill_record_name').val()
+          formData.append 'company', $('#medicine_bill_record_company').val()
+          formData.append 'noid', $('#medicine_bill_record_noid').val()
+          formData.append 'signid', $('#medicine_bill_record_signid').val()
+          formData.append 'remark', $('#medicine_bill_record_remark').val()
+          formData.append 'expire', $('#medicine_bill_record_expire').val()
+          if $('#medicine_bill_record_pmethod').val() == 'Cách mua'
+            formData.append 'pmethod', @props.record.pmethod
+          else
+            formData.append 'pmethod', $('#medicine_bill_record_pmethod').val()
+          formData.append 'qty', $('#medicine_bill_record_qty').val()
+          formData.append 'taxrate', $('#medicine_bill_record_taxrate').val()
+          formData.append 'price', $('#medicine_bill_record_price').val()
+          $.ajax
+            url: '/medicine_bill_record'
             type: 'PUT'
             data: formData
             async: false
@@ -496,12 +570,32 @@
               @setState autoComplete: result
               return
             ).bind(this)
+      else if @state.type == 'medicine_bill_record_add' or @state.type == 'medicine_bill_record_edit'
+        if $('#medicine_bill_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_bill_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
     triggerAutoComplete: (record) ->
       if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         $('#medicine_sample_company').val(record.name)
         @setState autoComplete: null
-      else if @state.type == 'medicine_bill_in_add' or @state.type == 'meidicine_bill_in_edit'
+      else if @state.type == 'medicine_bill_in_add' or @state.type == 'medicine_bill_in_edit'
         $('#medicine_bill_in_supplier').val(record.name)
+        @setState autoComplete: null
+      else if @state.type == 'medicine_bill_record_add' or @state.type == 'medicine_bill_record_edit'
+        $('#medicine_bill_record_name').val(record.name)
+        $('#medicine_bill_record_company').val(record.company)
         @setState autoComplete: null
     triggerRecalPayment: (e) ->
       if @state.type == 'medicine_bill_in_add' or @state.type == 'medicine_bill_in_edit'
@@ -2025,6 +2119,215 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    medicineBillRecordForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg modal-sp-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Mẫu thông tin thuốc nhập kho'
+              React.DOM.small null,
+                'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-12'
+                  React.DOM.form
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmit
+                    if @props.record == null
+                      React.DOM.div
+                        className: 'form-group'
+                        React.DOM.label
+                          className: 'col-sm-2 control-label hidden-xs'
+                          'Mã hóa đơn'
+                        React.DOM.div
+                          className: 'col-sm-2'
+                          React.DOM.input
+                            id: 'medicine_bill_record_billcode'
+                            type: 'text'
+                            className: 'form-control'
+                            placeholder: 'Mã hóa đơn'
+                            defaultValue: ""
+                            name: 'billcode'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên thuốc'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_bill_record_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Tên thuốc'
+                          name: 'name'
+                          onChange: @triggerAutoCompleteInput
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.name
+                            else
+                              ""
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_bill_record_name_autocomplete"
+                          if @state.autoComplete != null
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.name, record: recordsearch, trigger: @triggerAutoComplete
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Công ty sản xuất'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_bill_record_company'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Công ty sản xuất'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.company
+                            else
+                              ""
+                          name: 'company'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Số hiệu'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_bill_record_noid'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Số hiệu'
+                          name: 'noid'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.noid
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Ký hiệu'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_bill_record_signid'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Số hiệu'
+                          name: 'signid'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.signid
+                            else
+                              ""
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Hạn sử dụng'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input
+                          id: 'medicine_bill_record_expire'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: '30/01/1990'
+                          name: 'expire'
+                          defaultValue:
+                            if @props.record != null
+                              if @props.record.expire != null
+                                @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+                              else
+                                ""
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Cách mua'
+                      React.DOM.div
+                        className: 'col-sm-1'
+                        React.createElement SelectBox, id: 'medicine_bill_record_pmethod', className: 'form-control', text: "Cách mua", type: 4, records: [{id: 1, name: "Hộp"},{id: 2, name: "Lẻ"}]
+                      React.DOM.div
+                        className: 'col-sm-3'
+                        React.DOM.input
+                          id: 'medicine_bill_record_qty'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Số lượng'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.qty
+                            else
+                              ""
+                          name: 'qty'
+                      React.DOM.div
+                        className: 'col-sm-3'
+                        React.DOM.input
+                          id: 'medicine_bill_record_taxrate'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Thuế suất'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.taxrate
+                            else
+                              ""
+                          name: 'taxrate'
+                      React.DOM.div
+                        className: 'col-sm-3'
+                        React.DOM.input
+                          id: 'medicine_bill_record_price'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Biểu giá'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.price
+                            else
+                              ""
+                          name: 'price'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Ghi chú'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.textarea
+                          id: 'medicine_bill_record_remark'
+                          type: 'text'
+                          style: {'marginTop': '10px'}
+                          className: 'form-control'
+                          placeholder: 'Ghi chú'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.remark
+                            else
+                              ""
+                          name: 'remark'
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee'
@@ -2063,3 +2366,7 @@
         @medicineBillInForm()
       else if @state.type == 'medicine_bill_in_edit'
         @medicineBillInForm()
+      else if @state.type == 'medicine_bill_record_add'
+        @medicineBillRecordForm()
+      else if @state.type == 'medicine_bill_record_edit'
+        @medicineBillRecordForm()

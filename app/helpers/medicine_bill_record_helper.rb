@@ -1,0 +1,2 @@
+module MedicineBillRecordHelper
+end

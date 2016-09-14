@@ -892,7 +892,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 45
+      else if code == 45 #medicine_bill_record Thông tin thuốc nhập kho
         data =
           task: 45
           link: '/medicine_bill_record/list'
@@ -910,7 +910,7 @@
             }
             {
               code: 42 #Company medicine
-              active: true
+              active: false
               name: 'Doanh nghiệp sản xuất'
             }
             {
@@ -925,7 +925,7 @@
             }
             {
               code: 45 #Medicine Bill Record
-              active: false
+              active: true
               name: 'Thông tin thuốc nhập kho'
             }
             {
