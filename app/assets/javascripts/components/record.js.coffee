@@ -1101,6 +1101,21 @@
           React.DOM.td null, @props.record.price
           React.DOM.td null, @props.record.remark
           React.DOM.td null, @state.typeName
+    MedicinePrice: ->
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.minam
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.remark
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.minam
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.remark
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1112,3 +1127,5 @@
         @MedicineBillIn()
       else if @props.datatype == "medicine_bill_record"
         @MedicineBillRecord()
+      else if @props.datatype == 'medicine_price'
+        @MedicinePrice()

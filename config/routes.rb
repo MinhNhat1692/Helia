@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
   
+  delete '/medicine_price', to: 'medicine_price#destroy'
+  put '/medicine_price', to: 'medicine_price#update'
+  post '/medicine_price', to: 'medicine_price#create'
+  post '/medicine_price/list', to: 'medicine_price#list'
+  post '/medicine_price/search', to: 'medicine_price#search'
+  post '/medicine_price/find', to: 'medicine_price#find'
+
   delete '/medicine_bill_record', to: 'medicine_bill_record#destroy'
   put '/medicine_bill_record', to: 'medicine_bill_record#update'
   post '/medicine_bill_record', to: 'medicine_bill_record#create'

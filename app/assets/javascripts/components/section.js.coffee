@@ -959,7 +959,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 46
+      else if code == 46 #medicine_price Thông tin giá thuốc
         data =
           task: 46
           link: '/medicine_price/list'

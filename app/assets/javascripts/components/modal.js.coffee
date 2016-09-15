@@ -537,6 +537,46 @@
               @props.trigger2 @props.record, result
               return
             ).bind(this)
+      else if @props.type == 'medicine_price_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'name', $('#medicine_price_name').val()
+        formData.append 'minam', $('#medicine_price_minam').val()
+        formData.append 'price', $('#medicine_price_price').val()
+        formData.append 'remark', $('#medicine_price_remark').val()
+        $.ajax
+          url: '/medicine_price'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_price_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'name', $('#medicine_price_name').val()
+          formData.append 'minam', $('#medicine_price_minam').val()
+          formData.append 'price', $('#medicine_price_price').val()
+          formData.append 'remark', $('#medicine_price_remark').val()
+          $.ajax
+            url: '/medicine_price'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
     triggerAutoCompleteInput: (e) ->
       if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         if $('#medicine_sample_company').val().length > 1
@@ -586,6 +626,22 @@
               @setState autoComplete: result
               return
             ).bind(this)
+      else if @state.type == 'medicine_price_add' or @state.type == 'medicine_price_edit'
+        if $('#medicine_price_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_price_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
     triggerAutoComplete: (record) ->
       if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         $('#medicine_sample_company').val(record.name)
@@ -596,6 +652,9 @@
       else if @state.type == 'medicine_bill_record_add' or @state.type == 'medicine_bill_record_edit'
         $('#medicine_bill_record_name').val(record.name)
         $('#medicine_bill_record_company').val(record.company)
+        @setState autoComplete: null
+      else if @state.type == 'medicine_price_add' or @state.type == 'medicine_price_edit'
+        $('#medicine_price_name').val(record.name)
         @setState autoComplete: null
     triggerRecalPayment: (e) ->
       if @state.type == 'medicine_bill_in_add' or @state.type == 'medicine_bill_in_edit'
@@ -2328,45 +2387,137 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    medicinePriceForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Mẫu thông tin giá thuốc'
+              React.DOM.small null,
+                'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-12'
+                  React.DOM.form
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmit
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên thuốc'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input
+                          id: 'medicine_price_name'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Tên thuốc'
+                          name: 'name'
+                          onChange: @triggerAutoCompleteInput
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.name
+                            else
+                              ""
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_price_name_autocomplete"
+                          if @state.autoComplete != null
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.name, record: recordsearch, trigger: @triggerAutoComplete
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Số lượng ít nhất'
+                      React.DOM.div
+                        className: 'col-sm-4'
+                        React.DOM.input
+                          id: 'medicine_price_minam'
+                          type: 'number'
+                          className: 'form-control'
+                          placeholder: 'Số lượng ít nhất'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.minam
+                            else
+                              ""
+                          name: 'minam'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Giá'
+                      React.DOM.div
+                        className: 'col-sm-3'
+                        React.DOM.input
+                          id: 'medicine_price_price'
+                          type: 'text'
+                          className: 'form-control'
+                          placeholder: 'Giá'
+                          name: 'Giá'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.price
+                            else
+                              ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Ghi chú'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.textarea
+                          id: 'medicine_price_remark'
+                          type: 'text'
+                          style: {'marginTop': '10px'}
+                          className: 'form-control'
+                          placeholder: 'Ghi chú'
+                          defaultValue:
+                            if @props.record != null
+                              @props.record.remark
+                            else
+                              ""
+                          name: 'remark'
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
-      if @state.type == 'employee'
+      if @state.type == 'employee' or @state.type == 'employee_edit'
         @employeeForm()
-      else if @state.type == 'employee_edit'
-        @employeeForm()
-      else if @state.type == 'customer_record'
+      else if @state.type == 'customer_record' or @state.type == 'customer_edit_record'
         @customerForm()
-      else if @state.type == 'customer_edit_record'
-        @customerForm()
-      else if @state.type == 'room_add'
+      else if @state.type == 'room_add' or @state.type == 'room_edit'
         @roomForm()
-      else if @state.type == 'room_edit'
-        @roomForm()
-      else if @state.type == 'position_add'
+      else if @state.type == 'position_add' or @state.type == 'position_edit'
         @positionForm()
-      else if @state.type == 'position_edit'
-        @positionForm()
-      else if @state.type == 'service_add'
+      else if @state.type == 'service_add' or @state.type == 'service_edit'
         @serviceForm()
-      else if @state.type == 'service_edit'
-        @serviceForm()
-      else if @state.type == 'medicine_supplier_add'
+      else if @state.type == 'medicine_supplier_add' or @state.type == 'medicine_supplier_edit'
         @medicineSupplierForm()
-      else if @state.type == 'medicine_supplier_edit'
-        @medicineSupplierForm()
-      else if @state.type == 'medicine_company_add'
+      else if @state.type == 'medicine_company_add' or @state.type == 'medicine_company_edit'
         @medicineCompanyForm()
-      else if @state.type == 'medicine_company_edit'
-        @medicineCompanyForm()
-      else if @state.type == 'medicine_sample_add'
+      else if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         @medicineSampleForm()
-      else if @state.type == 'medicine_sample_edit'
-        @medicineSampleForm()
-      else if @state.type == 'medicine_bill_in_add'
+      else if @state.type == 'medicine_bill_in_add' or @state.type == 'medicine_bill_in_edit'
         @medicineBillInForm()
-      else if @state.type == 'medicine_bill_in_edit'
-        @medicineBillInForm()
-      else if @state.type == 'medicine_bill_record_add'
+      else if @state.type == 'medicine_bill_record_add' or @state.type == 'medicine_bill_record_edit'
         @medicineBillRecordForm()
-      else if @state.type == 'medicine_bill_record_edit'
-        @medicineBillRecordForm()
+      else if @state.type == 'medicine_price_add' or @state.type == 'medicine_price_edit'
+        @medicinePriceForm()
