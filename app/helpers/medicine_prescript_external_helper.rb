@@ -1,0 +1,2 @@
+module MedicinePrescriptExternalHelper
+end

@@ -1,0 +1,2 @@
+module MedicineStockRecordHelper
+end

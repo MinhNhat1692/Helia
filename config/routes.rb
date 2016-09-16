@@ -1,5 +1,40 @@
 Rails.application.routes.draw do
   
+  delete '/medicine_stock_record', to: 'medicine_stock_record#destroy'
+  put '/medicine_stock_record', to: 'medicine_stock_record#update'
+  post '/medicine_stock_record', to: 'medicine_stock_record#create'
+  post '/medicine_stock_record/list', to: 'medicine_stock_record#list'
+  post '/medicine_stock_record/search', to: 'medicine_stock_record#search'
+  post '/medicine_stock_record/find', to: 'medicine_stock_record#find'
+  
+  delete '/medicine_internal_record', to: 'medicine_internal_record#destroy'
+  put '/medicine_internal_record', to: 'medicine_internal_record#update'
+  post '/medicine_internal_record', to: 'medicine_internal_record#create'
+  post '/medicine_internal_record/list', to: 'medicine_internal_record#list'
+  post '/medicine_internal_record/search', to: 'medicine_internal_record#search'
+  post '/medicine_internal_record/find', to: 'medicine_internal_record#find'
+ 
+  delete '/medicine_prescript_internal', to: 'medicine_prescript_internal#destroy'
+  put '/medicine_prescript_internal', to: 'medicine_prescript_internal#update'
+  post '/medicine_prescript_internal', to: 'medicine_prescript_internal#create'
+  post '/medicine_prescript_internal/list', to: 'medicine_prescript_internal#list'
+  post '/medicine_prescript_internal/search', to: 'medicine_prescript_internal#search'
+  post '/medicine_prescript_internal/find', to: 'medicine_prescript_internal#find'
+
+  delete '/medicine_external_record', to: 'medicine_external_record#destroy'
+  put '/medicine_external_record', to: 'medicine_external_record#update'
+  post '/medicine_external_record', to: 'medicine_external_record#create'
+  post '/medicine_external_record/list', to: 'medicine_external_record#list'
+  post '/medicine_external_record/search', to: 'medicine_external_record#search'
+  post '/medicine_external_record/find', to: 'medicine_external_record#find'
+
+  delete '/medicine_prescript_external', to: 'medicine_prescript_external#destroy'
+  put '/medicine_prescript_external', to: 'medicine_prescript_external#update'
+  post '/medicine_prescript_external', to: 'medicine_prescript_external#create'
+  post '/medicine_prescript_external/list', to: 'medicine_prescript_external#list'
+  post '/medicine_prescript_external/search', to: 'medicine_prescript_external#search'
+  post '/medicine_prescript_external/find', to: 'medicine_prescript_external#find'
+
   delete '/medicine_price', to: 'medicine_price#destroy'
   put '/medicine_price', to: 'medicine_price#update'
   post '/medicine_price', to: 'medicine_price#create'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160913112259) do
+ActiveRecord::Schema.define(version: 20160916050753) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -167,6 +167,8 @@ ActiveRecord::Schema.define(version: 20160913112259) do
     t.float    "total",       limit: 24
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.string   "cname"
+    t.string   "script_code"
     t.index ["station_id"], name: "index_medicine_external_records_on_station_id", using: :btree
   end
 
@@ -193,6 +195,8 @@ ActiveRecord::Schema.define(version: 20160913112259) do
     t.integer  "status"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.string   "cname"
+    t.string   "script_code"
     t.index ["station_id"], name: "index_medicine_internal_records_on_station_id", using: :btree
   end
 
@@ -208,6 +212,8 @@ ActiveRecord::Schema.define(version: 20160913112259) do
     t.text     "remark",      limit: 65535
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.string   "cname"
+    t.string   "ename"
     t.index ["station_id"], name: "index_medicine_prescript_externals_on_station_id", using: :btree
   end
 
@@ -228,6 +234,9 @@ ActiveRecord::Schema.define(version: 20160913112259) do
     t.text     "remark",      limit: 65535
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.string   "cname"
+    t.string   "ename"
+    t.integer  "preparer_id"
     t.index ["station_id"], name: "index_medicine_prescript_internals_on_station_id", using: :btree
   end
 
@@ -278,8 +287,11 @@ ActiveRecord::Schema.define(version: 20160913112259) do
     t.string   "supplier"
     t.integer  "internal_record_id"
     t.integer  "bill_in_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.string   "bill_in_code"
+    t.string   "internal_record_code"
+    t.text     "remark",               limit: 65535
     t.index ["station_id"], name: "index_medicine_stock_records_on_station_id", using: :btree
   end
 
