@@ -1026,7 +1026,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 47
+      else if code == 47 #medicine_prescript_external Đơn thuốc ngoài
         data =
           task: 47
           link: '/medicine_prescript_external/list'
@@ -1093,7 +1093,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 48
+      else if code == 48 #medicine external_record Thông tin thuốc kê ngoài
         data =
           task: 48
           link: '/medicine_external_record/list'
@@ -1160,7 +1160,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 49
+      else if code == 49 #medicine_prescript_internal Đơn thuốc trong
         data =
           task: 49
           link: '/medicine_prescript_internal/list'
@@ -1227,7 +1227,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 50
+      else if code == 50 #medicine_internal_record Thông tin thuốc kê trong
         data =
           task: 50
           link: '/medicine_internal_record/list'
@@ -1294,7 +1294,7 @@
               name: 'Thống kê kho thuốc'
             }
           ]
-      else if code == 51
+      else if code == 51 #medicine_stock_record Thống kê kho thuốc
         data =
           task: 51
           link: '/medicine_stock_record/list'

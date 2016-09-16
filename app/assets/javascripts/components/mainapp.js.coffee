@@ -25,30 +25,51 @@
       React.createElement MedicineBillRecord, data: @props.data #task = code = 45
     MedicinePrice: ->
       React.createElement MedicinePrice, data: @props.data #task = code = 46
+    MedicinePrescriptExternal: ->
+      React.createElement MedicinePrescriptExternal, data: @props.data #task = code = 47
+    MedicineExternalRecord: ->
+      React.createElement MedicineExternalRecord, data: @props.data #task = code = 48
+    MedicinePrescriptInternal: ->
+      React.createElement MedicinePrescriptInternal, data: @props.data #task = code = 49
+    MedicineInternalRecord: ->
+      React.createElement MedicineInternalRecord, data: @props.data #task = code = 50
+    MedicineStockRecord: ->
+      React.createElement MedicineStockRecord, data: @props.data #task = code = 51
     render: ->
-      if @props.task == 1
-        @Employee()
-      else if @props.task == 2
-        @Position()
-      else if @props.task == 3
-        @Room()
-      else if @props.task == 4
-        @AppViewEmployee()
-      else if @props.task == 5
-        @Service()
-      else if @props.task == 6
-        @ServiceMap()
-      else if @props.task == 7
-        @PatientGeneral()
-      else if @props.task == 41
-        @MedicineSupplier()
-      else if @props.task == 42
-        @MedicineCompany()
-      else if @props.task == 43
-        @MedicineSample()
-      else if @props.task == 44
-        @MedicineBillIn()
-      else if @props.task == 45
-        @MedicineBillRecord()
-      else if @props.task == 46
-        @MedicinePrice()
+      switch @props.task
+        when 1
+          @Employee()
+        when 2
+          @Position()
+        when 3
+          @Room()
+        when 4
+          @AppViewEmployee()
+        when 5
+          @Service()
+        when 6
+          @ServiceMap()
+        when 7
+          @PatientGeneral()
+        when 41
+          @MedicineSupplier()
+        when 42
+          @MedicineCompany()
+        when 43
+          @MedicineSample()
+        when 44
+          @MedicineBillIn()
+        when 45
+          @MedicineBillRecord()
+        when 46
+          @MedicinePrice()
+        when 47
+          @MedicinePrescriptExternal()
+        when 48
+          @MedicineExternalRecord()
+        when 49
+          @MedicinePrescriptInternal()
+        when 50
+          @MedicineInternalRecord()
+        when 51
+          @MedicineStockRecord()

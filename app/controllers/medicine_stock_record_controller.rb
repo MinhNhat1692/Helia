@@ -142,6 +142,9 @@ class MedicineStockRecordController < ApplicationController
 			  elsif params.has_key?(:expire)
 				  @supplier = MedicineStockRecord.where("expire = ? and station_id = ?" , params[:expire], @station.id)
 			    render json:@supplier
+			  elsif params.has_key?(:typerecord)
+				  @supplier = MedicineStockRecord.where("typerecord = ? and station_id = ?" , params[:typerecord], @station.id)
+			    render json:@supplier
 			  end
       else
         redirect_to root_path
