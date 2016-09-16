@@ -2709,7 +2709,7 @@
                   React.DOM.th null, 'Giá'
                   React.DOM.th null, 'Giảm giá'
                   React.DOM.th null, 'Tổng giá trị'
-                  React.DOM.th null, 'Cách thanh toán'
+                  React.DOM.th null, 'Tình trạng'
                   React.DOM.th null, 'Số kiệu'
                   React.DOM.th null, 'Ký hiệu'
               React.DOM.tbody null,

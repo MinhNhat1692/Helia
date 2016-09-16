@@ -1116,6 +1116,180 @@
           React.DOM.td null, @props.record.minam
           React.DOM.td null, @props.record.price
           React.DOM.td null, @props.record.remark
+    MedicinePrescriptExternal: ->
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.code
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null,
+            if @props.record.date != null
+              @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.result_id
+          React.DOM.td null, @props.record.number_id
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.remark
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.code
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null,
+            if @props.record.date != null
+              @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.result_id
+          React.DOM.td null, @props.record.number_id
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.remark
+    MedicineExternalRecord: ->
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.script_code
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.amount
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.total
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.script_code
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.amount
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.total
+    MedicinePrescriptInternal: ->
+      switch Number(@props.record.pmethod)
+        when 1
+          @state.typeName = "Tiền mặt"
+        when 2
+          @state.typeName = "Chuyển khoản"
+        when 3
+          @state.typeName = "Khác"
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.code
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null,
+            if @props.record.date != null
+              @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.preparer
+          React.DOM.td null, @props.record.payer
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @props.record.@state.typeName
+          React.DOM.td null, @props.record.result_id
+          React.DOM.td null, @props.record.number_id
+          React.DOM.td null, @props.record.remark
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.code
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null,
+            if @props.record.date != null
+              @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.preparer
+          React.DOM.td null, @props.record.payer
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @props.record.@state.typeName
+          React.DOM.td null, @props.record.result_id
+          React.DOM.td null, @props.record.number_id
+          React.DOM.td null, @props.record.remark
+    MedicineInternalRecord: ->
+      switch Number(@props.record.status)
+        when 1
+          @state.typeName = "Đã thanh toán"
+        when 2
+          @state.typeName = "Chưa thanh toán"
+        when 3
+          @state.typeName = "Khác"
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.script_code
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.amount
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.signid
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.script_code
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.amount
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.signid
+    MedicineStockRecord: ->
+      switch Number(@props.record.typerecord)
+        when 1
+          @state.typeName = "Nhập"
+        when 2
+          @state.typeName = "Xuất"
+        when 3
+          @state.typeName = "Vô hiệu"
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.signid
+          React.DOM.td null, @props.record.amount
+          React.DOM.td null, @props.record.expire
+          React.DOM.td null, @props.record.supplier
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @props.record.bill_in_code
+          React.DOM.td null, @props.record.internal_record_code
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.signid
+          React.DOM.td null, @props.record.amount
+          React.DOM.td null, @props.record.expire
+          React.DOM.td null, @props.record.supplier
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @props.record.bill_in_code
+          React.DOM.td null, @props.record.internal_record_code
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1129,3 +1303,13 @@
         @MedicineBillRecord()
       else if @props.datatype == 'medicine_price'
         @MedicinePrice()
+      else if @props.datatype == 'medicine_prescript_external'
+        @MedicinePrescriptExternal()
+      else if @props.datatype == 'medicine_external_record'
+        @MedicineExternalRecord()
+      else if @props.datatype == 'medicine_prescript_internal'
+        @MedicinePrescriptInternal()
+      else if @props.datatype == 'medicine_internal_record'
+        @MedicineInternalRecord()
+      else if @props.datatype == 'medicine_stock_record'
+        @MedicineStockRecord()
