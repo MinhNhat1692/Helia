@@ -22,19 +22,13 @@ class MedicineExternalRecordController < ApplicationController
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
-		    @customer_id = nil
-		    @script_id = nil
-		    if params.has_key?(:customer_id) 
-		      @customerrecord = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
-		      if @custommerrecord != nil
-            @customer_id = @custommerrecord.id
-          end
-		    end
-		    if params.has_key?(:script_id)
-		      @script = MedicinePrescriptExternal.find_by(id: params[:script_id], code: params[:script_code], station_id: @station.id)
-		      if @script != nil
-            @script_id = @script.id
-          end
+		    @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
+		    if !@customer_id.nil?
+					@customer_id = @customer_id.id
+				end
+		    @script_id = MedicinePrescriptExternal.find_by(id: params[:script_id], code: params[:script_code], station_id: @station.id)
+		    if !@script_id.nil?
+					@script_id = @script_id.id
 		    end
 		    @supplier = MedicineExternalRecord.new(station_id: @station.id, customer_id: @customer_id, cname: params[:cname], script_id: @script_id, script_code: params[:script_code], name: params[:name], amount: params[:amount], remark: params[:remark], company: params[:company], price: params[:price], total: params[:total])
 				if @supplier.save
@@ -57,19 +51,13 @@ class MedicineExternalRecordController < ApplicationController
         if params.has_key?(:id)
           @supplier = MedicineExternalRecord.find(params[:id])
 			    if @supplier.station_id == @station.id
-            @customer_id = nil
-		        @script_id = nil
-		        if params.has_key?(:customer_id) 
-		          @customerrecord = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
-		          if @custommerrecord != nil
-                @customer_id = @custommerrecord.id
-              end
-		        end
-		        if params.has_key?(:script_id)
-		          @script = MedicinePrescriptExternal.find_by(id: params[:script_id], code: params[:script_code], station_id: @station.id)
-		          if @script != nil
-                @script_id = @script.id
-              end
+            @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
+		        if !@customer_id.nil?
+					    @customer_id = @customer_id.id
+				    end
+		        @script_id = MedicinePrescriptExternal.find_by(id: params[:script_id], code: params[:script_code], station_id: @station.id)
+		        if !@script_id.nil?
+					    @script_id = @script_id.id
 		        end
 		        if @supplier.update(customer_id: @customer_id, cname: params[:cname], script_id: @script_id, script_code: params[:script_code], name: params[:name], amount: params[:amount], remark: params[:remark], company: params[:company], price: params[:price], total: params[:total])
 				      render json: @supplier

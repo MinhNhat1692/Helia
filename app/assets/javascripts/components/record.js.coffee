@@ -1194,7 +1194,7 @@
           React.DOM.td null, @props.record.tpayment
           React.DOM.td null, @props.record.discount
           React.DOM.td null, @props.record.tpayout
-          React.DOM.td null, @props.record.@state.typeName
+          React.DOM.td null, @state.typeName
           React.DOM.td null, @props.record.result_id
           React.DOM.td null, @props.record.number_id
           React.DOM.td null, @props.record.remark
@@ -1214,18 +1214,18 @@
           React.DOM.td null, @props.record.tpayment
           React.DOM.td null, @props.record.discount
           React.DOM.td null, @props.record.tpayout
-          React.DOM.td null, @props.record.@state.typeName
+          React.DOM.td null, @state.typeName
           React.DOM.td null, @props.record.result_id
           React.DOM.td null, @props.record.number_id
           React.DOM.td null, @props.record.remark
     MedicineInternalRecord: ->
       switch Number(@props.record.status)
         when 1
-          @state.typeName = "Đã thanh toán"
+          @state.typeName = "Đã chuyển hàng"
         when 2
-          @state.typeName = "Chưa thanh toán"
+          @state.typeName = "Chưa chuyển hàng"
         when 3
-          @state.typeName = "Khác"
+          @state.typeName = "Hàng trả lại"
       if @props.selected
         React.DOM.tr
           className: "toggled"
@@ -1272,7 +1272,11 @@
           React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.signid
           React.DOM.td null, @props.record.amount
-          React.DOM.td null, @props.record.expire
+          React.DOM.td null,
+            if @props.record.expire != null
+              @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+            else
+              ""
           React.DOM.td null, @props.record.supplier
           React.DOM.td null, @props.record.remark
           React.DOM.td null, @props.record.bill_in_code
@@ -1285,7 +1289,11 @@
           React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.signid
           React.DOM.td null, @props.record.amount
-          React.DOM.td null, @props.record.expire
+          React.DOM.td null,
+            if @props.record.expire != null
+              @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+            else
+              ""
           React.DOM.td null, @props.record.supplier
           React.DOM.td null, @props.record.remark
           React.DOM.td null, @props.record.bill_in_code

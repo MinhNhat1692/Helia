@@ -207,6 +207,23 @@ class CustomerRecordController < ApplicationController
 		end
 	end
 	
+  
+  def search
+    if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:cname)
+          @supplier = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).group(:cname).limit(3)
+			    render json:@supplier
+			  end
+      else
+        redirect_to root_path
+      end
+    end
+  end
+  
   private
   	# Confirms a logged-in user.
 		def logged_in_user

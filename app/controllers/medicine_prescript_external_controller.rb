@@ -22,19 +22,13 @@ class MedicinePrescriptExternalController < ApplicationController
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
-		    @customer_id = nil
-		    @employee_id = nil
-		    if params.has_key?(:customer_id) 
-		      @customerrecord = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
-		      if @custommerrecord != nil
-            @customer_id = @custommerrecord.id
-          end
-		    end
-		    if params.has_key?(:employee_id)
-		      @employee = Employee.find_by(id: params[:employee_id], ename: params[:ename], station_id: @station.id)
-		      if @employee != nil
-            @employee_id = @employee.id
-          end
+		    @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
+		    if !@customer_id.nil?
+					@customer_id = @customer_id.id
+				end
+		    @employee_id = Employee.find_by(id: params[:employee_id], ename: params[:ename], station_id: @station.id)
+		    if !@employee_id.nil?
+					@employee_id = @employee_id.id
 		    end
 		    @supplier = MedicinePrescriptExternal.new(station_id: @station.id, code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], address: params[:address], remark: params[:remark])
 				if @supplier.save
@@ -57,21 +51,15 @@ class MedicinePrescriptExternalController < ApplicationController
         if params.has_key?(:id)
           @supplier = MedicinePrescriptExternal.find(params[:id])
 			    if @supplier.station_id == @station.id
-            @customer_id = nil
-		        @employee_id = nil
-		        if params.has_key?(:customer_id) 
-		          @customerrecord = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
-		          if @custommerrecord != nil
-                @customer_id = @custommerrecord.id
-              end
+            @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
+		        if !@customer_id.nil?
+  					  @customer_id = @customer_id.id
+	  			  end
+		        @employee_id = Employee.find_by(id: params[:employee_id], ename: params[:ename], station_id: @station.id)
+		        if !@employee_id.nil?
+				  	  @employee_id = @employee_id.id
 		        end
-		        if params.has_key?(:employee_id)
-		          @employee = Employee.find_by(id: params[:employee_id], station_id: @station.id)
-		          if @employee != nil
-                @employee_id = @employee.id
-              end
-		        end
-            if @supplier.update(code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], address: params[:address], remark: params[:remark])
+		        if @supplier.update(code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], address: params[:address], remark: params[:remark])
 				      render json: @supplier
 				    else
 				      render json: @supplier.errors, status: :unprocessable_entity

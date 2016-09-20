@@ -57,19 +57,13 @@ class MedicineInternalRecordController < ApplicationController
         if params.has_key?(:id)
           @supplier = MedicineInternalRecord.find(params[:id])
 			    if @supplier.station_id == @station.id
-            @customer_id = nil
-		        @script_id = nil
-		        if params.has_key?(:customer_id) 
-		          @customerrecord = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
-		          if @custommerrecord != nil
-                @customer_id = @custommerrecord.id
-              end
-		        end
-		        if params.has_key?(:script_id)
-		          @script = MedicinePrescriptInternal.find_by(id: params[:script_id], code: params[:script_code], station_id: @station.id)
-		          if @script != nil
-                @script_id = @script.id
-              end
+						@customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
+		        if !@customer_id.nil?
+					    @customer_id = @customer_id.id
+				    end
+		        @script_id = MedicinePrescriptInternal.find_by(id: params[:script_id], code: params[:script_code], station_id: @station.id)
+		        if !@script_id.nil?
+					    @script_id = @script_id.id
 		        end
 		        if @supplier.update(customer_id: @customer_id, cname: params[:cname], script_id: @script_id, script_code: params[:script_code], name: params[:name], amount: params[:amount], remark: params[:remark], company: params[:company], price: params[:price], noid: params[:noid], signid: params[:signid], discount: params[:discount], tpayment: params[:tpayment], status: params[:status])
 				      render json: @supplier

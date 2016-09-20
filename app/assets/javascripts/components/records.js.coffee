@@ -2932,18 +2932,18 @@
                   for record in @state.filteredRecord
                     if @state.selected != null
                       if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_internal_record", selected: true, selectRecord: @selectRecord
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_stock_record", selected: true, selectRecord: @selectRecord
                       else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_internal_record", selected: false, selectRecord: @selectRecord
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_stock_record", selected: false, selectRecord: @selectRecord
                     else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_internal_record", selected: false, selectRecord: @selectRecord
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_stock_record", selected: false, selectRecord: @selectRecord
                 else
                   for record in @state.records
                     if @state.selected != null
                       if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_internal_record", selected: true, selectRecord: @selectRecord
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_stock_record", selected: true, selectRecord: @selectRecord
                       else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_internal_record", selected: false, selectRecord: @selectRecord
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_stock_record", selected: false, selectRecord: @selectRecord
                     else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_internal_record", selected: false, selectRecord: @selectRecord
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_stock_record", selected: false, selectRecord: @selectRecord
 

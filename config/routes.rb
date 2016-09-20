@@ -82,6 +82,8 @@ Rails.application.routes.draw do
   post '/employee/update_record', to: 'employee#update_record'
   post '/employee/clear_link_record', to: 'employee#clear_link_record'
   post '/employee/find_record', to: 'employee#find_record'
+  post '/employee/search', to: 'employee#search'
+  
   delete '/customer_record', to: 'customer_record#destroy'
   put '/customer_record', to: 'customer_record#update'
   post '/customer_record', to: 'customer_record#create'
@@ -91,6 +93,8 @@ Rails.application.routes.draw do
   post '/customer_record/link_record', to: 'customer_record#link_record'
   post '/customer_record/update_record', to: 'customer_record#update_record'
   post '/customer_record/clear_link_record', to: 'customer_record#clear_link_record'
+  post '/customer_record/search', to: 'customer_record#search'
+  
   put '/service_mapping', to: 'service_mapping#update'
   post '/service_mapping/list', to: 'service_mapping#list'
   put '/services', to: 'service#update'

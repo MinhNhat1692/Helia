@@ -2,6 +2,7 @@
     getInitialState: ->
       type: @props.type
       autoComplete: null
+      code: null
     componentDidMount: ->
       $(ReactDOM.findDOMNode(this)).modal 'show'
       $(ReactDOM.findDOMNode(this)).on 'hidden.bs.modal', @props.handleHideModal
@@ -577,6 +578,290 @@
               @props.trigger2 @props.record, result
               return
             ).bind(this)
+      else if @props.type == 'medicine_prescript_external_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'code', $('#medicine_prescript_external_code').val()
+        formData.append 'customer_id', $('#medicine_prescript_external_customer_id').val()
+        formData.append 'cname', $('#medicine_prescript_external_cname').val()
+        formData.append 'employee_id', $('#medicine_prescript_external_employee_id').val()
+        formData.append 'ename', $('#medicine_prescript_external_ename').val()
+        formData.append 'result_id', $('#medicine_prescript_external_result_id').val()
+        formData.append 'number_id', $('#medicine_prescript_external_number_id').val()
+        formData.append 'date', $('#medicine_prescript_external_date').val()
+        formData.append 'address', $('#medicine_prescript_external_address').val()
+        formData.append 'remark', $('#medicine_prescript_external_remark').val()
+        $.ajax
+          url: '/medicine_prescript_external'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_prescript_external_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'code', $('#medicine_prescript_external_code').val()
+          formData.append 'customer_id', $('#medicine_prescript_external_customer_id').val()
+          formData.append 'cname', $('#medicine_prescript_external_cname').val()
+          formData.append 'employee_id', $('#medicine_prescript_external_employee_id').val()
+          formData.append 'ename', $('#medicine_prescript_external_ename').val()
+          formData.append 'result_id', $('#medicine_prescript_external_result_id').val()
+          formData.append 'number_id', $('#medicine_prescript_external_number_id').val()
+          formData.append 'date', $('#medicine_prescript_external_date').val()
+          formData.append 'address', $('#medicine_prescript_external_address').val()
+          formData.append 'remark', $('#medicine_prescript_external_remark').val()
+          $.ajax
+            url: '/medicine_prescript_external'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
+      else if @props.type == 'medicine_external_record_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'name', $('#medicine_external_record_name').val()
+        formData.append 'customer_id', $('#medicine_external_record_customer_id').val()
+        formData.append 'cname', $('#medicine_external_record_cname').val()
+        formData.append 'script_id', $('#medicine_external_record_script_id').val()
+        formData.append 'remark', $('#medicine_external_record_remark').val()
+        formData.append 'company', $('#medicine_external_record_company').val()
+        formData.append 'amount', $('#medicine_external_record_amount').val()
+        formData.append 'script_code', $('#medicine_external_record_script_code').val()
+        formData.append 'price', $('#medicine_external_record_price').val()
+        formData.append 'total', $('#medicine_external_record_total').val()
+        $.ajax
+          url: '/medicine_external_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_external_record_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'name', $('#medicine_external_record_name').val()
+          formData.append 'customer_id', $('#medicine_external_record_customer_id').val()
+          formData.append 'cname', $('#medicine_external_record_cname').val()
+          formData.append 'script_id', $('#medicine_external_record_script_id').val()
+          formData.append 'remark', $('#medicine_external_record_remark').val()
+          formData.append 'company', $('#medicine_external_record_company').val()
+          formData.append 'amount', $('#medicine_external_record_amount').val()
+          formData.append 'script_code', $('#medicine_external_record_script_code').val()
+          formData.append 'price', $('#medicine_external_record_price').val()
+          formData.append 'total', $('#medicine_external_record_total').val()
+          $.ajax
+            url: '/medicine_external_record'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
+      else if @props.type == 'medicine_prescript_internal_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'code', $('#medicine_prescript_internal_code').val()
+        formData.append 'customer_id', $('#medicine_prescript_internal_customer_id').val()
+        formData.append 'cname', $('#medicine_prescript_internal_cname').val()
+        formData.append 'employee_id', $('#medicine_prescript_internal_employee_id').val()
+        formData.append 'ename', $('#medicine_prescript_internal_ename').val()
+        formData.append 'result_id', $('#medicine_prescript_internal_result_id').val()
+        formData.append 'number_id', $('#medicine_prescript_internal_number_id').val()
+        formData.append 'date', $('#medicine_prescript_internal_date').val()
+        formData.append 'preparer', $('#medicine_prescript_internal_preparer').val()
+        formData.append 'remark', $('#medicine_prescript_internal_remark').val()
+        formData.append 'payer', $('#medicine_prescript_internal_payer').val()
+        formData.append 'tpayment', $('#medicine_prescript_internal_tpayment').val()
+        formData.append 'discount', $('#medicine_prescript_internal_discount').val()
+        formData.append 'tpayout', $('#medicine_prescript_internal_tpayout').val()
+        formData.append 'pmethod', $('#medicine_prescript_internal_pmethod').val()
+        formData.append 'preparer_id', $('#medicine_prescript_internal_preparer_id').val()
+        $.ajax
+          url: '/medicine_prescript_internal'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_prescript_internal_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'code', $('#medicine_prescript_internal_code').val()
+          formData.append 'customer_id', $('#medicine_prescript_internal_customer_id').val()
+          formData.append 'cname', $('#medicine_prescript_internal_cname').val()
+          formData.append 'employee_id', $('#medicine_prescript_internal_employee_id').val()
+          formData.append 'ename', $('#medicine_prescript_internal_ename').val()
+          formData.append 'result_id', $('#medicine_prescript_internal_result_id').val()
+          formData.append 'number_id', $('#medicine_prescript_internal_number_id').val()
+          formData.append 'date', $('#medicine_prescript_internal_date').val()
+          formData.append 'preparer', $('#medicine_prescript_internal_preparer').val()
+          formData.append 'remark', $('#medicine_prescript_internal_remark').val()
+          formData.append 'payer', $('#medicine_prescript_internal_payer').val()
+          formData.append 'tpayment', $('#medicine_prescript_internal_tpayment').val()
+          formData.append 'discount', $('#medicine_prescript_internal_discount').val()
+          formData.append 'tpayout', $('#medicine_prescript_internal_tpayout').val()
+          formData.append 'pmethod', $('#medicine_prescript_internal_pmethod').val()
+          formData.append 'preparer_id', $('#medicine_prescript_internal_preparer_id').val()
+          $.ajax
+            url: '/medicine_prescript_internal'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
+      else if @props.type == 'medicine_internal_record_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'name', $('#medicine_internal_record_name').val()
+        formData.append 'customer_id', $('#medicine_internal_record_customer_id').val()
+        formData.append 'cname', $('#medicine_internal_record_cname').val()
+        formData.append 'script_id', $('#medicine_internal_record_script_id').val()
+        formData.append 'remark', $('#medicine_internal_record_remark').val()
+        formData.append 'company', $('#medicine_internal_record_company').val()
+        formData.append 'amount', $('#medicine_internal_record_amount').val()
+        formData.append 'script_code', $('#medicine_internal_record_script_code').val()
+        formData.append 'price', $('#medicine_internal_record_price').val()
+        formData.append 'discount', $('#medicine_internal_record_discount').val()
+        formData.append 'tpayment', $('#medicine_internal_record_tpayment').val()
+        formData.append 'noid', $('#medicine_internal_record_noid').val()
+        formData.append 'signid', $('#medicine_internal_record_signid').val()
+        formData.append 'status', $('#medicine_internal_record_status').val()
+        $.ajax
+          url: '/medicine_internal_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_internal_record_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'name', $('#medicine_internal_record_name').val()
+          formData.append 'customer_id', $('#medicine_internal_record_customer_id').val()
+          formData.append 'cname', $('#medicine_internal_record_cname').val()
+          formData.append 'script_id', $('#medicine_internal_record_script_id').val()
+          formData.append 'remark', $('#medicine_internal_record_remark').val()
+          formData.append 'company', $('#medicine_internal_record_company').val()
+          formData.append 'amount', $('#medicine_internal_record_amount').val()
+          formData.append 'script_code', $('#medicine_internal_record_script_code').val()
+          formData.append 'price', $('#medicine_internal_record_price').val()
+          formData.append 'discount', $('#medicine_internal_record_discount').val()
+          formData.append 'tpayment', $('#medicine_internal_record_tpayment').val()
+          formData.append 'noid', $('#medicine_internal_record_noid').val()
+          formData.append 'signid', $('#medicine_internal_record_signid').val()
+          formData.append 'status', $('#medicine_internal_record_status').val()
+          $.ajax
+            url: '/medicine_internal_record'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
+      else if @props.type == 'medicine_stock_record_add'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'name', $('#medicine_stock_record_name').val()
+        formData.append 'typerecord', $('#medicine_stock_record_typerecord').val()
+        formData.append 'noid', $('#medicine_stock_record_noid').val()
+        formData.append 'signid', $('#medicine_stock_record_signid').val()
+        formData.append 'amount', $('#medicine_stock_record_amount').val()
+        formData.append 'expire', $('#medicine_stock_record_expire').val()
+        formData.append 'supplier', $('#medicine_stock_record_supplier').val()
+        formData.append 'internal_record_id', $('#medicine_stock_record_internal_record_id').val()
+        formData.append 'bill_in_id', $('#medicine_stock_record_bill_in_id').val()
+        formData.append 'bill_in_code', $('#medicine_stock_record_bill_in_code').val()
+        formData.append 'internal_record_code', $('#medicine_stock_record_internal_record_code').val()
+        formData.append 'remark', $('#medicine_stock_record_remark').val()
+        $.ajax
+          url: '/medicine_stock_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+      else if @props.type == 'medicine_stock_record_edit'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'name', $('#medicine_stock_record_name').val()
+          formData.append 'typerecord', $('#medicine_stock_record_typerecord').val()
+          formData.append 'noid', $('#medicine_stock_record_noid').val()
+          formData.append 'signid', $('#medicine_stock_record_signid').val()
+          formData.append 'amount', $('#medicine_stock_record_amount').val()
+          formData.append 'expire', $('#medicine_stock_record_expire').val()
+          formData.append 'supplier', $('#medicine_stock_record_supplier').val()
+          formData.append 'internal_record_id', $('#medicine_stock_record_internal_record_id').val()
+          formData.append 'bill_in_id', $('#medicine_stock_record_bill_in_id').val()
+          formData.append 'bill_in_code', $('#medicine_stock_record_bill_in_code').val()
+          formData.append 'internal_record_code', $('#medicine_stock_record_internal_record_code').val()
+          formData.append 'remark', $('#medicine_stock_record_remark').val()
+          $.ajax
+            url: '/medicine_stock_record'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger2 @props.record, result
+              return
+            ).bind(this)
     triggerAutoCompleteInput: (e) ->
       if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         if $('#medicine_sample_company').val().length > 1
@@ -642,6 +927,277 @@
               @setState autoComplete: result
               return
             ).bind(this)
+    triggerAutoCompleteInputAlt: (code) ->
+      if code == 'medicine_prescript_external_cname'
+        if $('#medicine_prescript_external_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#medicine_prescript_external_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: 'medicine_prescript_external_cname'
+              return
+            ).bind(this)
+      else if code == 'medicine_prescript_external_ename'
+        if $('#medicine_prescript_external_ename').val().length > 1
+          formData = new FormData
+          formData.append 'ename', $('#medicine_prescript_external_ename').val().toLowerCase()
+          $.ajax
+            url: '/employee/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: 'medicine_prescript_external_ename'
+              return
+            ).bind(this)
+      else if code == 'medicine_external_record_script_code'
+        if $('#medicine_external_record_script_code').val().length > 1
+          formData = new FormData
+          formData.append 'code', $('#medicine_external_record_script_code').val().toLowerCase()
+          $.ajax
+            url: '/medicine_prescript_external/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_external_record_name'
+        if $('#medicine_external_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_external_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_external_record_cname'
+        if $('#medicine_external_record_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#medicine_external_record_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: 'medicine_external_record_cname'
+              return
+            ).bind(this)
+      else if code == 'medicine_external_record_price'
+        if $('#medicine_external_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_external_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_price/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_prescript_internal_cname'
+        if $('#medicine_prescript_internal_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#medicine_prescript_internal_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_prescript_internal_ename'
+        if $('#medicine_prescript_internal_ename').val().length > 1
+          formData = new FormData
+          formData.append 'ename', $('#medicine_prescript_internal_ename').val().toLowerCase()
+          $.ajax
+            url: '/employee/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_prescript_internal_preparer'
+        if $('#medicine_prescript_internal_preparer').val().length > 1
+          formData = new FormData
+          formData.append 'ename', $('#medicine_prescript_internal_preparer').val().toLowerCase()
+          $.ajax
+            url: '/employee/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_internal_record_script_code'
+        if $('#medicine_internal_record_script_code').val().length > 1
+          formData = new FormData
+          formData.append 'code', $('#medicine_internal_record_script_code').val().toLowerCase()
+          $.ajax
+            url: '/medicine_prescript_internal/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_internal_record_name'
+        if $('#medicine_internal_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_internal_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_internal_record_cname'
+        if $('#medicine_internal_record_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#medicine_internal_record_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: 'medicine_internal_record_cname'
+              return
+            ).bind(this)
+      else if code == 'medicine_internal_record_price'
+        if $('#medicine_internal_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_internal_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_price/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_stock_record_name'
+        if $('#medicine_stock_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_stock_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_stock_record_supplier'
+        if $('#medicine_stock_record_supplier').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_stock_record_supplier').val().toLowerCase()
+          $.ajax
+            url: '/medicine_supplier/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
     triggerAutoComplete: (record) ->
       if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         $('#medicine_sample_company').val(record.name)
@@ -656,6 +1212,69 @@
       else if @state.type == 'medicine_price_add' or @state.type == 'medicine_price_edit'
         $('#medicine_price_name').val(record.name)
         @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_external_cname'
+        $('#medicine_prescript_external_customer_id').val(record.id)
+        $('#medicine_prescript_external_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_external_ename'
+        $('#medicine_prescript_external_employee_id').val(record.id)
+        $('#medicine_prescript_external_ename').val(record.ename)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_external_record_script_code'
+        $('#medicine_external_record_script_id').val(record.id)
+        $('#medicine_external_record_script_code').val(record.code)
+        $('#medicine_external_record_customer_id').val(record.customer_id)
+        $('#medicine_external_record_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_external_record_name'
+        $('#medicine_external_record_name').val(record.name)
+        $('#medicine_external_record_company').val(record.company)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_external_record_cname'
+        $('#medicine_external_record_customer_id').val(record.id)
+        $('#medicine_external_record_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_external_record_price'
+        $('#medicine_external_record_price').val(record.price)
+        @triggerRecalPayment()
+        @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_internal_cname'
+        $('#medicine_prescript_internal_customer_id').val(record.id)
+        $('#medicine_prescript_internal_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_internal_ename'
+        $('#medicine_prescript_internal_employee_id').val(record.id)
+        $('#medicine_prescript_internal_ename').val(record.ename)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_internal_preparer'
+        $('#medicine_prescript_internal_preparer_id').val(record.id)
+        $('#medicine_prescript_internal_preparer').val(record.ename)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_internal_record_script_code'
+        $('#medicine_internal_record_script_id').val(record.id)
+        $('#medicine_internal_record_script_code').val(record.code)
+        $('#medicine_internal_record_customer_id').val(record.customer_id)
+        $('#medicine_internal_record_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_internal_record_name'
+        $('#medicine_internal_record_name').val(record.name)
+        $('#medicine_internal_record_company').val(record.company)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_internal_record_cname'
+        $('#medicine_internal_record_customer_id').val(record.id)
+        $('#medicine_internal_record_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_internal_record_price'
+        $('#medicine_internal_record_price').val(record.price)
+        @triggerRecalPayment()
+        @setState autoComplete: null
+      else if @state.code == 'medicine_stock_record_name'
+        $('#medicine_stock_record_name').val(record.name)
+        $('#medicine_stock_record_company').val(record.company)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_stock_record_supplier'
+        $('#medicine_stock_record_supplier').val(record.name)
+        @setState autoComplete: null
     triggerRecalPayment: (e) ->
       if @state.type == 'medicine_bill_in_add' or @state.type == 'medicine_bill_in_edit'
         if $('#medicine_bill_in_tpayment').val() > 0
@@ -668,6 +1287,22 @@
               $('#medicine_bill_in_tpayout').val(Number($('#medicine_bill_in_tpayment').val()) - Number($('#medicine_bill_in_discount').val()))
             else
               $('#medicine_bill_in_tpayout').val(Number($('#medicine_bill_in_tpayment').val()) - Number($('#medicine_bill_in_discount').val()))
+      if @state.type == 'medicine_external_record_add' or @state.type == 'medicine_external_record_edit'
+        $('#medicine_external_record_total').val(Number($('#medicine_external_record_price').val()) * Number($('#medicine_external_record_amount').val()))
+      if @state.type == 'medicine_prescript_internal_add' or @state.type == 'medicine_prescript_internal_edit'
+        if $('#medicine_prescript_internal_tpayment').val() > 0
+          if $('#medicine_prescript_internal_discount').val() > 0
+            $('#medicine_prescript_internal_discount_percent').val(Number($('#medicine_prescript_internal_discount').val())/Number($('#medicine_prescript_internal_tpayment').val())*100)
+            $('#medicine_prescript_internal_tpayout').val(Number($('#medicine_prescript_internal_tpayment').val()) - Number($('#medicine_prescript_internal_discount').val()))
+          else
+            if $('#medicine_prescript_internal_discount_percent').val() > 0
+              $('#medicine_prescript_internal_discount').val(Number($('#medicine_prescript_internal_discount_percent').val()) * Number($('#medicine_prescript_internal_tpayment').val()) / 100)
+              $('#medicine_prescript_internal_tpayout').val(Number($('#medicine_prescript_internal_tpayment').val()) - Number($('#medicine_prescript_internal_discount').val()))
+            else
+              $('#medicine_prescript_internal_tpayout').val(Number($('#medicine_prescript_internal_tpayment').val()) - Number($('#medicine_prescript_internal_discount').val()))
+      if @state.type == 'medicine_internal_record_add' or @state.type == 'medicine_internal_record_edit'
+        $('#medicine_internal_record_tpayment').val(Number($('#medicine_internal_record_price').val()) * Number($('#medicine_internal_record_amount').val()))
+    trigger: (e) ->
     employeeForm: ->
       React.DOM.div
         className: 'modal fade'
@@ -2497,6 +3132,628 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    medicinePrescriptExternalForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg modal-sp-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Mẫu thông tin đơn thuốc ngoài'
+              React.DOM.small null,
+                'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-12'
+                  React.DOM.form
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmit
+                    autoComplete: 'off'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Mã đơn đơn thuốc'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.createElement InputField, id: 'medicine_prescript_external_code', className: 'form-control', type: 'text', code: '', placeholder: 'Mã đơn thuốc', style: '', trigger: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.code
+                          else
+                            ""
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên bệnh nhân'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input id: 'medicine_prescript_external_customer_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'cid', defaultValue:
+                          if @props.record != null
+                            @props.record.customer_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'medicine_prescript_external_cname', className: 'form-control', type: 'text', code: 'medicine_prescript_external_cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, defaultValue:
+                          if @props.record != null
+                            @props.record.cname
+                          else
+                            ""
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_prescript_external_cname_autocomplete"
+                          if @state.autoComplete != null and @state.code == 'medicine_prescript_external_cname'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.cname, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên bác sỹ kê đơn'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input id: 'medicine_prescript_external_employee_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.employee_id
+                          else
+                            0
+                        React.createElement InputField, id: 'medicine_prescript_external_ename', className: 'form-control', type: 'text', code: 'medicine_prescript_external_ename', placeholder: 'Tên bác sỹ kê đơn', style: '', trigger: @triggerAutoCompleteInputAlt, defaultValue:
+                          if @props.record != null
+                            @props.record.ename
+                          else
+                            ""
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_prescript_external_ename_autocomplete"
+                          if @state.autoComplete != null and @state.code == 'medicine_prescript_external_ename'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.ename, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số khám bệnh'
+                      React.DOM.div className: 'col-sm-4',
+                        React.createElement InputField, id: 'medicine_prescript_external_number_id', className: 'form-control', type: 'text', code: '', placeholder: 'Số khám bệnh', trigger: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.number_id
+                          else
+                            ""
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ngày kê đơn'
+                      React.DOM.div className: 'col-sm-4',
+                        React.createElement InputField, id: 'medicine_prescript_external_date', className: 'form-control', type: 'text', code: '', placeholder: '31/01/2016', trigger: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+                          else
+                            moment().format('DD/MM/YYYY')
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Địa chỉ mua thuốc'
+                      React.DOM.div className: 'col-sm-9',
+                        React.createElement InputField, id: 'medicine_prescript_external_address', className: 'form-control', type: 'text', code: '', placeholder: 'Địa chỉ mua thuốc', trigger: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.address
+                          else
+                            ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ghi chú'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.textarea id: 'medicine_prescript_external_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
+                          if @props.record != null
+                            @props.record.remark
+                          else
+                            ''
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
+    medicineExternalRecordForm: ->
+      React.DOM.div
+        className: 'modal fade'
+        React.DOM.div
+          className: 'modal-dialog modal-lg modal-sp-lg'
+          React.DOM.div
+            className: 'modal-content'
+            React.DOM.div
+              className: 'modal-header text-center'
+              React.DOM.h4
+                className: 'modal-title'
+                'Mẫu thông tin thuốc kê ngoài'
+              React.DOM.small null,
+                'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div
+              className: 'modal-body'
+              React.DOM.div
+                className: 'row'
+                React.DOM.div
+                  className: 'col-md-12'
+                  React.DOM.form
+                    className: 'form-horizontal'
+                    onSubmit: @handleSubmit
+                    autoComplete: 'off'
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Mã đơn thuốc'
+                      React.DOM.div
+                        className: 'col-sm-2'
+                        React.DOM.input id: 'medicine_external_record_script_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.script_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'medicine_external_record_script_code', className: 'form-control', type: 'text', code: 'medicine_external_record_script_code', placeholder: 'Mã đơn thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.script_code
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete", id: "medicine_external_record_script_code_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'medicine_external_record_script_code'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.code, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên bệnh nhân'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input id: 'medicine_external_record_customer_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'cid', defaultValue:
+                          if @props.record != null
+                            @props.record.customer_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'medicine_external_record_cname', className: 'form-control', type: 'text', code: 'medicine_external_record_cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.cname
+                          else
+                            ""
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_external_record_cname_autocomplete"
+                          if @state.autoComplete != null and @state.code == 'medicine_external_record_cname'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.cname, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div
+                      className: 'form-group'
+                      React.DOM.label
+                        className: 'col-sm-2 control-label hidden-xs'
+                        'Tên thuốc'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.createElement InputField, id: 'medicine_external_record_name', className: 'form-control', type: 'text', code: 'medicine_external_record_name', placeholder: 'Tên thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.name
+                          else
+                            ""
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_external_record_name_autocomplete"
+                          if @state.autoComplete != null and @state.code == 'medicine_external_record_name'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.name, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Công ty sản xuất'
+                      React.DOM.div className: 'col-sm-9',
+                        React.createElement InputField, id: 'medicine_external_record_company', className: 'form-control', type: 'text', code: '', placeholder: 'Công ty sản xuất', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.company
+                          else
+                            ""  
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ghi chú'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.textarea id: 'medicine_external_record_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
+                          if @props.record != null
+                            @props.record.remark
+                          else
+                            ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số lượng'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_external_record_amount', className: 'form-control', type: 'number', code: '', placeholder: 'Số lượng', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.amount
+                          else
+                            0
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Giá'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_external_record_price', className: 'form-control', type: 'number', code: 'medicine_external_record_price', placeholder: 'Tên thuốc', style: '', trigger: @trigger, trigger3: @triggerAutoCompleteInputAlt, trigger2: @triggerRecalPayment, defaultValue:
+                          if @props.record != null
+                            @props.record.price
+                          else
+                            0
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_external_record_price_autocomplete"
+                          if @state.autoComplete != null and @state.code == 'medicine_external_record_price'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.price, record: recordsearch, trigger: @triggerAutoComplete
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tổng'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_external_record_total', className: 'form-control', type: 'number', code: '', placeholder: 'Tổng', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.total
+                          else
+                            0
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
+    medicinePrescriptInternalForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin đơn thuốc trong'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Mã đơn đơn thuốc'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_prescript_internal_code', className: 'form-control', type: 'text', code: '', placeholder: 'Mã đơn thuốc', style: '', trigger: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.code
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'medicine_prescript_internal_customer_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'cid', defaultValue:
+                          if @props.record != null
+                            @props.record.customer_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'medicine_prescript_internal_cname', className: 'form-control', type: 'text', code: 'medicine_prescript_internal_cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.cname
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete", id: "medicine_prescript_internal_cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'medicine_prescript_internal_cname'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.cname, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bác sỹ kê đơn'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'medicine_prescript_internal_employee_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.employee_id
+                          else
+                            0
+                        React.createElement InputField, id: 'medicine_prescript_internal_ename', className: 'form-control', type: 'text', code: 'medicine_prescript_internal_ename', placeholder: 'Tên bác sỹ kê đơn', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.ename
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete", id: "medicine_prescript_internal_ename_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'medicine_prescript_internal_ename'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.ename, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Người chuẩn bị'
+                      React.DOM.div
+                        className: 'col-sm-9'
+                        React.DOM.input id: 'medicine_prescript_internal_preparer_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.preparer_id
+                          else
+                            0
+                        React.createElement InputField, id: 'medicine_prescript_internal_preparer', className: 'form-control', type: 'text', code: 'medicine_prescript_internal_preparer', placeholder: 'Người chuẩn bị thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.ename
+                          else
+                            ""
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_prescript_internal_preparer_autocomplete"
+                          if @state.autoComplete != null and @state.code == 'medicine_prescript_internal_preparer'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.ename, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số khám bệnh'
+                      React.DOM.div className: 'col-sm-4',
+                        React.createElement InputField, id: 'medicine_prescript_internal_number_id', className: 'form-control', type: 'text', code: '', placeholder: 'Số khám bệnh', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.number_id
+                          else
+                            ""
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ngày kê đơn'
+                      React.DOM.div className: 'col-sm-4',
+                        React.createElement InputField, id: 'medicine_prescript_internal_date', className: 'form-control', type: 'text', code: '', placeholder: '31/01/2016', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+                          else
+                            moment().format('DD/MM/YYYY')
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Người thanh toán'
+                      React.DOM.div className: 'col-sm-9',
+                        React.createElement InputField, id: 'medicine_prescript_internal_payer', className: 'form-control', type: 'text', code: '', placeholder: 'Người thanh toán', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.payer
+                          else
+                            ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-8',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ghi chú'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'medicine_prescript_internal_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
+                            if @props.record != null
+                              @props.record.remark
+                            else
+                              ''
+                      React.DOM.div className: 'col-md-4',
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Cách thanh toán'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement SelectBox, id: 'medicine_prescript_internal_pmethod', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Tiền mặt'},{id: 2, name: 'Chuyển khoản'},{id: 3, name: 'Khác'}], text: 'Cách thanh toán'
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'medicine_prescript_internal_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @trigger, trigger3: @trigger, trigger2: @trigger, defaultValue:
+                            if @props.record != null
+                              @props.record.tpayment
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'medicine_prescript_internal_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.discount
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'medicine_prescript_internal_discount_percent', className: 'form-control', type: 'number', placeholder: '% Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.discount/@props.record.tpayment * 100
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'medicine_prescript_internal_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.tpayout
+                            else
+                              0
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    medicineInternalRecordForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin thuốc kê trong'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Mã đơn thuốc'
+                      React.DOM.div className: 'col-sm-2',
+                        React.DOM.input id: 'medicine_internal_record_script_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.script_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'medicine_internal_record_script_code', className: 'form-control', type: 'text', code: 'medicine_internal_record_script_code', placeholder: 'Mã đơn thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.script_code
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete", id: "medicine_internal_record_script_code_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'medicine_internal_record_script_code'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.code, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'medicine_internal_record_customer_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'cid', defaultValue:
+                          if @props.record != null
+                            @props.record.customer_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'medicine_internal_record_cname', className: 'form-control', type: 'text', code: 'medicine_internal_record_cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.cname
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete", id: "medicine_internal_record_cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'medicine_internal_record_cname'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.cname, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên thuốc'
+                      React.DOM.div className: 'col-sm-9',
+                        React.createElement InputField, id: 'medicine_internal_record_name', className: 'form-control', type: 'text', code: 'medicine_internal_record_name', placeholder: 'Tên thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.name
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete", id: "medicine_internal_record_name_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'medicine_internal_record_name'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.name, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Công ty sản xuất'
+                      React.DOM.div className: 'col-sm-9',
+                        React.createElement InputField, id: 'medicine_internal_record_company', className: 'form-control', type: 'text', code: '', placeholder: 'Công ty sản xuất', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.company
+                          else
+                            ""  
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_internal_record_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.noid
+                          else
+                            ""
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_internal_record_signid', className: 'form-control', type: 'text', code: '', placeholder: 'Ký hiệu', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.signid
+                          else
+                            ""
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng thuốc'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement SelectBox, id: 'medicine_internal_record_status', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Đã chuyển hàng'},{id: 2, name: 'Chưa chuyển hàng'},{id: 3, name: 'Khác'}], text: 'Tình trạng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ghi chú'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.textarea id: 'medicine_internal_record_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
+                          if @props.record != null
+                            @props.record.remark
+                          else
+                            ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số lượng'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_internal_record_amount', className: 'form-control', type: 'number', code: '', placeholder: 'Số lượng', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.amount
+                          else
+                            0
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Giá'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_internal_record_price', className: 'form-control', type: 'number', code: 'medicine_internal_record_price', placeholder: 'Tên thuốc', style: '', trigger: @trigger, trigger3: @triggerAutoCompleteInputAlt, trigger2: @triggerRecalPayment, defaultValue:
+                          if @props.record != null
+                            @props.record.price
+                          else
+                            0
+                        React.DOM.div
+                          className: "auto-complete"
+                          id: "medicine_internal_record_price_autocomplete"
+                          if @state.autoComplete != null and @state.code == 'medicine_internal_record_price'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.price, record: recordsearch, trigger: @triggerAutoComplete
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tổng'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_internal_record_tpayment', className: 'form-control', type: 'number', code: '', placeholder: 'Tổng', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.total
+                          else
+                            0
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
+    medicineStockRecordForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin kho thuốc'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Trạng thái'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement SelectBox, id: 'medicine_stock_record_typerecord', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Nhập'},{id: 2, name: 'Xuất'},{id: 3, name: 'Vô hiệu'}], text: 'Trạng thái'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên thuốc'
+                      React.DOM.div className: 'col-sm-9',
+                        React.createElement InputField, id: 'medicine_stock_record_name', className: 'form-control', type: 'text', code: 'medicine_stock_record_name', placeholder: 'Tên thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.name
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete", id: "medicine_stock_record_name_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'medicine_stock_record_name'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.name, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_stock_record_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.noid
+                          else
+                            ""
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_stock_record_signid', className: 'form-control', type: 'text', code: '', placeholder: 'Ký hiệu', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.signid
+                          else
+                            ""
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hết hạn'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_stock_record_expire', className: 'form-control', type: 'text', code: '', placeholder: 'Hết hạn', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+                          else
+                            moment().format('DD/MM/YYYY')        
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên nhà cung cấp'
+                      React.DOM.div className: 'col-sm-6',
+                        React.createElement InputField, id: 'medicine_stock_record_supplier', className: 'form-control', type: 'text', code: 'medicine_stock_record_supplier', placeholder: 'Tên nhà cung cấp', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.supplier
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete", id: "medicine_stock_record_supplier_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'medicine_stock_record_supplier'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.name, record: recordsearch, trigger: @triggerAutoComplete
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số lượng'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'medicine_stock_record_amount', className: 'form-control', type: 'number', code: 'medicine_stock_record_amount', placeholder: 'Số lượng', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.amount
+                          else
+                            0
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ghi chú'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.textarea id: 'medicine_stock_record_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
+                          if @props.record != null
+                            @props.record.remark
+                          else
+                            ''
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee' or @state.type == 'employee_edit'
@@ -2521,3 +3778,13 @@
         @medicineBillRecordForm()
       else if @state.type == 'medicine_price_add' or @state.type == 'medicine_price_edit'
         @medicinePriceForm()
+      else if @state.type == 'medicine_prescript_external_add' or @state.type == 'medicine_prescript_external_edit'
+        @medicinePrescriptExternalForm()
+      else if @state.type == 'medicine_external_record_add' or @state.type == 'medicine_external_record_edit'
+        @medicineExternalRecordForm()
+      else if @state.type == 'medicine_prescript_internal_add' or @state.type == 'medicine_prescript_internal_edit'
+        @medicinePrescriptInternalForm()
+      else if @state.type == 'medicine_internal_record_add' or @state.type == 'medicine_internal_record_edit'
+        @medicineInternalRecordForm()
+      else if @state.type == 'medicine_stock_record_add' or @state.type == 'medicine_stock_record_edit'
+        @medicineStockRecordForm()

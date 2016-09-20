@@ -229,6 +229,22 @@ class EmployeeController < ApplicationController
 		end
 	end
   
+  def search
+    if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:ename)
+          @supplier = Employee.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id).group(:ename).limit(3)
+			    render json:@supplier
+			  end
+      else
+        redirect_to root_path
+      end
+    end
+  end
+  
   private
   	# Confirms a logged-in user.
 		def logged_in_user

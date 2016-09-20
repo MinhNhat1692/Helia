@@ -32,6 +32,7 @@
         id: 'employee_quick'
         encType: 'multipart/form-data'
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-2 col-sm-6'
@@ -134,6 +135,7 @@
         id: 'room_quick'
         encType: 'multipart/form-data'
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -202,6 +204,7 @@
         id: 'service_quick'
         encType: 'multipart/form-data'
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-4 col-sm-8'
@@ -300,6 +303,7 @@
       React.DOM.form
         id: 'patient_quick'
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-3 col-sm-8'
@@ -383,6 +387,7 @@
         id: 'position_quick'
         encType: 'multipart/form-data'
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-2 col-sm-9'
@@ -1004,7 +1009,7 @@
       else if @props.datatype == "medicine_internal_record"
         switch Number($('#filter_type_select').val())
           when 12
-            @setState selectList:[{id: 1, name: "Đã thanh toán"},{id: 2, name: "Chưa thanh toán"},{id: 3, name: "Khác"}]
+            @setState selectList:[{id: 1, name: "Đã chuyển hàng"},{id: 2, name: "Chưa chuyển hàng"},{id: 3, name: "Hàng trả lại"}]
           else
             @setState selectList: null
       else if @props.datatype == "medicine_stock_record"
@@ -1019,6 +1024,7 @@
     MedicineSupplier: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1136,6 +1142,7 @@
     MedicineCompany: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1223,6 +1230,7 @@
     MedicineSample: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1319,6 +1327,7 @@
     MedicineBillIn: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1410,6 +1419,7 @@
     MedicineBillRecord: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1506,6 +1516,7 @@
     MedicinePrice: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1575,6 +1586,7 @@
     MedicinePrescriptExternal: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1664,6 +1676,7 @@
     MedicineExternalRecord: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1751,6 +1764,7 @@
     MedicinePrescriptInternal: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1860,6 +1874,7 @@
     MedicineInternalRecord: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
@@ -1966,6 +1981,7 @@
     MedicineStockRecord: ->
       React.DOM.form
         className: 'form-horizontal row'
+        autoComplete: 'off'
         onSubmit: @handleSubmit
         React.DOM.div
           className: 'form-group col-lg-6 col-sm-12'
