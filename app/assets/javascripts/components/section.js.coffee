@@ -2,7 +2,7 @@
     getInitialState: ->
       type: 1
       data: @props.data
-      task: 1 #1 - employee
+      task: 11 #11 - employee
       toggled: false
       profile:
         type: 0
@@ -10,23 +10,7 @@
         logo: @props.station.logo
         sname: @props.station.sname
         username: @props.username
-        records: [
-          {
-            code: 5
-            active: false
-            name: 'Messages'
-          }
-          {
-            code: 6
-            active: false
-            name: 'Settings'
-          }
-          {
-            code: 7
-            active: false
-            name: 'Log Out'
-          }
-        ]
+        records: [{code: 5, active: false, name: 'Hỗ trợ'},{code: 6, active: false, name: 'Settings'},{code: 7, active: false, name: 'Log Out'}]
       homeMenu: 
         type: 1
         className: 'zmdi zmdi-home'
@@ -281,29 +265,13 @@
             }
           ]
       if code == 5
+        data =
+          task: 5
+          link: '/support/list'
+        @handleGetdata(data)
         @setState profile:
-          type: 0
-          active: true
-          logo: @props.station.logo
-          sname: @props.station.sname
-          username: @props.username
-          records: [
-            {
-              code: 5
-              active: true
-              name: 'Messages'
-            }
-            {
-              code: 6
-              active: false
-              name: 'Settings'
-            }
-            {
-              code: 7
-              active: false
-              name: 'Log Out'
-            }
-          ]
+          type: 0, active: true, logo: @props.station.logo, sname: @props.station.sname, username: @props.username,
+          records: [{code: 5, active: true, name: 'Hỗ trợ'},{code: 6, active: false, name: 'Settings'},{code: 7, active: false, name: 'Log Out'}]
       else if code == 6
         @setState profile:
           type: 0
@@ -378,7 +346,7 @@
           ]
       if code == 11 #employee
         data =
-          task: 1
+          task: 11
           link: '/employees/list'
         @handleGetdata(data)
         @setState DataInput:
@@ -410,7 +378,7 @@
           ]
       else if code == 12 #room
         data =
-          task: 3
+          task: 12
           link: '/rooms/list'
         @handleGetdata(data)
         @setState DataInput:
@@ -442,7 +410,7 @@
           ]
       else if code == 13 #position
         data =
-          task: 2
+          task: 13
           link: '/positions/list'
         @handleGetdata(data)
         @setState DataInput:
@@ -474,7 +442,7 @@
           ]
       else if code == 14 #service
         data =
-          task: 5
+          task: 14
           link: '/services/list'
         @handleGetdata(data)
         @setState DataInput:
@@ -534,7 +502,7 @@
           ]
       if code == 21 #employee link
         data =
-          task: 4
+          task: 21
           link: '/position_mapping/list'
         @handleGetdata(data)
         @setState DataLink:
@@ -556,7 +524,7 @@
           ]
       else if code == 22 #service link
         data =
-          task: 6
+          task: 22
           link: '/service_mapping/list'
         @handleGetdata(data)
         @setState DataLink:
@@ -596,7 +564,7 @@
           ]
       if code == 31 #patient list
         data =
-          task: 7
+          task: 31
           link: '/customer_record/list'
         @handleGetdata(data)
         @setState Patient:

@@ -1298,6 +1298,54 @@
           React.DOM.td null, @props.record.remark
           React.DOM.td null, @props.record.bill_in_code
           React.DOM.td null, @props.record.internal_record_code
+    SupportRecord: ->
+      switch Number(@props.record.status)
+        when 1
+          @state.typeName = "lgi-img bg-deep-orange"
+          @state.groupName = "zmdi zmdi-lock-open"
+        when 2
+          @state.typeName = "lgi-img bg-green"
+          @state.groupName = "zmdi zmdi-lock-open"
+        when 3
+          @state.typeName = "lgi-img bg-pink"
+          @state.groupName = "zmdi zmdi-lock"
+      if @props.selected
+        React.DOM.a className: "list-group-item media active",
+          React.DOM.div className: 'pull-left'
+            React.DOM.div className: @state.typeName,
+              React.DOM.i className: @state.groupName,
+          React.DOM.div className: 'media-body'
+            React.DOM.div className: 'lgi-heading', @props.record.title
+            React.DOM.small className: 'lgi-text', @props.record.infomation
+            React.DOM.small className: 'ms-time',  @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7)
+      else
+        React.DOM.a className: "list-group-item media",
+          React.DOM.div className: 'pull-left'
+            React.DOM.div className: @state.typeName,
+              React.DOM.i className: @state.groupName,
+          React.DOM.div className: 'media-body'
+            React.DOM.div className: 'lgi-heading', @props.record.title
+            React.DOM.small className: 'lgi-text', @props.record.infomation
+            React.DOM.small className: 'ms-time',  @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7)
+    TicketRecord: ->
+      React.DOM.div className: 'col-sm-12',
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-body card-padding', @props.record.infomation
+          if @props.record.attachment != "/attachment/original/missing.png"
+            React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm'
+    TicketCommentRecord: ->
+      if @props.selected
+        React.DOM.div className: 'mblm-item mblm-item-left',
+          React.DOM.div null,
+            if @props.record.attachment != "/attachment/original/missing.png"
+              React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm'
+            @props.record.comment
+      else
+        React.DOM.div className: 'mblm-item mblm-item-right',
+          React.DOM.div null,
+            if @props.record.attachment != "/attachment/original/missing.png"
+              React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm'
+            @props.record.comment
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1321,3 +1369,9 @@
         @MedicineInternalRecord()
       else if @props.datatype == 'medicine_stock_record'
         @MedicineStockRecord()
+      else if @props.datatype == 'support_record'
+        @SupportRecord()
+      else if @props.datatype == 'ticket_record'
+        @TicketRecord()
+      else if @props.datatype == 'ticket_comment_record'
+        @TicketCommentRecord()

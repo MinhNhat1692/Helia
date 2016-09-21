@@ -2947,3 +2947,105 @@
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, datatype: "medicine_stock_record", selected: false, selectRecord: @selectRecord
 
+
+@Support = React.createClass
+    getInitialState: ->
+      records: @props.data[0]
+      selected: null
+      record: null
+      autoComplete: null
+      filteredRecord: null
+      adding: null
+    toggleSideBar: ->
+      if @state.classSideBar == 'sidebar'
+        @setState classSideBar: 'sidebar toggled'
+      else
+        @setState classSideBar: 'sidebar'
+    updateRecord: (record, data) ->
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @setState
+        records: records
+        record: null
+    addRecord: (record) ->
+      records = React.addons.update(@state.records, { $push: [record] })
+      @setState records: records
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/support/ticket"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
+    trigger: (e) ->
+      console.log(1)
+    render: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Hỗ trợ'
+        React.DOM.div className: 'messages',
+          React.DOM.div className: 'm-sidebar',
+            React.DOM.header null,
+              React.DOM.h2 className: 'hidden-xs', 'Danh sách yêu cầu hỗ trợ'
+              React.DOM.ul className: 'actions',
+                React.DOM.li null,
+                  React.DOM.a className: 'bg-green',
+                    React.DOM.i className: 'zmdi zmdi-lock-open',
+                React.DOM.li null,
+                  React.DOM.a className: 'bg-pink',
+                    React.DOM.i className: 'zmdi zmdi-lock',
+            React.DOM.div className: 'list-group',
+              for record in @state.records
+                if @state.selected != null
+                  if record.id == @state.selected
+                    React.createElement RecordGeneral, key: record.id, record: record, datatype: "support_record", selected: true, selectRecord: @selectRecord
+                  else
+                    React.createElement RecordGeneral, key: record.id, record: record, datatype: "support_record", selected: false, selectRecord: @selectRecord
+                else
+                  React.createElement RecordGeneral, key: record.id, record: record, datatype: "support_record", selected: false, selectRecord: @selectRecord
+          React.DOM.div className: 'm-body',
+            React.DOM.header className: 'mb-header',
+              if @state.record != null
+                React.DOM.div className: 'mbh-user clearfix',
+                  React.DOM.div className: 'p-t-5', @state.record.title
+                React.DOM.ul classNAme: 'actions',
+                  React.DOM.li null,
+                    React.DOM.a null,
+                      React.DOM.i className: 'zmdi zmdi-plus',
+                  React.DOM.li null,
+                    React.DOM.a null,
+                      React.DOM.i className: 'zmdi zmdi-delete',
+                  React.DOM.li null,
+                    React.DOM.a null,
+                      React.DOM.i className: 'zmdi zmdi-lock',
+              else
+                React.DOM.ul classNAme: 'actions',
+                  React.DOM.li null,
+                    React.DOM.a null,
+                      React.DOM.i className: 'zmdi zmdi-plus',
+            React.DOM.div className: 'mbl-messages',
+              if @state.record != null
+                React.createElement RecordGeneral, key: record.id, record: @state.record, datatype: "ticket_record", selected: false, selectRecord: @trigger
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if record.user_id == @state.record.user_id
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: true, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: false, selectRecord: @selectRecord
+              else if @state.adding != null
+                React.createElement SupportForm, datatype: 'ticket', trigger: @trigger
+            React.createElement SupportForm, datatype: 'comment', record: @state.record, trigger: @trigger

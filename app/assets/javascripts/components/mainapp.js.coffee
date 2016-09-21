@@ -1,4 +1,6 @@
 @MainApp = React.createClass
+    Support: ->
+      React.createElement Support, data: @props.data
     Employee: ->
       React.createElement Records, data: @props.data 
     Position: ->
@@ -37,19 +39,21 @@
       React.createElement MedicineStockRecord, data: @props.data #task = code = 51
     render: ->
       switch @props.task
-        when 1
-          @Employee()
-        when 2
-          @Position()
-        when 3
-          @Room()
-        when 4
-          @AppViewEmployee()
         when 5
+          @Support()
+        when 11
+          @Employee()
+        when 13
+          @Position()
+        when 12
+          @Room()
+        when 21
+          @AppViewEmployee()
+        when 14
           @Service()
-        when 6
+        when 22
           @ServiceMap()
-        when 7
+        when 31
           @PatientGeneral()
         when 41
           @MedicineSupplier()

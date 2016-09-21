@@ -2102,3 +2102,77 @@
         @MedicineInternalRecord()
       else if @props.datatype == "medicine_stock_record"
         @MedicineStockRecord()
+        
+
+ @SupportForm = React.createClass
+    getInitialState: ->
+      type: null
+    handleSubmit: (e) ->
+      if @props.datatype == 'comment'
+        if @props.record != null
+          e.preventDefault()
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'comment', $('#support_comment_infomation_add').val()
+          if $('#support_comment_attachment_add')[0].files[0] != undefined
+            formData.append 'attachment', $('#support_comment_attachment_add')[0].files[0]
+          $.ajax
+            url: '/support/comment'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger result
+              $('#support_comment_infomation_add').val('')
+              $('#support_comment_attachment_add').val('')
+              return
+            ).bind(this)
+      else if @props.datatype == 'ticket'
+        e.preventDefault()
+        formData = new FormData
+        formData.append 'title', $('#support_ticket_title_add').val()
+        formData.append 'infomation', $('#support_ticket_infomation_add').val()
+        if $('#support_ticket_attachment_add')[0].files[0] != undefined
+          formData.append 'attachment', $('#support_ticket_attachment_add')[0].files[0]
+        $.ajax
+          url: '/support/ticket'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            return
+          ).bind(this)
+    CommentForm: ->
+      React.DOM.div className: 'mbl-compose',
+        React.DOM.textarea className: 'form-control', id: 'support_comment_infomation_add' placeholder: 'Viết phản hồi của bạn tại đây',
+        React.DOM.button onClick: @handleSubmit,
+          React.DOM.i className: 'zmdi zmdi-mail-send',
+        React.DOM.div className: 'col-sm-4',
+          React.DOM.input className: 'form-control', id 'support_comment_attachment_add', type: 'file'
+    TicketForm: ->
+      React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+        React.DOM.div className: 'form-group',
+          React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tiêu đề'
+          React.DOM.div className: 'col-sm-9',
+            React.createElement InputField, id: 'support_ticket_title_add', className: 'form-control', type: 'text', code: '', placeholder: 'Tiêu đề', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue: ""
+        React.DOM.div className: 'form-group',
+          React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tiêu đề'
+          React.DOM.div className: 'col-sm-9',
+            React.DOM.textarea id: 'support_ticket_infomation_add', rows: '5', className: 'form-control', type: 'text', code: '', placeholder: 'Nội dung', defaultValue: ""
+        React.DOM.div className: 'form-group',
+          React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tiêu đề'
+          React.DOM.div className: 'col-sm-4',
+            React.DOM.input id:'support_ticket_attachment_add', type: 'file'
+        React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Gửi yêu cầu hỗ trợ'
+    render: ->
+      if @props.datatype == 'comment'
+        @CommentForm()
+      else if @props.datatype == 'ticket'
+        @TicketForm()
