@@ -1310,28 +1310,28 @@
           @state.typeName = "lgi-img bg-pink"
           @state.groupName = "zmdi zmdi-lock"
       if @props.selected
-        React.DOM.a className: "list-group-item media active",
-          React.DOM.div className: 'pull-left'
+        React.DOM.a className: "list-group-item media active", onClick: @selectRecord,
+          React.DOM.div className: 'pull-left',
             React.DOM.div className: @state.typeName,
               React.DOM.i className: @state.groupName,
-          React.DOM.div className: 'media-body'
+          React.DOM.div className: 'media-body',
             React.DOM.div className: 'lgi-heading', @props.record.title
             React.DOM.small className: 'lgi-text', @props.record.infomation
             React.DOM.small className: 'ms-time',  @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7)
       else
-        React.DOM.a className: "list-group-item media",
-          React.DOM.div className: 'pull-left'
+        React.DOM.a className: "list-group-item media", onClick: @selectRecord,
+          React.DOM.div className: 'pull-left',
             React.DOM.div className: @state.typeName,
               React.DOM.i className: @state.groupName,
-          React.DOM.div className: 'media-body'
+          React.DOM.div className: 'media-body',
             React.DOM.div className: 'lgi-heading', @props.record.title
             React.DOM.small className: 'lgi-text', @props.record.infomation
             React.DOM.small className: 'ms-time',  @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7)
     TicketRecord: ->
-      React.DOM.div className: 'col-sm-12',
+      React.DOM.div className: 'col-sm-12', style: {'marginTop':'5px'},
         React.DOM.div className: 'card',
           React.DOM.div className: 'card-body card-padding', @props.record.infomation
-          if @props.record.attachment != "/attachment/original/missing.png"
+          if @props.record.attachment != "/attachment/original/missing.png" and @props.record.attachment != null
             React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm'
     TicketCommentRecord: ->
       if @props.selected

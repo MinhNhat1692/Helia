@@ -2981,6 +2981,20 @@
       @setState
         record: result
         selected: result.id
+      formData = new FormData
+      formData.append 'id', result.id
+      $.ajax
+        url: '/support/ticketinfo'
+        type: 'POST'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((data) ->
+          @setState filteredRecord: data    
+          return
+        ).bind(this)
     handleDelete: (e) ->
       e.preventDefault()
       if @state.record != null
@@ -3018,11 +3032,11 @@
                 else
                   React.createElement RecordGeneral, key: record.id, record: record, datatype: "support_record", selected: false, selectRecord: @selectRecord
           React.DOM.div className: 'm-body',
-            React.DOM.header className: 'mb-header',
-              if @state.record != null
+            if @state.record != null
+              React.DOM.header className: 'mb-header',
                 React.DOM.div className: 'mbh-user clearfix',
                   React.DOM.div className: 'p-t-5', @state.record.title
-                React.DOM.ul classNAme: 'actions',
+                React.DOM.ul className: 'actions',
                   React.DOM.li null,
                     React.DOM.a null,
                       React.DOM.i className: 'zmdi zmdi-plus',
@@ -3032,20 +3046,23 @@
                   React.DOM.li null,
                     React.DOM.a null,
                       React.DOM.i className: 'zmdi zmdi-lock',
-              else
-                React.DOM.ul classNAme: 'actions',
+            else
+              React.DOM.header className: 'mb-header',
+                React.DOM.ul className: 'actions',
                   React.DOM.li null,
                     React.DOM.a null,
                       React.DOM.i className: 'zmdi zmdi-plus',
-            React.DOM.div className: 'mbl-messages',
-              if @state.record != null
-                React.createElement RecordGeneral, key: record.id, record: @state.record, datatype: "ticket_record", selected: false, selectRecord: @trigger
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if record.user_id == @state.record.user_id
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: true, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: false, selectRecord: @selectRecord
-              else if @state.adding != null
-                React.createElement SupportForm, datatype: 'ticket', trigger: @trigger
-            React.createElement SupportForm, datatype: 'comment', record: @state.record, trigger: @trigger
+            React.DOM.div className: 'mb-list',
+              React.DOM.div className: 'mbl-messages',
+                if @state.record != null
+                  React.createElement RecordGeneral, record: @state.record, datatype: "ticket_record"
+                  if @state.filteredRecord != null
+                    if @state.filteredRecord.length > 0
+                      for record in @state.filteredRecord
+                        if record.user_id == @state.record.user_id
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: true, selectRecord: @trigger
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: false, selectRecord: @trigger
+                else if @state.adding != null
+                  React.createElement SupportForm, datatype: 'ticket', trigger: @trigger
+              React.createElement SupportForm, datatype: 'comment', record: @state.record, trigger: @trigger

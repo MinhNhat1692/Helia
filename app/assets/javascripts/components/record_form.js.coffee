@@ -2104,7 +2104,7 @@
         @MedicineStockRecord()
         
 
- @SupportForm = React.createClass
+  @SupportForm = React.createClass
     getInitialState: ->
       type: null
     handleSubmit: (e) ->
@@ -2151,11 +2151,12 @@
           ).bind(this)
     CommentForm: ->
       React.DOM.div className: 'mbl-compose',
-        React.DOM.textarea className: 'form-control', id: 'support_comment_infomation_add' placeholder: 'Viết phản hồi của bạn tại đây',
+        React.DOM.textarea id: 'support_comment_infomation_add', placeholder: 'Viết phản hồi của bạn tại đây', defaultValue: ''
         React.DOM.button onClick: @handleSubmit,
           React.DOM.i className: 'zmdi zmdi-mail-send',
-        React.DOM.div className: 'col-sm-4',
-          React.DOM.input className: 'form-control', id 'support_comment_attachment_add', type: 'file'
+        React.DOM.label htmlFor: "support_comment_attachment_add", style: {'cursor':'pointer'},
+          React.DOM.i className: 'fa fa-file',
+        React.DOM.input id: 'support_comment_attachment_add', type: 'file', style: {'display': 'none'}
     TicketForm: ->
       React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
         React.DOM.div className: 'form-group',

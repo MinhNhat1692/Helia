@@ -1,17 +1,13 @@
 Rails.application.routes.draw do
   
-  get 'support_comment/add'
-
-  get 'support_comment/remove'
-
-  get 'support_ticket/add'
-
-  get 'support_ticket/close'
-
-  get 'support_ticket/open'
-
-  get 'support_ticket/remove'
-
+  delete '/support/comment', to: 'support#deletecomment'
+  post '/support/comment', to: 'support#addcomment'
+  post '/support/list', to: 'support#listticket'
+  post '/support/ticketinfo', to: 'support#ticketinfo'
+  post '/support/ticket', to: 'support#addticket'
+  delete '/support/ticket', to: 'support#deleteticket'
+  put '/support/ticket', to: 'support#closeticket'
+  
   delete '/medicine_stock_record', to: 'medicine_stock_record#destroy'
   put '/medicine_stock_record', to: 'medicine_stock_record#update'
   post '/medicine_stock_record', to: 'medicine_stock_record#create'

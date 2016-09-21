@@ -604,6 +604,251 @@ a{
     border-radius: 0;
 }
 
+//Support Box design
+
+.messages {
+    border: 1px solid #2b343a;
+    height: calc(100vh - 200px);
+    position: relative;
+}
+
+.lightbox .lightbox-item, .messages {
+    overflow: hidden;
+}
+
+.m-sidebar {
+    width: 300px;
+    border-right: 1px solid #2b343a;
+    position: absolute;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    background: #222c32;
+}
+
+.m-sidebar header {
+    padding: 20px;
+}
+.m-sidebar header, .mb-header, .mblm-item-left>div {
+    background-color: #2b343a;
+}
+.messages header {
+    min-height: 55px;
+}
+
+.m-sidebar .list-group {
+    height: calc(100% - 50px);
+}
+.list-group {
+    margin-bottom: 0;
+}
+.list-group {
+    margin-bottom: 20px;
+    padding-left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.m-sidebar header h2 {
+    line-height: 100%;
+    font-size: 15px;
+    margin: 0;
+    font-weight: 400;
+}
+
+.messages header .actions {
+    position: absolute;
+    top: 12px;
+    right: 13px;
+}
+
+.actions {
+    list-style: none;
+    padding: 0;
+    z-index: 3;
+    margin: 0;
+}
+
+.actions>li {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+.actions>a, .actions>li>a {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    padding-top: 5px;
+    border-radius: 50%;
+    margin: 0 2px;
+    text-align: center;
+}
+
+.actions>a>i, .actions>li>a>i, .lgi-img>i {
+    color: rgba(255,255,255,.5);
+    font-size: 20px;
+}
+
+.list-group .list-group-item {
+    border: 0;
+    margin: 0;
+    padding: 15px 25px;
+}
+
+.list-group-item:first-child {
+    border-top-right-radius: 2px;
+    border-top-left-radius: 2px;
+}
+
+.media-heading, .media:first-child, .panel-title {
+    margin-top: 0;
+}
+
+a.list-group-item, button.list-group-item {
+    color: #555;
+}
+
+.media {
+    overflow: visible;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: transparent;
+    border: 1px solid #f4f4f4;
+}
+
+a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, button.list-group-item:hover {
+    text-decoration: none;
+    color: #555;
+    background-color: rgba(255,255,255,.02);
+}
+
+.media>.pull-left {
+    padding-right: 15px;
+}
+
+.lgi-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+}
+
+.lgi-img>i {
+    margin-top: 9px;
+}
+
+.m-sidebar .lgi-heading {
+    max-width: 120px;
+}
+.lgi-heading {
+    color: #D8DADA;
+}
+.lgi-heading, .lgi-text:not(:last-child) {
+    margin-bottom: 4px;
+}
+.fc-event .fc-title, .lgi-heading, .lgi-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.lgi-text {
+    display: block;
+    font-size: 12px;
+    color: rgba(255,255,255,.3);
+}
+
+.ms-time {
+    position: absolute;
+    top: 16px;
+    right: 25px;
+    color: rgba(255,255,255,.2);
+}
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    z-index: 2;
+    color: #000;
+    background-color: rgba(255,255,255,.04);
+    border-color: #f4f4f4;
+}
+
+.m-body {
+    height: 100%;
+}
+
+.mb-list {
+    height: calc(100% - 55px);
+    position: relative;
+}
+
+.mbl-compose {
+    background-color: #2b343a;
+    height: 70px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px 95px 15px 15px;
+}
+
+.mbl-compose textarea {
+    height: 100%;
+    width: 100%;
+    border-radius: 2px;
+    border: 0;
+    resize: none;
+    background: rgba(0,0,0,.2);
+    padding: 5px 10px;
+    color: rgba(255,255,255,.7);
+    -webkit-transition: background-color;
+    -o-transition: background-color;
+    transition: background-color;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+}
+
+.mbl-compose textarea:focus {
+    background-color: #D8DADA;
+    color: #2b343a;
+}
+
+.mbl-compose button {
+    position: absolute;
+    top: 14px;
+    right: 15px;
+    background: 0 0;
+    border: 0;
+    font-size: 25px;
+}
+
+.mbl-compose label {
+    position: absolute;
+    top: 14px;
+    right: 60px;
+    background: 0 0;
+    border: 0;
+    font-size: 25px;
+}
+
+.mbh-user {
+    padding: 12px 20px;
+}
+
+.p-t-5 {
+    padding-top: 5px!important;
+}
+
+@media (min-width: 768px){
+  .m-body {
+    padding-left: 300px;
+  }
+}
 //Auto Complete Design
 
 .auto-complete{
