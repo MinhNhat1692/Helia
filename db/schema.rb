@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160916050753) do
+ActiveRecord::Schema.define(version: 20160921035456) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -501,6 +501,35 @@ ActiveRecord::Schema.define(version: 20160916050753) do
     t.index ["user_id"], name: "index_stations_on_user_id", using: :btree
   end
 
+  create_table "support_comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.integer  "ticket_id"
+    t.text     "comment",                 limit: 65535
+    t.string   "attachment"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.index ["user_id"], name: "index_support_comments_on_user_id", using: :btree
+  end
+
+  create_table "support_tickets", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.text     "title",                   limit: 65535
+    t.text     "infomation",              limit: 65535
+    t.string   "attachment"
+    t.integer  "status"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
+    t.index ["user_id"], name: "index_support_tickets_on_user_id", using: :btree
+  end
+
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.string   "email"
@@ -513,6 +542,7 @@ ActiveRecord::Schema.define(version: 20160916050753) do
     t.datetime "reset_sent_at"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.integer  "admin"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
@@ -551,4 +581,6 @@ ActiveRecord::Schema.define(version: 20160916050753) do
   add_foreign_key "service_results", "users"
   add_foreign_key "services", "stations"
   add_foreign_key "stations", "users"
+  add_foreign_key "support_comments", "users"
+  add_foreign_key "support_tickets", "users"
 end
