@@ -2977,6 +2977,38 @@
     addRecord: (record) ->
       records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
+    addCommentRecord: (record) ->
+      records = React.addons.update(@state.filteredRecord, { $push: [record] })
+      @setState filteredRecord: records
+    toggleAddForm: (e) ->
+      @setState adding: true, selected: null, filteredRecord: null, record: null
+    loadOpenRecord: (e) ->
+      $.ajax
+        url: '/support/list'
+        type: 'POST'
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((data) ->
+          @setState records: data[0], selected: null, filteredRecord: null, adding: null, record: null
+          return
+        ).bind(this)
+    loadCloseRecord: (e) ->
+      formData = new FormData
+      formData.append 'status', 3
+      $.ajax
+        url: '/support/list'
+        type: 'POST'
+        data: formData
+        async: false
+        cache: false
+        contentType: false
+        processData: false
+        success: ((data) ->
+          @setState records: data[0], selected: null, filteredRecord: null, adding: null, record: null
+          return
+        ).bind(this)
     selectRecord: (result) ->
       @setState
         record: result
@@ -3005,6 +3037,18 @@
           data: {id: @state.record.id}
           success: () =>
             @deleteRecord @state.record
+            @setState record: null, selected: null, filteredRecord: null, adding: null
+    handleLock: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'put'
+          url: "/support/ticket"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
+            @setState record: null, selected: null, filteredRecord: null, adding: null
     trigger: (e) ->
       console.log(1)
     render: ->
@@ -3016,10 +3060,10 @@
             React.DOM.header null,
               React.DOM.h2 className: 'hidden-xs', 'Danh sách yêu cầu hỗ trợ'
               React.DOM.ul className: 'actions',
-                React.DOM.li null,
+                React.DOM.li onClick: @loadOpenRecord,
                   React.DOM.a className: 'bg-green',
                     React.DOM.i className: 'zmdi zmdi-lock-open',
-                React.DOM.li null,
+                React.DOM.li onClick: @loadCloseRecord,
                   React.DOM.a className: 'bg-pink',
                     React.DOM.i className: 'zmdi zmdi-lock',
             React.DOM.div className: 'list-group',
@@ -3037,32 +3081,34 @@
                 React.DOM.div className: 'mbh-user clearfix',
                   React.DOM.div className: 'p-t-5', @state.record.title
                 React.DOM.ul className: 'actions',
-                  React.DOM.li null,
+                  React.DOM.li onClick: @toggleAddForm,
                     React.DOM.a null,
-                      React.DOM.i className: 'zmdi zmdi-plus',
-                  React.DOM.li null,
+                      React.DOM.i className: 'zmdi zmdi-plus', 
+                  React.DOM.li onClick: @handleDelete,
                     React.DOM.a null,
                       React.DOM.i className: 'zmdi zmdi-delete',
-                  React.DOM.li null,
+                  React.DOM.li onClick: @handleLock,
                     React.DOM.a null,
-                      React.DOM.i className: 'zmdi zmdi-lock',
+                      React.DOM.i className: 'zmdi zmdi-lock', 
             else
               React.DOM.header className: 'mb-header',
                 React.DOM.ul className: 'actions',
-                  React.DOM.li null,
+                  React.DOM.li onClick: @toggleAddForm,
                     React.DOM.a null,
                       React.DOM.i className: 'zmdi zmdi-plus',
             React.DOM.div className: 'mb-list',
-              React.DOM.div className: 'mbl-messages',
-                if @state.record != null
+              if @state.record != null
+                React.DOM.div className: 'mbl-messages',
                   React.createElement RecordGeneral, record: @state.record, datatype: "ticket_record"
                   if @state.filteredRecord != null
-                    if @state.filteredRecord.length > 0
-                      for record in @state.filteredRecord
-                        if record.user_id == @state.record.user_id
-                          React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: true, selectRecord: @trigger
-                        else
-                          React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: false, selectRecord: @trigger
-                else if @state.adding != null
-                  React.createElement SupportForm, datatype: 'ticket', trigger: @trigger
-              React.createElement SupportForm, datatype: 'comment', record: @state.record, trigger: @trigger
+                    for record in @state.filteredRecord
+                      if record.user_id == @state.record.user_id
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: true, selectRecord: @trigger
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: "ticket_comment_record", selected: false, selectRecord: @trigger
+              else if @state.adding != null
+                React.DOM.div className: 'mbl-messages',
+                  React.createElement SupportForm, datatype: 'ticket', trigger: @addRecord
+              else
+                React.DOM.div className: 'mbl-messages',
+              React.createElement SupportForm, datatype: 'comment', record: @state.record, trigger: @addCommentRecord

@@ -5,95 +5,26 @@
       task: 11 #11 - employee
       toggled: false
       profile:
-        type: 0
-        active: false
-        logo: @props.station.logo
-        sname: @props.station.sname
-        username: @props.username
+        type: 0, active: false, logo: @props.station.logo, sname: @props.station.sname, username: @props.username,
         records: [{code: 5, active: false, name: 'Hỗ trợ'},{code: 6, active: false, name: 'Settings'},{code: 7, active: false, name: 'Log Out'}]
       homeMenu: 
-        type: 1
-        className: 'zmdi zmdi-home'
-        active: false
-        name: "Home"
-        code: 1
+        type: 1, className: 'zmdi zmdi-home', active: false, name: "Home", code: 1
       Header:
-        type: 2
-        className: 'zmdi zmdi-view-compact'
-        active: false
-        name: "Header"
-        records: [
-          {
-            code: 2
-            active: false
-            name: 'Top'
-          }
-          {
-            code: 3
-            active: false
-            name: 'Middle'
-          }
-          {
-            code: 4
-            active: false
-            name: 'Bottom'
-          }
-        ]
+        type: 2, className: 'zmdi zmdi-view-compact', active: false, name: "Header"
+        records: [{code: 2, active: false, name: 'Top'},{code: 3, active: false, name: 'Middle'},{code: 4, active: false, name: 'Bottom'}]
       DataInput:
-        type: 2
-        className: 'zmdi zmdi-view-list'
-        active: true
-        name: "Nhập dữ liệu gốc"
-        records: [
-          {
-            code: 11 #employee
-            active: true
-            name: 'Danh sách nhân viên'
-          }
-          {
-            code: 12 #room
-            active: false
-            name: 'Danh sách phòng'
-          }
-          {
-            code: 13 #position
-            active: false
-            name: 'Danh sách chức vụ'
-          }
-          {
-            code: 14 #service
-            active: false
-            name: 'Danh sách dịch vụ'
-          }
-        ]
+        type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
+        records: [{code: 11, active: true, name: 'Danh sách nhân viên'},{code: 12, active: false, name: 'Danh sách phòng'},{code: 13, active: false, name: 'Danh sách chức vụ'},{code: 14, active: false, name: 'Danh sách dịch vụ'}]
       DataLink:
-        type: 2
-        className: 'fa fa-link'
-        active: false
-        name: "Liên kết dữ liệu"
+        type: 2, className: 'fa fa-link', active: false, name: "Liên kết dữ liệu",
         records: [
-          {
-            code: 21 #employee link
-            active: false
-            name: 'Liên kết chức vụ'
-          }
-          {
-            code: 22 #service link
-            active: false
-            name: 'Liên kết dịch vụ'
-          }
+          {code: 21, active: false, name: 'Liên kết chức vụ'},
+          {code: 22, active: false, name: 'Liên kết dịch vụ'}
         ]
       Patient:
-        type: 2
-        className: 'zmdi zmdi-account'
-        active: false
-        name: "Bệnh nhân"
+        type: 2, className: 'zmdi zmdi-account', active: false, name: "Bệnh nhân",
         records: [
-          {
-            code: 31 #customer record
-            active: false
-            name: 'Danh sách bệnh nhân'
-          }
+          {code: 31, active: false, name: 'Danh sách bệnh nhân'}
         ]    
       Pharmacy:
         type: 2
@@ -279,23 +210,7 @@
           logo: @props.station.logo
           sname: @props.station.sname
           username: @props.username
-          records: [
-            {
-              code: 5
-              active: false
-              name: 'Messages'
-            }
-            {
-              code: 6
-              active: true
-              name: 'Settings'
-            }
-            {
-              code: 7
-              active: false
-              name: 'Log Out'
-            }
-          ]
+          records: [{code: 5, active: false, name: 'Hỗ trợ'},{code: 6, active: true, name: 'Settings'},{code: 7, active: false, name: 'Log Out'}]
       else if code == 7
         @setState profile:
           type: 0
@@ -303,23 +218,7 @@
           logo: @props.station.logo
           sname: @props.station.sname
           username: @props.username
-          records: [
-            {
-              code: 5
-              active: false
-              name: 'Messages'
-            }
-            {
-              code: 6
-              active: false
-              name: 'Settings'
-            }
-            {
-              code: 7
-              active: true
-              name: 'Log Out'
-            }
-          ]
+          records: [{code: 5, active: false, name: 'Hỗ trợ'},{code: 6, active: false, name: 'Settings'},{code: 7, active: true, name: 'Log Out'}]
       else
         @setState profile:
           type: 0
@@ -327,23 +226,7 @@
           logo: @props.station.logo
           sname: @props.station.sname
           username: @props.username
-          records: [
-            {
-              code: 5
-              active: false
-              name: 'Messages'
-            }
-            {
-              code: 6
-              active: false
-              name: 'Settings'
-            }
-            {
-              code: 7
-              active: false
-              name: 'Log Out'
-            }
-          ]
+          records: [{code: 5, active: false, name: 'Hỗ trợ'},{code: 6, active: false, name: 'Settings'},{code: 7, active: false, name: 'Log Out'}]
       if code == 11 #employee
         data =
           task: 11

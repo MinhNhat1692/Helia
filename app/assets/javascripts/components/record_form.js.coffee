@@ -2164,11 +2164,11 @@
           React.DOM.div className: 'col-sm-9',
             React.createElement InputField, id: 'support_ticket_title_add', className: 'form-control', type: 'text', code: '', placeholder: 'Tiêu đề', trigger: @trigger, trigger2: @trigger, trigger3: @trigger, defaultValue: ""
         React.DOM.div className: 'form-group',
-          React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tiêu đề'
+          React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nội dung'
           React.DOM.div className: 'col-sm-9',
-            React.DOM.textarea id: 'support_ticket_infomation_add', rows: '5', className: 'form-control', type: 'text', code: '', placeholder: 'Nội dung', defaultValue: ""
+            React.DOM.textarea id: 'support_ticket_infomation_add', rows: '5', className: 'form-control', placeholder: 'Nội dung', defaultValue: ""
         React.DOM.div className: 'form-group',
-          React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tiêu đề'
+          React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tệp đính kèm'
           React.DOM.div className: 'col-sm-4',
             React.DOM.input id:'support_ticket_attachment_add', type: 'file'
         React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Gửi yêu cầu hỗ trợ'

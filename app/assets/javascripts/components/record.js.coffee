@@ -1328,24 +1328,27 @@
             React.DOM.small className: 'lgi-text', @props.record.infomation
             React.DOM.small className: 'ms-time',  @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7)
     TicketRecord: ->
-      React.DOM.div className: 'col-sm-12', style: {'marginTop':'5px'},
+      React.DOM.div className: 'col-sm-12',
         React.DOM.div className: 'card',
-          React.DOM.div className: 'card-body card-padding', @props.record.infomation
-          if @props.record.attachment != "/attachment/original/missing.png" and @props.record.attachment != null
-            React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm'
+          React.DOM.div className: 'card-body card-padding',
+            if @props.record.attachment != "/attachments/original/missing.png"
+              React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm - '    
+            @props.record.infomation
     TicketCommentRecord: ->
       if @props.selected
         React.DOM.div className: 'mblm-item mblm-item-left',
           React.DOM.div null,
-            if @props.record.attachment != "/attachment/original/missing.png"
-              React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm'
+            if @props.record.attachment != "/attachments/original/missing.png"
+              React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm - '
             @props.record.comment
+          React.DOM.small null, @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7) + ' - ' + @props.record.created_at.substring(11, 16)
       else
         React.DOM.div className: 'mblm-item mblm-item-right',
           React.DOM.div null,
-            if @props.record.attachment != "/attachment/original/missing.png"
-              React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm'
+            if @props.record.attachment != "/attachments/original/missing.png"
+              React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm - '
             @props.record.comment
+          React.DOM.small null, @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7) + ' - ' + @props.record.created_at.substring(11, 16)
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()

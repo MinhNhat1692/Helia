@@ -844,6 +844,43 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     padding-top: 5px!important;
 }
 
+.mbl-messages {
+    padding: 50px 50px 0;
+    height: calc(100vh - 320px);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.mblm-item {
+    margin-bottom: 10px;
+}
+
+.mblm-item>div {
+    display: inline-block;
+    max-width: 70%;
+    padding: 15px 20px;
+    border-radius: 2px;
+}
+
+.mblm-item-left>div {
+    background-color: #2b343a;
+}
+
+.mblm-item-right>div {
+    background-color: #D8DADA;
+    color: #2b343a;
+}
+
+.mblm-item-right {
+    text-align: right;
+}
+
+.mblm-item small {
+    display: block;
+    color: rgba(255,255,255,.4);
+    padding: 5px 20px;
+}
+
 @media (min-width: 768px){
   .m-body {
     padding-left: 300px;

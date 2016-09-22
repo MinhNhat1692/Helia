@@ -30,16 +30,14 @@ class SupportController < ApplicationController
       if params.has_key?(:id)
 				@ticket = SupportTicket.find_by(id: params[:id], user_id: current_user.id)
 				if !@ticket.nil?
-          @data = []
-			    @data[0] = SupportComment.where(ticket_id: params[:id])
-			    render json: @data
+			    @comment = SupportComment.where(ticket_id: params[:id])
+			    render json: @comment
 			  end
 			end
     else
       if params.has_key?(:id)
-        @data = []
-			  @data[0] = SupportComment.where(ticket_id: params[:id])
-			  render json: @data
+			  @comment = SupportComment.where(ticket_id: params[:id])
+			  render json: @comment
 			end
     end
   end
@@ -109,6 +107,8 @@ class SupportController < ApplicationController
 				      render json: @comment.errors, status: :unprocessable_entity
 			      end
 			    end
+			  else
+				  head :no_content	
 			  end
 		  end
     else
@@ -132,6 +132,8 @@ class SupportController < ApplicationController
 				      render json: @comment.errors, status: :unprocessable_entity
 			      end
 			    end
+			  else
+					head :no_content
 			  end
 		  end
     end
