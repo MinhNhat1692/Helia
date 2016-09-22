@@ -102,6 +102,7 @@ Rails.application.routes.draw do
   post '/customer_record/update_record', to: 'customer_record#update_record'
   post '/customer_record/clear_link_record', to: 'customer_record#clear_link_record'
   post '/customer_record/search', to: 'customer_record#search'
+  post '/customer_record/find', to: 'customer_record#find'
   
   put '/service_mapping', to: 'service_mapping#update'
   post '/service_mapping/list', to: 'service_mapping#list'

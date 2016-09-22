@@ -470,34 +470,135 @@
       existed: false
       searchRecord: null
       userlink: null
+      autoComplete: null
+      filteredRecord: null
+    changeSearchRecord: (data) ->
+      @state.userlink = data[2]
+      if data[1] != null
+        index = -1
+        for record in @state.records
+          if data[1].id == record.id
+            index = @state.records.indexOf record
+            break
+        if index < 0
+          @addRecord(data[1])
+          @selectRecord(data[1])
+        else
+          @selectRecord(data[1])
+        @setState existed: true
+      else
+        @setState existed: false
+      @setState searchRecord: data[0]   
     updateRecord: (record, data) ->
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
+    deleteRecord: (record) ->
       index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-      @setState records: records
-    deleteRecord: (e) ->
-      if @state.record != null
-        e.preventDefault()
-        formData = new FormData
-        formData.append 'id', @state.record.id
-        $.ajax
-          url: '/customer_record'
-          type: 'DELETE'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            index = @state.records.indexOf @state.record
-            records = React.addons.update(@state.records, { $splice: [[index, 1]] })
-            @setState records: records
-            return
-          ).bind(this)
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @setState
+        records: records
+        record: null
     addRecord: (record) ->
-      records = React.addons.update([record], { $push: @state.records })
+      records = React.addons.update(@state.records, { $push: [record] })
       @setState records: records
-    trigger: ->
-      console.log(6)
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/customer_record"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
+    trigger: (e) ->
+      console.log(1)
+    triggerInput: (text,type,check1) ->
+      if type != '' && text.length > 1
+        if !check1.option1
+          filtered = []
+          for record in @state.records
+            if @checkContain(type,text,record)
+              filtered.push record
+              @setState filteredRecord: filtered
+        else
+          formData = new FormData	  
+          switch Number(type)
+            when 1
+              formData.append 'namestring', text.toLowerCase()
+            when 2
+              formData.append 'dob', text.toLowerCase()
+            when 3
+              formData.append 'gender', Number(text)
+            when 4
+              formData.append 'address', text.toLowerCase()
+            when 5
+              formData.append 'pnumber', text.toLowerCase()
+            when 6
+              formData.append 'noid', text.toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
+    checkContain: (type,text,record) ->
+      switch Number(type)
+        when 1
+          if record.cname.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 2
+          if (record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4)).search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 3
+          if record.gender == Number(text)
+            return true
+          else
+            return false
+        when 4
+          if record.address.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 5
+          if record.pnumber.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+        when 6
+          if record.noid.toLowerCase().search(text.toLowerCase()) > -1
+            return true
+          else
+            return false
+    triggerSubmit: (result) ->
+      @setState
+        autoComplete: null
+        filteredRecord: result
+    triggerChose: (result) ->
+      @setState
+        autoComplete: null
+    triggerClear: (e) ->
+      @setState
+        autoComplete: null
+        filteredRecord: null
     toggleSideBar: ->
       if @state.classSideBar == 'sidebar'
         @setState classSideBar: 'sidebar toggled'
@@ -520,10 +621,6 @@
       else
         @setState existed: false
       @setState searchRecord: data[0]   
-    SelectHandle: (record) ->
-      @setState
-        record: record
-        selected: record.id
     addRecordAlt: ->
       if @state.searchRecord != null
         formData = new FormData
@@ -604,7 +701,7 @@
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Delete', type: 1, Clicked: @deleteRecord
             React.DOM.br null
             React.DOM.br null
-            React.createElement PatientForm, handleOnchange: @checkrecord, handleRecordAdd: @addRecord
+            React.createElement FilterForm, datatype: 'patient_record', autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
           React.DOM.div
             className: 'card-body table-responsive'
             React.DOM.table
@@ -624,14 +721,24 @@
                   React.DOM.th null, 'created_at'
                   React.DOM.th null, 'updated_at'
               React.DOM.tbody null,
-                for record in @state.records
-                  if @state.selected != null
-                    if record.id == @state.selected
-                      React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: true, record: record, TriggerSelect: @SelectHandle
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: true, record: record, TriggerSelect: @selectRecord
+                      else
+                        React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @selectRecord
                     else
-                      React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @SelectHandle
-                  else
-                    React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @SelectHandle
+                      React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: true, record: record, TriggerSelect: @selectRecord
+                      else
+                        React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @selectRecord
+                    else
+                      React.createElement PatientRecord, key: record.id, gender: @props.data[1], select: false, record: record, TriggerSelect: @selectRecord
         React.DOM.div
           className: 'col-md-3'
           if @state.record != null

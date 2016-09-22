@@ -587,15 +587,19 @@
     handleSelect: (e) ->
       @props.TriggerSelect @props.record
     recordRow: ->
+      for gender in @state.genderlist
+        if @props.record.gender == gender.id
+          @state.gender = gender.name
+          break
       React.DOM.tr
         onClick: @handleSelect
         React.DOM.td null, @props.record.cname
-        React.DOM.td null, @props.record.dob
-        React.DOM.td null, @calAge(@props.record.dob,2).years
-        for gender in @state.genderlist
-            if @props.record.gender == gender.id
-              @state.gender = gender.name
-              break
+        React.DOM.td null,
+          if @props.record.dob != null
+            @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+          else
+            ""
+        React.DOM.td null, @calAge(@props.record.dob,2).years  
         React.DOM.td null, @state.gender
         React.DOM.td null, @props.record.address
         React.DOM.td null, @props.record.pnumber
@@ -612,16 +616,20 @@
         React.DOM.td null, @props.record.created_at
         React.DOM.td null, @props.record.updated_at
     recordRowSelected: ->
+      for gender in @state.genderlist
+        if @props.record.gender == gender.id
+          @state.gender = gender.name
+          break
       React.DOM.tr
         style: {'backgroundColor': '#494b54'}
         onClick: @handleSelect
         React.DOM.td null, @props.record.cname
-        React.DOM.td null, @props.record.dob
+        React.DOM.td null, 
+          if @props.record.dob != null
+            @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+          else
+            ""
         React.DOM.td null, @calAge(@props.record.dob,2).years
-        for gender in @state.genderlist
-            if @props.record.gender == gender.id
-              @state.gender = gender.name
-              break
         React.DOM.td null, @state.gender
         React.DOM.td null, @props.record.address
         React.DOM.td null, @props.record.pnumber
@@ -723,7 +731,10 @@
             React.DOM.li null,
               React.DOM.i
                 className: 'fa fa-birthday-cake'
-              @props.record.dob
+              if @props.record.dob != null
+                @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+              else
+                ""
             React.DOM.li null,
               React.DOM.i
                 className: 'fa fa-map-marker'
@@ -772,9 +783,11 @@
           React.DOM.h2 null, "Thông tin cơ bản"
           React.DOM.ul null,
             React.DOM.li null,
-              React.DOM.i
-                className: 'fa fa-birthday-cake'
-              @props.record.dob
+              React.DOM.i className: 'fa fa-birthday-cake',
+              if @props.record.dob != null
+                @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+              else
+                ""
             React.DOM.li null,
               React.DOM.i
                 className: 'fa fa-map-marker'

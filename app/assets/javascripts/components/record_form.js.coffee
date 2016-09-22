@@ -81,11 +81,11 @@
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
           React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'room_quick_name', type: 'text', className: 'form-control', placeholder: 'Tên phòng', name: 'name'
-        React.DOM.div className: 'form-group col-lg-2 col-sm-6'
+        React.DOM.div className: 'form-group col-lg-2 col-sm-6',
           React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'room_quick_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ hiển thị', name: 'lang', defaultValue: 'vi'
-        React.DOM.div className: 'form-group col-lg-3 col-sm-6'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-3 col-sm-6',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'room_quick_map', type: 'file', className: 'form-control', name: 'map'
         React.DOM.button type: 'submit', className: 'btn btn-primary', 'Create record'
   
@@ -118,23 +118,23 @@
         ).bind(this)
     render: ->
       React.DOM.form id: 'service_quick', className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
-        React.DOM.div className: 'form-group col-lg-4 col-sm-8'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-8',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'service_quick_sname', type: 'text', className: 'form-control', placeholder: 'Tên dịch vụ', name: 'sname'
-        React.DOM.div className: 'form-group col-lg-2 col-sm-4'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-2 col-sm-4',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'service_quick_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ hiển thị', name: 'lang', defaultValue: 'vi'
-        React.DOM.div className: 'form-group col-lg-3 col-sm-3'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-3 col-sm-3',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'service_quick_price', type: 'number', className: 'form-control', placeholder: 'Giá dịch vụ', name: 'price'
-        React.DOM.div className: 'form-group col-lg-3 col-sm-3'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-3 col-sm-3',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'service_quick_currency', type: 'text', className: 'form-control', placeholder: 'Đơn vị giá', defaultValue: 'VND', name: 'currency'
-        React.DOM.div className: 'form-group col-lg-8 col-sm-6'
-          React.DOM.div className: 'col-lg-12'
+        React.DOM.div className: 'form-group col-lg-8 col-sm-6',
+          React.DOM.div className: 'col-lg-12',
             React.DOM.textarea className: 'form-control col-lg-12', rows: 3, id: 'service_quick_description', placeholder: 'Mô tả ngắn dịch vụ', name: 'description'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-4'
-          React.DOM.div className: 'col-sm-6'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-4',
+          React.DOM.div className: 'col-sm-6',
             React.DOM.input id: 'service_quick_file', type: 'file', className: 'form-control', name: 'file'
           React.DOM.button type: 'submit', className: 'btn btn-primary col-sm-6', 'Create record'
 
@@ -167,17 +167,17 @@
         ).bind(this)
     render: ->
       React.DOM.form id: 'patient_quick', className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
-        React.DOM.div className: 'form-group col-lg-3 col-sm-8'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-3 col-sm-8',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'patient_quick_name', type: 'text', className: 'form-control', placeholder: 'Tên BN', name: 'name'
-        React.DOM.div className: 'form-group col-lg-3 col-sm-4'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-3 col-sm-4',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'patient_quick_dob', type: 'date', className: 'form-control', placeholder: 'DOB', name: 'dob'
-        React.DOM.div className: 'form-group col-lg-2 col-sm-6'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-2 col-sm-6',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'patient_quick_noid', type: 'text', className: 'form-control', placeholder: 'CMTND', name: 'noid'
-        React.DOM.div className: 'form-group col-lg-3 col-sm-6'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-3 col-sm-6',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'patient_quick_pnumber', type: 'text', className: 'form-control', placeholder: 'SDT', name: 'pnumber'
         React.DOM.button type: 'submit', className: 'btn btn-primary', style: {'marginRight': '5px'}, 'Filter'
         React.DOM.button type: 'button', className: 'btn btn-primary', 'Clear'
@@ -211,20 +211,20 @@
         ).bind(this)
     positionFormRender: ->
       React.DOM.form id: 'position_quick', className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
-        React.DOM.div className: 'form-group col-lg-2 col-sm-9'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-2 col-sm-9',
+          React.DOM.div className: 'col-sm-12',
             React.createElement SelectBox, records: @state.rooms, type: 1, id: 'position_quick_room', text: 'Tên phòng'
-        React.DOM.div className: 'form-group col-lg-2 col-sm-9'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-2 col-sm-9',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'position_quick_pname', type: 'text', className: 'form-control', placeholder: 'Tên chức vụ', name: 'pname'
-        React.DOM.div className: 'form-group col-lg-2 col-sm-3'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-2 col-sm-3',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'position_quick_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ hiển thị', name: 'lang', defaultValue: 'vi'
-        React.DOM.div className: 'form-group col-lg-5 col-sm-8'
-          React.DOM.div className: 'col-lg-12'
+        React.DOM.div className: 'form-group col-lg-5 col-sm-8',
+          React.DOM.div className: 'col-lg-12',
             React.DOM.textarea className: 'form-control col-lg-12', rows: 3, id: 'position_quick_description', placeholder: 'Mô tả ngắn công việc', name: 'description'
-        React.DOM.div className: 'form-group col-lg-2 col-sm-4'
-          React.DOM.div className: 'col-sm-12'
+        React.DOM.div className: 'form-group col-lg-2 col-sm-4',
+          React.DOM.div className: 'col-sm-12',
             React.DOM.input id: 'position_quick_file', type: 'file', className: 'form-control', name: 'file'
         React.DOM.button type: 'submit', className: 'btn btn-primary', 'Create record'
     render: ->
@@ -601,6 +601,32 @@
             @props.triggerSubmit result
             return
           ).bind(this)
+      else if @props.datatype == "patient_record"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'namestring', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'dob', $('#filter_text').val()
+          when 3
+            formData.append 'gender', $('#filter_text').val()
+          when 4
+            formData.append 'address', $('#filter_text').val().toLowerCase()
+          when 5
+            formData.append 'pnumber', $('#filter_text').val().toLowerCase()
+          when 6
+            formData.append 'noid', $('#filter_text').val().toLowerCase()
+        $.ajax
+          url: '/customer_record/find'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.triggerSubmit result
+            return
+          ).bind(this)
     triggerAutoCompleteInput: (e) ->
       e.preventDefault()
       @props.triggerInput $('#filter_text').val(), $('#filter_type_select').val(), option1: $('#checkbox_db').is(':checked')
@@ -765,6 +791,15 @@
             $('#filter_text').val(record.internal_record_code)
           when 7
             $('#filter_text').val(record.remark)
+      else if @props.datatype == "patient_record"
+        switch Number($('#filter_type_select').val())
+          when 1
+            if record.dob != null
+              $('#filter_text').val(record.cname + "," + record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4))
+            else
+              $('#filter_text').val(record.cname)
+          when 4
+            $('#filter_text').val(record.address)
       @props.triggerChose record
     triggerChangeType: (e) ->
       if @props.datatype == "medicine_sample"
@@ -805,6 +840,12 @@
         switch Number($('#filter_type_select').val())
           when 10
             @setState selectList:[{id: 1, name: "Nhập"},{id: 2, name: "Xuất"},{id: 3, name: "Vô hiệu"}]
+          else
+            @setState selectList: null
+      else if @props.datatype == "patient_record"
+        switch Number($('#filter_type_select').val())
+          when 3
+            @setState selectList:[{id: 1, name: "Nam"},{id: 2, name: "Nữ"}]
           else
             @setState selectList: null
     triggerClear: (e) ->
@@ -1868,6 +1909,45 @@
               type: 'checkbox'
               id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
+    PatientRecord: ->
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên bệnh nhân'
+              React.DOM.option value: 2, 'Ngày sinh'
+              React.DOM.option value: 3, 'Giới tính'
+              React.DOM.option value: 4, 'Địa chỉ'
+              React.DOM.option value: 5, 'Số điện thoại'
+              React.DOM.option value: 6, 'CMTND'
+          React.DOM.div
+            className: 'col-sm-8'
+            if @state.selectList == null
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...', name: 'filterText'
+            else
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+            React.DOM.div
+              className: "auto-complete"
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  switch Number($('#filter_type_select').val())
+                    when 1
+                      React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text:
+                        if record.dob != null
+                          record.cname + "," + record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4)
+                        else
+                          record.cname
+                    when 4
+                      React.createElement AutoComplete, key: record.id, text: record.address, record: record, trigger: @triggerAutoComplete
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search', ' Tìm kiếm'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close', ' Clear',
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+            "Tìm kỹ (chậm và đầy đủ)"    
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1891,6 +1971,8 @@
         @MedicineInternalRecord()
       else if @props.datatype == "medicine_stock_record"
         @MedicineStockRecord()
+      else if @props.datatype == "patient_record"
+        @PatientRecord()
         
 
   @SupportForm = React.createClass

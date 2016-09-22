@@ -1,5 +1,5 @@
 class CustomerRecordController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :create, :update, :destroy]
+  before_action :logged_in_user, only: [:edit, :create, :update, :destroy, :list, :find_record, :add_record, :link_record, :clear_link_record, :update_record]
   
   def create
 		if has_station?
@@ -208,14 +208,35 @@ class CustomerRecordController < ApplicationController
 	end
 	
   
+  
   def search
     if params.has_key?(:id_station)
       redirect_to root_path
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
-        if params.has_key?(:cname)
-          @supplier = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).group(:cname).limit(3)
+        if params.has_key?(:namestring)
+					if params[:namestring].include? ","
+						stringCheck = params[:namestring].split(",")
+						if stringCheck[1].include? "/"
+					    dobString = stringCheck[1].split("/")
+					    if dobString.length > 2
+							  @supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{dobString[2] + "-" + dobString[1] + "-" + dobString[0]}%" , @station.id).limit(5)
+			          render json:@supplier
+							else
+								@supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{dobString[1] + "-" + dobString[0]}%" , @station.id).limit(5)
+			          render json:@supplier
+							end
+					  else
+						  @supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{stringCheck[1]}%" , @station.id).limit(5)
+			        render json:@supplier
+			      end
+					else
+            @supplier = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:namestring]}%", @station.id).limit(5)
+			      render json:@supplier
+			    end
+        elsif params.has_key?(:address)
+				  @supplier = CustomerRecord.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).group(:address).limit(3)
 			    render json:@supplier
 			  end
       else
@@ -223,6 +244,55 @@ class CustomerRecordController < ApplicationController
       end
     end
   end
+
+  def find
+    if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:namestring)
+					if params[:namestring].include? ","
+						stringCheck = params[:namestring].split(",")
+						if stringCheck[1].include? "/"
+					    dobString = stringCheck[1].split("/")
+					    if dobString.length > 2
+							  @supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{dobString[2] + "-" + dobString[1] + "-" + dobString[0]}%" , @station.id)
+			          render json:@supplier
+							else
+								@supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{dobString[1] + "-" + dobString[0]}%" , @station.id)
+			          render json:@supplier
+							end
+					  else
+						  @supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{stringCheck[1]}%" , @station.id)
+			        render json:@supplier
+			      end
+					else
+            @supplier = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:namestring]}%", @station.id)
+			      render json:@supplier
+			    end
+        elsif params.has_key?(:dob)
+				  @supplier = CustomerRecord.where("dob = ? and station_id = ?" , params[:dob], @station.id).group(:address)
+			    render json:@supplier
+			  elsif params.has_key?(:gender)
+				  @supplier = CustomerRecord.where("gender = ? and station_id = ?" , params[:gender], @station.id).group(:address)
+			    render json:@supplier
+			  elsif params.has_key?(:address)
+				  @supplier = CustomerRecord.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).group(:address)
+			    render json:@supplier
+			  elsif params.has_key?(:pnumber)
+				  @supplier = CustomerRecord.where("pnumber = ? and station_id = ?" , params[:pnumber], @station.id).group(:address)
+			    render json:@supplier
+			  elsif params.has_key?(:noid)
+				  @supplier = CustomerRecord.where("noid = ? and station_id = ?" , params[:noid], @station.id).group(:address)
+			    render json:@supplier
+			  end
+      else
+        redirect_to root_path
+      end
+    end
+  end
+  
   
   private
   	# Confirms a logged-in user.
