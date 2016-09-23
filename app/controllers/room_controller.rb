@@ -2,73 +2,124 @@ class RoomController < ApplicationController
   before_action :logged_in_user, only: [:destroy, :create, :update, :list]
   
   def create
-    if has_station?
-			@station = Station.find_by(user_id: current_user.id)
-			if params.has_key?(:map)
-				@room = Room.new(station_id: @station.id, name: params[:name], lang: params[:lang], map: params[:map])
-				if @room.save
-				  render json: @room
-				else
-				  render json: @room.errors, status: :unprocessable_entity
-				end
-			else
-				@room = Room.new(station_id: @station.id, name: params[:name], lang: params[:lang])
-				if @room.save
-				  render json: @room
-				else
-				  render json: @room.errors, status: :unprocessable_entity
-				end
-			end
-		else
+		if params.has_key?(:id_station)
       redirect_to root_path
+    else
+      if has_station?
+  			@station = Station.find_by(user_id: current_user.id)
+	  		if params.has_key?(:map)
+		  		@room = Room.new(station_id: @station.id, name: params[:name], lang: params[:lang], map: params[:map])
+			  	if @room.save
+				    render json: @room
+  				else
+	  			  render json: @room.errors, status: :unprocessable_entity
+		  		end
+			  else
+				  @room = Room.new(station_id: @station.id, name: params[:name], lang: params[:lang])
+  				if @room.save
+	  			  render json: @room
+		  		else
+			  	  render json: @room.errors, status: :unprocessable_entity
+				  end
+  			end
+	  	else
+        redirect_to root_path
+      end
     end
   end
 
   def update
-    if has_station?
-      @station = Station.find_by(user_id: current_user.id)
-			@room = Room.find(params[:id])
-			if @station.id == @room.station_id
-				if params.has_key?(:map)
-					if @room.update(name: params[:name],lang: params[:lang],map: params[:map])
-						render json: @room
-					else
-						render json: @room.errors, status: :unprocessable_entity
-					end
-				else
-					if @room.update(name: params[:name],lang: params[:lang])
-						render json: @room
-					else
-						render json: @room.errors, status: :unprocessable_entity
-					end
-				end
-			end
-    else
+    if params.has_key?(:id_station)
       redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+		  	@room = Room.find(params[:id])
+			  if @station.id == @room.station_id
+				  if params.has_key?(:map)
+					  if @room.update(name: params[:name],lang: params[:lang],map: params[:map])
+						  render json: @room
+  					else
+	  					render json: @room.errors, status: :unprocessable_entity
+		  			end
+			  	else
+				  	if @room.update(name: params[:name],lang: params[:lang])
+					  	render json: @room
+  					else
+	  					render json: @room.errors, status: :unprocessable_entity
+		  			end
+			  	end
+  			end
+      else
+        redirect_to root_path
+      end
     end
   end
 
   def destroy
-		if has_station?
-			@station = Station.find_by(user_id: current_user.id)
-			@room = Room.find(params[:id])
-			if @room.station_id == @station.id
-				@room.destroy
-				head :no_content
-			end
-		else
-			redirect_to root_path
-		end
-	end
+		if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+		  if has_station?
+  			@station = Station.find_by(user_id: current_user.id)
+	  		@room = Room.find(params[:id])
+		  	if @room.station_id == @station.id
+			  	@room.destroy
+				  head :no_content
+  			end
+	  	else
+		  	redirect_to root_path
+  		end
+	  end
+  end
 
   def list
-    if has_station?
-			@station = Station.find_by(user_id: current_user.id)
-			render json: Room.where(station_id: @station.id)
-		else
+		if params.has_key?(:id_station)
       redirect_to root_path
+    else
+		  if has_station?
+  			@station = Station.find_by(user_id: current_user.id)
+	  		@data = []
+		  	@data[0] = Room.where(station_id: @station.id)
+  			render json: @data
+	  	else
+        redirect_to root_path
+      end
+	  end
+  end
+  
+  def search
+    if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:name)
+          @supplier = Room.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id).group(:name).limit(5)
+			    render json:@supplier
+			  end
+      else
+        redirect_to root_path
+      end
     end
   end
+  
+  def find
+		if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:name)
+          @supplier = Room.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+			    render json:@supplier
+			  end
+      else
+        redirect_to root_path
+      end
+    end
+  end
+  
   
   private
   	# Confirms a logged-in user.

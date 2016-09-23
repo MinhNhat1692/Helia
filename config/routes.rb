@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
   
+  delete '/order_map', to: 'order_map#destroy'
+  put '/order_map', to: 'order_map#edit'
+  post '/order_map', to: 'order_map#create'
+  post '/order_map/list', to: 'order_map#list'
+  post '/order_map/search', to: 'order_map#search'
+  post '/order_map/find', to: 'order_map#find'
+
   delete '/support/comment', to: 'support#deletecomment'
   post '/support/comment', to: 'support#addcomment'
   post '/support/list', to: 'support#listticket'
@@ -91,6 +98,12 @@ Rails.application.routes.draw do
   post '/employee/clear_link_record', to: 'employee#clear_link_record'
   post '/employee/find_record', to: 'employee#find_record'
   post '/employee/search', to: 'employee#search'
+  post '/employee/find', to: 'employee#find'
+  post '/employee/list', to: 'employee#list'
+  post '/employee', to: 'employee#create'
+  delete '/employee', to: 'employee#destroy'
+  put '/employee', to: 'employee#update'
+  get '/employee_activation', to: 'employee#activate'
   
   delete '/customer_record', to: 'customer_record#destroy'
   put '/customer_record', to: 'customer_record#update'
@@ -106,40 +119,55 @@ Rails.application.routes.draw do
   
   put '/service_mapping', to: 'service_mapping#update'
   post '/service_mapping/list', to: 'service_mapping#list'
-  put '/services', to: 'service#update'
-  post '/services', to: 'service#create'
-  delete '/services', to: 'service#destroy'
-  post '/services/list', to: 'service#list'
+  
+  put '/service', to: 'service#update'
+  post '/service', to: 'service#create'
+  delete '/service', to: 'service#destroy'
+  post '/service/list', to: 'service#list'
+  post '/service/search', to: 'service#search'
+  post '/service/find', to: 'service#find'
+
+  
   put '/position_mapping', to: 'position_mapping#update'
   post '/position_mapping/list', to: 'position_mapping#list'
-  put '/rooms', to: 'room#update'
-  post '/rooms', to: 'room#create'
-  delete '/rooms', to: 'room#destroy'
-  post '/rooms/list', to: 'room#list'
-  put '/positions', to: 'position#update'
-  delete '/positions', to: 'position#destroy'
-  post '/positions', to: 'position#create'
-  post '/positions/list', to: 'position#list'
-  post '/employees/list', to: 'employee#list'
+  
+  put '/room', to: 'room#update'
+  post '/room', to: 'room#create'
+  delete '/room', to: 'room#destroy'
+  post '/room/list', to: 'room#list'
+  post '/room/search', to: 'room#search'
+  post '/room/find', to: 'room#find'
+  
+  put '/position', to: 'position#update'
+  delete '/position', to: 'position#destroy'
+  post '/position', to: 'position#create'
+  post '/position/list', to: 'position#list'
+  post '/position/search', to: 'position#search'
+  post '/position/find', to: 'position#find'
+  
+  
   post '/country/list', to: 'nation#list'
-  post '/employee', to: 'employee#create'
-  delete '/employee', to: 'employee#destroy'
-  put '/employee', to: 'employee#update'
+  
   get '/station', to: 'station#new'
   post '/station',   to: 'station#create'
+  
   get '/profiles', to: 'profiles#new'
   post '/profiles',   to: 'profiles#create'
+  
   get '/dprofiles', to: 'doctor_profile#new'
   post '/dprofiles',   to: 'doctor_profile#create'
+  
   root "home#index"
+  
   get  '/signup',  to: 'users#new'
   post '/signup',  to: 'users#create'
+  
   get 'users/check_email', to: "users#check_email"
+  
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   get '/logout',  to: 'sessions#destroy'
-  get '/employee_activation', to: 'employee#activate'
   
   resources :users
   resources :account_activations, only: [:edit]

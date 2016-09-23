@@ -144,7 +144,7 @@
           if $('#room_form_map')[0].files[0] != undefined
             formData.append 'map', $('#room_form_map')[0].files[0]
           $.ajax
-            url: '/rooms'
+            url: '/room'
             type: 'PUT'
             data: formData
             async: false
@@ -163,7 +163,7 @@
         if $('#room_form_map')[0].files[0] != undefined
           formData.append 'map', $('#room_form_map')[0].files[0]
         $.ajax
-          url: '/rooms'
+          url: '/room'
           type: 'POST'
           data: formData
           async: false
@@ -179,14 +179,17 @@
           e.preventDefault()
           formData = new FormData
           formData.append 'id', @props.record.id
-          formData.append 'room', $('#position_form_room').val()
+          if $('#position_form_room').val() == ""
+            formData.append 'room', @props.record.room
+          else
+            formData.append 'room', $('#position_form_room').val()
           formData.append 'pname', $('#position_form_pname').val()
           formData.append 'lang', $('#position_form_lang').val()
           formData.append 'description', $('#position_form_description').val()
           if $('#position_form_file')[0].files[0] != undefined
             formData.append 'file', $('#position_form_file')[0].files[0]
           $.ajax
-            url: '/positions'
+            url: '/position'
             type: 'PUT'
             data: formData
             async: false
@@ -207,7 +210,7 @@
         if $('#position_form_file')[0].files[0] != undefined
           formData.append 'file', $('#position_form_file')[0].files[0]
         $.ajax
-          url: '/positions'
+          url: '/position'
           type: 'POST'
           data: formData
           async: false
@@ -231,7 +234,7 @@
           if $('#service_form_file')[0].files[0] != undefined
             formData.append 'file', $('#service_form_file')[0].files[0]
           $.ajax
-            url: '/services'
+            url: '/service'
             type: 'PUT'
             data: formData
             async: false
@@ -253,7 +256,7 @@
         if $('#service_form_file')[0].files[0] != undefined
           formData.append 'file', $('#service_form_file')[0].files[0]
         $.ajax
-          url: '/services'
+          url: '/service'
           type: 'POST'
           data: formData
           async: false
@@ -1198,6 +1201,42 @@
                 code: code
               return
             ).bind(this)
+      else if code == 'order_map_cname'
+        if $('#order_map_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#order_map_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'order_map_sername'
+        if $('#order_map_sername').val().length > 1
+          formData = new FormData
+          formData.append 'sname', $('#order_map_sername').val().toLowerCase()
+          $.ajax
+            url: '/service/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
     triggerAutoComplete: (record) ->
       if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         $('#medicine_sample_company').val(record.name)
@@ -1304,557 +1343,259 @@
         $('#medicine_internal_record_tpayment').val(Number($('#medicine_internal_record_price').val()) * Number($('#medicine_internal_record_amount').val()))
     trigger: (e) ->
     employeeForm: ->
-      React.DOM.div
-        className: 'modal fade'
-        React.DOM.div
-          className: 'modal-dialog modal-lg'
-          React.DOM.div
-            className: 'modal-content'
-            React.DOM.div
-              className: 'modal-header text-center'
-              React.DOM.h4
-                className: 'modal-title'
-                'Mẫu thông tin nhân viên'
-              React.DOM.small null,
-                'Description'
-            React.DOM.div
-              className: 'modal-body'
-              React.DOM.div
-                className: 'row'
-                React.DOM.div
-                  className: 'col-md-7'
-                  React.DOM.form
-                    id: 'employee_form'
-                    encType: 'multipart/form-data'
-                    className: 'form-horizontal'
-                    onSubmit: @handleSubmit
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Họ và Tên'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'employee_form_ename'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Họ và tên'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.ename
-                            else
-                              ""
-                          name: 'ename'
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Địa chỉ'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'employee_form_address'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Địa chỉ'
-                          name: 'address'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.address
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Số ĐT'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'employee_form_pnumber'
-                          type: 'number'
-                          className: 'form-control'
-                          placeholder: 'Số ĐT'
-                          name: 'pnumber'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.pnumber
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'CMTND'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'employee_form_noid'
-                          type: 'number'
-                          className: 'form-control'
-                          placeholder: 'Số hiệu NV'
-                          name: 'noid'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.noid
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-3 control-label'
-                        'Giới tính'
-                      React.DOM.div
-                        className: 'col-sm-3'
-                        React.DOM.select
-                          id: 'employee_form_gender'
-                          className: 'form-control'
-                          name: 'gender'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.gender
-                            else
-                              ""
-                          React.DOM.option
-                            value: ''
-                            'Giới tính'
-                          React.DOM.option
-                            value: '1'
-                            'Nam'
-                          React.DOM.option
-                            value: '2'
-                            'Nữ'
-                      React.DOM.label
-                        className: 'col-sm-3 control-label'
-                        'Ảnh đại diện'
-                      React.DOM.div
-                        className: 'col-sm-3'
-                        React.DOM.input
-                          id: 'employee_form_avatar'
-                          type: 'file'
-                          className: 'form-control'
-                          name: 'avatar'
-                    React.DOM.button
-                      type: 'submit'
-                      className: 'btn btn-default pull-right'
-                      'Lưu'
-                React.DOM.div
-                  className: 'col-md-5'
-                  style: {'alignContent': 'center'}
-                  React.DOM.div
-                    id: 'results'
-                    React.DOM.img
-                      style: {'maxWidth': '100%', 'maxHeight': '240px'}
-                      src:
-                        if @props.record != null
-                          if @props.record.avatar != "/avatars/original/missing.png"
-                            @props.record.avatar
-                          else
-                            'https://www.twomargins.com/images/noavatar.jpg'
-                        else
-                          'https://www.twomargins.com/images/noavatar.jpg'
-                  React.DOM.div
-                    id: 'my_camera'
-                  React.DOM.button
-                    type: 'button'
-                    className: 'btn btn-default'
-                    onClick: @setup_webcam
-                    name: 'close'
-                    'Setup'
-                  React.DOM.button
-                    type: 'button'
-                    className: 'btn btn-default'
-                    value: 'take Large Snapshot'
-                    onClick: @take_snapshot
-                    name: 'close'
-                    'Capture'
-            React.DOM.div
-              className: 'modal-footer'
-              React.DOM.button
-                className: 'btn btn-default'
-                'data-dismiss': 'modal'
-                type: 'button'
-                'Close'
-    customerForm: ->
-      React.DOM.div
-        className: 'modal fade'
-        React.DOM.div
-          className: 'modal-dialog modal-lg'
-          React.DOM.div
-            className: 'modal-content'
-            React.DOM.div
-              className: 'modal-header text-center'
-              React.DOM.h4
-                className: 'modal-title'
-                'Customer Record Form'
-              React.DOM.small null,
-                'Description'
-            React.DOM.div
-              className: 'modal-body'
-              React.DOM.div
-                className: 'row'
-                React.DOM.div
-                  className: 'col-md-7'
-                  React.DOM.p null, 'Detail for this modal - short'
-                  React.DOM.form
-                    id: 'customer_record_form'
-                    encType: 'multipart/form-data'
-                    className: 'form-horizontal'
-                    onSubmit: @handleSubmit
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Họ và Tên'
-                      React.DOM.div
-                        className: 'col-sm-10'
-                        React.DOM.input
-                          id: 'customer_form_name'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Họ và tên'
-                          name: 'name'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.cname
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Ngày sinh'
-                      React.DOM.div
-                        className: 'col-sm-10'
-                        React.DOM.input
-                          id: 'customer_form_dob'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: '31/01/1990'
-                          name: 'dob'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Địa chỉ'
-                      React.DOM.div
-                        className: 'col-sm-10'
-                        React.DOM.input
-                          id: 'customer_form_address'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Địa chỉ'
-                          name: 'address'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.address
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Số ĐT'
-                      React.DOM.div
-                        className: 'col-sm-10'
-                        React.DOM.input
-                          id: 'customer_form_pnumber'
-                          type: 'number'
-                          className: 'form-control'
-                          placeholder: 'Số ĐT'
-                          name: 'pnumber'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.pnumber
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'CMTND'
-                      React.DOM.div
-                        className: 'col-sm-10'
-                        React.DOM.input
-                          id: 'customer_form_noid'
-                          type: 'number'
-                          className: 'form-control'
-                          placeholder: 'Số CMTND'
-                          name: 'noid'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.noid
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Giới tính'
-                      React.DOM.div
-                        className: 'col-sm-4'
-                        React.DOM.select
-                          id: 'customer_form_gender'
-                          className: 'form-control'
-                          name: 'gender'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.gender
-                            else
-                              ""
-                          React.DOM.option
-                            value: ''
-                            'Giới tính'
-                          React.DOM.option
-                            value: '1'
-                            'Nam'
-                          React.DOM.option
-                            value: '2'
-                            'Nữ'
-                      React.DOM.label
-                        className: 'col-sm-2 control-label'
-                        'Ảnh đại diện'
-                      React.DOM.div
-                        className: 'col-sm-4'
-                        React.DOM.input
-                          id: 'customer_form_avatar'
-                          type: 'file'
-                          className: 'form-control'
-                          name: 'avatar'  
-                    React.DOM.button
-                      onClick: @handleSubmitCustomerRecord
-                      className: 'btn btn-default pull-right'
-                      'Lưu'
-                React.DOM.div
-                  className: 'col-md-5'
-                  style: {'alignContent': 'center'}
-                  React.DOM.div
-                    id: 'results'
-                    React.DOM.img
-                      style: {'maxWidth': '100%', 'maxHeight': '240px'}
-                      src:
-                        if @props.record != null
-                          if @props.record.avatar != "/avatars/original/missing.png"
-                            @props.record.avatar
-                          else
-                            'https://www.twomargins.com/images/noavatar.jpg'
-                        else
-                          'https://www.twomargins.com/images/noavatar.jpg'
-                  React.DOM.div
-                    id: 'my_camera'
-                  React.DOM.button
-                    type: 'button'
-                    className: 'btn btn-default'
-                    onClick: @setup_webcam
-                    name: 'close'
-                    'Setup'
-                  React.DOM.button
-                    type: 'button'
-                    className: 'btn btn-default'
-                    value: 'take Large Snapshot'
-                    onClick: @take_snapshot
-                    name: 'close'
-                    'Capture'
-            React.DOM.div
-              className: 'modal-footer'
-              React.DOM.button
-                className: 'btn btn-default'
-                'data-dismiss': 'modal'
-                type: 'button'
-                'Close'
-    roomForm: ->
-      React.DOM.div
-        className: 'modal fade'
-        React.DOM.div
-          className: 'modal-dialog modal-lg'
-          React.DOM.div
-            className: 'modal-content'
-            React.DOM.div
-              className: 'modal-header text-center'
-              React.DOM.h4
-                className: 'modal-title'
-                'Mẫu thông tin phòng'
-              React.DOM.small null,
-                'mời bạn điền vào các thông tin yêu cầu dưới đây'
-            React.DOM.div
-              className: 'modal-body'
-              React.DOM.div
-                className: 'row'
-                React.DOM.div
-                  className: 'col-md-12'
-                  React.DOM.form
-                    id: 'employee_form'
-                    encType: 'multipart/form-data'
-                    className: 'form-horizontal'
-                    onSubmit: @handleSubmit
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Tên phòng'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'room_form_name'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Tên phòng'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.name
-                            else
-                              ""
-                          name: 'name'
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Ngôn ngữ'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'room_form_lang'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Ngôn ngữ'
-                          name: 'lang'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.lang
-                            else
-                              "vi"
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Bản đồ'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'room_form_map'
-                          type: 'file'
-                          className: 'form-control'
-                          name: 'map'
-                    React.DOM.button
-                      type: 'submit'
-                      className: 'btn btn-default pull-right'
-                      'Lưu'
-            React.DOM.div
-              className: 'modal-footer'
-              React.DOM.button
-                className: 'btn btn-default'
-                'data-dismiss': 'modal'
-                type: 'button'
-                'Close'
-    positionForm: ->
-      React.DOM.div
-        className: 'modal fade'
-        React.DOM.div
-          className: 'modal-dialog modal-lg'
-          React.DOM.div
-            className: 'modal-content'
-            React.DOM.div
-              className: 'modal-header text-center'
-              React.DOM.h4
-                className: 'modal-title'
-                'Mẫu thông tin chức vụ'
-              React.DOM.small null,
-                'mời bạn điền vào các thông tin yêu cầu dưới đây'
-            React.DOM.div
-              className: 'modal-body'
-              React.DOM.div
-                className: 'row'
-                React.DOM.div
-                  className: 'col-md-12'
-                  React.DOM.form
-                    id: 'position_form'
-                    encType: 'multipart/form-data'
-                    className: 'form-horizontal'
-                    onSubmit: @handleSubmit
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Tên phòng'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.createElement SelectBox, records: @props.extra, type: 1, id: 'position_form_room', text: 'Tên phòng', defaultValue:
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin nhân viên'
+              React.DOM.small null, 'Description'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-7',
+                  React.DOM.form id: 'employee_form', autoComplete: 'off', className: 'form-horizontal', onSubmit: @handleSubmit,
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Họ và Tên'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'employee_form_ename', type: 'text', className: 'form-control', placeholder: 'Họ và tên', defaultValue:
                           if @props.record != null
-                            @props.record.room_id
+                            @props.record.ename
                           else
-                            null
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Tên chức vụ'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'position_form_pname'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Tên chức vụ'
-                          name: 'pname'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.pname
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Địa chỉ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'employee_form_address', type: 'text', className: 'form-control', placeholder: 'Địa chỉ', name: 'address', defaultValue:
+                          if @props.record != null
+                            @props.record.address
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Số ĐT'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'employee_form_pnumber', type: 'number', className: 'form-control', placeholder: 'Số ĐT', name: 'pnumber', defaultValue:
+                          if @props.record != null
+                            @props.record.pnumber
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'CMTND'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'employee_form_noid', type: 'number', className: 'form-control', placeholder: 'Số hiệu NV',  defaultValue:
+                          if @props.record != null
+                            @props.record.noid
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label', 'Giới tính'
+                      React.DOM.div className: 'col-sm-3',
+                        React.DOM.select id: 'employee_form_gender', className: 'form-control',
+                          React.DOM.option value: '', 'Giới tính',
+                          React.DOM.option value: '1', 'Nam',
+                          React.DOM.option value: '2', 'Nữ',
+                      React.DOM.label className: 'col-sm-3 control-label', 'Ảnh đại diện'
+                      React.DOM.div className: 'col-sm-3',
+                        React.DOM.input id: 'employee_form_avatar', type: 'file', className: 'form-control',
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+                React.DOM.div className: 'col-md-5', style: {'alignContent': 'center'},
+                  React.DOM.div id: 'results',
+                    React.DOM.img style: {'maxWidth': '100%', 'maxHeight': '240px'}, src:
+                      if @props.record != null
+                        if @props.record.avatar != "/avatars/original/missing.png"
+                          @props.record.avatar
+                        else
+                          'https://www.twomargins.com/images/noavatar.jpg'
+                      else
+                        'https://www.twomargins.com/images/noavatar.jpg'
+                  React.DOM.div id: 'my_camera',
+                  React.DOM.button type: 'button', className: 'btn btn-default', onClick: @setup_webcam, 'Setup'
+                  React.DOM.button type: 'button', className: 'btn btn-default', value: 'take Large Snapshot', onClick: @take_snapshot, 'Capture'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    customerForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Customer Record Form'
+              React.DOM.small null, 'Description'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-7',
+                  React.DOM.p null, 'Detail for this modal - short'
+                  React.DOM.form id: 'customer_record_form', className: 'form-horizontal', autoComplete: 'off', onSubmit: @handleSubmit,
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label', 'Họ và Tên'
+                      React.DOM.div className: 'col-sm-10',
+                        React.DOM.input id: 'customer_form_name', type: 'text', className: 'form-control', placeholder: 'Họ và tên', defaultValue:
+                          if @props.record != null
+                            @props.record.cname
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label', 'Ngày sinh'
+                      React.DOM.div className: 'col-sm-10',
+                        React.DOM.input id: 'customer_form_dob', type: 'text', className: 'form-control', placeholder: '31/01/1990', defaultValue:
+                          if @props.record != null
+                            @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label', 'Địa chỉ'
+                      React.DOM.div className: 'col-sm-10',
+                        React.DOM.input id: 'customer_form_address', type: 'text', className: 'form-control', placeholder: 'Địa chỉ', defaultValue:
+                          if @props.record != null
+                            @props.record.address
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label', 'Số ĐT'
+                      React.DOM.div className: 'col-sm-10',
+                        React.DOM.input id: 'customer_form_pnumber', type: 'number', className: 'form-control', placeholder: 'Số ĐT', defaultValue:
+                          if @props.record != null
+                            @props.record.pnumber
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label', 'CMTND'
+                      React.DOM.div className: 'col-sm-10',
+                        React.DOM.input id: 'customer_form_noid', type: 'number', className: 'form-control', placeholder: 'Số CMTND', defaultValue:
+                          if @props.record != null
+                            @props.record.noid
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label', 'Giới tính'
+                      React.DOM.div className: 'col-sm-4',
+                        React.DOM.select id: 'customer_form_gender', className: 'form-control',
+                          React.DOM.option value: '', 'Giới tính'
+                          React.DOM.option value: '1', 'Nam'
+                          React.DOM.option value: '2', 'Nữ'
+                      React.DOM.label className: 'col-sm-2 control-label', 'Ảnh đại diện'
+                      React.DOM.div className: 'col-sm-4',
+                        React.DOM.input id: 'customer_form_avatar', type: 'file', className: 'form-control'
+                    React.DOM.button onClick: @handleSubmitCustomerRecord, className: 'btn btn-default pull-right', 'Lưu'
+                React.DOM.div className: 'col-md-5', style: {'alignContent': 'center'},
+                  React.DOM.div id: 'results',
+                    React.DOM.img style: {'maxWidth': '100%', 'maxHeight': '240px'}, src:
+                      if @props.record != null
+                        if @props.record.avatar != "/avatars/original/missing.png"
+                          @props.record.avatar
+                        else
+                          'https://www.twomargins.com/images/noavatar.jpg'
+                      else
+                        'https://www.twomargins.com/images/noavatar.jpg'
+                  React.DOM.div id: 'my_camera',
+                  React.DOM.button type: 'button', className: 'btn btn-default', onClick: @setup_webcam, 'Setup'
+                  React.DOM.button type: 'button', className: 'btn btn-default', value: 'take Large Snapshot', onClick: @take_snapshot, 'Capture'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    orderMapForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Bản ghi dịch vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
+                      React.DOM.div className: 'col-sm-3',
+                        React.createElement SelectBox, id: 'order_map_status', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Đã thanh toán'},{id: 2, name: 'Chưa thanh toán'},{id: 3, name: 'Khác'}], text: 'Tình trạng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'order_map_customer_record_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.customer_record_id
+                          else
+                            if @props.customer != null
+                              @props.customer.id
                             else
                               ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Ngôn ngữ'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'position_form_lang'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Ngôn ngữ'
-                          name: 'lang'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.lang
-                            else
-                              "vi"
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Miêu tả ngắn'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.textarea
-                          id: 'position_form_description'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Miêu tả ngắn'
-                          name: 'description'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.description
+                        React.createElement InputField, id: 'order_map_cname_code', className: 'form-control', type: 'text', code: 'order_map_customer_code', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.cname
+                          else
+                            if @props.customer != null
+                              @props.customer.cname
                             else
                               ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'File đính kèm'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'position_form_file'
-                          type: 'file'
-                          className: 'form-control'
-                          name: 'file'
+                        React.DOM.div className: "auto-complete", id: "oorder_map_cname_code_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'order_map_cname_code'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, record: recordsearch, trigger: @triggerAutoComplete, text:
+                                if recordsearch.dob != null
+                                  recordsearch.cname + "," + recordsearch.dob.substring(8, 10) + "/" + recordsearch.dob.substring(5, 7) + "/" + recordsearch.dob.substring(0, 4)
+                                else
+                                  recordsearch.cname
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên dịch vụ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'order_map_service_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'cid', defaultValue:
+                          if @props.record != null
+                            @props.record.service_id
+                          else
+                            if @props.service != null
+                              @props.service.id
+                            else  
+                              ""
+                        React.createElement InputField, id: 'order_map_sername', className: 'form-control', type: 'text', code: 'order_map_sername', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.sername
+                          else
+                            if @props.service != null
+                              @props.service.sname
+                            else
+                              ""
+                        React.DOM.div className: "auto-complete", id: "order_map_sername_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'order_map_sername'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.sname, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng thuốc'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement SelectBox, id: 'order_map_status', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Đã chuyển hàng'},{id: 2, name: 'Chưa chuyển hàng'},{id: 3, name: 'Khác'}], text: 'Tình trạng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-8',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ghi chú'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'order_map_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
+                            if @props.record != null
+                              @props.record.remark
+                            else
+                              ''
+                      React.DOM.div className: 'col-md-4',
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'order_map_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @trigger, trigger3: @trigger, trigger2: @trigger, defaultValue:
+                            if @props.record != null
+                              @props.record.tpayment
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'order_map_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.discount
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'order_map_discount_percent', className: 'form-control', type: 'number', placeholder: '% Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.discount/@props.record.tpayment * 100
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'order_map_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.tpayout
+                            else
+                              0
                     React.DOM.button
                       type: 'submit'
                       className: 'btn btn-default pull-right'
@@ -1865,145 +1606,145 @@
                 className: 'btn btn-default'
                 'data-dismiss': 'modal'
                 type: 'button'
-                'Close'
+                'Close' 
+    roomForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin phòng'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form id: 'employee_form', className: 'form-horizontal', autoComplete: 'off', onSubmit: @handleSubmit,
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Tên phòng'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'room_form_name', type: 'text', className: 'form-control', placeholder: 'Tên phòng', defaultValue:
+                          if @props.record != null
+                            @props.record.name
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Ngôn ngữ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'room_form_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ', defaultValue:
+                          if @props.record != null
+                            @props.record.lang
+                          else
+                            "vi"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Bản đồ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'room_form_map', type: 'file', className: 'form-control'
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    positionForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin chức vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form id: 'position_form', className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Tên phòng'
+                      React.DOM.div className: 'col-sm-8',
+                        React.createElement SelectBox, records: @props.extra, type: 1, id: 'position_form_room', text: 'Tên phòng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Tên chức vụ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'position_form_pname', type: 'text', className: 'form-control', placeholder: 'Tên chức vụ', defaultValue:
+                          if @props.record != null
+                            @props.record.pname
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Ngôn ngữ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'position_form_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ', defaultValue:
+                          if @props.record != null
+                            @props.record.lang
+                          else
+                            "vi"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Miêu tả ngắn'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.textarea id: 'position_form_description', type: 'text', className: 'form-control', placeholder: 'Miêu tả ngắn', defaultValue:
+                          if @props.record != null
+                            @props.record.description
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'File đính kèm'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'position_form_file', type: 'file', className: 'form-control',
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
     serviceForm: ->
-      React.DOM.div
-        className: 'modal fade'
-        React.DOM.div
-          className: 'modal-dialog modal-lg'
-          React.DOM.div
-            className: 'modal-content'
-            React.DOM.div
-              className: 'modal-header text-center'
-              React.DOM.h4
-                className: 'modal-title'
-                'Mẫu thông tin dịch vụ'
-              React.DOM.small null,
-                'mời bạn điền vào các thông tin yêu cầu dưới đây'
-            React.DOM.div
-              className: 'modal-body'
-              React.DOM.div
-                className: 'row'
-                React.DOM.div
-                  className: 'col-md-12'
-                  React.DOM.form
-                    id: 'employee_form'
-                    encType: 'multipart/form-data'
-                    className: 'form-horizontal'
-                    onSubmit: @handleSubmit
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Tên dịch vụ'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'service_form_sname'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Tên dịch vụ'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.sname
-                            else
-                              ""
-                          name: 'sname'
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Ngôn ngữ'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'service_form_lang'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Ngôn ngữ'
-                          name: 'lang'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.lang
-                            else
-                              "vi"
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Giá'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'service_form_price'
-                          type: 'number'
-                          className: 'form-control'
-                          placeholder: 'Giá'
-                          name: 'price'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.price
-                            else
-                              "0"
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Đơn vị tiền'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'service_form_currency'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Đơn vị tiền'
-                          name: 'currency'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.price
-                            else
-                              "VND"
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Mô tả ngắn'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'service_form_description'
-                          type: 'text'
-                          className: 'form-control'
-                          placeholder: 'Mô tả ngắn'
-                          name: 'description'
-                          defaultValue:
-                            if @props.record != null
-                              @props.record.description
-                            else
-                              ""
-                    React.DOM.div
-                      className: 'form-group'
-                      React.DOM.label
-                        className: 'col-sm-4 control-label'
-                        'Logo'
-                      React.DOM.div
-                        className: 'col-sm-8'
-                        React.DOM.input
-                          id: 'service_form_file'
-                          type: 'file'
-                          className: 'form-control'
-                          name: 'file'
-                    React.DOM.button
-                      type: 'submit'
-                      className: 'btn btn-default pull-right'
-                      'Lưu'
-            React.DOM.div
-              className: 'modal-footer'
-              React.DOM.button
-                className: 'btn btn-default'
-                'data-dismiss': 'modal'
-                type: 'button'
-                'Close'
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin dịch vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form id: 'employee_form', className: 'form-horizontal', autoComplete: 'off', onSubmit: @handleSubmit,
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Tên dịch vụ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'service_form_sname', type: 'text', className: 'form-control', placeholder: 'Tên dịch vụ', defaultValue:
+                          if @props.record != null
+                            @props.record.sname
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label','Ngôn ngữ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'service_form_lang',type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ', name: 'lang', defaultValue:
+                          if @props.record != null
+                            @props.record.lang
+                          else
+                            "vi"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Giá'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'service_form_price', type: 'number', className: 'form-control', placeholder: 'Giá', name: 'price', defaultValue:
+                          if @props.record != null
+                            @props.record.price
+                          else
+                            "0"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Đơn vị tiền'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'service_form_currency', type: 'text', className: 'form-control', placeholder: 'Đơn vị tiền', name: 'currency', defaultValue:
+                          if @props.record != null
+                            @props.record.currency
+                          else
+                            "VND"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Mô tả ngắn'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'service_form_description', type: 'text', className: 'form-control', placeholder: 'Mô tả ngắn', defaultValue:
+                          if @props.record != null
+                            @props.record.description
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Logo'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'service_form_file', type: 'file', className: 'form-control'
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button','Close'
     medicineSupplierForm: ->
       React.DOM.div
         className: 'modal fade'
@@ -3760,6 +3501,8 @@
         @employeeForm()
       else if @state.type == 'customer_record' or @state.type == 'customer_edit_record'
         @customerForm()
+      else if @state.type == 'order_map_add' or @state.type == 'order_map_edit'
+        @orderMapForm()
       else if @state.type == 'room_add' or @state.type == 'room_edit'
         @roomForm()
       else if @state.type == 'position_add' or @state.type == 'position_edit'

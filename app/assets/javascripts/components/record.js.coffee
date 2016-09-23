@@ -1,126 +1,3 @@
-  @Record = React.createClass
-    getInitialState: ->
-      genderlist: @props.gender
-      gender: "Not set"
-    selectRecord: (e) ->
-      @props.selectRecord @props.record
-    recordRow: ->
-      React.DOM.tr
-        onClick: @selectRecord
-        React.DOM.td null, @props.record.ename
-        React.DOM.td null, @props.record.address
-        React.DOM.td null, @props.record.pnumber
-        React.DOM.td null, @props.record.noid
-        for gender in @state.genderlist
-            if @props.record.gender == gender.id
-              @state.gender = gender.name
-              break
-        React.DOM.td null, @state.gender
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default btn-xs'
-            style: {margin: '5px'}
-            href: @props.record.avatar
-            'AVATAR'
-    SelectedRecordRow: ->
-      React.DOM.tr
-        className: "toggled"
-        React.DOM.td null, @props.record.ename
-        React.DOM.td null, @props.record.address
-        React.DOM.td null, @props.record.pnumber
-        React.DOM.td null, @props.record.noid
-        for gender in @state.genderlist
-            if @props.record.gender == gender.id
-              @state.gender = gender.name
-              break
-        React.DOM.td null, @state.gender
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default btn-xs'
-            style: {margin: '5px'}
-            href: @props.record.avatar
-            'AVATAR'
-    render: ->
-      if @props.selected
-        @SelectedRecordRow()
-      else
-        @recordRow()
-
-
-  @Room = React.createClass
-    getInitialState: ->
-      type: 1
-    selectRecord: (e) ->
-      @props.selectRecord @props.record
-    recordRow: ->
-      React.DOM.tr
-        onClick: @selectRecord
-        React.DOM.td null, @props.record.name
-        React.DOM.td null, @props.record.lang
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default btn-xs'
-            style: {margin: '5px'}
-            href: @props.record.map
-            'Bản đồ'
-    SelectedRecordRow: ->
-      React.DOM.tr
-        className: "toggled"
-        React.DOM.td null, @props.record.name
-        React.DOM.td null, @props.record.lang
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default btn-xs'
-            style: {margin: '5px'}
-            href: @props.record.map
-            'Bản đồ'
-    render: ->
-      if @props.selected
-        @SelectedRecordRow()
-      else
-        @recordRow()
-
-
-  @Service = React.createClass
-    getInitialState: ->
-      type: 1
-    selectRecord: (e) ->
-      @props.selectRecord @props.record
-    recordRow: ->
-      React.DOM.tr
-        onClick: @selectRecord
-        React.DOM.td null, @props.record.sname
-        React.DOM.td null, @props.record.lang
-        React.DOM.td null, @props.record.price
-        React.DOM.td null, @props.record.currency
-        React.DOM.td null, @props.record.description
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default btn-xs'
-            style: {margin: '5px'}
-            href: @props.record.file
-            'Logo'
-    SelectedRecordRow: ->
-      React.DOM.tr
-        className: "toggled"
-        React.DOM.td null, @props.record.sname
-        React.DOM.td null, @props.record.lang
-        React.DOM.td null, @props.record.price
-        React.DOM.td null, @props.record.currency
-        React.DOM.td null, @props.record.description
-        React.DOM.td null,
-          React.DOM.a
-            className: 'btn btn-default btn-xs'
-            style: {margin: '5px'}
-            href: @props.record.file
-            'Logo'
-    render: ->
-      if @props.selected
-        @SelectedRecordRow()
-      else
-        @recordRow()
-
-
   @Position = React.createClass
     getInitialState: ->
       rooms: @props.rooms
@@ -783,7 +660,7 @@
           React.DOM.h2 null, "Thông tin cơ bản"
           React.DOM.ul null,
             React.DOM.li null,
-              React.DOM.i className: 'fa fa-birthday-cake',
+              React.DOM.i className: 'fa fa-birthday-cake'
               if @props.record.dob != null
                 @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
               else
@@ -1362,6 +1239,81 @@
               React.DOM.a href: @props.record.attachment, target: '_blank', 'Tệp đính kèm - '
             @props.record.comment
           React.DOM.small null, @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7) + ' - ' + @props.record.created_at.substring(11, 16)
+    Service: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.sname
+          React.DOM.td null, @props.record.lang
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.currency
+          React.DOM.td null, @props.record.description
+          React.DOM.td null,
+          React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'Logo'
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.sname
+          React.DOM.td null, @props.record.lang
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.currency
+          React.DOM.td null, @props.record.description
+          React.DOM.td null,
+          React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'Logo'
+    Employee: ->
+      for gender in @props.gender
+        if @props.record.gender == gender.id
+          @state.typeName = gender.name
+          break
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @state.typeName
+          React.DOM.td null,
+            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.avatar, 'AVATAR'
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @state.typeName
+          React.DOM.td null,
+            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.avatar, 'AVATAR'  
+    Room: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.lang
+          React.DOM.td null,
+            React.DOM.a className: 'btn btn-default btn-xs',style: {margin: '5px'}, href: @props.record.map, 'Bản đồ'
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.lang
+          React.DOM.td null,
+            React.DOM.a className: 'btn btn-default btn-xs',style: {margin: '5px'}, href: @props.record.map, 'Bản đồ'
+    Position: ->
+      for room in @props.room
+        if room.id == @props.record.room_id
+          @state.typeName = room.name
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.pname
+          React.DOM.td null, @props.record.lang
+          React.DOM.td null, @props.record.description
+          React.DOM.td null,
+            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'File'
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.pname
+          React.DOM.td null, @props.record.lang
+          React.DOM.td null, @props.record.description
+          React.DOM.td null,
+            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'File'
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1391,3 +1343,11 @@
         @TicketRecord()
       else if @props.datatype == 'ticket_comment_record'
         @TicketCommentRecord()
+      else if @props.datatype == 'service'
+        @Service()
+      else if @props.datatype == 'employee'
+        @Employee()
+      else if @props.datatype == 'room'
+        @Room()
+      else if @props.datatype == 'position'
+        @Position()

@@ -2,15 +2,15 @@
     Support: ->
       React.createElement Support, data: @props.data
     Employee: ->
-      React.createElement Records, data: @props.data 
+      React.createElement Record, data: @props.data 
     Position: ->
-      React.createElement Positions, data: @props.data
+      React.createElement Position, data: @props.data
     Room: ->
-      React.createElement Rooms, records: @props.data
+      React.createElement Room, data: @props.data
     AppViewEmployee: ->
       React.createElement AppViewsEmployees, data: @props.data
     Service: ->
-      React.createElement Services, records: @props.data
+      React.createElement Service, data: @props.data
     ServiceMap: ->
       React.createElement AppViewsServices, data: @props.data
     PatientGeneral: ->

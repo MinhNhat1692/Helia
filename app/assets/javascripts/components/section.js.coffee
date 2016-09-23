@@ -132,7 +132,7 @@
       if code == 11 #employee
         data =
           task: 11
-          link: '/employees/list'
+          link: '/employee/list'
         @handleGetdata(data)
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
@@ -145,7 +145,7 @@
       else if code == 12 #room
         data =
           task: 12
-          link: '/rooms/list'
+          link: '/room/list'
         @handleGetdata(data)
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
@@ -158,7 +158,7 @@
       else if code == 13 #position
         data =
           task: 13
-          link: '/positions/list'
+          link: '/position/list'
         @handleGetdata(data)
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
@@ -171,7 +171,7 @@
       else if code == 14 #service
         data =
           task: 14
-          link: '/services/list'
+          link: '/service/list'
         @handleGetdata(data)
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",

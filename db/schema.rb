@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160921035456) do
+ActiveRecord::Schema.define(version: 20160923033109) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -345,8 +345,14 @@ ActiveRecord::Schema.define(version: 20160921035456) do
     t.integer  "customer_record_id"
     t.integer  "service_id"
     t.integer  "status"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "cname"
+    t.string   "sername"
+    t.float    "tpayment",           limit: 24
+    t.float    "discount",           limit: 24
+    t.float    "tpayout",            limit: 24
+    t.text     "remark",             limit: 65535
     t.index ["customer_record_id"], name: "index_order_maps_on_customer_record_id", using: :btree
     t.index ["service_id"], name: "index_order_maps_on_service_id", using: :btree
   end
@@ -454,6 +460,7 @@ ActiveRecord::Schema.define(version: 20160921035456) do
     t.string   "result"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.string   "cname"
     t.index ["order_map_id"], name: "index_service_results_on_order_map_id", using: :btree
     t.index ["user_id"], name: "index_service_results_on_user_id", using: :btree
   end
