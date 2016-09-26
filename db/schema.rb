@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160923033109) do
+ActiveRecord::Schema.define(version: 20160926111417) do
 
   create_table "cities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -353,6 +353,7 @@ ActiveRecord::Schema.define(version: 20160923033109) do
     t.float    "discount",           limit: 24
     t.float    "tpayout",            limit: 24
     t.text     "remark",             limit: 65535
+    t.string   "code"
     t.index ["customer_record_id"], name: "index_order_maps_on_customer_record_id", using: :btree
     t.index ["service_id"], name: "index_order_maps_on_service_id", using: :btree
   end
@@ -553,6 +554,25 @@ ActiveRecord::Schema.define(version: 20160923033109) do
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
+  create_table "visit_bills", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "station_id"
+    t.integer  "customer_id"
+    t.string   "cname"
+    t.string   "placecode"
+    t.integer  "billtype"
+    t.integer  "status"
+    t.integer  "pmethod"
+    t.float    "tpayment",    limit: 24
+    t.float    "discount",    limit: 24
+    t.float    "tpayout",     limit: 24
+    t.string   "billcode"
+    t.text     "remark",      limit: 65535
+    t.date     "billdate"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["station_id"], name: "index_visit_bills_on_station_id", using: :btree
+  end
+
   add_foreign_key "cities", "nations"
   add_foreign_key "customer_records", "stations"
   add_foreign_key "doctor_profiles", "users"
@@ -590,4 +610,5 @@ ActiveRecord::Schema.define(version: 20160923033109) do
   add_foreign_key "stations", "users"
   add_foreign_key "support_comments", "users"
   add_foreign_key "support_tickets", "users"
+  add_foreign_key "visit_bills", "stations"
 end

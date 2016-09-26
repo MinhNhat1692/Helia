@@ -221,6 +221,24 @@
             @props.trigger result
             return
           ).bind(this)
+      else if @props.type == 'position_set_add'
+        e.preventDefault()
+        if @props.record != null
+          formData = new FormData
+          formData.append 'id', @props.record.id
+          formData.append 'posmap', $('#position_set_p_id').val()
+          $.ajax
+            url: '/position_mapping'
+            type: 'PUT'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @props.trigger result
+              return
+            ).bind(this)
       else if @props.type == 'service_edit'
         if @props.record != null
           e.preventDefault()
@@ -1237,6 +1255,24 @@
                 code: code
               return
             ).bind(this)
+      else if code == 'position_set_pname'
+        if $('#position_set_pname').val().length > 1
+          formData = new FormData
+          formData.append 'pname', $('#position_set_pname').val().toLowerCase()
+          $.ajax
+            url: '/position/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
     triggerAutoComplete: (record) ->
       if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         $('#medicine_sample_company').val(record.name)
@@ -1313,6 +1349,10 @@
         @setState autoComplete: null
       else if @state.code == 'medicine_stock_record_supplier'
         $('#medicine_stock_record_supplier').val(record.name)
+        @setState autoComplete: null
+      else if @state.code == 'position_set_pname'
+        $('#position_set_p_id').val(record.id)
+        $('#position_set_pname').val(record.pname)
         @setState autoComplete: null
     triggerRecalPayment: (e) ->
       if @state.type == 'medicine_bill_in_add' or @state.type == 'medicine_bill_in_edit'
@@ -1687,6 +1727,45 @@
                     React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
             React.DOM.div className: 'modal-footer',
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    positionSetForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin chức vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhân viên'
+                      React.DOM.div className: 'col-sm-9',
+                        React.createElement InputField, id: 'position_set_ename', className: 'form-control disabled', type: 'text', code: 'medicine_stock_record_name', placeholder: 'Tên thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.ename
+                          else
+                            ""
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên chức vụ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'position_set_p_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue: ""
+                        React.createElement InputField, id: 'position_set_pname', className: 'form-control', type: 'text', code: 'position_set_pname', placeholder: 'Tên chức vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:""
+                        React.DOM.div className: "auto-complete", id: "position_set_pname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'position_set_pname'
+                            for recordsearch in @state.autoComplete
+                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.pname, record: recordsearch, trigger: @triggerAutoComplete
+                    React.DOM.button
+                      type: 'submit'
+                      className: 'btn btn-default pull-right'
+                      'Lưu'
+            React.DOM.div
+              className: 'modal-footer'
+              React.DOM.button
+                className: 'btn btn-default'
+                'data-dismiss': 'modal'
+                type: 'button'
+                'Close'
     serviceForm: ->
       React.DOM.div className: 'modal fade',
         React.DOM.div className: 'modal-dialog modal-lg',
@@ -3531,3 +3610,5 @@
         @medicineInternalRecordForm()
       else if @state.type == 'medicine_stock_record_add' or @state.type == 'medicine_stock_record_edit'
         @medicineStockRecordForm()
+      else if @state.type == 'position_set_add'
+        @positionSetForm()

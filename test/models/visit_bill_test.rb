@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PreOrderTest < ActiveSupport::TestCase
+class VisitBillTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
