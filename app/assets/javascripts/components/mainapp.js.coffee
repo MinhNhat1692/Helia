@@ -13,8 +13,8 @@
       React.createElement MainPart, data: @props.data, datatype: 'service'
     ServiceMap: ->
       React.createElement AppViewsServices, data: @props.data
-    PatientGeneral: ->
-      React.createElement PatientGeneral, data: @props.data #31
+    CustomerRecord: ->
+      React.createElement MainPart, data: @props.data, datatype: 'customer_record' #31
     OrderMap: ->
       React.createElement OrderMap, data: @props.data #32
     CheckInfo: ->
@@ -62,7 +62,7 @@
         when 22
           @ServiceMap()
         when 31
-          @PatientGeneral()
+          @CustomerRecord()
         when 32
           @OrderMap()
         when 33

@@ -1555,7 +1555,7 @@
               type: 'checkbox'
               id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
-    PatientRecord: ->
+    CustomerRecord: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
           React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
@@ -1753,8 +1753,8 @@
         @MedicineInternalRecord()
       else if @props.datatype == "medicine_stock_record"
         @MedicineStockRecord()
-      else if @props.datatype == "patient_record"
-        @PatientRecord()
+      else if @props.datatype == "customer_record"
+        @CustomerRecord()
       else if @props.datatype == "service"
         @Service()
       else if @props.datatype == "employee"

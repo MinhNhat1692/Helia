@@ -347,144 +347,7 @@
             className: "pti-footer"
     render: ->
       @recordBlock()
-       
-        
-  @PatientRecord = React.createClass
-    getInitialState: ->
-      genderlist: @props.gender
-      gender: "Not set"
-    handleEdit: (e) ->
-      e.preventDefault()
-      formData = new FormData
-      formData.append 'id', @props.record.id
-      formData.append 'name', $('#room_edit_name').val()
-      formData.append 'lang', $('#room_edit_lang').val()
-      if $('#room_edit_map')[0].files[0] != undefined
-        formData.append 'map', $('#room_edit_map')[0].files[0]
-      $.ajax
-        url: '/rooms'
-        type: 'PUT'
-        data: formData
-        async: false
-        cache: false
-        contentType: false
-        processData: false
-        success: ((result) ->
-          @setState edit: false
-          @props.handleEditRoom @props.record, result
-          return
-        ).bind(this)
-    handleToggle: (e) ->
-      e.preventDefault()
-      @setState edit: !@state.edit
-    handleDelete: (e) ->
-      e.preventDefault()
-      $.ajax
-        method: 'DELETE'
-        url: "/rooms"
-        dataType: 'JSON'
-        data: {id: @props.record.id}
-        success: () =>
-          @props.handleDeleteRoom @props.record
-    calAge: (dob, style) ->
-      now = new Date
-      today = new Date(now.getYear(), now.getMonth(), now.getDate())
-      yearNow = now.getYear()
-      monthNow = now.getMonth()
-      dateNow = now.getDate()
-      if style == 1
-        dob = new Date(dob.substring(6, 10), dob.substring(3, 5) - 1, dob.substring(0, 2))
-      else
-        dob = new Date(dob.substring(0, 4), dob.substring(5, 7) - 1, dob.substring(8, 10))
-      yearDob = dob.getYear()
-      monthDob = dob.getMonth()
-      dateDob = dob.getDate()
-      yearAge = yearNow - yearDob
-      if monthNow >= monthDob
-        monthAge = monthNow - monthDob
-      else
-        yearAge--
-        monthAge = 12 + monthNow - monthDob
-      if dateNow >= dateDob
-        dateAge = dateNow - dateDob
-      else
-        monthAge--
-        dateAge = 31 + dateNow - dateDob
-        if monthAge < 0
-          monthAge = 11
-          yearAge--
-      age =
-        years: yearAge
-        months: monthAge
-        days: dateAge
-      return age
-    handleSelect: (e) ->
-      @props.TriggerSelect @props.record
-    recordRow: ->
-      for gender in @state.genderlist
-        if @props.record.gender == gender.id
-          @state.gender = gender.name
-          break
-      React.DOM.tr
-        onClick: @handleSelect
-        React.DOM.td null, @props.record.cname
-        React.DOM.td null,
-          if @props.record.dob != null
-            @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
-          else
-            ""
-        React.DOM.td null, @calAge(@props.record.dob,2).years  
-        React.DOM.td null, @state.gender
-        React.DOM.td null, @props.record.address
-        React.DOM.td null, @props.record.pnumber
-        React.DOM.td null, @props.record.noid
-        React.DOM.td null, @props.record.issue_date
-        React.DOM.td null, @props.record.issue_place
-        React.DOM.td null,
-          React.DOM.a
-            href: @props.record.avatar
-            className: 'btn btn-default'
-            target: '_blank'
-            style: {margin: '5px'}
-            'Avatar'
-        React.DOM.td null, @props.record.created_at
-        React.DOM.td null, @props.record.updated_at
-    recordRowSelected: ->
-      for gender in @state.genderlist
-        if @props.record.gender == gender.id
-          @state.gender = gender.name
-          break
-      React.DOM.tr
-        style: {'backgroundColor': '#494b54'}
-        onClick: @handleSelect
-        React.DOM.td null, @props.record.cname
-        React.DOM.td null, 
-          if @props.record.dob != null
-            @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
-          else
-            ""
-        React.DOM.td null, @calAge(@props.record.dob,2).years
-        React.DOM.td null, @state.gender
-        React.DOM.td null, @props.record.address
-        React.DOM.td null, @props.record.pnumber
-        React.DOM.td null, @props.record.noid
-        React.DOM.td null, @props.record.issue_date
-        React.DOM.td null, @props.record.issue_place
-        React.DOM.td null,
-          React.DOM.a
-            href: @props.record.avatar
-            className: 'btn btn-default'
-            target: '_blank'
-            style: {margin: '5px'}
-            'Avatar'
-        React.DOM.td null, @props.record.created_at
-        React.DOM.td null, @props.record.updated_at
-    render: ->
-      if !@props.select
-        @recordRow()
-      else
-        @recordRowSelected()
-        
+             
   
   @PatientProfile = React.createClass
     getInitialState: ->
@@ -764,6 +627,38 @@
       groupName: null
     selectRecord: (e) ->
       @props.selectRecord @props.record
+    calAge: (dob, style) ->
+      now = new Date
+      today = new Date(now.getYear(), now.getMonth(), now.getDate())
+      yearNow = now.getYear()
+      monthNow = now.getMonth()
+      dateNow = now.getDate()
+      if style == 1
+        dob = new Date(dob.substring(6, 10), dob.substring(3, 5) - 1, dob.substring(0, 2))
+      else
+        dob = new Date(dob.substring(0, 4), dob.substring(5, 7) - 1, dob.substring(8, 10))
+      yearDob = dob.getYear()
+      monthDob = dob.getMonth()
+      dateDob = dob.getDate()
+      yearAge = yearNow - yearDob
+      if monthNow >= monthDob
+        monthAge = monthNow - monthDob
+      else
+        yearAge--
+        monthAge = 12 + monthNow - monthDob
+      if dateNow >= dateDob
+        dateAge = dateNow - dateDob
+      else
+        monthAge--
+        dateAge = 31 + dateNow - dateDob
+        if monthAge < 0
+          monthAge = 11
+          yearAge--
+      age =
+        years: yearAge
+        months: monthAge
+        days: dateAge
+      return age
     MedicineSupplier: ->
       if @props.selected
         React.DOM.tr
@@ -1271,6 +1166,53 @@
           React.DOM.td null, @props.record.description
           React.DOM.td null,
             React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'File'
+    CustomerRecord: ->
+      for gender in @props.gender
+        if @props.record.gender == gender.id
+          @state.typeName = gender.name
+          break
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, 
+            if @props.record.dob != null && @props.record.dob != undefined
+              @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+            else
+              ""
+          React.DOM.td null,
+            if @props.record.dob != null && @props.record.dob != undefined  
+              @calAge(@props.record.dob,2).years
+            else
+              ""
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.issue_date
+          React.DOM.td null, @props.record.issue_place
+          React.DOM.td null,
+            React.DOM.a href: @props.record.avatar, className: 'btn btn-default', target: '_blank', style: {margin: '5px'}, 'Avatar'
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, 
+            if @props.record.dob != null && @props.record.dob != undefined 
+              @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+            else
+              ""
+          React.DOM.td null,
+            if @props.record.dob != null && @props.record.dob != undefined 
+              @calAge(@props.record.dob,2).years
+            else
+              ""
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.issue_date
+          React.DOM.td null, @props.record.issue_place
+          React.DOM.td null,
+            React.DOM.a href: @props.record.avatar, className: 'btn btn-default', target: '_blank', style: {margin: '5px'}, 'Avatar'
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1308,3 +1250,5 @@
         @Room()
       else if @props.datatype == 'position'
         @Position()
+      else if @props.datatype == 'customer_record'
+        @CustomerRecord()

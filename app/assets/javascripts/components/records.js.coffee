@@ -2945,6 +2945,21 @@
                 formData.append 'price', text
               when 3
                 formData.append 'description', text.toLowerCase()
+          if @props.datatype == "customer_record"
+            formData = new FormData	  
+            switch Number(type)
+              when 1
+                formData.append 'namestring', text.toLowerCase()
+              when 2
+                formData.append 'dob', text.toLowerCase()
+              when 3
+                formData.append 'gender', Number(text)
+              when 4
+                formData.append 'address', text.toLowerCase()
+              when 5
+                formData.append 'pnumber', text.toLowerCase()
+              when 6
+                formData.append 'noid', text.toLowerCase()
           
           if formData != undefined
             $.ajax
@@ -2987,14 +3002,14 @@
               return true
             else
               return false
-      if @props.datatype == "room"
+      else if @props.datatype == "room"
         switch Number(type)
           when 1
             if record.name.toLowerCase().search(text.toLowerCase()) > -1
               return true
             else
               return false
-      if @props.datatype == "position"
+      else if @props.datatype == "position"
         switch Number(type)
           when 1
             if record.pname.toLowerCase().search(text.toLowerCase()) > -1
@@ -3011,7 +3026,7 @@
               return true
             else
               return false
-      if @props.datatype == "service"
+      else if @props.datatype == "service"
         switch Number(type)
           when 1
             if record.sname.toLowerCase().search(text.toLowerCase()) > -1
@@ -3028,6 +3043,39 @@
               return true
             else
               return false  
+      else if @props.datatype == "customer_record"
+        switch Number(type)
+          when 1
+            if record.cname.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 2
+            if (record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4)).search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 3
+            if record.gender == Number(text)
+              return true
+            else
+              return false
+          when 4
+            if record.address.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 5
+            if record.pnumber.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 6
+            if record.noid.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+
     triggerSubmit: (result) ->
       @setState
         autoComplete: null
@@ -3049,6 +3097,10 @@
         if @state.searchRecord != null
           formData = new FormData
           formData.append 'id', @state.searchRecord.user_id
+      else if @props.datatype == "customer_record"
+        if @state.searchRecord != null
+          formData = new FormData
+          formData.append 'id', @state.searchRecord.user_id
       if formData != undefined
         $.ajax
           url: '/' + @props.datatype + '/add_record'
@@ -3064,6 +3116,11 @@
           ).bind(this)
     updateRecordAlt: ->
       if @props.datatype == "employee"
+        if @state.searchRecord != null && @state.record != null
+          formData = new FormData
+          formData.append 'id', @state.searchRecord.user_id
+          formData.append 'idrecord', @state.record.id
+      else if @props.datatype == "customer_record"
         if @state.searchRecord != null && @state.record != null
           formData = new FormData
           formData.append 'id', @state.searchRecord.user_id
@@ -3088,6 +3145,12 @@
           formData = new FormData
           formData.append 'id', @state.searchRecord.user_id
           formData.append 'idrecord', @state.record.id
+      else if @props.datatype == "customer_record"
+        if @state.searchRecord != null && @state.record != null
+          formData = new FormData
+          formData.append 'id', @state.searchRecord.user_id
+          formData.append 'idrecord', @state.record.id
+
       if formData != undefined
         $.ajax
           url: '/' + @props.datatype + '/link_record'
@@ -3107,6 +3170,11 @@
         if @state.record != null
           formData = new FormData
           formData.append 'idrecord', @state.record.id
+      else if @props.datatype == "customer_record"
+        if @state.record != null
+          formData = new FormData
+          formData.append 'idrecord', @state.record.id
+    
       if formData != undefined
         $.ajax
           url: '/' + @props.datatype + '/clear_link_record'
@@ -3255,25 +3323,19 @@
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
     serviceRender: ->
-      React.DOM.div
-        className: 'container'
-        React.DOM.div
-          className: 'block-header'
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Dịch vụ'
-        React.DOM.div
-          className: 'card'
-          React.DOM.div
-            className: 'card-header'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'service', prefix: 'add'
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'service', prefix: 'edit', record: @state.record
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
             React.DOM.br null
             React.DOM.br null
             React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div
-            className: 'card-body table-responsive'
-            React.DOM.table
-              className: 'table table-hover table-condensed'
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
               React.DOM.thead null,
                 React.DOM.tr null,
                   React.DOM.th null, 'Tên dịch vụ'
@@ -3301,6 +3363,58 @@
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    customerRecordRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Danh sách bệnh nhân'
+        React.createElement AsideMenu, key: 'Aside', style: 1, record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleCustomerSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
+        React.DOM.div className: 'col-md-9',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-exchange', text: ' Toggle Sidebar', type: 1, Clicked: @toggleSideBar
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record', prefix: "add"
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o', text: ' Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_record', prefix: "edit", record: @state.record
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Delete', type: 1, Clicked: @deleteRecord
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Thêm yêu cầu khám bệnh', type: 2, trigger: @trigger, datatype: 'order_map', prefix: "add"
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: 'customer_record', autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.DOM.thead null,
+                  React.DOM.tr null,
+                    React.DOM.th null, 'Họ và tên'
+                    React.DOM.th null, 'Ngày sinh'
+                    React.DOM.th null, 'Tuổi'
+                    React.DOM.th null, 'Giới tính'
+                    React.DOM.th null, 'Địa chỉ'
+                    React.DOM.th null, 'Số điện thoại'
+                    React.DOM.th null, 'CMTND'
+                    React.DOM.th null, 'Ngày cấp'
+                    React.DOM.th null, 'Nơi cấp'
+                    React.DOM.th null, 'Ảnh đại diện'
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                  else
+                    for record in @state.records
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-3',
+          if @state.record != null
+            React.createElement PatientProfile, gender: @props.data[1], record: @state.record, style: 'normal', clearLinkListener: @ClearlinkRecordAlt
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()
@@ -3310,3 +3424,5 @@
         @positionRender()
       else if @props.datatype == 'service'
         @serviceRender()
+      else if @props.datatype == "customer_record"
+        @customerRecordRender()

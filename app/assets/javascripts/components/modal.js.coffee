@@ -3431,7 +3431,7 @@
     render: ->
       if @state.type == 'employee'
         @employeeForm()
-      else if @state.type == 'customer_record' or @state.type == 'customer_edit_record'
+      else if @state.type == 'customer_record'
         @customerForm()
       else if @state.type == 'order_map_add' or @state.type == 'order_map_edit'
         @orderMapForm()
