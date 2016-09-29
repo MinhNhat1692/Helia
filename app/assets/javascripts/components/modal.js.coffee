@@ -1,5 +1,6 @@
   @Modal = React.createClass
     getInitialState: ->
+      #we have @props.prefix to know which is add form, which is edit form
       type: @props.type
       autoComplete: null
       code: null
@@ -26,154 +27,50 @@
         return
       return
     handleSubmit: (e) ->
+      e.preventDefault()
+      formData = new FormData
       if @props.type == 'employee'
-        e.preventDefault()
-        formData = new FormData
-        formData.append 'ename', $('#employee_form_ename').val()
-        formData.append 'address', $('#employee_form_address').val()
-        formData.append 'pnumber', $('#employee_form_pnumber').val()
-        formData.append 'noid', $('#employee_form_noid').val()
-        formData.append 'gender', $('#employee_form_gender').val()
-        if $('#employee_form_avatar')[0].files[0] != undefined
-          formData.append 'avatar', $('#employee_form_avatar')[0].files[0]
-        else if $('#webcamout').attr('src') != undefined
-          formData.append 'avatar', $('#webcamout').attr('src')
-        $.ajax
-          url: '/employee'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.trigger result
-            @setState @getInitialState()
-            return
-          ).bind(this)
-      else if @props.type == 'employee_edit'
         if @props.record != null
-          e.preventDefault()
-          formData = new FormData
           formData.append 'id', @props.record.id
-          formData.append 'ename', $('#employee_form_ename').val()
-          formData.append 'address', $('#employee_form_address').val()
-          formData.append 'pnumber', $('#employee_form_pnumber').val()
-          formData.append 'noid', $('#employee_form_noid').val()
           if $('#employee_form_gender').val() == 'Giới tính'
             formdata.append 'gender', @props.record.gender
           else
             formData.append 'gender', $('#employee_form_gender').val()
-          if $('#employee_form_avatar')[0].files[0] != undefined
-            formData.append 'avatar', $('#employee_form_avatar')[0].files[0]
-          else if $('#webcamout').attr('src') != undefined
-            formData.append 'avatar', $('#webcamout').attr('src')
-          $.ajax
-            url: '/employee'
-            type: 'PUT'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @props.trigger2 @props.record, result
-              return
-            ).bind(this)
-      else if @props.type == 'customer_record'
-        e.preventDefault()
-        formData = new FormData
-        formData.append 'cname', $('#customer_form_name').val()
-        formData.append 'dob', $('#customer_form_dob').val()
-        formData.append 'address', $('#customer_form_address').val()
-        formData.append 'pnumber', $('#customer_form_pnumber').val()
-        formData.append 'noid', $('#customer_form_noid').val()
-        formData.append 'gender', $('#customer_form_gender').val()
-        if $('#customer_form_avatar')[0].files[0] != undefined
-          formData.append 'avatar', $('#customer_form_avatar')[0].files[0]
+        else
+          formData.append 'gender', $('#employee_form_gender').val()
+        formData.append 'ename', $('#employee_form_ename').val()
+        formData.append 'address', $('#employee_form_address').val()
+        formData.append 'pnumber', $('#employee_form_pnumber').val()
+        formData.append 'noid', $('#employee_form_noid').val()
+        if $('#employee_form_avatar')[0].files[0] != undefined
+          formData.append 'avatar', $('#employee_form_avatar')[0].files[0]
         else if $('#webcamout').attr('src') != undefined
           formData.append 'avatar', $('#webcamout').attr('src')
-        $.ajax
-          url: '/customer_record'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.trigger result
-            return
-          ).bind(this)   
-      else if @props.type == 'customer_edit_record'
-        e.preventDefault()
-        formData = new FormData
-        formData.append 'id', @props.record.id
-        formData.append 'cname', $('#customer_form_name').val()
-        formData.append 'dob', $('#customer_form_dob').val()
-        formData.append 'address', $('#customer_form_address').val()
-        formData.append 'pnumber', $('#customer_form_pnumber').val()
-        formData.append 'noid', $('#customer_form_noid').val()
-        if $('#customer_form_gender').val() == "Giới tính"
-          formData.append 'gender', @props.record.gender
+      else if @props.type == 'customer_record'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+          if $('#customer_form_gender').val() == "Giới tính"
+            formData.append 'gender', @props.record.gender
+          else
+            formData.append 'gender', $('#customer_form_gender').val()
         else
           formData.append 'gender', $('#customer_form_gender').val()
+        formData.append 'cname', $('#customer_form_name').val()
+        formData.append 'dob', $('#customer_form_dob').val()
+        formData.append 'address', $('#customer_form_address').val()
+        formData.append 'pnumber', $('#customer_form_pnumber').val()
+        formData.append 'noid', $('#customer_form_noid').val()
         if $('#customer_form_avatar')[0].files[0] != undefined
           formData.append 'avatar', $('#customer_form_avatar')[0].files[0]
         else if $('#webcamout').attr('src') != undefined
           formData.append 'avatar', $('#webcamout').attr('src')
-        $.ajax
-          url: '/customer_record'
-          type: 'PUT'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.trigger2 @props.record, result
-            return
-          ).bind(this)
-      else if @props.type == 'room_edit'
+      else if @props.type == 'room'
         if @props.record != null
-          e.preventDefault()
-          formData = new FormData
           formData.append 'id', @props.record.id
-          formData.append 'name', $('#room_form_name').val()
-          formData.append 'lang', $('#room_form_lang').val()
-          if $('#room_form_map')[0].files[0] != undefined
-            formData.append 'map', $('#room_form_map')[0].files[0]
-          $.ajax
-            url: '/room'
-            type: 'PUT'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @props.trigger2 @props.record, result
-              return
-            ).bind(this)
-      else if @props.type == 'room_add'
-        e.preventDefault()
-        formData = new FormData
         formData.append 'name', $('#room_form_name').val()
         formData.append 'lang', $('#room_form_lang').val()
         if $('#room_form_map')[0].files[0] != undefined
           formData.append 'map', $('#room_form_map')[0].files[0]
-        $.ajax
-          url: '/room'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.trigger result
-            return
-          ).bind(this)
       else if @props.type == 'position_edit'
         if @props.record != null
           e.preventDefault()
@@ -883,6 +780,33 @@
               @props.trigger2 @props.record, result
               return
             ).bind(this)
+      if @props.prefix == "add"
+        $.ajax
+          url: '/' + @props.type
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger result
+            @setState @getInitialState()
+            return
+          ).bind(this)
+      else if @props.prefix == "edit"
+        $.ajax
+          url: '/' + @props.type
+          type: 'PUT'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.trigger2 @props.record, result
+            return
+          ).bind(this)
     triggerAutoCompleteInput: (e) ->
       if @state.type == 'medicine_sample_add' or @state.type == 'medicine_sample_edit'
         if $('#medicine_sample_company').val().length > 1
@@ -1429,9 +1353,9 @@
                       React.DOM.label className: 'col-sm-3 control-label', 'Giới tính'
                       React.DOM.div className: 'col-sm-3',
                         React.DOM.select id: 'employee_form_gender', className: 'form-control',
-                          React.DOM.option value: '', 'Giới tính',
-                          React.DOM.option value: '1', 'Nam',
-                          React.DOM.option value: '2', 'Nữ',
+                          React.DOM.option value: '', 'Giới tính'
+                          React.DOM.option value: '1', 'Nam'
+                          React.DOM.option value: '2', 'Nữ'
                       React.DOM.label className: 'col-sm-3 control-label', 'Ảnh đại diện'
                       React.DOM.div className: 'col-sm-3',
                         React.DOM.input id: 'employee_form_avatar', type: 'file', className: 'form-control',
@@ -3576,13 +3500,13 @@
                 'Close'
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
-      if @state.type == 'employee' or @state.type == 'employee_edit'
+      if @state.type == 'employee'
         @employeeForm()
       else if @state.type == 'customer_record' or @state.type == 'customer_edit_record'
         @customerForm()
       else if @state.type == 'order_map_add' or @state.type == 'order_map_edit'
         @orderMapForm()
-      else if @state.type == 'room_add' or @state.type == 'room_edit'
+      else if @state.type == 'room'
         @roomForm()
       else if @state.type == 'position_add' or @state.type == 'position_edit'
         @positionForm()
@@ -3612,3 +3536,24 @@
         @medicineStockRecordForm()
       else if @state.type == 'position_set_add'
         @positionSetForm()
+        
+        
+  @ModalOutside = React.createClass
+    getInitialState: ->
+      type: @props.type
+      autoComplete: null
+      code: null
+    sampleRender: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', @props.title
+              React.DOM.small null, @props.undertitle
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    render: ->
+      @sampleRender()

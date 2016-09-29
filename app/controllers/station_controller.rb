@@ -15,12 +15,6 @@ class StationController < ApplicationController
 		end
   end
 
-  def edit
-  end
-
-  def show
-  end
-
   def create
 		if has_station?
 			@station = Station.find_by(user_id: current_user.id)
@@ -40,14 +34,4 @@ class StationController < ApplicationController
 			end
 		end
   end
-  
-  private
-  	# Confirms a logged-in user.
-		def logged_in_user
-			unless logged_in?
-				store_location
-				flash[:danger] = "Please log in."
-				redirect_to login_url
-			end
-		end
 end

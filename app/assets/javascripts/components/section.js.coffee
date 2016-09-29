@@ -38,6 +38,10 @@
         type: 2, className: 'zmdi zmdi-account', active: false, name: "Bệnh nhân",
         records: [
           {code: 31, active: false, name: 'Danh sách bệnh nhân'}
+          {code: 32, active: false, name: 'Danh sách phiếu khám'}
+          {code: 33, active: false, name: 'Thông tin điều trị'}
+          {code: 34, active: false, name: 'Thông tin khám'}
+          {code: 35, active: false, name: 'Danh sách hóa đơn'}
         ]    
       Pharmacy:
         type: 2, className: 'fa fa-medkit', active: false, name: "Quản lý thuốc",
@@ -228,12 +232,76 @@
           type: 2, className: 'zmdi zmdi-account', active: true, name: "Bệnh nhân",
           records: [
             {code: 31, active: true, name: 'Danh sách bệnh nhân'}
+            {code: 32, active: false, name: 'Danh sách phiếu khám'}
+            {code: 33, active: false, name: 'Thông tin điều trị'}
+            {code: 34, active: false, name: 'Thông tin khám'}
+            {code: 35, active: false, name: 'Danh sách hóa đơn'}
+          ]
+      else if code == 32
+        data =
+          task: 32
+          link: '/order_map/list'
+        @handleGetdata(data)
+        @setState Patient:
+          type: 2, className: 'zmdi zmdi-account', active: true, name: "Bệnh nhân",
+          records: [
+            {code: 31, active: false, name: 'Danh sách bệnh nhân'}
+            {code: 32, active: true, name: 'Danh sách phiếu khám'}
+            {code: 33, active: false, name: 'Thông tin điều trị'}
+            {code: 34, active: false, name: 'Thông tin khám'}
+            {code: 35, active: false, name: 'Danh sách hóa đơn'}
+          ]
+      else if code == 33
+        data =
+          task: 33
+          link: '/check_info/list'
+        @handleGetdata(data)
+        @setState Patient:
+          type: 2, className: 'zmdi zmdi-account', active: true, name: "Bệnh nhân",
+          records: [
+            {code: 31, active: false, name: 'Danh sách bệnh nhân'}
+            {code: 32, active: false, name: 'Danh sách phiếu khám'}
+            {code: 33, active: true, name: 'Thông tin điều trị'}
+            {code: 34, active: false, name: 'Thông tin khám'}
+            {code: 35, active: false, name: 'Danh sách hóa đơn'}
+          ]
+      else if code == 34
+        data =
+          task: 34
+          link: '/doctor_check_info/list'
+        @handleGetdata(data)
+        @setState Patient:
+          type: 2, className: 'zmdi zmdi-account', active: true, name: "Bệnh nhân",
+          records: [
+            {code: 31, active: false, name: 'Danh sách bệnh nhân'}
+            {code: 32, active: false, name: 'Danh sách phiếu khám'}
+            {code: 33, active: false, name: 'Thông tin điều trị'}
+            {code: 34, active: true, name: 'Thông tin khám'}
+            {code: 35, active: false, name: 'Danh sách hóa đơn'}
+          ]
+      else if code == 35
+        data =
+          task: 35
+          link: '/bill_info/list'
+        @handleGetdata(data)
+        @setState Patient:
+          type: 2, className: 'zmdi zmdi-account', active: true, name: "Bệnh nhân",
+          records: [
+            {code: 31, active: false, name: 'Danh sách bệnh nhân'}
+            {code: 32, active: false, name: 'Danh sách phiếu khám'}
+            {code: 33, active: false, name: 'Thông tin điều trị'}
+            {code: 34, active: false, name: 'Thông tin khám'}
+            {code: 35, active: true, name: 'Danh sách hóa đơn'}
           ]
       else
         @setState Patient:
           type: 2, className: 'zmdi zmdi-account', active: false, name: "Bệnh nhân",
           records: [
             {code: 31, active: false, name: 'Danh sách bệnh nhân'}
+            {code: 32, active: false, name: 'Danh sách phiếu khám'}
+            {code: 33, active: false, name: 'Thông tin điều trị'}
+            {code: 34, active: false, name: 'Thông tin khám'}
+            {code: 35, active: false, name: 'Danh sách hóa đơn'}
           ]
       if code == 41 #Pharmacy list
         data =

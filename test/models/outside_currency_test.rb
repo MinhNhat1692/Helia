@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ServiceResultTest < ActiveSupport::TestCase
+class OutsideCurrencyTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

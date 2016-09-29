@@ -1,0 +1,39 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  daycheck: 2016-09-29
+  ename: MyString
+  e_id: 1
+  qtbenhly: MyText
+  klamsang: MyText
+  nhiptim: 1
+  nhietdo: 1.5
+  hamin: 1
+  hamax: 1
+  ntho: 1
+  cnang: 1.5
+  cao: 1.5
+  cdbandau: MyText
+  bktheo: MyText
+  cdicd: MyText
+  kluan: MyText
+  order_map: one
+
+two:
+  daycheck: 2016-09-29
+  ename: MyString
+  e_id: 1
+  qtbenhly: MyText
+  klamsang: MyText
+  nhiptim: 1
+  nhietdo: 1.5
+  hamin: 1
+  hamax: 1
+  ntho: 1
+  cnang: 1.5
+  cao: 1.5
+  cdbandau: MyText
+  bktheo: MyText
+  cdicd: MyText
+  kluan: MyText
+  order_map: two

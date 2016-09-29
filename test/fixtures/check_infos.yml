@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ename: MyString
+  e_id: 1
+  status: 1
+  daystart: 2016-09-29
+  dayend: 2016-09-29
+  kluan: MyText
+  cdoan: MyText
+  hdieutri: MyText
+  order_map: one
+
+two:
+  ename: MyString
+  e_id: 1
+  status: 1
+  daystart: 2016-09-29
+  dayend: 2016-09-29
+  kluan: MyText
+  cdoan: MyText
+  hdieutri: MyText
+  order_map: two

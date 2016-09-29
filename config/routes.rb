@@ -1,5 +1,23 @@
 Rails.application.routes.draw do
   
+  delete '/bill_info', to: 'bill_info#destroy'
+  put '/bill_info', to: 'bill_info#update'
+  post '/bill_info/list', to: 'bill_info#list'
+  post '/bill_info/search', to: 'bill_info#search'
+  post '/bill_info/find', to: 'bill_info#find'
+  
+  delete '/doctor_check_info', to: 'doctor_check_info#destroy'
+  put '/doctor_check_info', to: 'doctor_check_info#update'
+  post '/doctor_check_info/list', to: 'doctor_check_info#list'
+  post '/doctor_check_info/search', to: 'doctor_check_info#search'
+  post '/doctor_check_info/find', to: 'doctor_check_info#find'
+  
+  delete '/check_info', to: 'check_info#destroy'
+  put '/check_info', to: 'check_info#update'
+  post '/check_info/list', to: 'check_info#list'
+  post '/check_info/search', to: 'check_info#search'
+  post '/check_info/find', to: 'check_info#find'
+
   delete '/order_map', to: 'order_map#destroy'
   put '/order_map', to: 'order_map#edit'
   post '/order_map', to: 'order_map#create'

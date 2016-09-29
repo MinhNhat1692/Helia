@@ -1,272 +1,3 @@
-@Record = React.createClass
-    getInitialState: ->
-      records: @props.data[0]
-      selected: null
-      record: null
-      classSideBar: 'sidebar'
-      existed: false
-      searchRecord: null
-      userlink: null
-      autoComplete: null
-      filteredRecord: null
-    changeSearchRecord: (data) ->
-      @state.userlink = data[2]
-      if data[1] != null
-        index = -1
-        for record in @state.records
-          if data[1].id == record.id
-            index = @state.records.indexOf record
-            break
-        if index < 0
-          @addRecord(data[1])
-          @selectRecord(data[1])
-        else
-          @selectRecord(data[1])
-        @setState existed: true
-      else
-        @setState existed: false
-      @setState searchRecord: data[0]   
-    updateRecord: (record, data) ->
-      for recordlife in @state.records
-        if recordlife.id == record.id
-          index = @state.records.indexOf recordlife
-          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-          @setState records: records
-          break
-    deleteRecord: (record) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
-      @setState
-        records: records
-        record: null
-    addRecord: (record) ->
-      records = React.addons.update(@state.records, { $push: [record] })
-      @setState records: records
-    selectRecord: (result) ->
-      @setState
-        record: result
-        selected: result.id
-    trigger: (e) ->
-      console.log(1)
-    triggerInput: (text,type,check1) ->
-      if type != '' && text.length > 1
-        if !check1.option1
-          filtered = []
-          for record in @state.records
-            if @checkContain(type,text,record)
-              filtered.push record
-              @setState filteredRecord: filtered
-        else
-          formData = new FormData	  
-          switch Number(type)
-            when 1
-              formData.append 'ename', text.toLowerCase()
-            when 2
-              formData.append 'address', text.toLowerCase()
-            when 3
-              formData.append 'noid', Number(text)
-            when 4
-              formData.append 'pnumber', text.toLowerCase()
-            when 5
-              formData.append 'gender', text.toLowerCase()
-          $.ajax
-            url: '/employee/search'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState autoComplete: result
-              return
-            ).bind(this)
-    checkContain: (type,text,record) ->
-      switch Number(type)
-        when 1
-          if record.ename.toLowerCase().search(text.toLowerCase()) > -1
-            return true
-          else
-            return false
-        when 2
-          if record.address.toLowerCase().search(text.toLowerCase()) > -1
-            return true
-          else
-            return false
-        when 3
-          if record.noid.toLowerCase().search(text.toLowerCase()) > -1
-            return true
-          else
-            return false
-        when 4
-          if record.pnumber.toLowerCase().search(text.toLowerCase()) > -1
-            return true
-          else
-            return false
-        when 5
-          if record.pnumber == Number(text)
-            return true
-          else
-            return false
-    triggerSubmit: (result) ->
-      @setState
-        autoComplete: null
-        filteredRecord: result
-    triggerChose: (result) ->
-      @setState
-        autoComplete: null
-    triggerClear: (e) ->
-      @setState
-        autoComplete: null
-        filteredRecord: null
-    toggleSideBar: ->
-      if @state.classSideBar == 'sidebar'
-        @setState classSideBar: 'sidebar toggled'
-      else
-        @setState classSideBar: 'sidebar'
-    changeSearchRecord: (data) ->
-      @state.userlink = data[2]
-      if data[1] != null
-        index = -1
-        for record in @state.records
-          if data[1].id == record.id
-            index = @state.records.indexOf record
-            break
-        if index < 0
-          @addRecord(data[1])
-          @selectRecord(data[1])
-        else
-          @selectRecord(data[1])
-        @setState existed: true
-      else
-        @setState existed: false
-      @setState searchRecord: data[0]   
-    addRecordAlt: ->
-      if @state.searchRecord != null
-        formData = new FormData
-        formData.append 'id', @state.searchRecord.user_id
-        $.ajax
-          url: '/employee/add_record'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @addRecord(result)
-            return
-          ).bind(this)
-    updateRecordAlt: ->
-      if @state.searchRecord != null && @state.record != null
-        formData = new FormData
-        formData.append 'id', @state.searchRecord.user_id
-        formData.append 'idrecord', @state.record.id
-        $.ajax
-          url: '/employee/update_record'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @updateRecord(@state.record,result)
-            @setState record: result
-            return
-          ).bind(this)
-    linkRecordAlt: ->
-      if @state.searchRecord != null && @state.record != null
-        formData = new FormData
-        formData.append 'id', @state.searchRecord.user_id
-        formData.append 'idrecord', @state.record.id
-        $.ajax
-          url: '/employee/link_record'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @updateRecord(@state.record,result)
-            @setState record: result
-            return
-          ).bind(this)
-    ClearlinkRecordAlt: ->
-      if @state.record != null
-        formData = new FormData
-        formData.append 'idrecord', @state.record.id
-        $.ajax
-          url: '/employee/clear_link_record'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @updateRecord(@state.record,result)
-            @setState record: result
-            return
-          ).bind(this)
-    handleDelete: (e) ->
-      e.preventDefault()
-      if @state.record != null
-        $.ajax
-          method: 'DELETE'
-          url: "/employee"
-          dataType: 'JSON'
-          data: {id: @state.record.id}
-          success: () =>
-            @deleteRecord @state.record
-    render: ->
-      React.DOM.div className: 'container',
-        React.DOM.div className: 'block-header',
-          React.DOM.h2 null, 'Nhân viên'
-        React.createElement AsideMenu, style: 2, record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-link', text: ' Liên kết', type: 1, Clicked: @toggleSideBar
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'employee'
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'employee_edit', record: @state.record
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-flash-off', text: ' Bỏ liên kết', type: 1, Clicked: @ClearlinkRecordAlt
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ cho nhân viên', type: 2, trigger: @trigger, datatype: 'position_set_add', record: @state.record
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: 'employee', autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Name'
-                  React.DOM.th null, 'Address'
-                  React.DOM.th null, 'Phone Number'
-                  React.DOM.th null, 'Ma NV'
-                  React.DOM.th null, 'Gioi tinh'
-                  React.DOM.th null, 'Anh'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: "employee", selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: "employee", selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: "employee", selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: "employee", selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: "employee", selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: "employee", selected: false, selectRecord: @selectRecord
-
-
 @Room = React.createClass
     getInitialState: ->
       records: @props.data[0]
@@ -3616,4 +3347,323 @@
                   React.createElement SupportForm, datatype: 'ticket', trigger: @addRecord
               else
                 React.DOM.div className: 'mbl-messages',
-              React.createElement SupportForm, datatype: 'comment', record: @state.record, trigger: @addCommentRecord
+              React.createElement SupportForm, datatype: 'comment', record: @state.record, trigger: @
+              
+
+@MainPart = React.createClass
+    getInitialState: ->
+      records: @props.data[0]
+      selected: null
+      record: null
+      classSideBar: 'sidebar'
+      existed: false
+      searchRecord: null
+      userlink: null
+      autoComplete: null
+      filteredRecord: null
+    changeSearchRecord: (data) ->
+      @state.userlink = data[2]
+      if data[1] != null
+        index = -1
+        for record in @state.records
+          if data[1].id == record.id
+            index = @state.records.indexOf record
+            break
+        if index < 0
+          @addRecord(data[1])
+          @selectRecord(data[1])
+        else
+          @selectRecord(data[1])
+        @setState existed: true
+      else
+        @setState existed: false
+      @setState searchRecord: data[0]   
+    updateRecord: (record, data) ->
+      for recordlife in @state.records
+        if recordlife.id == record.id
+          index = @state.records.indexOf recordlife
+          records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
+          @setState records: records
+          break
+    deleteRecord: (record) ->
+      index = @state.records.indexOf record
+      records = React.addons.update(@state.records, { $splice: [[index, 1]] })
+      @setState
+        records: records
+        record: null
+    addRecord: (record) ->
+      records = React.addons.update(@state.records, { $push: [record] })
+      @setState records: records
+    selectRecord: (result) ->
+      @setState
+        record: result
+        selected: result.id
+    trigger: (e) ->
+      console.log(1)
+    triggerInput: (text,type,check1) ->
+      if type != '' && text.length > 1
+        if !check1.option1
+          filtered = []
+          for record in @state.records
+            if @checkContain(type,text,record)
+              filtered.push record
+              @setState filteredRecord: filtered
+        else
+          if @props.datatype == "employee"
+            formData = new FormData	  
+            switch Number(type)
+              when 1
+                formData.append 'ename', text.toLowerCase()
+              when 2
+                formData.append 'address', text.toLowerCase()
+              when 3
+                formData.append 'noid', Number(text)
+              when 4
+                formData.append 'pnumber', text.toLowerCase()
+              when 5
+                formData.append 'gender', text.toLowerCase()
+          if @props.datatype == "room"
+            formData = new FormData
+            switch Number(type)
+              when 1
+                formData.append 'name', text.toLowerCase()
+          
+          if formData != undefined
+            $.ajax
+              url: '/' + @props.datatype + '/search'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState autoComplete: result
+                return
+              ).bind(this)    
+    checkContain: (type,text,record) ->
+      if @props.datatype == "employee"
+        switch Number(type)
+          when 1
+            if record.ename.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 2
+            if record.address.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 3
+            if record.noid.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 4
+            if record.pnumber.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 5
+            if record.pnumber == Number(text)
+              return true
+            else
+              return false
+      if @props.datatype == "room"
+        switch Number(type)
+          when 1
+            if record.name.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+    triggerSubmit: (result) ->
+      @setState
+        autoComplete: null
+        filteredRecord: result
+    triggerChose: (result) ->
+      @setState
+        autoComplete: null
+    triggerClear: (e) ->
+      @setState
+        autoComplete: null
+        filteredRecord: null
+    toggleSideBar: ->
+      if @state.classSideBar == 'sidebar'
+        @setState classSideBar: 'sidebar toggled'
+      else
+        @setState classSideBar: 'sidebar'
+    addRecordAlt: ->
+      if @props.datatype == "employee"
+        if @state.searchRecord != null
+          formData = new FormData
+          formData.append 'id', @state.searchRecord.user_id
+      if formData != undefined
+        $.ajax
+          url: '/' + @props.datatype + '/add_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @addRecord(result)
+            return
+          ).bind(this)
+    updateRecordAlt: ->
+      if @props.datatype == "employee"
+        if @state.searchRecord != null && @state.record != null
+          formData = new FormData
+          formData.append 'id', @state.searchRecord.user_id
+          formData.append 'idrecord', @state.record.id
+      if formData != undefined
+        $.ajax
+          url: '/' + @props.datatype + '/update_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @updateRecord(@state.record,result)
+            @setState record: result
+            return
+          ).bind(this)
+    linkRecordAlt: ->
+      if @props.datatype == "employee"
+        if @state.searchRecord != null && @state.record != null
+          formData = new FormData
+          formData.append 'id', @state.searchRecord.user_id
+          formData.append 'idrecord', @state.record.id
+      if formData != undefined
+        $.ajax
+          url: '/' + @props.datatype + '/link_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @updateRecord(@state.record,result)
+            @setState record: result
+            return
+          ).bind(this)
+    ClearlinkRecordAlt: ->
+      if @props.datatype == "employee"
+        if @state.record != null
+          formData = new FormData
+          formData.append 'idrecord', @state.record.id
+      if formData != undefined
+        $.ajax
+          url: '/' + @props.datatype + '/clear_link_record'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @updateRecord(@state.record,result)
+            @setState record: result
+            return
+          ).bind(this)
+    handleDelete: (e) ->
+      e.preventDefault()
+      if @state.record != null
+        $.ajax
+          method: 'DELETE'
+          url: "/" + @props.datatype
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          success: () =>
+            @deleteRecord @state.record
+    employeeRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Nhân viên'
+        React.createElement AsideMenu, style: 2, record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-link', text: ' Liên kết', type: 1, Clicked: @toggleSideBar
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: "add"
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: "edit", record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-flash-off', text: ' Bỏ liên kết', type: 1, Clicked: @ClearlinkRecordAlt
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ cho nhân viên', type: 2, trigger: @trigger, datatype: 'position_set_add', record: @state.record
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Name'
+                  React.DOM.th null, 'Address'
+                  React.DOM.th null, 'Phone Number'
+                  React.DOM.th null, 'Ma NV'
+                  React.DOM.th null, 'Gioi tinh'
+                  React.DOM.th null, 'Anh'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    roomRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Phòng'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: "add"
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: "edit", record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên phòng'
+                  React.DOM.th null, 'Ngôn ngữ'
+                  React.DOM.th null, 'Bản đồ'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    render: ->
+      if @props.datatype == 'employee'
+        @employeeRender()
+      else if @props.datatype == 'room'
+        @roomRender()

@@ -2,11 +2,11 @@
     Support: ->
       React.createElement Support, data: @props.data
     Employee: ->
-      React.createElement Record, data: @props.data 
+      React.createElement MainPart, data: @props.data, datatype: 'employee' 
     Position: ->
       React.createElement Position, data: @props.data
     Room: ->
-      React.createElement Room, data: @props.data
+      React.createElement MainPart, data: @props.data, datatype: 'room' 
     AppViewEmployee: ->
       React.createElement AppViewsEmployees, data: @props.data
     Service: ->
@@ -14,7 +14,15 @@
     ServiceMap: ->
       React.createElement AppViewsServices, data: @props.data
     PatientGeneral: ->
-      React.createElement PatientGeneral, data: @props.data
+      React.createElement PatientGeneral, data: @props.data #31
+    OrderMap: ->
+      React.createElement OrderMap, data: @props.data #32
+    CheckInfo: ->
+      React.createElement CheckInfo, data: @props.data #33
+    DoctorCheckInfo: ->
+      React.createElement DoctorCheckInfo, data: @props.data #34
+    BillInfo: ->
+      React.createElement BillInfo, data: @props.data #35
     MedicineSupplier: ->
       React.createElement MedicineSupplier, data: @props.data #task = code = 41
     MedicineCompany: ->
@@ -55,6 +63,14 @@
           @ServiceMap()
         when 31
           @PatientGeneral()
+        when 32
+          @OrderMap()
+        when 33
+          @CheckInfo()
+        when 34
+          @DoctorCheckInfo()
+        when 35
+          @BillInfo()
         when 41
           @MedicineSupplier()
         when 42

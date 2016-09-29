@@ -18,7 +18,7 @@ class OrderMapController < ApplicationController
 		        if !@service_id.nil?
 				      @service_id = @service_id.id
   		      end
-	  	      if @supplier.update(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: [:tpayout])
+	  	      if @supplier.update(remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: [:tpayout])
   		  		  render json: @supplier
 	  		  	else
 		  		  	render json: @supplier.errors, status: :unprocessable_entity
@@ -47,6 +47,10 @@ class OrderMapController < ApplicationController
 		    end
 		    @supplier = OrderMap.new(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: [:tpayout])
 				if @supplier.save
+					@checkinfo = CheckInfo.new(order_map_id: @supplier.id, c_id: @supplier.customer_record_id, station_id: @station.id)
+					@checkinfo.save
+					@doctorcheckinfo = DoctorCheckInfo.new(order_map_id: @supplier.id,c_id: @supplier.customer_record_id, station_id: @station.id)
+					@doctorcheckinfo.save
 				  render json: @supplier
 				else
 					render json: @supplier.errors, status: :unprocessable_entity
@@ -146,14 +150,4 @@ class OrderMapController < ApplicationController
       end
     end
   end
-  
-  private
-  	# Confirms a logged-in user.
-		def logged_in_user
-			unless logged_in?
-				store_location
-				flash[:danger] = "Please log in."
-				redirect_to login_url
-			end
-		end
 end

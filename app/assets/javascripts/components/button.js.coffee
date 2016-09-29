@@ -36,14 +36,14 @@
         if @state.showModal
           if @props.record != undefined
             if @props.extra != undefined
-              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: @props.record, extra: @props.extra, handleHideModal: @handleHideModal
+              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, prefix: @props.prefix, record: @props.record, extra: @props.extra, handleHideModal: @handleHideModal
             else
-              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: @props.record, handleHideModal: @handleHideModal
+              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, prefix: @props.prefix, record: @props.record, handleHideModal: @handleHideModal
           else
             if @props.extra != undefined
-              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: null, extra: @props.extra, handleHideModal: @handleHideModal
+              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, prefix: @props.prefix, record: null, extra: @props.extra, handleHideModal: @handleHideModal
             else
-              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, record: null, handleHideModal: @handleHideModal
+              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, prefix: @props.prefix, record: null, handleHideModal: @handleHideModal
         else
           null
     render: ->
