@@ -4,13 +4,13 @@
     Employee: ->
       React.createElement MainPart, data: @props.data, datatype: 'employee' 
     Position: ->
-      React.createElement Position, data: @props.data
+      React.createElement MainPart, data: @props.data, datatype: 'position'
     Room: ->
-      React.createElement MainPart, data: @props.data, datatype: 'room' 
+      React.createElement MainPart, data: @props.data, datatype: 'room'
     AppViewEmployee: ->
       React.createElement AppViewsEmployees, data: @props.data
     Service: ->
-      React.createElement Service, data: @props.data
+      React.createElement MainPart, data: @props.data, datatype: 'service'
     ServiceMap: ->
       React.createElement AppViewsServices, data: @props.data
     PatientGeneral: ->

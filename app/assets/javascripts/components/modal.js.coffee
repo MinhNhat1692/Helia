@@ -71,57 +71,22 @@
         formData.append 'lang', $('#room_form_lang').val()
         if $('#room_form_map')[0].files[0] != undefined
           formData.append 'map', $('#room_form_map')[0].files[0]
-      else if @props.type == 'position_edit'
+      else if @props.type == 'position'
         if @props.record != null
-          e.preventDefault()
-          formData = new FormData
           formData.append 'id', @props.record.id
-          if $('#position_form_room').val() == ""
-            formData.append 'room', @props.record.room
+          if $('#position_form_room').val() == "Tên phòng"
+            formData.append 'room', @props.record.room_id
           else
             formData.append 'room', $('#position_form_room').val()
-          formData.append 'pname', $('#position_form_pname').val()
-          formData.append 'lang', $('#position_form_lang').val()
-          formData.append 'description', $('#position_form_description').val()
-          if $('#position_form_file')[0].files[0] != undefined
-            formData.append 'file', $('#position_form_file')[0].files[0]
-          $.ajax
-            url: '/position'
-            type: 'PUT'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @props.trigger2 @props.record, result
-              return
-            ).bind(this)
-      else if @props.type == 'position_add'
-        e.preventDefault()
-        formData = new FormData
-        formData.append 'room', $('#position_form_room').val()
+        else
+          formData.append 'room', $('#position_form_room').val()
         formData.append 'pname', $('#position_form_pname').val()
         formData.append 'lang', $('#position_form_lang').val()
         formData.append 'description', $('#position_form_description').val()
         if $('#position_form_file')[0].files[0] != undefined
           formData.append 'file', $('#position_form_file')[0].files[0]
-        $.ajax
-          url: '/position'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.trigger result
-            return
-          ).bind(this)
-      else if @props.type == 'position_set_add'
-        e.preventDefault()
+      else if @props.type == 'position_mapping' # need fix
         if @props.record != null
-          formData = new FormData
           formData.append 'id', @props.record.id
           formData.append 'posmap', $('#position_set_p_id').val()
           $.ajax
@@ -136,33 +101,9 @@
               @props.trigger result
               return
             ).bind(this)
-      else if @props.type == 'service_edit'
+      else if @props.type == 'service'
         if @props.record != null
-          e.preventDefault()
-          formData = new FormData
           formData.append 'id', @props.record.id
-          formData.append 'sname', $('#service_form_sname').val()
-          formData.append 'lang', $('#service_form_lang').val()
-          formData.append 'price', $('#service_form_price').val()
-          formData.append 'currency', $('#service_form_currency').val()
-          formData.append 'description', $('#service_form_description').val()
-          if $('#service_form_file')[0].files[0] != undefined
-            formData.append 'file', $('#service_form_file')[0].files[0]
-          $.ajax
-            url: '/service'
-            type: 'PUT'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @props.trigger2 @props.record, result
-              return
-            ).bind(this)
-      else if @props.type == 'service_add'
-        e.preventDefault()
-        formData = new FormData
         formData.append 'sname', $('#service_form_sname').val()
         formData.append 'lang', $('#service_form_lang').val()
         formData.append 'price', $('#service_form_price').val()
@@ -170,18 +111,6 @@
         formData.append 'description', $('#service_form_description').val()
         if $('#service_form_file')[0].files[0] != undefined
           formData.append 'file', $('#service_form_file')[0].files[0]
-        $.ajax
-          url: '/service'
-          type: 'POST'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.trigger result
-            return
-          ).bind(this)
       else if @props.type == 'medicine_supplier_add'
         e.preventDefault()
         formData = new FormData
@@ -3508,9 +3437,9 @@
         @orderMapForm()
       else if @state.type == 'room'
         @roomForm()
-      else if @state.type == 'position_add' or @state.type == 'position_edit'
+      else if @state.type == 'position'
         @positionForm()
-      else if @state.type == 'service_add' or @state.type == 'service_edit'
+      else if @state.type == 'service'
         @serviceForm()
       else if @state.type == 'medicine_supplier_add' or @state.type == 'medicine_supplier_edit'
         @medicineSupplierForm()

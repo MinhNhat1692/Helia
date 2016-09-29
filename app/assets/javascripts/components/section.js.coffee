@@ -548,6 +548,7 @@
           @setState
             data: result
             task: data.task
+          $(APP).trigger('rebuild')
           return
         ).bind(this)
     componentWillMount: ->
