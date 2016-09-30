@@ -24,27 +24,27 @@
     BillInfo: ->
       React.createElement BillInfo, data: @props.data #35
     MedicineSupplier: ->
-      React.createElement MedicineSupplier, data: @props.data #task = code = 41
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_supplier' #task = code = 41
     MedicineCompany: ->
-      React.createElement MedicineCompany, data: @props.data #task = code = 42
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_company' #task = code = 42
     MedicineSample: ->
-      React.createElement MedicineSample, data: @props.data #task = code = 43
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_sample' #task = code = 43
     MedicineBillIn: ->
-      React.createElement MedicineBillIn, data: @props.data #task = code = 44
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_bill_in' #task = code = 44
     MedicineBillRecord: ->
-      React.createElement MedicineBillRecord, data: @props.data #task = code = 45
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_bill_record' #task = code = 45
     MedicinePrice: ->
-      React.createElement MedicinePrice, data: @props.data #task = code = 46
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_price' #task = code = 46
     MedicinePrescriptExternal: ->
-      React.createElement MedicinePrescriptExternal, data: @props.data #task = code = 47
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_prescript_external' #task = code = 47
     MedicineExternalRecord: ->
-      React.createElement MedicineExternalRecord, data: @props.data #task = code = 48
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_external_record' #task = code = 48
     MedicinePrescriptInternal: ->
-      React.createElement MedicinePrescriptInternal, data: @props.data #task = code = 49
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_prescript_internal' #task = code = 49
     MedicineInternalRecord: ->
-      React.createElement MedicineInternalRecord, data: @props.data #task = code = 50
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_internal_record' #task = code = 50
     MedicineStockRecord: ->
-      React.createElement MedicineStockRecord, data: @props.data #task = code = 51
+      React.createElement MainPart, data: @props.data, datatype: 'medicine_stock_record' #task = code = 51
     render: ->
       switch @props.task
         when 5

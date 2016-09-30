@@ -766,13 +766,13 @@
           className: "toggled"
           React.DOM.td null, @props.record.billcode
           React.DOM.td null,
-            if @props.record.dayin != null
+            if @props.record.dayin != null and @props.record.dayin != undefined 
               @props.record.dayin.substring(8, 10) + "/" + @props.record.dayin.substring(5, 7) + "/" + @props.record.dayin.substring(0, 4)
             else
               ""
           React.DOM.td null, @props.record.supplier
           React.DOM.td null,
-            if @props.record.daybook != null
+            if @props.record.daybook != null and @props.record.daybook != undefined
               @props.record.daybook.substring(8, 10) + "/" + @props.record.daybook.substring(5, 7) + "/" + @props.record.daybook.substring(0, 4)
             else
               ""
@@ -787,13 +787,13 @@
           onClick: @selectRecord
           React.DOM.td null, @props.record.billcode
           React.DOM.td null, 
-            if @props.record.dayin != null
+            if @props.record.dayin != null and @props.record.dayin != undefined 
               @props.record.dayin.substring(8, 10) + "/" + @props.record.dayin.substring(5, 7) + "/" + @props.record.dayin.substring(0, 4)
             else
               ""
           React.DOM.td null, @props.record.supplier
           React.DOM.td null,
-            if @props.record.daybook != null
+            if @props.record.daybook != null and @props.record.daybook != undefined
               @props.record.daybook.substring(8, 10) + "/" + @props.record.daybook.substring(5, 7) + "/" + @props.record.daybook.substring(0, 4)
             else
               ""
@@ -816,7 +816,7 @@
           React.DOM.td null, @props.record.signid
           React.DOM.td null, @props.record.name
           React.DOM.td null,
-            if @props.record.expire != null
+            if @props.record.expire != null and @props.record.expire != undefined
               @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
             else
               ""
@@ -833,7 +833,7 @@
           React.DOM.td null, @props.record.signid
           React.DOM.td null, @props.record.name
           React.DOM.td null,
-            if @props.record.expire != null
+            if @props.record.expire != null and @props.record.expire != undefined
               @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
             else
               ""
@@ -866,7 +866,7 @@
           React.DOM.td null, @props.record.cname
           React.DOM.td null, @props.record.ename
           React.DOM.td null,
-            if @props.record.date != null
+            if @props.record.date != null and @props.record.date != undefined
               @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
             else
               ""
@@ -881,7 +881,7 @@
           React.DOM.td null, @props.record.cname
           React.DOM.td null, @props.record.ename
           React.DOM.td null,
-            if @props.record.date != null
+            if @props.record.date != null and @props.record.date != undefined
               @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
             else
               ""
@@ -927,7 +927,7 @@
           React.DOM.td null, @props.record.cname
           React.DOM.td null, @props.record.ename
           React.DOM.td null,
-            if @props.record.date != null
+            if @props.record.date != null and @props.record.date != undefined
               @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
             else
               ""
@@ -947,7 +947,7 @@
           React.DOM.td null, @props.record.cname
           React.DOM.td null, @props.record.ename
           React.DOM.td null,
-            if @props.record.date != null
+            if @props.record.date != null and @props.record.date != undefined
               @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
             else
               ""
@@ -1015,7 +1015,7 @@
           React.DOM.td null, @props.record.signid
           React.DOM.td null, @props.record.amount
           React.DOM.td null,
-            if @props.record.expire != null
+            if @props.record.expire != null and @props.record.expire != undefined
               @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
             else
               ""
@@ -1032,7 +1032,7 @@
           React.DOM.td null, @props.record.signid
           React.DOM.td null, @props.record.amount
           React.DOM.td null,
-            if @props.record.expire != null
+            if @props.record.expire != null and @props.record.expire != undefined
               @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
             else
               ""
