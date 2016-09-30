@@ -1213,6 +1213,131 @@
           React.DOM.td null, @props.record.issue_place
           React.DOM.td null,
             React.DOM.a href: @props.record.avatar, className: 'btn btn-default', target: '_blank', style: {margin: '5px'}, 'Avatar'
+    OrderMap: ->
+      switch Number(@props.record.status)
+        when 1
+          @state.typeName = "Chưa thanh toán, chưa khám bệnh"
+        when 2
+          @state.typeName = "Đã thanh toán, đang chờ khám"
+        when 3
+          @state.typeName = "Đã thanh toán, đã khám bệnh"
+        when 4
+          @state.typeName = "Chưa thanh toán, đã khám bệnh"
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.sername
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @props.record.remark
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.sername
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @props.record.remark
+    CheckInfo: ->
+      switch Number(@props.record.status)
+        when 1
+          @state.typeName = "Chưa khám"
+        when 2
+          @state.typeName = "Đang khám"
+        when 3
+          @state.typeName = "Kết thúc khám"
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.c_name
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.kluan
+          React.DOM.td null, @props.record.cdoan
+          React.DOM.td null, @props.record.hdieutri
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, 
+            if @props.record.daystart != null && @props.record.daystart != undefined
+              @props.record.daystart.substring(8, 10) + "/" + @props.record.daystart.substring(5, 7) + "/" + @props.record.daystart.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, 
+            if @props.record.dayend != null && @props.record.dayend != undefined
+              @props.record.dayend.substring(8, 10) + "/" + @props.record.dayend.substring(5, 7) + "/" + @props.record.dayend.substring(0, 4)
+            else
+              ""
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.c_name
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.kluan
+          React.DOM.td null, @props.record.cdoan
+          React.DOM.td null, @props.record.hdieutri
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, 
+            if @props.record.daystart != null && @props.record.daystart != undefined
+              @props.record.daystart.substring(8, 10) + "/" + @props.record.daystart.substring(5, 7) + "/" + @props.record.daystart.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, 
+            if @props.record.dayend != null && @props.record.dayend != undefined
+              @props.record.dayend.substring(8, 10) + "/" + @props.record.dayend.substring(5, 7) + "/" + @props.record.dayend.substring(0, 4)
+            else
+              ""
+    DoctorCheckInfo: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.c_name
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.qtbenhly
+          React.DOM.td null, @props.record.klamsang
+          React.DOM.td null, @props.record.cdbandau
+          React.DOM.td null, @props.record.bktheo
+          React.DOM.td null, @props.record.cdicd
+          React.DOM.td null, @props.record.kluan
+          React.DOM.td null, 
+            if @props.record.daycheck != null && @props.record.daycheck != undefined
+              @props.record.daycheck.substring(8, 10) + "/" + @props.record.daycheck.substring(5, 7) + "/" + @props.record.daycheck.substring(0, 4)
+            else
+              ""
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.c_name
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.qtbenhly
+          React.DOM.td null, @props.record.klamsang
+          React.DOM.td null, @props.record.cdbandau
+          React.DOM.td null, @props.record.bktheo
+          React.DOM.td null, @props.record.cdicd
+          React.DOM.td null, @props.record.kluan
+          React.DOM.td null, 
+            if @props.record.daycheck != null && @props.record.daycheck != undefined
+              @props.record.daycheck.substring(8, 10) + "/" + @props.record.daycheck.substring(5, 7) + "/" + @props.record.daycheck.substring(0, 4)
+            else
+              ""
+    BillInfo: ->
+      for dvi in @props.dvi
+        if dvi.id == @props.record.dvi
+          @state.typeName = dvi.name
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.c_name
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.sluong
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayout
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.c_name
+          React.DOM.td null, @props.record.remark
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.sluong
+          React.DOM.td null, @props.record.tpayment
+          React.DOM.td null, @props.record.discount
+          React.DOM.td null, @props.record.tpayout
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1252,3 +1377,11 @@
         @Position()
       else if @props.datatype == 'customer_record'
         @CustomerRecord()
+      else if @props.datatype == 'order_map'
+        @OrderMap()
+      else if @props.datatype == 'check_info'
+        @CheckInfo()
+      else if @props.datatype == 'doctor_check_info'
+        @DoctorCheckInfo()
+      else if @props.datatype == 'bill_info'
+        @BillInfo()

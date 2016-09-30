@@ -70,6 +70,9 @@ class DoctorCheckInfoController < ApplicationController
         if params.has_key?(:ename)
           @supplier = DoctorCheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id).group(:ename).limit(5)
 		      render json:@supplier
+        elsif params.has_key?(:c_name)
+		      @supplier = DoctorCheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id).group(:c_name).limit(5)
+		      render json:@supplier
         elsif params.has_key?(:qtbenhly)
 		      @supplier = DoctorCheckInfo.where("qtbenhly LIKE ? and station_id = ?" , "%#{params[:qtbenhly]}%", @station.id).group(:qtbenhly).limit(5)
 		      render json:@supplier
@@ -103,6 +106,9 @@ class DoctorCheckInfoController < ApplicationController
         @station = Station.find_by(user_id: current_user.id)
         if params.has_key?(:ename)
           @supplier = DoctorCheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+		      render json:@supplier
+        elsif params.has_key?(:c_name)
+		      @supplier = DoctorCheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
 		      render json:@supplier
         elsif params.has_key?(:qtbenhly)
 		      @supplier = DoctorCheckInfo.where("qtbenhly LIKE ? and station_id = ?" , "%#{params[:qtbenhly]}%", @station.id)

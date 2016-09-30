@@ -281,6 +281,70 @@
             formData.append 'description', $('#filter_text').val().toLowerCase()
           when 3
             formData.append 'room_id', $('#filter_text').val()
+      else if @props.datatype == "order_map"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'cname', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'sername', $('#filter_text').val().toLowerCase()
+          when 3
+            formData.append 'remark', $('#filter_text').val().toLowerCase()
+          when 4
+            formData.append 'status', $('#filter_text').val()
+          when 5
+            formData.append 'tpayment', $('#filter_text').val()
+          when 6
+            formData.append 'discount', $('#filter_text').val()
+          when 7
+            formData.append 'tpayout', $('#filter_text').val()
+      else if @props.datatype == "check_info"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'ename', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'c_name', $('#filter_text').val().toLowerCase()
+          when 3
+            formData.append 'conclude', $('#filter_text').val().toLowerCase()
+          when 4
+            formData.append 'cdoan', $('#filter_text').val().toLowerCase()
+          when 5
+            formData.append 'hdieutri', $('#filter_text').val().toLowerCase()
+          when 6
+            formData.append 'status', $('#filter_text').val()
+      else if @props.datatype == "doctor_check_info"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'ename', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'c_name', $('#filter_text').val().toLowerCase()
+          when 3
+            formData.append 'qtbenhly', $('#filter_text').val().toLowerCase()
+          when 4
+            formData.append 'klamsang', $('#filter_text').val().toLowerCase()
+          when 5
+            formData.append 'cdbandau', $('#filter_text').val().toLowerCase()
+          when 6
+            formData.append 'bktheo', $('#filter_text').val().toLowerCase()
+          when 7
+            formData.append 'cdicd', $('#filter_text').val().toLowerCase()
+          when 8
+            formData.append 'kluan', $('#filter_text').val()
+      else if @props.datatype == "bill_info"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'remark', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'c_name', $('#filter_text').val().toLowerCase()
+          when 3
+            formData.append 'dvi', $('#filter_text').val()
+          when 4
+            formData.append 'sluong', $('#filter_text').val()
+          when 5
+            formData.append 'tpayment', $('#filter_text').val()
+          when 6
+            formData.append 'discount', $('#filter_text').val()
+          when 7
+            formData.append 'tpayout', $('#filter_text').val()
       $.ajax
         url: '/' + @props.datatype + '/find'
         type: 'POST'
@@ -492,6 +556,50 @@
             $('#filter_text').val(record.pname)
           when 2
             $('#filter_text').val(record.description)
+      else if @props.datatype == "order_map"
+        switch Number($('#filter_type_select').val())
+          when 1
+            $('#filter_text').val(record.cname)
+          when 2
+            $('#filter_text').val(record.sername)
+          when 3
+            $('#filter_text').val(record.remark)
+      else if @props.datatype == "check_info"
+        switch Number($('#filter_type_select').val())
+          when 1
+            $('#filter_text').val(record.ename)
+          when 2
+            $('#filter_text').val(record.c_name)
+          when 3
+            $('#filter_text').val(record.conclude)
+          when 4
+            $('#filter_text').val(record.cdoan)
+          when 5
+            $('#filter_text').val(record.hdieutri)
+      else if @props.datatype == "doctor_check_info"
+        switch Number($('#filter_type_select').val())
+          when 1
+            $('#filter_text').val(record.ename)
+          when 2
+            $('#filter_text').val(record.c_name)
+          when 3
+            $('#filter_text').val(record.qtbenhly)
+          when 4
+            $('#filter_text').val(record.klamsang)
+          when 5
+            $('#filter_text').val(record.cdbandau)
+          when 6
+            $('#filter_text').val(record.bktheo)
+          when 7
+            $('#filter_text').val(record.cdicd)
+          when 8
+            $('#filter_text').val(record.kluan)
+      else if @props.datatype == "bill_info"
+        switch Number($('#filter_type_select').val())
+          when 1
+            $('#filter_text').val(record.remark)
+          when 2
+            $('#filter_text').val(record.c_name)
       @props.triggerChose record
     triggerChangeType: (e) ->
       if @props.datatype == "medicine_sample"
@@ -550,6 +658,24 @@
         switch Number($('#filter_type_select').val())
           when 3
             @setState selectList: @props.rooms
+          else
+            @setState selectList: null
+      else if @props.datatype == "order_map"
+        switch Number($('#filter_type_select').val())
+          when 4
+            @setState selectList: [{id: 1, name: "Chưa thanh toán, chưa khám bệnh"},{id: 2, name: "Đã thanh toán, đang chờ khám"},{id: 3, name: "Đã thanh toán, đã khám bệnh"},{id: 4, name: "Chưa thanh toán, đã khám bệnh"}]
+          else
+            @setState selectList: null
+      else if @props.datatype == "check_info"
+        switch Number($('#filter_type_select').val())
+          when 6
+            @setState selectList: [{id: 1, name: "Chưa khám"},{id: 2, name: "Đang khám"},{id: 3, name: "Kết thúc khám"}]
+          else
+            @setState selectList: null
+      else if @props.datatype == "bill_info"
+        switch Number($('#filter_type_select').val())
+          when 3
+            @setState selectList: @props.dvi
           else
             @setState selectList: null
     triggerClear: (e) ->
@@ -616,56 +742,21 @@
             React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicineCompany: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Mã'
-              React.DOM.option
-                value: 2
-                'Tên doanh nghiệp'
-              React.DOM.option
-                value: 3
-                'Số ĐT'
-              React.DOM.option
-                value: 4
-                'Địa chỉ'
-              React.DOM.option
-                value: 5
-                'Email'
-              React.DOM.option
-                value: 6
-                'Website'
-              React.DOM.option
-                value: 7
-                'Mã số thuế'
-          React.DOM.div
-            className: 'col-sm-8'
-            React.DOM.input
-              id: 'filter_text'
-              type: 'text'
-              className: 'form-control'
-              defaultValue: ''
-              onChange: @triggerAutoCompleteInput
-              placeholder: 'Type here ...'
-              name: 'filterText'
-            React.DOM.div
-              className: "auto-complete"
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Mã'
+              React.DOM.option value: 2, 'Tên doanh nghiệp'
+              React.DOM.option value: 3, 'Số ĐT'
+              React.DOM.option value: 4, 'Địa chỉ'
+              React.DOM.option value: 5, 'Email'
+              React.DOM.option value: 6, 'Website'
+              React.DOM.option value: 7, 'Mã số thuế'
+          React.DOM.div className: 'col-sm-8',
+            React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   if Number($('#filter_type_select').val()) == 1
@@ -682,87 +773,37 @@
                     React.createElement AutoComplete, key: record.id, text: record.website, record: record, trigger: @triggerAutoComplete
                   else if Number($('#filter_type_select').val()) == 7
                     React.createElement AutoComplete, key: record.id, text: record.taxcode, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicineSample: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Mã'
-              React.DOM.option
-                value: 2
-                'Tên thuốc'
-              React.DOM.option
-                value: 3
-                'Loại thuốc'
-              React.DOM.option
-                value: 4
-                'Nhóm thuốc'
-              React.DOM.option
-                value: 5
-                'Công ty sản xuất'
-              React.DOM.option
-                value: 6
-                'Giá'
-              React.DOM.option
-                value: 7
-                'Khối lượng'
-              React.DOM.option
-                value: 8
-                'Ghi chú'
-              React.DOM.option
-                value: 9
-                'Hạn sử dụng'
-          React.DOM.div
-            className: 'col-sm-8'
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Mã',
+              React.DOM.option value: 2, 'Tên thuốc'
+              React.DOM.option value: 3, 'Loại thuốc'
+              React.DOM.option value: 4, 'Nhóm thuốc'
+              React.DOM.option value: 5, 'Công ty sản xuất'
+              React.DOM.option value: 6, 'Giá'
+              React.DOM.option value: 7, 'Khối lượng'
+              React.DOM.option value: 8, 'Ghi chú'
+              React.DOM.option value: 9, 'Hạn sử dụng'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
-              React.DOM.input
-                id: 'filter_text'
-                type: 'text'
-                className: 'form-control'
-                defaultValue: ''
-                onChange: @triggerAutoCompleteInput
-                placeholder: 'Type here ...'
-                name: 'filterText'
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   if Number($('#filter_type_select').val()) == 1
@@ -779,90 +820,38 @@
                     React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
                   else if Number($('#filter_type_select').val()) == 9
                     React.createElement AutoComplete, key: record.id, text: record.expire, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicineBillIn: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Số hóa đơn'
-              React.DOM.option
-                value: 2
-                'Người cung cấp'
-              React.DOM.option
-                value: 3
-                'Ghi chú'
-              React.DOM.option
-                value: 4
-                'Ngày nhập'
-              React.DOM.option
-                value: 5
-                'Ngày đặt hàng'
-              React.DOM.option
-                value: 6
-                'Cách thanh toán'
-              React.DOM.option
-                value: 7
-                'Tổng giá hàng hóa'
-              React.DOM.option
-                value: 8
-                'Giảm giá'
-              React.DOM.option
-                value: 9
-                'Tổng giá thanh toán'
-              React.DOM.option
-                value: 10
-                'Tình trạng hóa đơn'
-          React.DOM.div
-            className: 'col-sm-8'
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Số hóa đơn'
+              React.DOM.option value: 2, 'Người cung cấp'
+              React.DOM.option value: 3, 'Ghi chú'
+              React.DOM.option value: 4, 'Ngày nhập'
+              React.DOM.option value: 5, 'Ngày đặt hàng'
+              React.DOM.option value: 6, 'Cách thanh toán'
+              React.DOM.option value: 7, 'Tổng giá hàng hóa'
+              React.DOM.option value: 8, 'Giảm giá'
+              React.DOM.option value: 9, 'Tổng giá thanh toán'
+              React.DOM.option value: 10, 'Tình trạng hóa đơn'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
-              React.DOM.input
-                id: 'filter_text'
-                type: 'text'
-                className: 'form-control'
-                defaultValue: ''
-                onChange: @triggerAutoCompleteInput
-                placeholder: 'Type here ...'
-                name: 'filterText'
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   if Number($('#filter_type_select').val()) == 1
@@ -871,90 +860,38 @@
                     React.createElement AutoComplete, key: record.id, text: record.supplier, record: record, trigger: @triggerAutoComplete
                   else if Number($('#filter_type_select').val()) == 3
                     React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close',
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicineBillRecord: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Tên thuốc'
-              React.DOM.option
-                value: 2
-                'Công ty sản xuất'
-              React.DOM.option
-                value: 3
-                'Số hiệu'
-              React.DOM.option
-                value: 4
-                'Ký hiệu'
-              React.DOM.option
-                value: 5
-                'Ghi chú'
-              React.DOM.option
-                value: 6
-                'Hạn sử dụng'
-              React.DOM.option
-                value: 7
-                'Cách mua'
-              React.DOM.option
-                value: 8
-                'Số lượng'
-              React.DOM.option
-                value: 9
-                '% thuế'
-              React.DOM.option
-                value: 10
-                'Giá'
-          React.DOM.div
-            className: 'col-sm-8'
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên thuốc'
+              React.DOM.option value: 2, 'Công ty sản xuất'
+              React.DOM.option value: 3, 'Số hiệu'
+              React.DOM.option value: 4, 'Ký hiệu'
+              React.DOM.option value: 5, 'Ghi chú'
+              React.DOM.option value: 6, 'Hạn sử dụng'
+              React.DOM.option value: 7, 'Cách mua'
+              React.DOM.option value: 8, 'Số lượng'
+              React.DOM.option value: 9, '% thuế'
+              React.DOM.option value: 10, 'Giá'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
-              React.DOM.input
-                id: 'filter_text'
-                type: 'text'
-                className: 'form-control'
-                defaultValue: ''
-                onChange: @triggerAutoCompleteInput
-                placeholder: 'Type here ...'
-                name: 'filterText'
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -968,69 +905,29 @@
                       React.createElement AutoComplete, key: record.id, text: record.signid, record: record, trigger: @triggerAutoComplete
                     when 5
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicinePrice: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Tên thuốc'
-              React.DOM.option
-                value: 2
-                'Ghi chú'
-              React.DOM.option
-                value: 3
-                'Số lượng tối thiểu'
-              React.DOM.option
-                value: 4
-                'Giá'
-          React.DOM.div
-            className: 'col-sm-8'
-            React.DOM.input
-              id: 'filter_text'
-              type: 'text'
-              className: 'form-control'
-              defaultValue: ''
-              onChange: @triggerAutoCompleteInput
-              placeholder: 'Type here ...'
-              name: 'filterText'
-            React.DOM.div
-              className: "auto-complete"
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên thuốc'
+              React.DOM.option value: 2, 'Ghi chú'
+              React.DOM.option value: 3, 'Số lượng tối thiểu'
+              React.DOM.option value: 4, 'Giá'
+          React.DOM.div className: 'col-sm-8',
+            React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1038,81 +935,33 @@
                       React.createElement AutoComplete, key: record.id, text: record.name, record: record, trigger: @triggerAutoComplete
                     when 2
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicinePrescriptExternal: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Mã đơn thuốc'
-              React.DOM.option
-                value: 2
-                'Bệnh nhân'
-              React.DOM.option
-                value: 3
-                'Người kê đơn'
-              React.DOM.option
-                value: 4
-                'Số khám bệnh'
-              React.DOM.option
-                value: 5
-                'Địa chỉ mua thuốc'
-              React.DOM.option
-                value: 6
-                'Ghi chú'
-              React.DOM.option
-                value: 7
-                'Kết quả khám'
-              React.DOM.option
-                value: 8
-                'Ngày kê'
-          React.DOM.div
-            className: 'col-sm-8'
-            React.DOM.input
-              id: 'filter_text'
-              type: 'text'
-              className: 'form-control'
-              defaultValue: ''
-              onChange: @triggerAutoCompleteInput
-              placeholder: 'Type here ...'
-              name: 'filterText'
-            React.DOM.div
-              className: "auto-complete"
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Mã đơn thuốc'
+              React.DOM.option value: 2, 'Bệnh nhân'
+              React.DOM.option value: 3, 'Người kê đơn'
+              React.DOM.option value: 4, 'Số khám bệnh'
+              React.DOM.option value: 5, 'Địa chỉ mua thuốc'
+              React.DOM.option value: 6, 'Ghi chú'
+              React.DOM.option value: 7, 'Kết quả khám'
+              React.DOM.option value: 8, 'Ngày kê'
+          React.DOM.div className: 'col-sm-8',
+            React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1128,81 +977,33 @@
                       React.createElement AutoComplete, key: record.id, text: record.address, record: record, trigger: @triggerAutoComplete
                     when 6
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicineExternalRecord: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Tên thuốc'
-              React.DOM.option
-                value: 2
-                'Tên bệnh nhân'
-              React.DOM.option
-                value: 3
-                'Mã đơn thuốc'
-              React.DOM.option
-                value: 4
-                'Ghi chú'
-              React.DOM.option
-                value: 5
-                'Công ty sản xuất'
-              React.DOM.option
-                value: 6
-                'Liều lượng'
-              React.DOM.option
-                value: 7
-                'Giá'
-              React.DOM.option
-                value: 8
-                'Tổng tiền'
-          React.DOM.div
-            className: 'col-sm-8'
-            React.DOM.input
-              id: 'filter_text'
-              type: 'text'
-              className: 'form-control'
-              defaultValue: ''
-              onChange: @triggerAutoCompleteInput
-              placeholder: 'Type here ...'
-              name: 'filterText'
-            React.DOM.div
-              className: "auto-complete"
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên thuốc'
+              React.DOM.option value: 2, 'Tên bệnh nhân'
+              React.DOM.option value: 3, 'Mã đơn thuốc'
+              React.DOM.option value: 4, 'Ghi chú'
+              React.DOM.option value: 5, 'Công ty sản xuất'
+              React.DOM.option value: 6, 'Liều lượng'
+              React.DOM.option value: 7, 'Giá'
+              React.DOM.option value: 8, 'Tổng tiền'
+          React.DOM.div className: 'col-sm-8',
+            React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1216,99 +1017,41 @@
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
                     when 5
                       React.createElement AutoComplete, key: record.id, text: record.company, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close',
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicinePrescriptInternal: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Mã đơn thuốc'
-              React.DOM.option
-                value: 2
-                'Bệnh nhân'
-              React.DOM.option
-                value: 3
-                'Người kê đơn'
-              React.DOM.option
-                value: 4
-                'Số khám bệnh'
-              React.DOM.option
-                value: 5
-                'Ghi chú'
-              React.DOM.option
-                value: 6
-                'Người chuẩn bị thuốc'
-              React.DOM.option
-                value: 7
-                'Người thanh toán'
-              React.DOM.option
-                value: 8
-                'Số kết quả khám'
-              React.DOM.option
-                value: 9
-                'Ngày kê'
-              React.DOM.option
-                value: 10
-                'Tổng giá trị'
-              React.DOM.option
-                value: 11
-                'Giảm giá'
-              React.DOM.option
-                value: 12
-                'Tổng tiền thanh toán'
-              React.DOM.option
-                value: 13
-                'Cách thanh toán'
-          React.DOM.div
-            className: 'col-sm-8'
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Mã đơn thuốc'
+              React.DOM.option value: 2, 'Bệnh nhân'
+              React.DOM.option value: 3, 'Người kê đơn'
+              React.DOM.option value: 4, 'Số khám bệnh'
+              React.DOM.option value: 5, 'Ghi chú'
+              React.DOM.option value: 6, 'Người chuẩn bị thuốc'
+              React.DOM.option value: 7, 'Người thanh toán'
+              React.DOM.option value: 8, 'Số kết quả khám'
+              React.DOM.option value: 9, 'Ngày kê'
+              React.DOM.option value: 10, 'Tổng giá trị'
+              React.DOM.option value: 11, 'Giảm giá'
+              React.DOM.option value: 12, 'Tổng tiền thanh toán'
+              React.DOM.option value: 13, 'Cách thanh toán'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
-              React.DOM.input
-                id: 'filter_text'
-                type: 'text'
-                className: 'form-control'
-                defaultValue: ''
-                onChange: @triggerAutoCompleteInput
-                placeholder: 'Type here ...'
-                name: 'filterText'
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1326,96 +1069,40 @@
                       React.createElement AutoComplete, key: record.id, text: record.preparer, record: record, trigger: @triggerAutoComplete
                     when 7
                       React.createElement AutoComplete, key: record.id, text: record.payer, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicineInternalRecord: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Tên thuốc'
-              React.DOM.option
-                value: 2
-                'Tên bệnh nhân'
-              React.DOM.option
-                value: 3
-                'Mã đơn thuốc'
-              React.DOM.option
-                value: 4
-                'Ghi chú'
-              React.DOM.option
-                value: 5
-                'Công ty sản xuất'
-              React.DOM.option
-                value: 6
-                'Số kiệu'
-              React.DOM.option
-                value: 7
-                'Ký hiệu'
-              React.DOM.option
-                value: 8
-                'Liều lượng'
-              React.DOM.option
-                value: 9
-                'Giá'
-              React.DOM.option
-                value: 10
-                'Giảm giá'
-              React.DOM.option
-                value: 11
-                'Tổng giá trị'
-              React.DOM.option
-                value: 12
-                'Tình trạng'
-          React.DOM.div
-            className: 'col-sm-8'
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên thuốc'
+              React.DOM.option value: 2, 'Tên bệnh nhân'
+              React.DOM.option value: 3, 'Mã đơn thuốc'
+              React.DOM.option value: 4, 'Ghi chú'
+              React.DOM.option value: 5, 'Công ty sản xuất'
+              React.DOM.option value: 6, 'Số kiệu'
+              React.DOM.option value: 7, 'Ký hiệu'
+              React.DOM.option value: 8, 'Liều lượng'
+              React.DOM.option value: 9, 'Giá'
+              React.DOM.option value: 10, 'Giảm giá'
+              React.DOM.option value: 11, 'Tổng giá trị'
+              React.DOM.option value: 12, 'Tình trạng'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
-              React.DOM.input
-                id: 'filter_text'
-                type: 'text'
-                className: 'form-control'
-                defaultValue: ''
-                onChange: @triggerAutoCompleteInput
-                placeholder: 'Type here ...'
-                name: 'filterText'
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1433,90 +1120,38 @@
                       React.createElement AutoComplete, key: record.id, text: record.noid, record: record, trigger: @triggerAutoComplete
                     when 7
                       React.createElement AutoComplete, key: record.id, text: record.signid, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     MedicineStockRecord: ->
-      React.DOM.form
-        className: 'form-horizontal row'
-        autoComplete: 'off'
-        onSubmit: @handleSubmit
-        React.DOM.div
-          className: 'form-group col-lg-6 col-sm-12'
-          React.DOM.div
-            className: 'col-sm-4'
-            style: {'marginBottom': '15px'}
-            React.DOM.select
-              id: 'filter_type_select'
-              className: 'form-control'
-              name: 'filterType'
-              onChange: @triggerChangeType
-              React.DOM.option
-                value: ''
-                'Chọn tiêu chuẩn lọc'
-              React.DOM.option
-                value: 1
-                'Tên thuốc'
-              React.DOM.option
-                value: 2
-                'Kí hiệu'
-              React.DOM.option
-                value: 3
-                'Số hiệu'
-              React.DOM.option
-                value: 4
-                'Nguồn cung cấp'
-              React.DOM.option
-                value: 5
-                'Mã hóa đơn vào'
-              React.DOM.option
-                value: 6
-                'Mã đơn thuốc trong'
-              React.DOM.option
-                value: 7
-                'Ghi chú'
-              React.DOM.option
-                value: 8
-                'Số lượng'
-              React.DOM.option
-                value: 9
-                'Hạn sử dụng'
-              React.DOM.option
-                value: 10
-                'Tình trạng'
-          React.DOM.div
-            className: 'col-sm-8'
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên thuốc'
+              React.DOM.option value: 2, 'Kí hiệu'
+              React.DOM.option value: 3, 'Số hiệu'
+              React.DOM.option value: 4, 'Nguồn cung cấp'
+              React.DOM.option value: 5, 'Mã hóa đơn vào'
+              React.DOM.option value: 6, 'Mã đơn thuốc trong'
+              React.DOM.option value: 7, 'Ghi chú'
+              React.DOM.option value: 8, 'Số lượng'
+              React.DOM.option value: 9, 'Hạn sử dụng'
+              React.DOM.option value: 10, 'Tình trạng'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
-              React.DOM.input
-                id: 'filter_text'
-                type: 'text'
-                className: 'form-control'
-                defaultValue: ''
-                onChange: @triggerAutoCompleteInput
-                placeholder: 'Type here ...'
-                name: 'filterText'
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1534,26 +1169,15 @@
                       React.createElement AutoComplete, key: record.id, text: record.internal_record_code, record: record, trigger: @triggerAutoComplete
                     when 7
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button
-          type: 'submit'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          React.DOM.i
-            className: 'zmdi zmdi-search'
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
-        React.DOM.button
-          type: 'button'
-          className: 'btn bg-green col-lg-1 col-md-4 col-sm-6'
-          onClick: @triggerClear
-          React.DOM.i
-            className: 'zmdi zmdi-close'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
           ' Clear'
-        React.DOM.div
-          className: 'form-group col-lg-4 col-sm-12'
-          React.DOM.label
-            className: 'checkbox checkbox-inline m-r-20'
-            React.DOM.input
-              type: 'checkbox'
-              id: 'checkbox_db'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
             "Tìm kỹ (chậm và đầy đủ)"
     CustomerRecord: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
@@ -1567,14 +1191,12 @@
               React.DOM.option value: 4, 'Địa chỉ'
               React.DOM.option value: 5, 'Số điện thoại'
               React.DOM.option value: 6, 'CMTND'
-          React.DOM.div
-            className: 'col-sm-8'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
               React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...', name: 'filterText'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1605,14 +1227,12 @@
               React.DOM.option value: 1, 'Tên dịch vụ'
               React.DOM.option value: 2, 'Giá'
               React.DOM.option value: 3, 'Mô tả dịch vụ'
-          React.DOM.div
-            className: 'col-sm-8'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
               React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...', name: 'filterText'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1705,14 +1325,12 @@
               React.DOM.option value: 1, 'Tên chức vụ'
               React.DOM.option value: 2, 'Mô tả'
               React.DOM.option value: 3, 'Phòng'
-          React.DOM.div
-            className: 'col-sm-8'
+          React.DOM.div className: 'col-sm-8',
             if @state.selectList == null
               React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...', name: 'filterText'
             else
               React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
-            React.DOM.div
-              className: "auto-complete"
+            React.DOM.div className: "auto-complete",
               if @props.autoComplete != null
                 for record in @props.autoComplete
                   switch Number($('#filter_type_select').val())
@@ -1730,6 +1348,170 @@
           React.DOM.label className: 'checkbox checkbox-inline m-r-20',
             React.DOM.input id: 'checkbox_db', type: 'checkbox'  
             "Tìm kỹ (chậm và đầy đủ)"      
+    OrderMap: ->
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên bệnh nhân'
+              React.DOM.option value: 2, 'Tên dịch vụ'
+              React.DOM.option value: 3, 'Ghi chú'
+              React.DOM.option value: 4, 'Tình trạng'
+              React.DOM.option value: 5, 'Tổng đơn giá'
+              React.DOM.option value: 6, 'Giảm giá'
+              React.DOM.option value: 7, 'Tổng thanh toán'
+          React.DOM.div className: 'col-sm-8',
+            if @state.selectList == null
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+            else
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+            React.DOM.div className: "auto-complete",
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  switch Number($('#filter_type_select').val())
+                    when 1
+                      React.createElement AutoComplete, key: record.id, text: record.cname, record: record, trigger: @triggerAutoComplete
+                    when 2
+                      React.createElement AutoComplete, key: record.id, text: record.sername, record: record, trigger: @triggerAutoComplete
+                    when 3
+                      React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
+          ' Clear'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
+            "Tìm kỹ (chậm và đầy đủ)"
+    CheckInfo: ->
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên bác sỹ'
+              React.DOM.option value: 2, 'Tên bệnh nhân'
+              React.DOM.option value: 3, 'Kết luận'
+              React.DOM.option value: 4, 'Chuẩn đoán'
+              React.DOM.option value: 5, 'Hướng điều trị'
+              React.DOM.option value: 6, 'Tình trạng'
+          React.DOM.div className: 'col-sm-8',
+            if @state.selectList == null
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+            else
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+            React.DOM.div className: "auto-complete",
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  switch Number($('#filter_type_select').val())
+                    when 1
+                      React.createElement AutoComplete, key: record.id, text: record.ename, record: record, trigger: @triggerAutoComplete
+                    when 2
+                      React.createElement AutoComplete, key: record.id, text: record.c_name, record: record, trigger: @triggerAutoComplete
+                    when 3
+                      React.createElement AutoComplete, key: record.id, text: record.conclude, record: record, trigger: @triggerAutoComplete
+                    when 4
+                      React.createElement AutoComplete, key: record.id, text: record.cdoan, record: record, trigger: @triggerAutoComplete
+                    when 5
+                      React.createElement AutoComplete, key: record.id, text: record.hdieutri, record: record, trigger: @triggerAutoComplete
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
+          ' Clear'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
+            "Tìm kỹ (chậm và đầy đủ)"
+    DoctorCheckInfo: ->
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên bác sỹ'
+              React.DOM.option value: 2, 'Tên bệnh nhân'
+              React.DOM.option value: 3, 'Quá trình bệnh lý'
+              React.DOM.option value: 4, 'Khám lâm sàng'
+              React.DOM.option value: 5, 'Chuẩn đoán ban đầu'
+              React.DOM.option value: 6, 'Bệnh kèm theo'
+              React.DOM.option value: 7, 'Chuẩn đoán ICD'
+              React.DOM.option value: 8, 'Kết luận'
+          React.DOM.div className: 'col-sm-8',
+            if @state.selectList == null
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+            else
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+            React.DOM.div className: "auto-complete",
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  switch Number($('#filter_type_select').val())
+                    when 1
+                      React.createElement AutoComplete, key: record.id, text: record.ename, record: record, trigger: @triggerAutoComplete
+                    when 2
+                      React.createElement AutoComplete, key: record.id, text: record.c_name, record: record, trigger: @triggerAutoComplete
+                    when 3
+                      React.createElement AutoComplete, key: record.id, text: record.qtbenhly, record: record, trigger: @triggerAutoComplete
+                    when 4
+                      React.createElement AutoComplete, key: record.id, text: record.klamsang, record: record, trigger: @triggerAutoComplete
+                    when 5
+                      React.createElement AutoComplete, key: record.id, text: record.cdbandau, record: record, trigger: @triggerAutoComplete
+                    when 6
+                      React.createElement AutoComplete, key: record.id, text: record.bktheo, record: record, trigger: @triggerAutoComplete
+                    when 7
+                      React.createElement AutoComplete, key: record.id, text: record.cdicd, record: record, trigger: @triggerAutoComplete
+                    when 8
+                      React.createElement AutoComplete, key: record.id, text: record.kluan, record: record, trigger: @triggerAutoComplete
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
+          ' Clear'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
+            "Tìm kỹ (chậm và đầy đủ)"
+    BillInfo: ->
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Diễn giải'
+              React.DOM.option value: 2, 'Tên bệnh nhân'
+              React.DOM.option value: 3, 'Đơn vị'
+              React.DOM.option value: 4, 'Số lượng'
+              React.DOM.option value: 5, 'Đơn giá'
+              React.DOM.option value: 6, 'Giảm giá'
+              React.DOM.option value: 7, 'Tổng thanh toán'
+          React.DOM.div className: 'col-sm-8',
+            if @state.selectList == null
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+            else
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+            React.DOM.div className: "auto-complete",
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  switch Number($('#filter_type_select').val())
+                    when 1
+                      React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
+                    when 2
+                      React.createElement AutoComplete, key: record.id, text: record.c_name, record: record, trigger: @triggerAutoComplete
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
+          ' Clear'
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input type: 'checkbox', id: 'checkbox_db'
+            "Tìm kỹ (chậm và đầy đủ)"
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1763,6 +1545,14 @@
         @Room()
       else if @props.datatype == "position"
         @Position()
+      else if @props.datatype == "order_map"
+        @OrderMap()
+      else if @props.datatype == "check_info"
+        @CheckInfo()
+      else if @props.datatype == "doctor_check_info"
+        @DoctorCheckInfo()
+      else if @props.datatype == "bill_info"
+        @BillInfo()
 
   @SupportForm = React.createClass
     getInitialState: ->

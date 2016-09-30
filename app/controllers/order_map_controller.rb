@@ -94,7 +94,7 @@ class OrderMapController < ApplicationController
 		  end
     end
   end
-
+  
   def search
     if params.has_key?(:id_station)
       redirect_to root_path

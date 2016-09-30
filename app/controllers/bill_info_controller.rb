@@ -50,6 +50,7 @@ class BillInfoController < ApplicationController
 	      @station = Station.find_by(user_id: current_user.id)
 		    @data = []
 		    @data[0] = BillInfo.where(station_id: @station.id).order(updated_at: :desc).limit(200)
+		    @data[1] = OutsideCurrency.where(category: 1, station_id: nil)
 		    render json: @data
 	    else
         redirect_to root_path
@@ -65,6 +66,9 @@ class BillInfoController < ApplicationController
         @station = Station.find_by(user_id: current_user.id)
         if params.has_key?(:remark)
           @supplier = BillInfo.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id).group(:remark).limit(5)
+		      render json:@supplier
+		    elsif params.has_key?(:c_name)
+          @supplier = BillInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id).group(:c_name).limit(5)
 		      render json:@supplier
 		    end
       else
@@ -82,7 +86,10 @@ class BillInfoController < ApplicationController
         if params.has_key?(:remark)
           @supplier = BillInfo.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 		      render json:@supplier
-        elsif params.has_key?(:dvi)
+        elsif params.has_key?(:c_name)
+          @supplier = BillInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
+		      render json:@supplier
+		    elsif params.has_key?(:dvi)
 		      @supplier = BillInfo.where("dvi = ? and station_id = ?" , params[:dvi], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:sluong)
@@ -95,7 +102,7 @@ class BillInfoController < ApplicationController
 		      @supplier = BillInfo.where("discount = ? and station_id = ?" , params[:discount], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:tpayout)
-		      @supplier = BillInfo.where("tpayout LIKE ? and station_id = ?" , params[:tpayout], @station.id)
+		      @supplier = BillInfo.where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
 		      render json:@supplier
 		    end
       else

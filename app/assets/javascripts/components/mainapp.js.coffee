@@ -16,13 +16,13 @@
     CustomerRecord: ->
       React.createElement MainPart, data: @props.data, datatype: 'customer_record' #31
     OrderMap: ->
-      React.createElement OrderMap, data: @props.data #32
+      React.createElement MainPart, data: @props.data, datatype: 'order_map' #32
     CheckInfo: ->
-      React.createElement CheckInfo, data: @props.data #33
+      React.createElement MainPart, data: @props.data, datatype: 'check_info'
     DoctorCheckInfo: ->
-      React.createElement DoctorCheckInfo, data: @props.data #34
+      React.createElement MainPart, data: @props.data, datatype: 'doctor_check_info'
     BillInfo: ->
-      React.createElement BillInfo, data: @props.data #35
+      React.createElement MainPart, data: @props.data, datatype: 'bill_info'
     MedicineSupplier: ->
       React.createElement MainPart, data: @props.data, datatype: 'medicine_supplier' #task = code = 41
     MedicineCompany: ->

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160929054004) do
+ActiveRecord::Schema.define(version: 20160930121548) do
 
   create_table "bill_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "remark",       limit: 65535
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20160929054004) do
     t.datetime "updated_at",                 null: false
     t.integer  "c_id"
     t.integer  "station_id"
+    t.string   "c_name"
     t.index ["order_map_id"], name: "index_bill_infos_on_order_map_id", using: :btree
     t.index ["station_id"], name: "index_bill_infos_on_station_id", using: :btree
   end
@@ -42,6 +43,7 @@ ActiveRecord::Schema.define(version: 20160929054004) do
     t.datetime "updated_at",                 null: false
     t.integer  "c_id"
     t.integer  "station_id"
+    t.string   "c_name"
     t.index ["order_map_id"], name: "index_check_infos_on_order_map_id", using: :btree
     t.index ["station_id"], name: "index_check_infos_on_station_id", using: :btree
   end
@@ -105,6 +107,7 @@ ActiveRecord::Schema.define(version: 20160929054004) do
     t.datetime "updated_at",                 null: false
     t.integer  "c_id"
     t.integer  "station_id"
+    t.string   "c_name"
     t.index ["order_map_id"], name: "index_doctor_check_infos_on_order_map_id", using: :btree
     t.index ["station_id"], name: "index_doctor_check_infos_on_station_id", using: :btree
   end
@@ -406,8 +409,10 @@ ActiveRecord::Schema.define(version: 20160929054004) do
     t.float    "tpayout",            limit: 24
     t.text     "remark",             limit: 65535
     t.string   "code"
+    t.integer  "station_id"
     t.index ["customer_record_id"], name: "index_order_maps_on_customer_record_id", using: :btree
     t.index ["service_id"], name: "index_order_maps_on_service_id", using: :btree
+    t.index ["station_id"], name: "index_order_maps_on_station_id", using: :btree
   end
 
   create_table "outside_currencies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -640,6 +645,7 @@ ActiveRecord::Schema.define(version: 20160929054004) do
   add_foreign_key "medicine_suppliers", "stations"
   add_foreign_key "order_maps", "customer_records"
   add_foreign_key "order_maps", "services"
+  add_foreign_key "order_maps", "stations"
   add_foreign_key "outside_currencies", "stations"
   add_foreign_key "position_mappings", "employees"
   add_foreign_key "position_mappings", "positions"

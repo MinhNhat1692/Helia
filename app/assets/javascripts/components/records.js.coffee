@@ -539,6 +539,54 @@
                 formData.append 'internal_record_code', text.toLowerCase()
               when 7
                 formData.append 'remark', text.toLowerCase()
+          else if @props.datatype == "order_map"
+            formData = new FormData	  
+            switch Number(type)
+              when 1
+                formData.append 'cname', text.toLowerCase()
+              when 2
+                formData.append 'sername', text.toLowerCase()
+              when 3
+                formData.append 'remark', text.toLowerCase()
+          else if @props.datatype == "check_info"
+            formData = new FormData	  
+            switch Number(type)
+              when 1
+                formData.append 'ename', text.toLowerCase()
+              when 2
+                formData.append 'c_name', text.toLowerCase()
+              when 3
+                formData.append 'conclude', text.toLowerCase()
+              when 4
+                formData.append 'cdoan', text.toLowerCase()
+              when 5
+                formData.append 'hdieutri', text.toLowerCase()
+          else if @props.datatype == "doctor_check_info"
+            formData = new FormData	  
+            switch Number(type)
+              when 1
+                formData.append 'ename', text.toLowerCase()
+              when 2
+                formData.append 'c_name', text.toLowerCase()
+              when 3
+                formData.append 'qtbenhly', text.toLowerCase()
+              when 4
+                formData.append 'klamsang', text.toLowerCase()
+              when 5
+                formData.append 'cdbandau', text.toLowerCase()
+              when 6
+                formData.append 'bktheo', text.toLowerCase()
+              when 7
+                formData.append 'cdicd', text.toLowerCase()
+              when 8
+                formData.append 'kluan', text.toLowerCase()
+          else if @props.datatype == "bill_info"
+            formData = new FormData	  
+            switch Number(type)
+              when 1
+                formData.append 'remark', text.toLowerCase()
+              when 2
+                formData.append 'c_name', text.toLowerCase()
           
           if formData != undefined
             $.ajax
@@ -1193,6 +1241,154 @@
               return false
           when 10
             if record.typerecord == Number(text)
+              return true
+            else
+              return false
+      else if @props.datatype == "order_map"
+        switch Number(type)
+          when 1
+            if record.cname.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 2
+            if record.sername.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 3
+            if record.remark.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 4
+            if record.status == Number(text)
+              return true
+            else
+              return false
+          when 5
+            if record.tpayment == Number(text)
+              return true
+            else
+              return false
+          when 6
+            if record.discount == Number(text)
+              return true
+            else
+              return false
+          when 7
+            if record.tpayout == Number(text)
+              return true
+            else
+              return false
+      else if @props.datatype == "check_info"
+        switch Number(type)
+          when 1
+            if record.ename.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 2
+            if record.c_name.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 3
+            if record.conclude.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 4
+            if record.cdoan.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 5
+            if record.hdieutri.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 6
+            if record.status == Number(text)
+              return true
+            else
+              return false
+      else if @props.datatype == "doctor_check_info"
+        switch Number(type)
+          when 1
+            if record.ename.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 2
+            if record.c_name.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 3
+            if record.qtbenhly.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 4
+            if record.klamsang.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 5
+            if record.cdbandau.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 6
+            if record.bktheo.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 7
+            if record.cdicd.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 8
+            if record.kluan.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+      else if @props.datatype == "bill_info"
+        switch Number(type)
+          when 1
+            if record.remark.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 2
+            if record.c_name.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 3
+            if record.dvi == Number(text)
+              return true
+            else
+              return false
+          when 4
+            if record.sluong == Number(text)
+              return true
+            else
+              return false
+          when 5
+            if record.tpayment == Number(text)
+              return true
+            else
+              return false
+          when 6
+            if record.discount == Number(text)
+              return true
+            else
+              return false
+          when 7
+            if record.tpayout == Number(text)
               return true
             else
               return false
@@ -2036,6 +2232,177 @@
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    orderMapRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Danh sách phiếu khám'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên dịch vụ'
+                  React.DOM.th null, 'Tên khách hàng'
+                  React.DOM.th null, 'Tình trạng'
+                  React.DOM.th null, 'Tổng đơn giá'
+                  React.DOM.th null, 'Giảm giá'
+                  React.DOM.th null, 'Tổng thanh toán'
+                  React.DOM.th null, 'Ghi chú'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    checkInfoRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Thông tin điều trị'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên bệnh nhân'
+                  React.DOM.th null, 'Tên bác sỹ'
+                  React.DOM.th null, 'Kết luận'
+                  React.DOM.th null, 'Chuẩn đoán'
+                  React.DOM.th null, 'Hướng điều trị'
+                  React.DOM.th null, 'Tình trạng'
+                  React.DOM.th null, 'Ngày bắt đầu'
+                  React.DOM.th null, 'Ngày bắt kết thúc'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    doctorCheckInfoRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Thông tin khám'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên bệnh nhân'
+                  React.DOM.th null, 'Tên bác sỹ'
+                  React.DOM.th null, 'Quá trình bệnh lý'
+                  React.DOM.th null, 'Khám lâm sàng'
+                  React.DOM.th null, 'Chuẩn đoán ban đầu'
+                  React.DOM.th null, 'Bệnh kèm theo'
+                  React.DOM.th null, 'Chuẩn đoán ICD'
+                  React.DOM.th null, 'Kết luận'
+                  React.DOM.th null, 'Ngày kiểm tra'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    billInfoRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Danh sách hóa đơn'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: @props.datatype, dvi: @props.data[1], autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên bệnh nhân'
+                  React.DOM.th null, 'Diễn giải'
+                  React.DOM.th null, 'Đơn vị'
+                  React.DOM.th null, 'Số lượng'
+                  React.DOM.th null, 'Đơn giá'
+                  React.DOM.th null, 'Giảm giá'
+                  React.DOM.th null, 'Thanh toán'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()
@@ -2069,3 +2436,11 @@
         @medicineInternalRecordRender()
       else if @props.datatype == "medicine_stock_record"
         @medicineStockRecordRender()
+      else if @props.datatype == "order_map"
+        @orderMapRender()
+      else if @props.datatype == "check_info"
+        @checkInfoRender()
+      else if @props.datatype == "doctor_check_info"
+        @doctorCheckInfoRender()
+      else if @props.datatype == "bill_info"
+        @billInfoRender()

@@ -70,6 +70,9 @@ class CheckInfoController < ApplicationController
         if params.has_key?(:ename)
           @supplier = CheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id).group(:ename).limit(5)
 			    render json:@supplier
+			  elsif params.has_key?(:c_name)
+          @supplier = CheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id).group(:c_name).limit(5)
+			    render json:@supplier
         elsif params.has_key?(:conclude)
 				  @supplier = CheckInfo.where("conclude LIKE ? and station_id = ?" , "%#{params[:conclude]}%", @station.id).group(:conclude).limit(5)
 			    render json:@supplier
@@ -94,6 +97,9 @@ class CheckInfoController < ApplicationController
         @station = Station.find_by(user_id: current_user.id)
         if params.has_key?(:ename)
           @supplier = CheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+			    render json:@supplier
+        elsif params.has_key?(:c_name)
+          @supplier = CheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:conclude)
 				  @supplier = CheckInfo.where("conclude LIKE ? and station_id = ?" , "%#{params[:conclude]}%", @station.id)
