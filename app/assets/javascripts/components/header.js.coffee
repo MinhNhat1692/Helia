@@ -58,3 +58,22 @@
               type: "text"
     render: ->
       @NormalRender()
+      
+@Footer = React.createClass
+    getInitialState: ->
+      headerClassName: 'clearfix'
+    NormalRender: ->
+      React.DOM.footer id: 'footer', 'Copyright © 2016 Helia',
+        React.DOM.ul className: 'f-menu',
+          React.DOM.li null,
+            React.DOM.a href: '', 'Home'
+          React.DOM.li null,
+            React.DOM.a href: '', 'Dashboard'
+          React.DOM.li null,
+            React.DOM.a href: '', 'Report'
+          React.DOM.li null,
+            React.DOM.a href: '', 'Support'
+          React.DOM.li null,
+            React.DOM.a href: '', 'Contact'
+    render: ->
+      @NormalRender()

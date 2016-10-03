@@ -1,7 +1,7 @@
 class OrderMapController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :create, :list, :destroy, :search, :find]
+  before_action :logged_in_user, only: [:update, :create, :list, :destroy, :search, :find]
   
-  def edit
+  def update
     if params.has_key?(:id_station)
       redirect_to root_path
     else
@@ -18,7 +18,7 @@ class OrderMapController < ApplicationController
 		        if !@service_id.nil?
 				      @service_id = @service_id.id
   		      end
-	  	      if @supplier.update(remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: [:tpayout])
+	  	      if @supplier.update(remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
   		  		  render json: @supplier
 	  		  	else
 		  		  	render json: @supplier.errors, status: :unprocessable_entity
@@ -45,11 +45,16 @@ class OrderMapController < ApplicationController
 		    if !@service_id.nil?
 					@service_id = @service_id.id
 		    end
-		    @supplier = OrderMap.new(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: [:tpayout])
+		    if params[:status] != 'Tình trạng'
+					@status = params[:status]
+				else
+					@status = 2
+		    end
+		    @supplier = OrderMap.new(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: @status, tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
 				if @supplier.save
-					@checkinfo = CheckInfo.new(order_map_id: @supplier.id, c_id: @supplier.customer_record_id, station_id: @station.id)
+					@checkinfo = CheckInfo.new(status: 1, order_map_id: @supplier.id, c_id: @customer_id, c_name: params[:cname], station_id: @station.id)
 					@checkinfo.save
-					@doctorcheckinfo = DoctorCheckInfo.new(order_map_id: @supplier.id,c_id: @supplier.customer_record_id, station_id: @station.id)
+					@doctorcheckinfo = DoctorCheckInfo.new(order_map_id: @supplier.id,c_id: @customer_id, c_name: params[:cname], station_id: @station.id)
 					@doctorcheckinfo.save
 				  render json: @supplier
 				else

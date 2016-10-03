@@ -1,6 +1,5 @@
   @Modal = React.createClass
     getInitialState: ->
-      #we have @props.prefix to know which is add form, which is edit form
       type: @props.type
       autoComplete: null
       code: null
@@ -283,6 +282,78 @@
         formData.append 'bill_in_code', $('#medicine_stock_record_bill_in_code').val()
         formData.append 'internal_record_code', $('#medicine_stock_record_internal_record_code').val()
         formData.append 'remark', $('#medicine_stock_record_remark').val()
+      else if @props.type == 'order_map'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+          if $('#form_status').val() == ''
+            formData.append 'status', @props.record.status
+          else
+            formData.append 'status', $('#form_status').val()
+        else
+          formData.append 'status', $('#form_status').val()
+        formData.append 'remark', $('#form_remark').val()
+        formData.append 'customer_id', $('#form_c_id').val()
+        formData.append 'cname', $('#form_cname').val()
+        formData.append 'service_id', $('#form_s_id').val()
+        formData.append 'sername', $('#form_sname').val()
+        formData.append 'tpayment', $('#form_tpayment').val()
+        formData.append 'discount', $('#form_discount').val()
+        formData.append 'tpayout', $('#form_tpayout').val()
+      else if @props.type == 'check_info'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+          if $('#form_status').val() == ''
+            formData.append 'status', @props.record.status
+          else
+            formData.append 'status', $('#form_status').val()
+        else
+          formData.append 'status', $('#form_status').val()
+        formData.append 'ename', $('#form_ename').val()
+        formData.append 'e_id', $('#form_e_id').val()
+        formData.append 'c_name', $('#form_cname').val()
+        formData.append 'c_id', $('#form_c_id').val()
+        formData.append 'kluan', $('#form_kluan').val()
+        formData.append 'cdoan', $('#form_cdoan').val()
+        formData.append 'hdieutri', $('#form_hdieutri').val()
+        formData.append 'daystart', $('#form_daystart').val()
+        formData.append 'dayend', $('#form_dayend').val()
+      else if @props.type == 'doctor_check_info'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+        formData.append 'daycheck', $('#form_daycheck').val()
+        formData.append 'ename', $('#form_ename').val()
+        formData.append 'e_id', $('#form_e_id').val()
+        formData.append 'c_id', $('#form_c_id').val()
+        formData.append 'c_name', $('#form_cname').val()
+        formData.append 'qtbenhly', $('#form_qtbenhly').val()
+        formData.append 'klamsang', $('#form_klamsang').val()
+        formData.append 'nhiptim', $('#form_nhiptim').val()
+        formData.append 'nhietdo', $('#form_nhietdo').val()
+        formData.append 'hamin', $('#form_hamin').val()
+        formData.append 'hamax', $('#form_hamax').val()
+        formData.append 'ntho', $('#form_ntho').val()
+        formData.append 'cnang', $('#form_cnang').val()
+        formData.append 'cao', $('#form_cao').val()
+        formData.append 'cdbandau', $('#form_cdbandau').val()
+        formData.append 'bktheo', $('#form_bktheo').val()
+        formData.append 'cdicd', $('#form_cdicd').val()
+        formData.append 'kluan', $('#form_kluan').val()
+      else if @props.type == 'bill_info'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+          if $('#form_dvi').val() == ''
+            formData.append 'dvi', @props.record.dvi
+          else
+            formData.append 'dvi', $('#form_dvi').val()
+        else
+          formData.append 'dvi', $('#form_dvi').val()
+        formData.append 'remark', $('#form_remark').val()
+        formData.append 'c_id', $('#form_c_id').val()
+        formData.append 'c_name', $('#form_cname').val()
+        formData.append 'sluong', $('#form_sluong').val()
+        formData.append 'tpayment', $('#form_tpayment').val()
+        formData.append 'discount', $('#form_discount').val()
+        formData.append 'tpayout', $('#form_tpayout').val()
       if @props.prefix == "add"
         $.ajax
           url: '/' + @props.type
@@ -700,6 +771,60 @@
                 code: code
               return
             ).bind(this)
+      else if code == 'cname'
+        if $('#form_cname').val().length > 3
+          formData = new FormData
+          formData.append 'namestring', $('#form_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'ename'
+        if $('#form_ename').val().length > 1
+          formData = new FormData
+          formData.append 'ename', $('#form_ename').val().toLowerCase()
+          $.ajax
+            url: '/employee/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'sname'
+        if $('#form_sname').val().length > 1
+          formData = new FormData
+          formData.append 'sname', $('#form_sname').val().toLowerCase()
+          $.ajax
+            url: '/service/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
     triggerAutoComplete: (record) ->
       if @state.type == 'medicine_sample'
         $('#medicine_sample_company').val(record.name)
@@ -781,6 +906,20 @@
         $('#position_set_p_id').val(record.id)
         $('#position_set_pname').val(record.pname)
         @setState autoComplete: null
+      else if @state.code == 'cname'
+        $('#form_cname').val(record.cname)
+        $('#form_c_id').val(record.id)
+        @setState autoComplete: null
+      else if @state.code == 'ename'
+        $('#form_ename').val(record.ename)
+        $('#form_e_id').val(record.id)
+        @setState autoComplete: null
+      else if @state.code == 'sname'
+        $('#form_sname').val(record.sname)
+        $('#form_tpayment').val(record.price)
+        $('#form_tpayout').val(record.price)
+        $('#form_s_id').val(record.id)
+        @setState autoComplete: null
     triggerRecalPayment: (e) ->
       if @state.type == 'medicine_bill_in'
         if $('#medicine_bill_in_tpayment').val() > 0
@@ -808,6 +947,17 @@
               $('#medicine_prescript_internal_tpayout').val(Number($('#medicine_prescript_internal_tpayment').val()) - Number($('#medicine_prescript_internal_discount').val()))
       if @state.type == 'medicine_internal_record'
         $('#medicine_internal_record_tpayment').val(Number($('#medicine_internal_record_price').val()) * Number($('#medicine_internal_record_amount').val()))
+      if @state.type == 'order_map'
+        if $('#form_tpayment').val() > 0
+          if $('#form_discount').val() > 0
+            $('#form_discount_percent').val(Number($('#form_discount').val())/Number($('#form_tpayment').val())*100)
+            $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+          else
+            if $('#form_discount_percent').val() > 0
+              $('#form_discount').val(Number($('#form_discount_percent').val()) * Number($('#form_tpayment').val()) / 100)
+              $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+            else
+              $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
     trigger: (e) ->
     employeeForm: ->
       React.DOM.div className: 'modal fade',
@@ -969,67 +1119,57 @@
                   React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
-                      React.DOM.div className: 'col-sm-3',
-                        React.createElement SelectBox, id: 'order_map_status', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Đã thanh toán'},{id: 2, name: 'Chưa thanh toán'},{id: 3, name: 'Khác'}], text: 'Tình trạng'
+                      React.DOM.div className: 'col-sm-5',
+                        React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Chưa thanh toán, chưa khám bệnh'},{id: 2, name: 'Đã thanh toán, đang chờ khám'},{id: 3, name: 'Đã thanh toán, đã khám bệnh'},{id: 4, name: 'Chưa thanh toán, đã khám bệnh'}], text: 'Tình trạng'
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bệnh nhân'
                       React.DOM.div className: 'col-sm-9',
-                        React.DOM.input id: 'order_map_customer_record_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                        React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
                           if @props.record != null
                             @props.record.customer_record_id
                           else
-                            if @props.customer != null
-                              @props.customer.id
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'customer_record'
+                              @props.extra.data.id
                             else
                               ""
-                        React.createElement InputField, id: 'order_map_cname_code', className: 'form-control', type: 'text', code: 'order_map_customer_code', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                        React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
                           if @props.record != null
                             @props.record.cname
                           else
-                            if @props.customer != null
-                              @props.customer.cname
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'customer_record'
+                              @props.extra.data.cname
                             else
                               ""
-                        React.DOM.div className: "auto-complete", id: "oorder_map_cname_code_autocomplete",
-                          if @state.autoComplete != null and @state.code == 'order_map_cname_code'
-                            for recordsearch in @state.autoComplete
-                              React.createElement AutoComplete, key: recordsearch.id, record: recordsearch, trigger: @triggerAutoComplete, text:
-                                if recordsearch.dob != null
-                                  recordsearch.cname + "," + recordsearch.dob.substring(8, 10) + "/" + recordsearch.dob.substring(5, 7) + "/" + recordsearch.dob.substring(0, 4)
-                                else
-                                  recordsearch.cname
+                        React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'cname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên dịch vụ'
                       React.DOM.div className: 'col-sm-9',
-                        React.DOM.input id: 'order_map_service_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'cid', defaultValue:
+                        React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'sid', defaultValue:
                           if @props.record != null
                             @props.record.service_id
                           else
-                            if @props.service != null
-                              @props.service.id
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'service'
+                              @props.extra.data.id
                             else  
                               ""
-                        React.createElement InputField, id: 'order_map_sername', className: 'form-control', type: 'text', code: 'order_map_sername', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                        React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
                           if @props.record != null
                             @props.record.sername
                           else
-                            if @props.service != null
-                              @props.service.sname
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'service'
+                              @props.extra.data.sname
                             else
                               ""
-                        React.DOM.div className: "auto-complete", id: "order_map_sername_autocomplete",
-                          if @state.autoComplete != null and @state.code == 'order_map_sername'
-                            for recordsearch in @state.autoComplete
-                              React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.sname, record: recordsearch, trigger: @triggerAutoComplete
-                    React.DOM.div className: 'form-group',
-                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng thuốc'
-                      React.DOM.div className: 'col-sm-2',
-                        React.createElement SelectBox, id: 'order_map_status', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Đã chuyển hàng'},{id: 2, name: 'Chưa chuyển hàng'},{id: 3, name: 'Khác'}], text: 'Tình trạng'
+                        React.DOM.div className: "auto-complete", id: "sname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'sname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
                     React.DOM.div className: 'form-group',
                       React.DOM.div className: 'col-md-8',
                         React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ghi chú'
                         React.DOM.div className: 'col-sm-9',
-                          React.DOM.textarea id: 'order_map_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
+                          React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
                             if @props.record != null
                               @props.record.remark
                             else
@@ -1037,43 +1177,35 @@
                       React.DOM.div className: 'col-md-4',
                         React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
                         React.DOM.div className: 'col-sm-6',
-                          React.createElement InputField, id: 'order_map_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @trigger, trigger3: @trigger, trigger2: @trigger, defaultValue:
+                          React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @trigger, trigger3: @trigger, trigger2: @trigger, defaultValue:
                             if @props.record != null
                               @props.record.tpayment
                             else
                               0
                         React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
                         React.DOM.div className: 'col-sm-6',
-                          React.createElement InputField, id: 'order_map_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                          React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
                             if @props.record != null
                               @props.record.discount
                             else
                               0
                         React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
                         React.DOM.div className: 'col-sm-6',
-                          React.createElement InputField, id: 'order_map_discount_percent', className: 'form-control', type: 'number', placeholder: '% Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                          React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', placeholder: '% Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
                             if @props.record != null
                               @props.record.discount/@props.record.tpayment * 100
                             else
                               0
                         React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
                         React.DOM.div className: 'col-sm-6',
-                          React.createElement InputField, id: 'order_map_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                          React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
                             if @props.record != null
                               @props.record.tpayout
                             else
                               0
-                    React.DOM.button
-                      type: 'submit'
-                      className: 'btn btn-default pull-right'
-                      'Lưu'
-            React.DOM.div
-              className: 'modal-footer'
-              React.DOM.button
-                className: 'btn btn-default'
-                'data-dismiss': 'modal'
-                type: 'button'
-                'Close' 
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close' 
     roomForm: ->
       React.DOM.div className: 'modal fade',
         React.DOM.div className: 'modal-dialog modal-lg',
@@ -2298,6 +2430,384 @@
                 'data-dismiss': 'modal'
                 type: 'button'
                 'Close'
+    checkInfoForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Thông tin điều trị'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng'
+                      React.DOM.div className: 'col-sm-5',
+                        React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Chưa khám'},{id: 2, name: 'Đang khám'},{id: 3, name: 'Kết thúc khám'}], text: 'Tình trạng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.c_id
+                          else
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'customer_record'
+                              @props.extra.data.id
+                            else
+                              ""
+                        React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.c_name
+                          else
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'customer_record'
+                              @props.extra.data.cname
+                            else
+                              ""
+                        React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'cname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bác sỹ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_e_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'eid', defaultValue:
+                          if @props.record != null
+                            @props.record.e_id
+                          else
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'employee'
+                              @props.extra.data.id
+                            else  
+                              ""
+                        React.createElement InputField, id: 'form_ename', className: 'form-control', type: 'text', code: 'ename', placeholder: 'Tên bác sỹ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.ename
+                          else
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'employee'
+                              @props.extra.data.ename
+                            else
+                              ""
+                        React.DOM.div className: "auto-complete", id: "ename_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'ename'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'employee_mini', header: [{id: 1,name: "Mã nhân viên"},{id: 2, name: "Tên"},{id: 3, name: "Số điện thoại"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Kết luận'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_kluan', className: 'form-control', placeholder: 'Kết luận', defaultValue:
+                            if @props.record != null
+                              @props.record.kluan
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Chuẩn đoán'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_cdoan', className: 'form-control', placeholder: 'Chuẩn đoán', defaultValue:
+                            if @props.record != null
+                              @props.record.cdoan
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hướng điều trị'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_hdieutri', className: 'form-control', placeholder: 'Hướng điều trị', defaultValue:
+                            if @props.record != null
+                              @props.record.hdieutri
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ngày bắt đầu'
+                        React.DOM.div className: 'col-sm-3',
+                          React.DOM.input id: 'form_daystart', type: 'text', className: 'form-control', placeholder: 'Ngày bắt đầu', defaultValue:
+                            if @props.record != null and @props.record.daystart != null
+                              @props.record.daystart.substring(8, 10) + "/" + @props.record.daystart.substring(5, 7) + "/" + @props.record.daystart.substring(0, 4)
+                            else
+                              moment().format('DD/MM/YYYY')
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ngày kết thúc'
+                        React.DOM.div className: 'col-sm-3',
+                          React.DOM.input id: 'form_dayend', type: 'text', className: 'form-control', placeholder: 'Ngày kết thúc', defaultValue:
+                            if @props.record != null and @props.record.dayend != null
+                              @props.record.dayend.substring(8, 10) + "/" + @props.record.dayend.substring(5, 7) + "/" + @props.record.dayend.substring(0, 4)
+                            else
+                              moment().format('DD/MM/YYYY')
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close' 
+    doctorCheckInfoForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Thông tin khám'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ngày khám'
+                        React.DOM.div className: 'col-sm-4',
+                          React.DOM.input id: 'form_daycheck', type: 'text', className: 'form-control', placeholder: 'Ngày khám', defaultValue:
+                            if @props.record != null and @props.record.daycheck != null
+                              @props.record.daycheck.substring(8, 10) + "/" + @props.record.daycheck.substring(5, 7) + "/" + @props.record.daycheck.substring(0, 4)
+                            else
+                              moment().format('DD/MM/YYYY')
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.c_id
+                          else
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'customer_record'
+                              @props.extra.data.id
+                            else
+                              ""
+                        React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.c_name
+                          else
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'customer_record'
+                              @props.extra.data.cname
+                            else
+                              ""
+                        React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'cname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên bác sỹ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_e_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'eid', defaultValue:
+                          if @props.record != null
+                            @props.record.e_id
+                          else
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'employee'
+                              @props.extra.data.id
+                            else  
+                              ""
+                        React.createElement InputField, id: 'form_ename', className: 'form-control', type: 'text', code: 'ename', placeholder: 'Tên bác sỹ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.ename
+                          else
+                            if @props.extra != null and @props.extra != undefined and @props.extra.datatype == 'employee'
+                              @props.extra.data.ename
+                            else
+                              ""
+                        React.DOM.div className: "auto-complete", id: "ename_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'ename'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'employee_mini', header: [{id: 1,name: "Mã nhân viên"},{id: 2, name: "Tên"},{id: 3, name: "Số điện thoại"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Quá trình bệnh lý'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_qtbenhly', className: 'form-control', placeholder: 'Quá trình bệnh lý', defaultValue:
+                            if @props.record != null
+                              @props.record.qtbenhly
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Khám lâm sàng'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_klamsang', className: 'form-control', placeholder: 'Khám lâm sàng', defaultValue:
+                            if @props.record != null
+                              @props.record.klamsang
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhịp tim'
+                        React.DOM.div className: 'col-sm-2',
+                          React.DOM.input id: 'form_nhiptim', type: 'number', className: 'form-control', placeholder: 'Nhịp tim', defaultValue:
+                            if @props.record != null
+                              @props.record.nhiptim
+                            else
+                              ''
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhiệt độ'
+                        React.DOM.div className: 'col-sm-2',
+                          React.DOM.input id: 'form_nhietdo', type: 'number', className: 'form-control', placeholder: 'Nhiệt độ', defaultValue:
+                            if @props.record != null
+                              @props.record.nhietdo
+                            else
+                              ''
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhịp thở'
+                        React.DOM.div className: 'col-sm-2',
+                          React.DOM.input id: 'form_ntho', type: 'number', className: 'form-control', placeholder: 'Nhịp thở', defaultValue:
+                            if @props.record != null
+                              @props.record.ntho
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Huyết ap min'
+                        React.DOM.div className: 'col-sm-1',
+                          React.DOM.input id: 'form_hamin', type: 'number', className: 'form-control', placeholder: 'Huyết ap min', defaultValue:
+                            if @props.record != null
+                              @props.record.hamin
+                            else
+                              ''
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Huyết áp max'
+                        React.DOM.div className: 'col-sm-1',
+                          React.DOM.input id: 'form_hamax', type: 'number', className: 'form-control', placeholder: 'Huyết áp max', defaultValue:
+                            if @props.record != null
+                              @props.record.hamax
+                            else
+                              ''
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Cân nặng'
+                        React.DOM.div className: 'col-sm-1',
+                          React.DOM.input id: 'form_cnang', type: 'number', className: 'form-control', placeholder: 'Cân nặng', defaultValue:
+                            if @props.record != null
+                              @props.record.cnang
+                            else
+                              ''
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Chiều cao'
+                        React.DOM.div className: 'col-sm-1',
+                          React.DOM.input id: 'form_cao', type: 'number', className: 'form-control', placeholder: 'Chiều cao', defaultValue:
+                            if @props.record != null
+                              @props.record.cao
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Chuẩn đoán ban đầu'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_cdbandau', className: 'form-control', placeholder: 'Chuẩn đoán ban đầu', defaultValue:
+                            if @props.record != null
+                              @props.record.cdbandau
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Bệnh kèm theo'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_bktheo', className: 'form-control', placeholder: 'Bệnh kèm theo', defaultValue:
+                            if @props.record != null
+                              @props.record.bktheo
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Chuẩn đoán ICD'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_cdicd', className: 'form-control', placeholder: 'Chuẩn đoán ICD', defaultValue:
+                            if @props.record != null
+                              @props.record.cdicd
+                            else
+                              ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Kết luận'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_kluan', className: 'form-control', placeholder: 'Kết luận', defaultValue:
+                            if @props.record != null
+                              @props.record.kluan
+                            else
+                              ''
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close' 
+    billInfoForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Bản ghi dịch vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
+                      React.DOM.div className: 'col-sm-5',
+                        React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @trigger, blurOut: @trigger, records: [{id: 1, name: 'Chưa thanh toán, chưa khám bệnh'},{id: 2, name: 'Đã thanh toán, đang chờ khám'},{id: 3, name: 'Đã thanh toán, đã khám bệnh'},{id: 4, name: 'Chưa thanh toán, đã khám bệnh'}], text: 'Tình trạng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.customer_record_id
+                          else
+                            if @props.customer != null and @props.customer != undefined
+                              @props.customer.id
+                            else
+                              ""
+                        React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.cname
+                          else
+                            if @props.customer != null and @props.customer != undefined
+                              @props.customer.cname
+                            else
+                              ""
+                        React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'cname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên dịch vụ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'sid', defaultValue:
+                          if @props.record != null
+                            @props.record.service_id
+                          else
+                            if @props.service != null and @props.service != undefined
+                              @props.service.id
+                            else  
+                              ""
+                        React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.sername
+                          else
+                            if @props.service != null and @props.service != undefined
+                              @props.service.sname
+                            else
+                              ""
+                        React.DOM.div className: "auto-complete", id: "sname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'sname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-8',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ghi chú'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue:
+                            if @props.record != null
+                              @props.record.remark
+                            else
+                              ''
+                      React.DOM.div className: 'col-md-4',
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @trigger, trigger3: @trigger, trigger2: @trigger, defaultValue:
+                            if @props.record != null
+                              @props.record.tpayment
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.discount
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', placeholder: '% Giảm giá', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.discount/@props.record.tpayment * 100
+                            else
+                              0
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @trigger, trigger3: @trigger, trigger2: @triggerRecalPayment, defaultValue:
+                            if @props.record != null
+                              @props.record.tpayout
+                            else
+                              0
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close' 
     propTypes: handleHideModal: React.PropTypes.func.isRequired
     render: ->
       if @state.type == 'employee'
@@ -2336,6 +2846,12 @@
         @medicineStockRecordForm()
       else if @state.type == 'position_set'
         @positionSetForm()
+      else if @state.type == 'check_info'
+        @checkInfoForm()
+      else if @state.type == 'doctor_check_info'
+        @doctorCheckInfoForm()
+      else if @state.type == 'bill_info'
+        @billInfoForm()
         
         
   @ModalOutside = React.createClass

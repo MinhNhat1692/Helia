@@ -10,7 +10,11 @@ class BillInfoController < ApplicationController
 		    if params.has_key?(:id)
           @supplier = BillInfo.find(params[:id])
           if @supplier.station_id == @station.id
-            if @supplier.update(remark: params[:text], dvi: params[:dvi], sluong: params[:sluong], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
+						@customer_id = CustomerRecord.find_by(id: params[:c_id], cname: params[:c_name], station_id: @station.id)
+		        if !@customer_id.nil?
+				      @customer_id = @customer_id.id
+  		      end
+            if @supplier.update(remark: params[:remark], c_id: @customer_id, c_name: params[:c_name], dvi: params[:dvi], sluong: params[:sluong], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
   		  	    render json: @supplier
 	  		    else
 		  	      render json: @supplier.errors, status: :unprocessable_entity

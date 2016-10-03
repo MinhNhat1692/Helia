@@ -43,6 +43,7 @@
           {code: 34, active: false, name: 'Thông tin khám'}
           {code: 35, active: false, name: 'Danh sách hóa đơn'}
         ]    
+      Doctor: {type: 1, className: 'fa fa-user-md', active: false, name: "Trình tác vụ của bác sỹ", code: 60}
       Pharmacy:
         type: 2, className: 'fa fa-medkit', active: false, name: "Quản lý thuốc",
         records: [
@@ -539,6 +540,11 @@
             {code: 50, active: false, name: 'Thông tin thuốc kê trong'}
             {code: 51, active: false, name: 'Thống kê kho thuốc'}
           ]
+      if code == 60
+        @setState Doctor: {type: 1, className: 'fa fa-user-md', active: true, name: "Trình tác vụ của bác sỹ", code: 60}
+      else
+        @setState Doctor: {type: 1, className: 'fa fa-user-md', active: false, name: "Trình tác vụ của bác sỹ", code: 60}
+      
     handleGetdata: (data) ->
       $.ajax
         url: data.link
@@ -571,6 +577,7 @@
             React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.DataLink, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.Patient, Trigger: @Trigger
+            React.createElement MenuAside, submenu: @state.Doctor, Trigger: @Trigger 
             React.createElement MenuAside, submenu: @state.Pharmacy, Trigger: @Trigger
         React.DOM.section id: 'content',
           React.createElement MainApp, data: @state.data, task: @state.task

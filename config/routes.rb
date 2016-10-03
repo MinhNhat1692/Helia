@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   post '/check_info/find', to: 'check_info#find'
 
   delete '/order_map', to: 'order_map#destroy'
-  put '/order_map', to: 'order_map#edit'
+  put '/order_map', to: 'order_map#update'
   post '/order_map', to: 'order_map#create'
   post '/order_map/list', to: 'order_map#list'
   post '/order_map/search', to: 'order_map#search'

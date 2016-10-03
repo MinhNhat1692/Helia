@@ -289,7 +289,9 @@
         if recordlife.id == record.id
           index = @state.records.indexOf recordlife
           records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-          @setState records: records
+          @setState
+            records: records
+            record: data
           break
     deleteRecord: (record) ->
       index = @state.records.indexOf record
@@ -1644,8 +1646,8 @@
           React.DOM.h2 null, 'Dịch vụ'
         React.DOM.div className: 'card',
           React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: 'service', prefix: 'add'
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: 'service', prefix: 'edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
             React.DOM.br null
             React.DOM.br null
@@ -1688,10 +1690,10 @@
           React.DOM.div className: 'card',
             React.DOM.div className: 'card-header',
               React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-exchange', text: ' Toggle Sidebar', type: 1, Clicked: @toggleSideBar
-              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Add Record', type: 2, trigger: @addRecord, datatype: 'customer_record', prefix: "add"
-              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o', text: ' Edit', type: 2, trigger2: @updateRecord, datatype: 'customer_record', prefix: "edit", record: @state.record
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Add Record', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: "add"
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o', text: ' Edit', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: "edit", record: @state.record
               React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Delete', type: 1, Clicked: @deleteRecord
-              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Thêm yêu cầu khám bệnh', type: 2, trigger: @trigger, datatype: 'order_map', prefix: "add"
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Thêm yêu cầu khám bệnh', type: 2, trigger: @trigger, datatype: 'order_map', prefix: "add", extra: {datatype: @props.datatype, data: @state.record}
               React.DOM.br null
               React.DOM.br null
               React.createElement FilterForm, datatype: 'customer_record', autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
@@ -2280,7 +2282,7 @@
           React.DOM.h2 null, 'Thông tin điều trị'
         React.DOM.div className: 'card',
           React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
             React.DOM.br null
@@ -2297,7 +2299,7 @@
                   React.DOM.th null, 'Hướng điều trị'
                   React.DOM.th null, 'Tình trạng'
                   React.DOM.th null, 'Ngày bắt đầu'
-                  React.DOM.th null, 'Ngày bắt kết thúc'
+                  React.DOM.th null, 'Ngày kết thúc'
               React.DOM.tbody null,
                 if @state.filteredRecord != null
                   for record in @state.filteredRecord
@@ -2323,7 +2325,7 @@
           React.DOM.h2 null, 'Thông tin khám'
         React.DOM.div className: 'card',
           React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
             React.DOM.br null

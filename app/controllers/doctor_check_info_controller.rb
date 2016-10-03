@@ -10,11 +10,15 @@ class DoctorCheckInfoController < ApplicationController
 		    if params.has_key?(:id)
           @supplier = DoctorCheckInfo.find(params[:id])
           if @supplier.station_id == @station.id
-            @employee_id = Employee.find_by(id: params[:e_id], sname: params[:ename], station_id: @station.id)
+						@customer_id = CustomerRecord.find_by(id: params[:c_id], cname: params[:c_name], station_id: @station.id)
+		        if !@customer_id.nil?
+				      @customer_id = @customer_id.id
+  		      end
+            @employee_id = Employee.find_by(id: params[:e_id], ename: params[:ename], station_id: @station.id)
 		        if !@employee_id.nil?
 			        @employee_id = @employee_id.id
   		      end
-		        if @supplier.update(date: params[:date], ename: params[:ename], e_id: @employee_id, qtbenhly: params[:qtbenhly], klamsang: params[:klamsang], nhiptim: params[:nhaptim], nhietdo: params[:nhietdo], hamin: params[:hamin], hamax: params[:hamax], ntho: params[:ntho], cnang: params[:cnang], cao: params[:cao], cdbandau: params[:cdbandau], bktheo: params[:bktheo], cdicd: params[:cdicd], kluan: params[:kluan])
+		        if @supplier.update(daycheck: params[:daycheck], c_id: @customer_id, c_name: params[:c_name], ename: params[:ename], e_id: @employee_id, qtbenhly: params[:qtbenhly], klamsang: params[:klamsang], nhiptim: params[:nhiptim], nhietdo: params[:nhietdo], hamin: params[:hamin], hamax: params[:hamax], ntho: params[:ntho], cnang: params[:cnang], cao: params[:cao], cdbandau: params[:cdbandau], bktheo: params[:bktheo], cdicd: params[:cdicd], kluan: params[:kluan])
   		  	    render json: @supplier
 	  		    else
 		  	      render json: @supplier.errors, status: :unprocessable_entity

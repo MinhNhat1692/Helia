@@ -1100,7 +1100,7 @@
           React.DOM.td null, @props.record.currency
           React.DOM.td null, @props.record.description
           React.DOM.td null,
-          React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'Logo'
+            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'Logo'
       else
         React.DOM.tr onClick: @selectRecord,
           React.DOM.td null, @props.record.sname
@@ -1109,7 +1109,18 @@
           React.DOM.td null, @props.record.currency
           React.DOM.td null, @props.record.description
           React.DOM.td null,
-          React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'Logo'
+            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'Logo'
+    ServiceMini: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.sname
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.currency
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.sname
+          React.DOM.td null, @props.record.price
+          React.DOM.td null, @props.record.currency
     Employee: ->
       for gender in @props.gender
         if @props.record.gender == gender.id
@@ -1133,6 +1144,17 @@
           React.DOM.td null, @state.typeName
           React.DOM.td null,
             React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.avatar, 'AVATAR'  
+    EmployeeMini: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.pnumber
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.pnumber
     Room: ->
       if @props.selected
         React.DOM.tr className: "toggled",
@@ -1213,6 +1235,45 @@
           React.DOM.td null, @props.record.issue_place
           React.DOM.td null,
             React.DOM.a href: @props.record.avatar, className: 'btn btn-default', target: '_blank', style: {margin: '5px'}, 'Avatar'
+    CustomerRecordMini: ->
+      for gender in @props.gender
+        if @props.record.gender == gender.id
+          @state.typeName = gender.name
+          break
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, 
+            if @props.record.dob != null && @props.record.dob != undefined
+              @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+            else
+              ""
+          React.DOM.td null,
+            if @props.record.dob != null && @props.record.dob != undefined  
+              @calAge(@props.record.dob,2).years
+            else
+              ""
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.noid
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, 
+            if @props.record.dob != null && @props.record.dob != undefined 
+              @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+            else
+              ""
+          React.DOM.td null,
+            if @props.record.dob != null && @props.record.dob != undefined 
+              @calAge(@props.record.dob,2).years
+            else
+              ""
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.address
+          React.DOM.td null, @props.record.pnumber
+          React.DOM.td null, @props.record.noid
     OrderMap: ->
       switch Number(@props.record.status)
         when 1
@@ -1385,3 +1446,9 @@
         @DoctorCheckInfo()
       else if @props.datatype == 'bill_info'
         @BillInfo()
+      else if @props.datatype == 'customer_record_mini'
+        @CustomerRecordMini()
+      else if @props.datatype == 'service_mini'
+        @ServiceMini()
+      else if @props.datatype == 'employee_mini'
+        @EmployeeMini()
