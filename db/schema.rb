@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160930121548) do
+ActiveRecord::Schema.define(version: 20161003123156) do
 
   create_table "bill_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "remark",       limit: 65535
@@ -432,6 +432,8 @@ ActiveRecord::Schema.define(version: 20160930121548) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "station_id"
+    t.string   "ename"
+    t.string   "pname"
     t.index ["employee_id"], name: "index_position_mappings_on_employee_id", using: :btree
     t.index ["position_id"], name: "index_position_mappings_on_position_id", using: :btree
   end
@@ -449,6 +451,7 @@ ActiveRecord::Schema.define(version: 20160930121548) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
+    t.string   "rname"
     t.index ["room_id"], name: "index_positions_on_room_id", using: :btree
     t.index ["station_id"], name: "index_positions_on_station_id", using: :btree
   end
@@ -510,6 +513,8 @@ ActiveRecord::Schema.define(version: 20160930121548) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "station_id"
+    t.string   "sname"
+    t.string   "rname"
     t.index ["room_id"], name: "index_service_maps_on_room_id", using: :btree
     t.index ["service_id"], name: "index_service_maps_on_service_id", using: :btree
   end

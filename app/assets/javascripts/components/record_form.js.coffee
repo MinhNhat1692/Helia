@@ -280,7 +280,19 @@
           when 2
             formData.append 'description', $('#filter_text').val().toLowerCase()
           when 3
-            formData.append 'room_id', $('#filter_text').val()
+            formData.append 'rname', $('#filter_text').val()
+      else if @props.datatype == "posmap"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'ename', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'pname', $('#filter_text').val().toLowerCase()
+      else if @props.datatype == "sermap"
+        switch Number($('#filter_type_select').val())
+          when 1
+            formData.append 'sname', $('#filter_text').val().toLowerCase()
+          when 2
+            formData.append 'rname', $('#filter_text').val().toLowerCase()
       else if @props.datatype == "order_map"
         switch Number($('#filter_type_select').val())
           when 1
@@ -556,6 +568,20 @@
             $('#filter_text').val(record.pname)
           when 2
             $('#filter_text').val(record.description)
+          when 3
+            $('#filer_text').val(record.rname)
+      else if @props.datatype == "posmap"
+        switch Number($('#filter_type_select').val())
+          when 1
+            $('#filter_text').val(record.ename)
+          when 2
+            $('#filter_text').val(record.pname)
+      else if @props.datatype == "sermap"
+        switch Number($('#filter_type_select').val())
+          when 1
+            $('#filter_text').val(record.sname)
+          when 2
+            $('#filter_text').val(record.name)
       else if @props.datatype == "order_map"
         switch Number($('#filter_type_select').val())
           when 1
@@ -652,12 +678,6 @@
         switch Number($('#filter_type_select').val())
           when 5
             @setState selectList:[{id: 1, name: "Nam"},{id: 2, name: "Nữ"}]
-          else
-            @setState selectList: null
-      else if @props.datatype == "position"
-        switch Number($('#filter_type_select').val())
-          when 3
-            @setState selectList: @props.rooms
           else
             @setState selectList: null
       else if @props.datatype == "order_map"
@@ -789,7 +809,7 @@
           React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
             React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
               React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
-              React.DOM.option value: 1, 'Mã',
+              React.DOM.option value: 1, 'Mã'
               React.DOM.option value: 2, 'Tên thuốc'
               React.DOM.option value: 3, 'Loại thuốc'
               React.DOM.option value: 4, 'Nhóm thuốc'
@@ -1337,7 +1357,71 @@
                     when 1
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.pname
                     when 2
-                      React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.description                      
+                      React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.description
+                    when 3
+                      React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.rname                      
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
+          ' Về ban đầu',
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+            "Tìm kỹ (chậm và đầy đủ)"      
+    PosMap: ->
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên nhân viên'
+              React.DOM.option value: 2, 'Tên chức vụ'
+          React.DOM.div className: 'col-sm-8',
+            if @state.selectList == null
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...', name: 'filterText'
+            else
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+            React.DOM.div className: "auto-complete",
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  switch Number($('#filter_type_select').val())
+                    when 1
+                      React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.ename
+                    when 2
+                      React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.pname                     
+        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
+          React.DOM.i className: 'zmdi zmdi-search'
+          ' Tìm kiếm'
+        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
+          React.DOM.i className: 'zmdi zmdi-close'
+          ' Về ban đầu',
+        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
+          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
+            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+            "Tìm kỹ (chậm và đầy đủ)"      
+    SerMap: ->
+      React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
+        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+          React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+            React.DOM.select id: 'filter_type_select', className: 'form-control', name: 'filterType', onChange: @triggerChangeType,
+              React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+              React.DOM.option value: 1, 'Tên dịch vụ'
+              React.DOM.option value: 2, 'Tên phòng'
+          React.DOM.div className: 'col-sm-8',
+            if @state.selectList == null
+              React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...', name: 'filterText'
+            else
+              React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+            React.DOM.div className: "auto-complete",
+              if @props.autoComplete != null
+                for record in @props.autoComplete
+                  switch Number($('#filter_type_select').val())
+                    when 1
+                      React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.sname
+                    when 2
+                      React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.name                      
         React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
           React.DOM.i className: 'zmdi zmdi-search'
           ' Tìm kiếm'
@@ -1545,6 +1629,10 @@
         @Room()
       else if @props.datatype == "position"
         @Position()
+      else if @props.datatype == "posmap"
+        @PosMap()
+      else if @props.datatype == "sermap"
+        @SerMap()
       else if @props.datatype == "order_map"
         @OrderMap()
       else if @props.datatype == "check_info"

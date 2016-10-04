@@ -27,12 +27,8 @@
           {code: 12, active: false, name: 'Danh sách phòng'},
           {code: 13, active: false, name: 'Danh sách chức vụ'},
           {code: 14, active: false, name: 'Danh sách dịch vụ'}
-        ]
-      DataLink:
-        type: 2, className: 'fa fa-link', active: false, name: "Liên kết dữ liệu",
-        records: [
-          {code: 21, active: false, name: 'Liên kết chức vụ'},
-          {code: 22, active: false, name: 'Liên kết dịch vụ'}
+          {code: 15, active: false, name: 'Định chức vụ cho nhân viên'}
+          {code: 16, active: false, name: 'Định dịch vụ cho từng phòng'}
         ]
       Patient:
         type: 2, className: 'zmdi zmdi-account', active: false, name: "Bệnh nhân",
@@ -43,7 +39,14 @@
           {code: 34, active: false, name: 'Thông tin khám'}
           {code: 35, active: false, name: 'Danh sách hóa đơn'}
         ]    
-      Doctor: {type: 1, className: 'fa fa-user-md', active: false, name: "Trình tác vụ của bác sỹ", code: 60}
+      Doctor:
+        type: 2, className: 'zmdi zmdi-account', active: false, name: "Thông tin quản lý phòng",
+        records: [
+          {code: 60, active: false, name: 'Theo ngày'}
+          {code: 61, active: false, name: 'Theo tuần'}
+          {code: 62, active: false, name: 'Theo tháng'}
+          {code: 63, active: false, name: 'Theo năm'}
+        ]
       Pharmacy:
         type: 2, className: 'fa fa-medkit', active: false, name: "Quản lý thuốc",
         records: [
@@ -142,10 +145,12 @@
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
           records: [
-            {code: 11, active: true, name: 'Danh sách nhân viên'},
-            {code: 12, active: false, name: 'Danh sách phòng'},
-            {code: 13, active: false, name: 'Danh sách chức vụ'},
+            {code: 11, active: true, name: 'Danh sách nhân viên'}
+            {code: 12, active: false, name: 'Danh sách phòng'}
+            {code: 13, active: false, name: 'Danh sách chức vụ'}
             {code: 14, active: false, name: 'Danh sách dịch vụ'}
+            {code: 15, active: false, name: 'Định chức vụ cho nhân viên'}
+            {code: 16, active: false, name: 'Định dịch vụ cho từng phòng'}
           ]
       else if code == 12 #room
         data =
@@ -155,10 +160,12 @@
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
           records: [
-            {code: 11, active: false, name: 'Danh sách nhân viên'},
-            {code: 12, active: true, name: 'Danh sách phòng'},
-            {code: 13, active: false, name: 'Danh sách chức vụ'},
+            {code: 11, active: false, name: 'Danh sách nhân viên'}
+            {code: 12, active: true, name: 'Danh sách phòng'}
+            {code: 13, active: false, name: 'Danh sách chức vụ'}
             {code: 14, active: false, name: 'Danh sách dịch vụ'}
+            {code: 15, active: false, name: 'Định chức vụ cho nhân viên'}
+            {code: 16, active: false, name: 'Định dịch vụ cho từng phòng'}
           ]
       else if code == 13 #position
         data =
@@ -168,10 +175,12 @@
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
           records: [
-            {code: 11, active: false, name: 'Danh sách nhân viên'},
-            {code: 12, active: false, name: 'Danh sách phòng'},
-            {code: 13, active: true, name: 'Danh sách chức vụ'},
+            {code: 11, active: false, name: 'Danh sách nhân viên'}
+            {code: 12, active: false, name: 'Danh sách phòng'}
+            {code: 13, active: true, name: 'Danh sách chức vụ'}
             {code: 14, active: false, name: 'Danh sách dịch vụ'}
+            {code: 15, active: false, name: 'Định chức vụ cho nhân viên'}
+            {code: 16, active: false, name: 'Định dịch vụ cho từng phòng'}
           ]
       else if code == 14 #service
         data =
@@ -181,48 +190,53 @@
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
           records: [
-            {code: 11, active: false, name: 'Danh sách nhân viên'},
-            {code: 12, active: false, name: 'Danh sách phòng'},
-            {code: 13, active: false, name: 'Danh sách chức vụ'},
+            {code: 11, active: false, name: 'Danh sách nhân viên'}
+            {code: 12, active: false, name: 'Danh sách phòng'}
+            {code: 13, active: false, name: 'Danh sách chức vụ'}
             {code: 14, active: true, name: 'Danh sách dịch vụ'}
+            {code: 15, active: false, name: 'Định chức vụ cho nhân viên'}
+            {code: 16, active: false, name: 'Định dịch vụ cho từng phòng'}
+          ]
+      else if code == 15 #posmap
+        data =
+          task: 15
+          link: '/posmap/list'
+        @handleGetdata(data)
+        @setState DataInput:
+          type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
+          records: [
+            {code: 11, active: false, name: 'Danh sách nhân viên'}
+            {code: 12, active: false, name: 'Danh sách phòng'}
+            {code: 13, active: false, name: 'Danh sách chức vụ'}
+            {code: 14, active: false, name: 'Danh sách dịch vụ'}
+            {code: 15, active: true, name: 'Định chức vụ cho nhân viên'}
+            {code: 16, active: false, name: 'Định dịch vụ cho từng phòng'}
+          ]
+      else if code == 16 #sermap
+        data =
+          task: 16
+          link: '/sermap/list'
+        @handleGetdata(data)
+        @setState DataInput:
+          type: 2, className: 'zmdi zmdi-view-list', active: true, name: "Nhập dữ liệu gốc",
+          records: [
+            {code: 11, active: false, name: 'Danh sách nhân viên'}
+            {code: 12, active: false, name: 'Danh sách phòng'}
+            {code: 13, active: false, name: 'Danh sách chức vụ'}
+            {code: 14, active: false, name: 'Danh sách dịch vụ'}
+            {code: 15, active: false, name: 'Định chức vụ cho nhân viên'}
+            {code: 16, active: true, name: 'Định dịch vụ cho từng phòng'}
           ]
       else
         @setState DataInput:
           type: 2, className: 'zmdi zmdi-view-list', active: false, name: "Nhập dữ liệu gốc",
           records: [
-            {code: 11, active: false, name: 'Danh sách nhân viên'},
-            {code: 12, active: false, name: 'Danh sách phòng'},
-            {code: 13, active: false, name: 'Danh sách chức vụ'},
+            {code: 11, active: false, name: 'Danh sách nhân viên'}
+            {code: 12, active: false, name: 'Danh sách phòng'}
+            {code: 13, active: false, name: 'Danh sách chức vụ'}
             {code: 14, active: false, name: 'Danh sách dịch vụ'}
-          ]
-      if code == 21 #employee link
-        data =
-          task: 21
-          link: '/position_mapping/list'
-        @handleGetdata(data)
-        @setState DataLink:
-          type: 2, className: 'fa fa-link', active: true, name: "Liên kết dữ liệu",
-          records: [
-            {code: 21, active: true, name: 'Liên kết chức vụ'},
-            {code: 22, active: false, name: 'Liên kết dịch vụ'}
-          ]
-      else if code == 22 #service link
-        data =
-          task: 22
-          link: '/service_mapping/list'
-        @handleGetdata(data)
-        @setState DataLink:
-          type: 2, className: 'fa fa-link', active: true, name: "Liên kết dữ liệu",
-          records: [
-            {code: 21, active: false, name: 'Liên kết chức vụ'},
-            {code: 22, active: true, name: 'Liên kết dịch vụ'}
-          ]
-      else
-        @setState DataLink:
-          type: 2, className: 'fa fa-link', active: false, name: "Liên kết dữ liệu",
-          records: [
-            {code: 21, active: false, name: 'Liên kết chức vụ'},
-            {code: 22, active: false, name: 'Liên kết dịch vụ'}
+            {code: 15, active: false, name: 'Định chức vụ cho nhân viên'}
+            {code: 16, active: false, name: 'Định dịch vụ cho từng phòng'}
           ]
       if code == 31 #patient list
         data =
@@ -541,10 +555,50 @@
             {code: 51, active: false, name: 'Thống kê kho thuốc'}
           ]
       if code == 60
-        @setState Doctor: {type: 1, className: 'fa fa-user-md', active: true, name: "Trình tác vụ của bác sỹ", code: 60}
+        @setState Doctor:
+          type: 2, className: 'zmdi zmdi-account', active: true, name: "Thông tin quản lý phòng",
+          records: [
+            {code: 60, active: true, name: 'Theo ngày'}
+            {code: 61, active: false, name: 'Theo tuần'}
+            {code: 62, active: false, name: 'Theo tháng'}
+            {code: 63, active: false, name: 'Theo năm'}
+          ]
+      else if code == 61
+        @setState Doctor:
+          type: 2, className: 'zmdi zmdi-account', active: true, name: "Thông tin quản lý phòng",
+          records: [
+            {code: 60, active: false, name: 'Theo ngày'}
+            {code: 61, active: true, name: 'Theo tuần'}
+            {code: 62, active: false, name: 'Theo tháng'}
+            {code: 63, active: false, name: 'Theo năm'}
+          ]
+      else if code == 62
+        @setState Doctor:
+          type: 2, className: 'zmdi zmdi-account', active: true, name: "Thông tin quản lý phòng",
+          records: [
+            {code: 60, active: false, name: 'Theo ngày'}
+            {code: 61, active: false, name: 'Theo tuần'}
+            {code: 62, active: true, name: 'Theo tháng'}
+            {code: 63, active: false, name: 'Theo năm'}
+          ]
+      else if code == 63
+        @setState Doctor:
+          type: 2, className: 'zmdi zmdi-account', active: true, name: "Thông tin quản lý phòng",
+          records: [
+            {code: 60, active: false, name: 'Theo ngày'}
+            {code: 61, active: false, name: 'Theo tuần'}
+            {code: 62, active: false, name: 'Theo tháng'}
+            {code: 63, active: true, name: 'Theo năm'}
+          ]
       else
-        @setState Doctor: {type: 1, className: 'fa fa-user-md', active: false, name: "Trình tác vụ của bác sỹ", code: 60}
-      
+        @setState Doctor:
+          type: 2, className: 'zmdi zmdi-account', active: false, name: "Thông tin quản lý phòng",
+          records: [
+            {code: 60, active: false, name: 'Theo ngày'}
+            {code: 61, active: false, name: 'Theo tuần'}
+            {code: 62, active: false, name: 'Theo tháng'}
+            {code: 63, active: false, name: 'Theo năm'}
+          ]
     handleGetdata: (data) ->
       $.ajax
         url: data.link
@@ -574,10 +628,9 @@
             React.createElement MenuAside, submenu: @state.profile, Trigger: @Trigger      
             React.createElement MenuAside, submenu: @state.homeMenu, Trigger: @Trigger 
             React.createElement MenuAside, submenu: @state.Header, Trigger: @Trigger
-            React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
-            React.createElement MenuAside, submenu: @state.DataLink, Trigger: @Trigger
-            React.createElement MenuAside, submenu: @state.Patient, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.Doctor, Trigger: @Trigger 
+            React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
+            React.createElement MenuAside, submenu: @state.Patient, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.Pharmacy, Trigger: @Trigger
         React.DOM.section id: 'content',
           React.createElement MainApp, data: @state.data, task: @state.task

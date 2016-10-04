@@ -72,18 +72,28 @@
           formData.append 'map', $('#room_form_map')[0].files[0]
       else if @props.type == 'position'
         if @props.record != null
+          formData.append 'id', @props.record.id  
+        formData.append 'rname', $('#form_rname').val()
+        formData.append 'r_id', $('#form_r_id').val()
+        formData.append 'pname', $('#form_pname').val()
+        formData.append 'lang', $('#form_lang').val()
+        formData.append 'description', $('#form_description').val()
+        if $('#form_file')[0].files[0] != undefined
+          formData.append 'file', $('#form_file')[0].files[0]
+      else if @props.type == 'posmap'
+        if @props.record != null
           formData.append 'id', @props.record.id
-          if $('#position_form_room').val() == "Tên phòng"
-            formData.append 'room', @props.record.room_id
-          else
-            formData.append 'room', $('#position_form_room').val()
-        else
-          formData.append 'room', $('#position_form_room').val()
-        formData.append 'pname', $('#position_form_pname').val()
-        formData.append 'lang', $('#position_form_lang').val()
-        formData.append 'description', $('#position_form_description').val()
-        if $('#position_form_file')[0].files[0] != undefined
-          formData.append 'file', $('#position_form_file')[0].files[0]
+        formData.append 'ename', $('#form_ename').val()
+        formData.append 'e_id', $('#form_e_id').val()
+        formData.append 'pname', $('#form_pname').val()
+        formData.append 'p_id', $('#form_p_id').val()
+      else if @props.type == 'sermap'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+        formData.append 'sname', $('#form_sname').val()
+        formData.append 's_id', $('#form_s_id').val()
+        formData.append 'rname', $('#form_rname').val()
+        formData.append 'r_id', $('#form_r_id').val()
       else if @props.type == 'position_mapping' # need fix
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -825,6 +835,42 @@
                 code: code
               return
             ).bind(this)
+      else if code == 'pname'
+        if $('#form_pname').val().length > 1
+          formData = new FormData
+          formData.append 'pname', $('#form_pname').val().toLowerCase()
+          $.ajax
+            url: '/position/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'rname'
+        if $('#form_rname').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#form_rname').val().toLowerCase()
+          $.ajax
+            url: '/room/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
     triggerAutoComplete: (record) ->
       if @state.type == 'medicine_sample'
         $('#medicine_sample_company').val(record.name)
@@ -919,6 +965,14 @@
         $('#form_tpayment').val(record.price)
         $('#form_tpayout').val(record.price)
         $('#form_s_id').val(record.id)
+        @setState autoComplete: null
+      else if @state.code == 'pname'
+        $('#form_pname').val(record.pname)
+        $('#form_p_id').val(record.id)
+        @setState autoComplete: null
+      else if @state.code == 'rname'
+        $('#form_rname').val(record.name)
+        $('#form_r_id').val(record.id)
         @setState autoComplete: null
     triggerRecalPayment: (e) ->
       if @state.type == 'medicine_bill_in'
@@ -1208,7 +1262,7 @@
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close' 
     roomForm: ->
       React.DOM.div className: 'modal fade',
-        React.DOM.div className: 'modal-dialog modal-lg',
+        React.DOM.div className: 'modal-dialog',
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin phòng'
@@ -1242,7 +1296,7 @@
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
     positionForm: ->
       React.DOM.div className: 'modal fade',
-        React.DOM.div className: 'modal-dialog modal-lg',
+        React.DOM.div className: 'modal-dialog',
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin chức vụ'
@@ -1250,15 +1304,27 @@
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
-                  React.DOM.form id: 'position_form', className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
                     React.DOM.div className: 'form-group',
-                      React.DOM.label className: 'col-sm-4 control-label', 'Tên phòng'
+                      React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Tên phòng'
                       React.DOM.div className: 'col-sm-8',
-                        React.createElement SelectBox, records: @props.extra, type: 1, id: 'position_form_room', text: 'Tên phòng'
+                        React.DOM.input id: 'form_r_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.room_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'form_rname', className: 'form-control', type: 'text', code: 'rname', placeholder: 'Tên phòng', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.rname
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'rname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'room_mini', header: [{id: 1,name: "Tên phòng"},{id: 2,name: "Ngôn ngữ"}], trigger: @triggerAutoComplete
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-4 control-label', 'Tên chức vụ'
                       React.DOM.div className: 'col-sm-8',
-                        React.DOM.input id: 'position_form_pname', type: 'text', className: 'form-control', placeholder: 'Tên chức vụ', defaultValue:
+                        React.DOM.input id: 'form_pname', type: 'text', className: 'form-control', placeholder: 'Tên chức vụ', defaultValue:
                           if @props.record != null
                             @props.record.pname
                           else
@@ -1266,7 +1332,7 @@
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-4 control-label', 'Ngôn ngữ'
                       React.DOM.div className: 'col-sm-8',
-                        React.DOM.input id: 'position_form_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ', defaultValue:
+                        React.DOM.input id: 'form_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ', defaultValue:
                           if @props.record != null
                             @props.record.lang
                           else
@@ -1274,7 +1340,7 @@
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-4 control-label', 'Miêu tả ngắn'
                       React.DOM.div className: 'col-sm-8',
-                        React.DOM.textarea id: 'position_form_description', type: 'text', className: 'form-control', placeholder: 'Miêu tả ngắn', defaultValue:
+                        React.DOM.textarea id: 'form_description', type: 'text', className: 'form-control', placeholder: 'Miêu tả ngắn', defaultValue:
                           if @props.record != null
                             @props.record.description
                           else
@@ -1282,7 +1348,99 @@
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-4 control-label', 'File đính kèm'
                       React.DOM.div className: 'col-sm-8',
-                        React.DOM.input id: 'position_form_file', type: 'file', className: 'form-control',
+                        React.DOM.input id: 'form_file', type: 'file', className: 'form-control',
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    posmapForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu định chức vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Tên nhân viên'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_e_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.employee_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'form_ename', className: 'form-control', type: 'text', code: 'ename', placeholder: 'Tên nhân viên', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.ename
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'ename'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'employee_mini', header: [{id: 1,name: "Mã nhân viên"},{id: 2, name: "Tên"},{id: 3, name: "Số điện thoại"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Tên chức vụ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_p_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.poisition_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'form_pname', className: 'form-control', type: 'text', code: 'pname', placeholder: 'Tên chức vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.pname
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'pname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'position_mini', header: [{id: 1,name: "Tên phòng"},{id: 2, name: "Tên chức vụ"},{id: 3, name: "Diễn giải"}], trigger: @triggerAutoComplete
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    sermapForm: ->
+      React.DOM.div className: 'modal fade',
+        React.DOM.div className: 'modal-dialog',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu định phòng cho dịch vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Tên dịch vụ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.service_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.sname
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'sname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Tên phòng'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_r_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue:
+                          if @props.record != null
+                            @props.record.room_id
+                          else
+                            ""
+                        React.createElement InputField, id: 'form_rname', className: 'form-control', type: 'text', code: 'rname', placeholder: 'Tên phòng', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @trigger, trigger3: @trigger, defaultValue:
+                          if @props.record != null
+                            @props.record.rname
+                          else
+                            ""
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'rname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'room_mini', header: [{id: 1,name: "Tên phòng"},{id: 2,name: "Ngôn ngữ"}], trigger: @triggerAutoComplete
                     React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
             React.DOM.div className: 'modal-footer',
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
@@ -1596,10 +1754,10 @@
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Loại thuốc'
                       React.DOM.div className: 'col-sm-2',
-                        React.createElement SelectBox, id: 'medicine_sample_typemedicine', records: @props.extra[2], className: 'form-control', type: 4, text: ""
+                        React.createElement SelectBox, id: 'medicine_sample_typemedicine', records: @props.extra[1].data, className: 'form-control', type: 4, text: ""
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhóm thuốc'
                       React.DOM.div className: 'col-sm-2',
-                        React.createElement SelectBox, id: 'medicine_sample_groupmedicine', records: @props.extra[1], className: 'form-control', type: 4, text: ""
+                        React.createElement SelectBox, id: 'medicine_sample_groupmedicine', records: @props.extra[0].data, className: 'form-control', type: 4, text: ""
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Giá thuốc'
                       React.DOM.div className: 'col-sm-2',
                         React.DOM.input id: 'medicine_sample_price', type: 'number', className: 'form-control', placeholder: 'Giá thuốc', defaultValue:
@@ -1644,7 +1802,7 @@
                               React.createElement AutoComplete, key: recordsearch.id, text: recordsearch.name, record: recordsearch, trigger: @triggerAutoComplete
                     React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
             React.DOM.div className: 'modal-footer',
-              React.DOM.button, className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
     medicineBillInForm: ->
       React.DOM.div className: 'modal fade',
         React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
@@ -2820,6 +2978,10 @@
         @roomForm()
       else if @state.type == 'position'
         @positionForm()
+      else if @state.type == 'posmap'
+        @posmapForm()
+      else if @state.type == 'sermap'
+        @sermapForm()
       else if @state.type == 'service'
         @serviceForm()
       else if @state.type == 'medicine_supplier'

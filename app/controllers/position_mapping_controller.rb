@@ -1,62 +1,51 @@
 class PositionMappingController < ApplicationController
-  before_action :logged_in_user, only: [:destroy, :create, :update, :list]
+  before_action :logged_in_user, only: [:destroy, :create, :update, :list, :search, :find]
   
   def create
+		if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+  			@station = Station.find_by(user_id: current_user.id)
+	  	  @e_id = Employee.find_by(id: params[:e_id], ename: params[:ename], station_id: @station.id)
+		    if !@e_id.nil?
+					@e_id = @e_id.id
+				end
+	  	  @p_id = Position.find_by(id: params[:p_id], pname: params[:pname], station_id: @station.id)
+		    if !@p_id.nil?
+					@p_id = @p_id.id
+				end
+	  	  @position = PositionMapping.new(station_id: @station.id, employee_id: @e_id, ename: params[:ename], pname: params[:pname], position_id: @p_id)
+				if @position.save
+					render json: @position
+  			else
+	  			render json: @position.errors, status: :unprocessable_entity
+		  	end
+	    else
+        redirect_to root_path
+      end
+    end
   end
 
   def update
 		if has_station?
       @station = Station.find_by(user_id: current_user.id)
 			if params.has_key?(:id)
-				@employee = Employee.find(params[:id])
-				if @employee.station_id == @station.id
-					if params.has_key?(:ename)
-						if @employee.update(ename: params[:ename])
-							render json:@employee
-						else
-							render json: @employee.errors, status: :unprocessable_entity
-						end		
-					elsif params.has_key?(:address)
-						if @employee.update(address: params[:address])
-							render json:@employee
-						else
-							render json: @employee.errors, status: :unprocessable_entity
-						end 
-					elsif params.has_key?(:avatar)
-						if @employee.update(avatar: params[:avatar])
-							render json:@employee
-						else
-							render json: @employee.errors, status: :unprocessable_entity
-						end
-					elsif params.has_key?(:noid)
-						if @employee.update(noid: params[:noid])
-							render json:@employee
-						else
-							render json: @employee.errors, status: :unprocessable_entity
-						end
-					elsif params.has_key?(:pnumber)
-						if @employee.update(pnumber: params[:pnumber])
-							render json: @employee
-						else
-							render json: @employee.errors, status: :unprocessable_entity
-						end
-					elsif params.has_key?(:posmap)
-						@pos = PositionMapping.find_by(station_id: @station.id, employee_id: @employee.id)
-						if @pos.nil?
-							@pos = PositionMapping.new(station_id: @station.id, employee_id: @employee.id, position_id: params[:posmap])
-							if @pos.save
-								render json: @pos
-							else
-								render json: @pos.errors, status: :unprocessable_entity
-							end
-						else
-							if @pos.update(position_id: params[:posmap])
-								render json: @pos
-							else
-								render json: @pos.errors, status: :unprocessable_entity
-							end
-						end
-					end
+				@posmap = PositionMapping.find(params[:id])
+				if @posmap.station_id == @station.id
+					@e_id = Employee.find_by(id: params[:e_id], ename: params[:ename], station_id: @station.id)
+		      if !@e_id.nil?
+					  @e_id = @e_id.id
+				  end
+	  	    @p_id = Position.find_by(id: params[:p_id], pname: params[:pname], station_id: @station.id)
+		      if !@p_id.nil?
+					  @p_id = @p_id.id
+				  end
+	  	    if @posmap.update(station_id: @station.id, employee_id: @e_id, ename: params[:ename], pname: params[:pname], position_id: @p_id)
+					  render json: @posmap
+  			  else
+	  			  render json: @posmap.errors, status: :unprocessable_entity
+		  	  end
 				end
 			end
     else
@@ -65,30 +54,68 @@ class PositionMappingController < ApplicationController
   end
 
   def destroy
+    if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+  		if has_station?
+	  		@station = Station.find_by(user_id: current_user.id)
+		  	@position = PositionMapping.find(params[:id])
+			  if @position.station_id == @station.id
+				  @position.destroy
+  				head :no_content
+	  		end
+		  else
+			  redirect_to root_path
+  		end
+	  end
   end
 
   def list
     if has_station?
 			@station = Station.find_by(user_id: current_user.id)
 			@data = []
-			@data[0] = Employee.where(station_id: @station.id)
-			@data[1] = Room.where(station_id: @station.id)
-			@data[2] = Position.where(station_id: @station.id)
-			@data[3] = PositionMapping.where(station_id: @station.id)
-			@data[4] = @station
+			@data[0] = PositionMapping.where(station_id: @station.id)
 			render json: @data
 		else
       redirect_to root_path
     end
   end
   
-  private
-  	# Confirms a logged-in user.
-		def logged_in_user
-			unless logged_in?
-				store_location
-				flash[:danger] = "Please log in."
-				redirect_to login_url
-			end
-		end
+  def search
+	  if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:ename)
+          @supplier = PositionMapping.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id).group(:ename).limit(5)
+			    render json:@supplier
+			  elsif params.has_key?(:pname)
+          @supplier = PositionMapping.where("pname LIKE ? and station_id = ?" , "%#{params[:pname]}%", @station.id).group(:pname).limit(5)
+			    render json:@supplier
+			  end
+      else
+        redirect_to root_path
+      end
+    end
+	end
+  
+  def find
+		if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:ename)
+          @supplier = PositionMapping.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+			    render json:@supplier
+			  elsif params.has_key?(:pname)
+          @supplier = PositionMapping.where("pname LIKE ? and station_id = ?" , "%#{params[:pname]}%", @station.id)
+			    render json:@supplier
+			  end
+      else
+        redirect_to root_path
+      end
+    end
+	end
 end

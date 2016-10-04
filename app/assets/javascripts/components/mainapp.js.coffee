@@ -7,12 +7,12 @@
       React.createElement MainPart, data: @props.data, datatype: 'position'
     Room: ->
       React.createElement MainPart, data: @props.data, datatype: 'room'
-    AppViewEmployee: ->
-      React.createElement AppViewsEmployees, data: @props.data
     Service: ->
       React.createElement MainPart, data: @props.data, datatype: 'service'
-    ServiceMap: ->
-      React.createElement AppViewsServices, data: @props.data
+    PosMap: ->
+      React.createElement MainPart, data: @props.data, datatype: 'posmap'
+    SerMap: ->
+      React.createElement MainPart, data: @props.data, datatype: 'sermap'
     CustomerRecord: ->
       React.createElement MainPart, data: @props.data, datatype: 'customer_record' #31
     OrderMap: ->
@@ -51,14 +51,18 @@
           @Support()
         when 11
           @Employee()
-        when 13
-          @Position()
         when 12
           @Room()
-        when 21
-          @AppViewEmployee()
+        when 13
+          @Position()
         when 14
           @Service()
+        when 15
+          @PosMap()
+        when 16
+          @SerMap()
+        when 21
+          @AppViewEmployee()
         when 22
           @ServiceMap()
         when 31

@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   
+  get 'room_manager/list'
+
+  get 'room_manager/detail'
+
   delete '/bill_info', to: 'bill_info#destroy'
   put '/bill_info', to: 'bill_info#update'
   post '/bill_info/list', to: 'bill_info#list'
@@ -135,8 +139,12 @@ Rails.application.routes.draw do
   post '/customer_record/search', to: 'customer_record#search'
   post '/customer_record/find', to: 'customer_record#find'
   
-  put '/service_mapping', to: 'service_mapping#update'
-  post '/service_mapping/list', to: 'service_mapping#list'
+  put '/sermap', to: 'service_mapping#update'
+  post '/sermap', to: 'service_mapping#create'
+  delete '/sermap', to: 'service_mapping#destroy'
+  post '/sermap/list', to: 'service_mapping#list'
+  post '/sermap/search', to: 'service_mapping#search'
+  post '/sermap/find', to: 'service_mapping#find'
   
   put '/service', to: 'service#update'
   post '/service', to: 'service#create'
@@ -145,9 +153,12 @@ Rails.application.routes.draw do
   post '/service/search', to: 'service#search'
   post '/service/find', to: 'service#find'
 
-  
-  put '/position_mapping', to: 'position_mapping#update'
-  post '/position_mapping/list', to: 'position_mapping#list'
+  put '/posmap', to: 'position_mapping#update'
+  post '/posmap', to: 'position_mapping#create'
+  delete '/posmap', to: 'position_mapping#destroy'
+  post '/posmap/list', to: 'position_mapping#list'
+  post '/posmap/search', to: 'position_mapping#search'
+  post '/posmap/find', to: 'position_mapping#find'
   
   put '/room', to: 'room#update'
   post '/room', to: 'room#create'

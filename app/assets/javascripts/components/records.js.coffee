@@ -1,82 +1,3 @@
-@AppViewsEmployees = React.createClass
-    getInitialState: ->
-      records: @props.data[0]
-      rooms: @props.data[1]
-      positions: @props.data[2]
-      positionmap: @props.data[3]
-      station: @props.data[4]
-    updateRecord: (record, data) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-      @setState records: records
-    updateMap: (data) ->
-      check = true
-      for map in @state.positionmap
-        if map.id == data.id
-          index = @state.positionmap.indexOf map
-          listposmap = React.addons.update(@state.positionmap, { $splice: [[index, 1, data]] })
-          @setState positionmap: listposmap
-          check = false
-          break
-      if check
-        listposmap = React.addons.update(@state.positionmap, { $push: [data] })
-        @setState positionmap: listposmap
-    render: ->
-      React.DOM.div
-        className: 'container'
-        React.DOM.div
-          className: "text-center"
-          React.DOM.h2
-            className: "f-400"
-            "DANH SÁCH NHÂN VIÊN"
-          React.DOM.p
-            className: "c-gray m-t-20 m-b-20"
-            "Click vào thông tin chức vụ của nhân viên để định chức vụ cho từng nhân viên. Tùy vào chức vụ được phân công mà nhân viên sẽ có quyền truy cập thông tin của từng dịch vụ khác nhau"
-        React.DOM.div
-          className: "row m-t-25 card"
-          React.DOM.div
-            className: "card-body card-padding"
-            for record in @state.records
-              React.createElement AppViewsEmployee, key: record.id, record: record, rooms: @state.rooms, positions: @state.positions, positionmap: @state.positionmap, station: @state.station, ownerMode: true, className: "col-md-2 col-sm-4 col-xs-6", handleEditAppMap: @updateRecord, handleEditPosMap: @updateMap
-          
-
-@AppViewsServices = React.createClass
-    getInitialState: ->
-      records: @props.data[0]
-      rooms: @props.data[1]
-      servicemap: @props.data[2]
-    updateRecord: (record, data) ->
-      index = @state.records.indexOf record
-      records = React.addons.update(@state.records, { $splice: [[index, 1, data]] })
-      @setState records: records
-    updateMap: (data) ->
-      check = true
-      for map in @state.servicemap
-        if map.id == data.id
-          index = @state.servicemap.indexOf map
-          listsermap = React.addons.update(@state.servicemap, { $splice: [[index, 1, data]] })
-          @setState servicemap: listsermap
-          check = false
-          break
-      if check
-        listsermap = React.addons.update(@state.servicemap, { $push: [data] })
-        @setState servicemap: listsermap
-    render: ->
-      React.DOM.div
-        className: 'container container-alt'
-        React.DOM.div
-          className: "text-center"
-          React.DOM.h2
-            className: "f-400"
-            "DANH SÁCH DỊCH VỤ"
-          React.DOM.p
-            className: "c-gray m-t-20 m-b-20"
-            "Click vào thông tin phòng để định phòng cho từng dịch vụ"
-        React.DOM.div
-          className: "row m-t-25"
-          for record in @state.records
-            React.createElement AppViewsService, key: record.id, record: record, rooms: @state.rooms, ownerMode: true, className: "col-sm-4", servicemap: @state.servicemap, handleEditSerMap: @updateMap, handleEditSer: @updateRecord
-
 @Support = React.createClass
     getInitialState: ->
       records: @props.data[0]
@@ -342,6 +263,8 @@
                 formData.append 'pname', text.toLowerCase()
               when 2
                 formData.append 'description', text.toLowerCase()
+              when 3
+                formData.append 'rname', text.toLowerCase()
           else if @props.datatype == "service"
             formData = new FormData	  
             switch Number(type)
@@ -351,6 +274,20 @@
                 formData.append 'price', text
               when 3
                 formData.append 'description', text.toLowerCase()
+          else if @props.datatype == "posmap"
+            formData = new FormData	  
+            switch Number(type)
+              when 1
+                formData.append 'ename', text.toLowerCase()
+              when 2
+                formData.append 'pname', text.toLowerCase()
+          else if @props.datatype == "sermap"
+            formData = new FormData	  
+            switch Number(type)
+              when 1
+                formData.append 'sname', text.toLowerCase()
+              when 2
+                formData.append 'rname', text.toLowerCase()
           else if @props.datatype == "customer_record"
             formData = new FormData	  
             switch Number(type)
@@ -651,7 +588,7 @@
             else
               return false
           when 3
-            if record.room_id == Number(text)
+            if record.rname.toLowerCase().search(text.toLowerCase()) > -1
               return true
             else
               return false
@@ -672,6 +609,30 @@
               return true
             else
               return false  
+      else if @props.datatype == "posmap"
+        switch Number(type)
+          when 1
+            if record.ename.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 2
+            if record.pname.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+      else if @props.datatype == "sermap"
+        switch Number(type)
+          when 1
+            if record.sname.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
+          when 2
+            if record.rname.toLowerCase().search(text.toLowerCase()) > -1
+              return true
+            else
+              return false
       else if @props.datatype == "customer_record"
         switch Number(type)
           when 1
@@ -1681,6 +1642,84 @@
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    posmapRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Định chức vụ cho nhân viên'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên nhân viên'
+                  React.DOM.th null, 'Tên chức vụ'
+                  React.DOM.th null, 'Cập nhật lần cuối'
+                  React.DOM.th null, 'Khởi tạo lúc'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    sermapRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Định dịch vụ cho từng phòng'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.DOM.br null
+            React.DOM.br null
+            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên dịch vụ'
+                  React.DOM.th null, 'Tên phòng'
+                  React.DOM.th null, 'Cập nhật lần cuối'
+                  React.DOM.th null, 'Khởi tạo lúc'
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
     customerRecordRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
@@ -1829,8 +1868,8 @@
           React.DOM.h2 null, 'Mẫu thuốc'
         React.DOM.div className: 'card',
           React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add', extra: @props.data
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record, extra: @props.data
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add', extra: [{data: @props.data[1]},{data: @props.data[2]}]
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record, extra: [{data: @props.data[1]},{data: @props.data[2]}]
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
             React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm công ty sản xuất', type: 2, datatype: 'medicine_company', prefix: 'add'
             React.DOM.br null
@@ -2414,6 +2453,10 @@
         @positionRender()
       else if @props.datatype == 'service'
         @serviceRender()
+      else if @props.datatype == 'posmap'
+        @posmapRender()
+      else if @props.datatype == 'sermap'
+        @sermapRender()
       else if @props.datatype == "customer_record"
         @customerRecordRender()
       else if @props.datatype == "medicine_supplier"

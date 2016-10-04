@@ -1,354 +1,3 @@
-
-  @AppViewsEmployee = React.createClass
-    getInitialState: ->
-      type: 0
-      record: @props.record
-      rooms: @props.rooms
-      positions: @props.positions
-      positionmap: @props.positionmap
-      station: @props.station
-      positionName: 'Chưa có chức vụ'
-    calAge: (dob, style) ->
-      now = new Date
-      today = new Date(now.getYear(), now.getMonth(), now.getDate())
-      yearNow = now.getYear()
-      monthNow = now.getMonth()
-      dateNow = now.getDate()
-      if style == 1
-        dob = new Date(dob.substring(6, 10), dob.substring(3, 5) - 1, dob.substring(0, 2))
-      else
-        dob = new Date(dob.substring(0, 4), dob.substring(5, 7) - 1, dob.substring(8, 10))
-      yearDob = dob.getYear()
-      monthDob = dob.getMonth()
-      dateDob = dob.getDate()
-      yearAge = yearNow - yearDob
-      if monthNow >= monthDob
-        monthAge = monthNow - monthDob
-      else
-        yearAge--
-        monthAge = 12 + monthNow - monthDob
-      if dateNow >= dateDob
-        dateAge = dateNow - dateDob
-      else
-        monthAge--
-        dateAge = 31 + dateNow - dateDob
-        if monthAge < 0
-          monthAge = 11
-          yearAge--
-      age =
-        years: yearAge
-        months: monthAge
-        days: dateAge
-      return age    
-    handleEdit: (e) ->
-      e.preventDefault()
-      formData = new FormData
-      formData.append 'id', @props.record.id
-      if @state.type == 1
-        formData.append 'ename', $('#quick_edit_ename').val()
-      else if @state.type == 2
-        formData.append 'address', $('#quick_edit_address').val()
-      else if @state.type == 3
-        if $('#quick_edit_avatar')[0].files[0] != undefined
-          formData.append 'avatar', $('#quick_edit_avatar')[0].files[0]
-      else if @state.type == 4
-        formData.append 'noid', $('#quick_edit_noid').val()
-      else if @state.type == 5
-        formData.append 'pnumber', $('#quick_edit_pnumber').val() 
-      else if @state.type == 10
-        formData.append 'posmap', $('#quick_edit_posmap').val() 
-      if @state.type != 10
-        $.ajax
-          url: '/position_mapping'
-          type: 'PUT'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.handleEditAppMap @props.record, result
-            @setState
-              type: 0
-            return
-          ).bind(this)
-      else
-        $.ajax
-          url: '/position_mapping'
-          type: 'PUT'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.handleEditPosMap result
-            @setState
-              type: 0
-            return
-          ).bind(this)
-    handleToggleName: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 1
-    handleToggleAddress: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 2
-    handleToggleAvatar: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 3
-    handleToggleNoid: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 4
-    handleTogglePnumber: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 5
-    handleTogglePosMap: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 10
-    recordBlock: ->
-      React.DOM.div
-        className: @props.className
-        for map in @props.positionmap
-          if map.employee_id == @props.record.id
-            for pos in @props.positions
-              if pos.id == map.position_id
-                @state.positionName = pos.pname
-                break
-            break
-        React.DOM.div
-          className: "c-item animated flipInY"
-          React.DOM.a
-            className: "ci-avatar"
-            if @state.type == 3
-              React.DOM.input
-                className: 'form-control'
-                type: 'file'
-                onBlur: @handleEdit
-                placeholder: 'Avatar'
-                id: 'quick_edit_avatar'
-            else
-              React.DOM.img
-                alt: ''
-                onClick: @handleToggleAvatar
-                src:
-                  if @props.record.avatar != "/avatars/original/missing.png"
-                    @props.record.avatar
-                  else
-                    'https://www.twomargins.com/images/noavatar.jpg'
-          React.DOM.div
-            className: "c-info"
-            if @state.type == 1  
-              React.DOM.input
-                className: 'form-control'
-                type: 'text'
-                defaultValue: @props.record.ename
-                onBlur: @handleEdit
-                placeholder: 'Type name'
-                id: 'quick_edit_ename'
-            else
-              React.DOM.strong
-                onClick: @handleToggleName
-                @props.record.ename
-            if @state.type == 10
-              React.createElement SelectBox, records: @props.positions, type: 2, id: 'quick_edit_posmap', text: 'Tên Position', blurOut: @handleEdit
-            else
-              React.DOM.small
-                onClick: @handleTogglePosMap
-                @state.positionName
-            React.DOM.small null, @calAge(@props.record.created_at,2).years + " Năm " + @calAge(@props.record.created_at,2).months + " Tháng " + @calAge(@props.record.created_at,2).days + " Ngày" 
-            if @state.type == 2
-              React.DOM.input
-                className: 'form-control'
-                type: 'text'
-                defaultValue: @props.record.address
-                onBlur: @handleEdit
-                placeholder: 'Type address'
-                id: 'quick_edit_address'
-            else
-              React.DOM.small
-                onClick: @handleToggleAddress
-                @props.record.address
-            if @state.type == 4
-              React.DOM.input
-                className: 'form-control'
-                type: 'text'
-                defaultValue: @props.record.noid
-                onBlur: @handleEdit
-                placeholder: 'Type noid'
-                id: 'quick_edit_noid'
-            else
-              React.DOM.small
-                onClick: @handleToggleNoid
-                @props.record.noid 
-            if @state.type == 5
-              React.DOM.input
-                className: 'form-control'
-                type: 'text'
-                defaultValue: @props.record.pnumber
-                onBlur: @handleEdit
-                placeholder: 'Type pnumber'
-                id: 'quick_edit_pnumber'
-            else  
-              React.DOM.small
-                onClick: @handleTogglePnumber
-                @props.record.pnumber
-          React.DOM.div
-            className: "c-footer"
-            React.DOM.button null, " LIÊN LẠC"
-    render: ->
-      @recordBlock()
-    
-        
-  @AppViewsService = React.createClass
-    getInitialState: ->
-      type: 0
-      record: @props.record
-      rooms: @props.rooms
-      servicemap: @props.servicemap
-      roomName: 'Chưa định phòng khám'
-    handleEdit: (e) ->
-      e.preventDefault()
-      formData = new FormData
-      formData.append 'id', @props.record.id
-      if @state.type == 1
-        formData.append 'sname', $('#quick_edit_sname').val()
-      else if @state.type == 2
-        formData.append 'description', $('#quick_edit_description').val()
-      else if @state.type == 4
-        formData.append 'price', $('#quick_edit_price').val()
-      else if @state.type == 10
-        formData.append 'sermap', $('#quick_edit_room').val() 
-      if @state.type != 10
-        $.ajax
-          url: '/service_mapping'
-          type: 'PUT'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.handleEditSer @props.record, result
-            @setState
-              type: 0
-            return
-          ).bind(this)
-      else
-        $.ajax
-          url: '/service_mapping'
-          type: 'PUT'
-          data: formData
-          async: false
-          cache: false
-          contentType: false
-          processData: false
-          success: ((result) ->
-            @props.handleEditSerMap result
-            @setState
-              type: 0
-            return
-          ).bind(this)
-    handleToggleName: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 1
-    handleToggleDescription: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 2
-    handleTogglePrice: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 4
-    handleToggleSerMap: (e) ->
-      e.preventDefault()
-      if @props.ownerMode
-        @setState
-          type: 10
-    recordBlock: ->
-      React.DOM.div
-        className: @props.className
-        React.DOM.div
-          className: 'card text-center pt-inner'
-          React.DOM.div
-            className: 'pti-header'
-            if @state.type == 4 
-              React.DOM.input
-                className: 'form-control'
-                type: 'number'
-                defaultValue: @props.record.price
-                onBlur: @handleEdit
-                placeholder: 'Type price'
-                id: 'quick_edit_price'
-            else
-              React.DOM.h2
-                onClick: @handleTogglePrice
-                @props.record.price
-                React.DOM.small null,
-                  @props.record.currency
-            if @state.type == 1
-              React.DOM.input
-                className: 'form-control'
-                type: 'text'
-                defaultValue: @props.record.sname
-                onBlur: @handleEdit
-                placeholder: 'Type name'
-                id: 'quick_edit_sname'
-            else
-              React.DOM.div
-                className: "ptih-title"
-                onClick: @handleToggleName
-                @props.record.sname
-            for map in @props.servicemap
-              if map.service_id == @props.record.id
-                for room in @props.rooms
-                  if room.id == map.room_id
-                    @state.roomName = room.name
-                    break
-                break
-          React.DOM.div
-            className: "pti-body"
-            if @state.type == 2
-              React.DOM.textarea
-                className: 'form-control'
-                type: 'text'
-                defaultValue: @props.record.description
-                onBlur: @handleEdit
-                placeholder: 'Type description'
-                id: 'quick_edit_description'
-            else
-              React.DOM.div
-                className: 'ptib-item'
-                onClick: @handleToggleDescription
-                @props.record.description
-            if @state.type == 10
-              React.createElement SelectBox, records: @props.rooms, type: 3, id: 'quick_edit_room', text: 'Tên phòng', blurOut: @handleEdit
-            else
-              React.DOM.div
-                className: 'ptib-item'
-                onClick: @handleToggleSerMap
-                @state.roomName
-          React.DOM.div
-            className: "pti-footer"
-    render: ->
-      @recordBlock()
-             
-  
   @PatientProfile = React.createClass
     getInitialState: ->
       genderlist: @props.gender
@@ -1168,13 +817,19 @@
           React.DOM.td null, @props.record.lang
           React.DOM.td null,
             React.DOM.a className: 'btn btn-default btn-xs',style: {margin: '5px'}, href: @props.record.map, 'Bản đồ'
-    Position: ->
-      for room in @props.room
-        if room.id == @props.record.room_id
-          @state.typeName = room.name
+    RoomMini: ->
       if @props.selected
         React.DOM.tr className: "toggled",
-          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.lang
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.lang
+    Position: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.rname
           React.DOM.td null, @props.record.pname
           React.DOM.td null, @props.record.lang
           React.DOM.td null, @props.record.description
@@ -1182,12 +837,81 @@
             React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'File'
       else
         React.DOM.tr onClick: @selectRecord,
-          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.rname
           React.DOM.td null, @props.record.pname
           React.DOM.td null, @props.record.lang
           React.DOM.td null, @props.record.description
           React.DOM.td null,
             React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'File'
+    PositionMini: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.rname
+          React.DOM.td null, @props.record.pname
+          React.DOM.td null, @props.record.description
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.rname
+          React.DOM.td null, @props.record.pname
+          React.DOM.td null, @props.record.description
+    PosMap: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.pname
+          React.DOM.td null, 
+            if @props.record.updated_at != null && @props.record.updated_at != undefined
+              @props.record.updated_at.substring(8, 10) + "/" + @props.record.updated_at.substring(5, 7) + "/" + @props.record.updated_at.substring(0, 4)
+            else
+              ""
+          React.DOM.td null,
+            if @props.record.created_at != null && @props.record.created_at != undefined
+              @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7) + "/" + @props.record.created_at.substring(0, 4)
+            else
+              ""
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null, @props.record.pname
+          React.DOM.td null, 
+            if @props.record.updated_at != null && @props.record.updated_at != undefined
+              @props.record.updated_at.substring(8, 10) + "/" + @props.record.updated_at.substring(5, 7) + "/" + @props.record.updated_at.substring(0, 4)
+            else
+              ""
+          React.DOM.td null,
+            if @props.record.created_at != null && @props.record.created_at != undefined
+              @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7) + "/" + @props.record.created_at.substring(0, 4)
+            else
+              ""
+    SerMap: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.sname
+          React.DOM.td null, @props.record.rname
+          React.DOM.td null, 
+            if @props.record.updated_at != null && @props.record.updated_at != undefined
+              @props.record.updated_at.substring(8, 10) + "/" + @props.record.updated_at.substring(5, 7) + "/" + @props.record.updated_at.substring(0, 4)
+            else
+              ""
+          React.DOM.td null,
+            if @props.record.created_at != null && @props.record.created_at != undefined
+              @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7) + "/" + @props.record.created_at.substring(0, 4)
+            else
+              ""
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.sname
+          React.DOM.td null, @props.record.rname
+          React.DOM.td null, 
+            if @props.record.updated_at != null && @props.record.updated_at != undefined
+              @props.record.updated_at.substring(8, 10) + "/" + @props.record.updated_at.substring(5, 7) + "/" + @props.record.updated_at.substring(0, 4)
+            else
+              ""
+          React.DOM.td null,
+            if @props.record.created_at != null && @props.record.created_at != undefined
+              @props.record.created_at.substring(8, 10) + "/" + @props.record.created_at.substring(5, 7) + "/" + @props.record.created_at.substring(0, 4)
+            else
+              ""
     CustomerRecord: ->
       for gender in @props.gender
         if @props.record.gender == gender.id
@@ -1434,8 +1158,16 @@
         @Employee()
       else if @props.datatype == 'room'
         @Room()
+      else if @props.datatype == 'room_mini'
+        @RoomMini()
       else if @props.datatype == 'position'
         @Position()
+      else if @props.datatype == 'position_mini'
+        @PositionMini()
+      else if @props.datatype == 'posmap'
+        @PosMap()
+      else if @props.datatype == 'sermap'
+        @SerMap()
       else if @props.datatype == 'customer_record'
         @CustomerRecord()
       else if @props.datatype == 'order_map'
