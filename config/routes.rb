@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
   
-  get 'room_manager/list'
-
-  get 'room_manager/detail'
+  get '/room_manager/list', to: 'room_manager#list'
 
   delete '/bill_info', to: 'bill_info#destroy'
   put '/bill_info', to: 'bill_info#update'

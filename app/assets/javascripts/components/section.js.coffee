@@ -40,7 +40,7 @@
           {code: 35, active: false, name: 'Danh sách hóa đơn'}
         ]    
       Doctor:
-        type: 2, className: 'zmdi zmdi-account', active: false, name: "Thông tin quản lý phòng",
+        type: 2, className: 'fa fa-user-md', active: false, name: "Thông tin quản lý phòng",
         records: [
           {code: 60, active: false, name: 'Theo ngày'}
           {code: 61, active: false, name: 'Theo tuần'}
@@ -555,8 +555,13 @@
             {code: 51, active: false, name: 'Thống kê kho thuốc'}
           ]
       if code == 60
+        data =
+          task: 60
+          link: '/room_manager/list'
+          formData: {length: 1}
+        @handleGetdataAlt(data)
         @setState Doctor:
-          type: 2, className: 'zmdi zmdi-account', active: true, name: "Thông tin quản lý phòng",
+          type: 2, className: 'fa fa-user-md', active: true, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: true, name: 'Theo ngày'}
             {code: 61, active: false, name: 'Theo tuần'}
@@ -565,7 +570,7 @@
           ]
       else if code == 61
         @setState Doctor:
-          type: 2, className: 'zmdi zmdi-account', active: true, name: "Thông tin quản lý phòng",
+          type: 2, className: 'fa fa-user-md', active: true, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: false, name: 'Theo ngày'}
             {code: 61, active: true, name: 'Theo tuần'}
@@ -574,7 +579,7 @@
           ]
       else if code == 62
         @setState Doctor:
-          type: 2, className: 'zmdi zmdi-account', active: true, name: "Thông tin quản lý phòng",
+          type: 2, className: 'fa fa-user-md', active: true, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: false, name: 'Theo ngày'}
             {code: 61, active: false, name: 'Theo tuần'}
@@ -583,7 +588,7 @@
           ]
       else if code == 63
         @setState Doctor:
-          type: 2, className: 'zmdi zmdi-account', active: true, name: "Thông tin quản lý phòng",
+          type: 2, className: 'fa fa-user-md', active: true, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: false, name: 'Theo ngày'}
             {code: 61, active: false, name: 'Theo tuần'}
@@ -592,7 +597,7 @@
           ]
       else
         @setState Doctor:
-          type: 2, className: 'zmdi zmdi-account', active: false, name: "Thông tin quản lý phòng",
+          type: 2, className: 'fa fa-user-md', active: false, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: false, name: 'Theo ngày'}
             {code: 61, active: false, name: 'Theo tuần'}
@@ -603,6 +608,19 @@
       $.ajax
         url: data.link
         type: 'POST'
+        dataType: 'JSON'
+        success: ((result) ->
+          @setState
+            data: result
+            task: data.task
+          $(APP).trigger('rebuild')
+          return
+        ).bind(this)
+    handleGetdataAlt: (data) ->
+      $.ajax
+        url: data.link
+        type: 'POST'
+        data: data.formData
         dataType: 'JSON'
         success: ((result) ->
           @setState
