@@ -577,13 +577,50 @@ a{
     box-shadow: 0 1px 1px rgba(0,0,0,.1);
 }
 
-.card .card-header {
+.card .card-header, .card-header{
     position: relative;
     padding: 23px 25px;
 }
 
+.card-header h2 {
+    margin: 0;
+    line-height: 100%;
+    font-size: 17px;
+    font-weight: 400;
+}
+
+.card-header .actions {
+    position: absolute;
+    right: 10px;
+    z-index: 2;
+    top: 15px;
+}
+
+.card-header h2 small {
+    display: block;
+    margin-top: 5px;
+    line-height: 160%;
+}
+
 .card .card-body.card-padding {
     padding: 25px 27px;
+}
+
+.card-style{
+    min-height: 300px;
+    overflow-y: auto;
+}
+
+.sv-item small {
+    color: rgba(255,255,255,.3);
+}
+
+.sv-item h3 {
+    font-weight: 400;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .c-item {
@@ -1094,6 +1131,58 @@ select option {
     padding: 2px 5px;
     font-size: 13px;
     line-height: 1;
+}
+
+//Minichar item
+
+.mini-charts-item {
+    position: relative;
+    margin-bottom: 10px;
+    background-color: #2b343a;
+}
+
+.mini-charts-item {
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+
+.mini-charts-item .chart {
+    width: 75px;
+    background: rgba(255,255,255,.04);
+    float: left;
+    padding-top: 15px;
+    line-height: 58px;
+    text-align: center;
+}
+
+.mini-charts-item .count {
+    overflow: hidden;
+    color: rgba(255,255,255,.9);
+    padding: 16px 20px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.04) 50%, #2b343a 50%);
+    background-size: 200% 100%;
+    background-position:right bottom;
+    transition: all 0.5s ease;
+}
+
+.mini-charts-item .count:hover {
+    background-position:left bottom;
+}
+
+.mini-charts-item .count>h2, .mini-charts-item .count>small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mini-charts-item .count>small {
+    margin-bottom: 2px;
+    display: block;
+}
+
+.mini-charts-item .count>h2 {
+    margin: 0;
+    line-height: 100%;
+    font-size: 22px;
+    font-weight: 300;
 }
 
 //Color list

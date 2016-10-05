@@ -1184,3 +1184,14 @@
         @ServiceMini()
       else if @props.datatype == 'employee_mini'
         @EmployeeMini()
+        
+
+  @RoomSample = React.createClass
+    getInitialState: ->
+    smallModeRender: ->
+    expandModeRender: ->
+    render: ->
+      if @props.datatype == 'normal'
+        @normalModeRender()
+      else if @props.datatype == 'expand'
+        @normalModeRender()

@@ -10,5 +10,6 @@
 //= require luna
 //= require react
 //= require react_ujs
+//= require chart
 //= require webcam
 //= require_tree ./components
