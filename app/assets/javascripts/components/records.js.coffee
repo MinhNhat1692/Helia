@@ -175,8 +175,8 @@
             labels: ["Red","Blue","Yellow"]
             datasets: [{
               data: [300, 50, 100]
-              backgroundColor: ["#FF6384","#36A2EB","#FFCE56"]
-              hoverBackgroundColor: ["#FF6384","#36A2EB","#FFCE56"]
+              backgroundColor: ["#F44336","#E91E63","#FFEB3B","#00BCD4"]
+              hoverBackgroundColor: ["#F44336","#E91E63","#FFEB3B","#00BCD4"]
             }]
           }
         })
@@ -184,93 +184,8 @@
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Thông tin quản lý phòng'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'col-md-9',
-            React.DOM.div className: 'card-header', style: {'background': '#2b343a'},
-              React.DOM.h2 onClick: @draw, 'Sales Statistics',
-                React.DOM.small null, 'Vestibulum purus quam scelerisque, mollis nonummy metus'
-              React.DOM.ul className: 'actions',
-                React.DOM.li null,
-                  React.DOM.a href: '',
-                    React.DOM.i className: 'zmdi zmdi-refresh-alt'
-            React.DOM.div className: 'card-body card-padding card-style', style: {'background': '#2b343a'},
-              React.DOM.div className: 'col-md-4',
-                React.DOM.canvas id: 'myCanvas', width: 200, height: 200
-              React.DOM.div className: 'col-md-4', style: {'borderLeft': '1px solid rgba(255, 255, 255, 0.04)'},
-                React.DOM.p null, "Danh sách nhân viên"
-                React.DOM.div className: 'list-group',
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'pull-left',
-                      React.DOM.img className: 'lgi-img', src: 'http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/1.jpg', alt: ''
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'pull-left',
-                      React.DOM.img className: 'lgi-img', src: 'http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/1.jpg', alt: ''
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'pull-left',
-                      React.DOM.img className: 'lgi-img', src: 'http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/1.jpg', alt: ''
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'pull-left',
-                      React.DOM.img className: 'lgi-img', src: 'http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/1.jpg', alt: ''
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'pull-left',
-                      React.DOM.img className: 'lgi-img', src: 'http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/1.jpg', alt: ''
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-              React.DOM.div className: 'col-md-4', style: {'borderLeft': '1px solid rgba(255, 255, 255, 0.04)'},
-                React.DOM.p null, "Danh sách dịch vụ"
-                React.DOM.div className: 'list-group',
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-                  React.DOM.a className: 'list-group-item media', href: '',
-                    React.DOM.div className: 'media-body',
-                      React.DOM.div className: 'lgi-heading', 'David Belle'
-                      React.DOM.small className: 'lgi-text', 'Cum sociis natoque penatibus et magnis dis parturient montes'
-          React.DOM.div className: 'col-md-3',
-            React.DOM.div className: 'mini-charts-item',
-              React.DOM.div className: 'chart stats-bar',
-                React.DOM.i className: 'fa fa-wheelchair fa-3x',
-              React.DOM.div className: 'count',
-                React.DOM.small null, 'Số người chờ khám'
-                React.DOM.h2 null, 987.459
-            React.DOM.div className: 'mini-charts-item',
-              React.DOM.div className: 'chart stats-bar',
-                React.DOM.i className: 'fa fa-user fa-3x',
-              React.DOM.div className: 'count',
-                React.DOM.small null, 'Số khách khám'
-                React.DOM.h2 null, 987.459
-            React.DOM.div className: 'mini-charts-item',
-              React.DOM.div className: 'chart stats-bar',
-                React.DOM.i className: 'fa fa-money fa-3x',
-              React.DOM.div className: 'count',
-                React.DOM.small null, 'Doanh thu'
-                React.DOM.h2 null, 987.459
+        for room in @props.data.room
+          React.createElement RoomSample, key: room.id, datatype: 'normal', data: room, statwait: @props.data.order_map_wait, stattoday: @props.data.order_map_today, statincome: @props.data.total_income_today, position: @props.data.position
     expandModeRender: ->
     render: ->
       if @state.datatype == 'normal'

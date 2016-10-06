@@ -1186,12 +1186,195 @@
         @EmployeeMini()
         
 
+  @ListgroupSample = React.createClass
+    getInitialState: ->
+      type: 1
+    employeeRender: ->
+      React.DOM.div className: 'list-group',
+        for record in @props.records
+          if record.room_id == @props.room_id
+            for posmap in record.position_mappings
+              React.createElement ListgroupDetail, key: record.id, datatype: 'noImg', bigtext: posmap.ename, smalltext: posmap.pname
+    serviceRender: ->
+      React.DOM.div className: 'list-group',
+        for record in @props.records
+          React.createElement ListgroupDetail, key: record.id, datatype: 'noImg', bigtext: record.sname, smalltext: ''
+    render: ->
+      if @props.datatype == 'employee_group'
+        @employeeRender()
+      else if @props.datatype == 'service_group'
+        @serviceRender()
+
+  @ListgroupDetail = React.createClass
+    getInitialState: ->
+      type: 1
+    haveImgRender: ->
+      React.DOM.a className: 'list-group-item media', href: '',
+        React.DOM.div className: 'pull-left',
+          React.DOM.img className: 'lgi-img', src: @props.img, alt: ''
+        React.DOM.div className: 'media-body',
+          React.DOM.div className: 'lgi-heading', @props.bigtext
+          React.DOM.small className: 'lgi-text', @props.smalltext
+    noImgRender: ->
+      React.DOM.a className: 'list-group-item media', href: '',
+        React.DOM.div className: 'media-body',
+          React.DOM.div className: 'lgi-heading', @props.bigtext
+          React.DOM.small className: 'lgi-text', @props.smalltext
+    render: ->
+      if @props.datatype == 'haveImg'
+        @haveImgRender()
+      else if @props.datatype == 'noImg'
+        @noImgRender()
+
   @RoomSample = React.createClass
     getInitialState: ->
+      wait: 0
+      customer: 0
+      income: 0
+    drawDoughnutIncome: ->
+      canvas = document.getElementById('roomCanvas' + @props.data.id)
+      if canvas != null
+        myDoughnutChart = new Chart(canvas, {
+          type: 'doughnut',
+          data: @getIncomeChartData()
+        })  
+    drawDoughnutWait: ->
+      canvas = document.getElementById('roomCanvas' + @props.data.id)
+      if canvas != null
+        myDoughnutChart = new Chart(canvas, {
+          type: 'doughnut',
+          data: @getWaitChartData()
+        })
+    drawDoughnutCustomer: ->
+      canvas = document.getElementById('roomCanvas' + @props.data.id)
+      if canvas != null
+        myDoughnutChart = new Chart(canvas, {
+          type: 'doughnut',
+          data: @getCustomerChartData()
+        })
+    getIncomeChartData: ->
+      labellist = []
+      datanumber = []
+      for service in @props.data.service_maps
+        labellist.push(service.sname)
+        incomesnumber: 0
+        for statincome in @props.statincome
+          if statincome.service_id == service.service_id
+            incomesnumber = statincome.sum
+        datanumber.push(incomesnumber)
+      dataOut = {
+        labels: labellist
+        datasets: [{
+          data: datanumber
+          backgroundColor: ["#673AB7","#00BCD4","#CDDC39","#FF5722","#9C27B0","#03A9F4","#8BC34A","#FF9800","#607D8B"]
+          hoverBackgroundColor: ["#673AB7","#00BCD4","#CDDC39","#FF5722","#9C27B0","#03A9F4","#8BC34A","#FF9800","#607D8B"]
+        }]
+      }
+      return dataOut
+    getWaitChartData: ->
+      labellist = []
+      datanumber = []
+      for service in @props.data.service_maps
+        labellist.push(service.sname)
+        incomesnumber: 0
+        for statwait in @props.statwait
+          if statwait.service_id == service.service_id
+            incomesnumber = statwait.count
+        datanumber.push(incomesnumber)
+      dataOut = {
+        labels: labellist
+        datasets: [{
+          data: datanumber
+          backgroundColor: ["#673AB7","#00BCD4","#CDDC39","#FF5722","#9C27B0","#03A9F4","#8BC34A","#FF9800","#607D8B"]
+          hoverBackgroundColor: ["#673AB7","#00BCD4","#CDDC39","#FF5722","#9C27B0","#03A9F4","#8BC34A","#FF9800","#607D8B"]
+        }]
+      }
+      return dataOut
+    getCustomerChartData: ->
+      labellist = []
+      datanumber = []
+      for service in @props.data.service_maps
+        labellist.push(service.sname)
+        incomesnumber: 0
+        for stattoday in @props.stattoday
+          if stattoday.service_id == service.service_id
+            incomesnumber = stattoday.count
+        datanumber.push(incomesnumber)
+      dataOut = {
+        labels: labellist
+        datasets: [{
+          data: datanumber
+          backgroundColor: ["#673AB7","#00BCD4","#CDDC39","#FF5722","#9C27B0","#03A9F4","#8BC34A","#FF9800","#607D8B"]
+          hoverBackgroundColor: ["#673AB7","#00BCD4","#CDDC39","#FF5722","#9C27B0","#03A9F4","#8BC34A","#FF9800","#607D8B"]
+        }]
+      }
+      return dataOut
     smallModeRender: ->
+      @state.wait = 0
+      @state.customer = 0
+      @state.income = 0
+      for wait in @props.statwait
+        for service in @props.data.service_maps
+          if wait.service_id == service.service_id
+            @state.wait+= wait.count
+      for stattoday in @props.stattoday
+        for service in @props.data.service_maps
+          if stattoday.service_id == service.service_id
+            @state.customer+= stattoday.count
+      for statincome in @props.statincome
+        for service in @props.data.service_maps
+          if statincome.service_id == service.service_id
+            @state.income+= statincome.sum
+      React.DOM.div className: 'card',
+        React.DOM.div className: 'col-md-9', style: {'marginBottom':'10px'},
+          React.DOM.div className: 'card-header', style: {'background': '#2b343a'},
+            React.DOM.h2 null, @props.data.name,
+              React.DOM.small null, 'Thống kê tóm tắt'
+            React.DOM.ul className: 'actions',
+              React.DOM.li null,
+                React.DOM.a href: '',
+                  React.DOM.i className: 'zmdi zmdi-refresh-alt'
+          React.DOM.div className: 'card-body card-padding card-style', style: {'background': '#2b343a'},
+            React.DOM.div className: 'col-md-4', style: {'textAlign': 'center'},
+              React.DOM.div className: 'btn-group',
+                React.DOM.button type: 'button', onClick: @drawDoughnutIncome, className: 'btn btn-default', 'Income'
+                React.DOM.button type: 'button', onClick: @drawDoughnutWait, className: 'btn btn-default', 'Wait'
+                React.DOM.button type: 'button', onClick: @drawDoughnutCustomer, className: 'btn btn-default', 'Customer'
+              React.DOM.canvas id: 'roomCanvas' + @props.data.id, width: 120, height: 120
+            React.DOM.div className: 'col-md-4', style: {'borderLeft': '1px solid rgba(255, 255, 255, 0.04)'},
+              React.DOM.p null, "Danh sách nhân viên"
+              if @props.position.length > 0
+                React.createElement ListgroupSample, room_id: @props.data.id, records: @props.position, datatype: 'employee_group'
+              else
+                React.DOM.p null, "Không có nhân viên trong phòng"
+            React.DOM.div className: 'col-md-4', style: {'borderLeft': '1px solid rgba(255, 255, 255, 0.04)'},
+              React.DOM.p null, "Danh sách dịch vụ"
+              if @props.data.service_maps.length > 0 and @props.data.service_maps != null
+                React.createElement ListgroupSample, records: @props.data.service_maps, datatype: 'service_group'
+              else
+                React.DOM.p null, "Không có dịch vụ trong phòng"
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, @state.wait
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-user fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số khách khám'
+              React.DOM.h2 null, @state.customer
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-money fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Doanh thu'
+              React.DOM.h2 null, @state.income  
     expandModeRender: ->
     render: ->
       if @props.datatype == 'normal'
-        @normalModeRender()
+        @smallModeRender()
       else if @props.datatype == 'expand'
-        @normalModeRender()
+        @expandModeRender()

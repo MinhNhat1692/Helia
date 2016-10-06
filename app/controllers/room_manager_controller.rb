@@ -11,25 +11,25 @@ class RoomManagerController < ApplicationController
           render :json => {
             :room => Room.includes(:service_maps).where(station_id: @station.id).order(updated_at: :desc).as_json( :include => [:service_maps] ),
             :position => Position.includes(:position_mappings).where(station_id: @station.id).order(updated_at: :desc).as_json( :include => [:position_mappings] ),
-            :order_map_wait => OrderMap.group(:service_id).where("updated_at >= Date(NOW()) and status IN (?,?)", 1, 2).count,
-            :order_map_today => OrderMap.group(:service_id).where("updated_at >= Date(NOW())").count,
-            :total_income_today => OrderMap.group(:service_id).where("updated_at >= Date(NOW())").sum(:tpayout)
+            :order_map_wait => OrderMap.select('service_id, COUNT(*) AS count').group(:service_id).where("updated_at >= Date(NOW()) and status IN (?,?)", 1, 2),
+            :order_map_today => OrderMap.select('service_id, COUNT(*) AS count').group(:service_id).where("updated_at >= Date(NOW())"),
+            :total_income_today => OrderMap.select('service_id, SUM(tpayout) AS sum').group(:service_id).where("updated_at >= Date(NOW())")
           }
 			  elsif params[:length] == "30"
           render :json => {
             :room => Room.includes(:service_maps).where(station_id: @station.id).order(updated_at: :desc).as_json( :include => [:service_maps] ),
             :position => Position.includes(:position_mappings).where(station_id: @station.id).order(updated_at: :desc).as_json( :include => [:position_mappings] ),
-            :order_map_wait => OrderMap.group(:service_id).where("updated_at >= Month(NOW()) and status IN (?,?)", 1, 2).count,
-            :order_map_today => OrderMap.group(:service_id).where("updated_at >= Month(NOW())").count,
-            :total_income_today => OrderMap.group(:service_id).where("updated_at >= Month(NOW())").sum(:tpayout)
+            :order_map_wait => OrderMap.select('service_id, COUNT(*) AS count').group(:service_id).where("updated_at >= Month(NOW()) and status IN (?,?)", 1, 2),
+            :order_map_today => OrderMap.select('service_id, COUNT(*) AS count').group(:service_id).where("updated_at >= Month(NOW())"),
+            :total_income_today => OrderMap.select('service_id, SUM(tpayout) AS sum').group(:service_id).where("updated_at >= Month(NOW())")
           }
         elsif params[:length] == "365"
           render :json => {
             :room => Room.includes(:service_maps).where(station_id: @station.id).order(updated_at: :desc).as_json( :include => [:service_maps] ),
             :position => Position.includes(:position_mappings).where(station_id: @station.id).order(updated_at: :desc).as_json( :include => [:position_mappings] ),
-            :order_map_wait => OrderMap.group(:service_id).where("updated_at >= Year(NOW()) and status IN (?,?)", 1, 2).count,
-            :order_map_today => OrderMap.group(:service_id).where("updated_at >= Year(NOW())").count,
-            :total_income_today => OrderMap.group(:service_id).where("updated_at >= Year(NOW())").sum(:tpayout)
+            :order_map_wait => OrderMap.select('service_id, COUNT(*) AS count').group(:service_id).where("updated_at >= Year(NOW()) and status IN (?,?)", 1, 2),
+            :order_map_today => OrderMap.select('service_id, COUNT(*) AS count').group(:service_id).where("updated_at >= Year(NOW())"),
+            :total_income_today => OrderMap.select('service_id, SUM(tpayout) AS sum').group(:service_id).where("updated_at >= Year(NOW())")
           }
         end
 		  else
