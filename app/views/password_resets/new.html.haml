@@ -1,23 +1,16 @@
 %body.blank
-.wrapper
+.login-content
   / Main content
-  %section.content
-    .back-link
-      %a.btn.btn-accent{:href => "index.html"} Back to Dashboard
+  .lc-block
     .container-center.animated.slideInDown
-      - flash.each do |message_type, message|
-        %div{:class => "alert alert-#{message_type}"}= message
-      .view-header
-        .header-icon
-          %i.pe.page-header-icon.pe-7s-unlock
-        .header-title
-          %h3 Đặt lại mật khẩu
-          %small
-            Mời bạn nhập vào thông tin yêu cầu.
       .panel.panel-filled
         .panel-body
           = form_for(:password_reset, url: password_resets_path) do |f|
-            .form-group
-              = f.label :email
-              = f.email_field :email, class: 'form-control', placeholder: 'Nhập Email'
-              = f.submit "Đặt lại mật khẩu", class: "btn btn-primary pull-right", style: "margin: 5px"
+            .input-group.m-b-20
+              %span.input-group-addon
+                %i.fa.fa-envelope
+              .fg-line
+                = f.email_field :email, class: 'form-control', placeholder: 'Nhập Email'
+            %div
+              = button_tag(type: 'submit', class: "btn btn-default btn-float btn-login") do
+                %i.zmdi.zmdi-arrow-forward

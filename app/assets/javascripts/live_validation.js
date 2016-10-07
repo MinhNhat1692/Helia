@@ -1,6 +1,6 @@
 
 jQuery(document).ready(function($) {  
-  $('#new_user').validate({
+  $('form').validate({
     debug: true,
     onkeyup: false,
     onfocusout: function(e){ $(e).valid() },

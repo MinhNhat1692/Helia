@@ -3,8 +3,6 @@
   / Main content
   .lc-block
     .container-center.animated.slideInDown
-      - flash.each do |message_type, message|
-        %div{:class => "alert alert-#{message_type}"}= message
       .panel.panel-filled
         .panel-body
           = form_for(:session, url: login_path) do |f|

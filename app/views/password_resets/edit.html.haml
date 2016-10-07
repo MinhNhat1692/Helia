@@ -1,28 +1,22 @@
 %body.blank
-.wrapper
+.login-content
   / Main content
-  %section.content
-    .back-link
-      %a.btn.btn-accent{:href => "index.html"} Back to Dashboard
+  .lc-block
     .container-center.animated.slideInDown
-      - flash.each do |message_type, message|
-        %div{:class => "alert alert-#{message_type}"}= message
-        = render 'shared/error_messages'
-      .view-header
-        .header-icon
-          %i.pe.page-header-icon.pe-7s-unlock
-        .header-title
-          %h3 Đặt lại mật khẩu
-          %small
-            Mời bạn nhập vào thông tin yêu cầu.
       .panel.panel-filled
         .panel-body
           = form_for(@user, url: password_reset_path(params[:id])) do |f|
             = hidden_field_tag :email, @user.email
-            .form-group
-              = f.label :password
-              = f.password_field :password, class: 'form-control', placeholder: 'Nhập mật khẩu mới'
-            .form-group  
-              = f.label :password_confirmation, "Confirmation"
-              = f.password_field :password_confirmation, class: 'form-control', placeholder: 'Nhập lại mật khẩu mới'
-              = f.submit "Đặt lại mật khẩu", class: "btn btn-primary pull-right", style: "margin: 5px"
+            .input-group.m-b-20
+              %span.input-group-addon
+                %i.fa.fa-lock
+              .fg-line
+                = f.password_field :password, class: 'form-control', placeholder: 'Nhập mật khẩu mới'
+            .input-group.m-b-20
+              %span.input-group-addon
+                %i.fa.fa-unlock-alt
+              .fg-line
+                = f.password_field :password_confirmation, class: 'form-control', placeholder: 'Nhập lại mật khẩu mới'
+            %div
+              = button_tag(type: 'submit', class: "btn btn-default btn-float btn-login") do
+                %i.zmdi.zmdi-arrow-forward
