@@ -8,23 +8,23 @@
         %span.icon-bar
         %span.icon-bar
       %a.navbar-brand.page-scroll{:href => "#page-top"}
-        %h3{:style => "margin-top:10px"} Helia
+        %h3{:style => "margin-top:10px"} Prolife
     / Collect the nav links, forms, and other content for toggling
     #bs-example-navbar-collapse-1.collapse.navbar-collapse
       %ul.nav.navbar-nav.navbar-right
         %li.hidden.active
-          %a.page-scroll{:href => "#page-top"}
+          %a{:href => "#page-top"}
         %li
-          %a.page-scroll{:href => "#about"} About
+          %a{:href => ""} Thông tin
         %li
-          %a.page-scroll{:href => "#process"} Process
+          %a{:href => ""} Sản phẩm
         %li
-          %a.page-scroll{:href => "#work"} Work
+          %a{:href => ""} Hướng dẫn sử dụng
         - if logged_in?
-          %li= link_to "Users", '#'
-          %li= link_to "Log out", logout_path, method: "delete"
+          %li= link_to "Thông tin tài khoản", '#'
+          %li= link_to "Đăng xuất", logout_path, method: "delete"
         - else
-          %li= link_to "Log in", login_path
-          %li= link_to "Sign Up", signup_path
+          %li= link_to "Đăng nhập", login_path
+          %li= link_to "Đăn ký", signup_path
     / /.navbar-collapse
   / /.container

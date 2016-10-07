@@ -1,10 +1,20 @@
 %body
-  %header{:style => "background-image: url('assets/bg-header.jpg');"}
+  %header
+    .background-img{:style => "background-image: url('assets/bg-header.jpg');"}
     .intro-content
-      %img.img-responsive.img-centered{:alt => "", :src => "assets/preloader.gif"}/
-      .brand-name Helia
-      %hr.colored/
-      .brand-name-subtext by Start Bootstrap
-    .scroll-down
-      %a.btn.page-scroll{:href => "#about"}
-        %i.fa.fa-angle-down.fa-fw
+      .row
+        .col-md-4.col-md-push-8
+          .project-details
+            %span.project-name ProLife
+            %span.project-description Medical Management
+            %hr.colored/
+            %button.btn.btn-outline-light
+              Tìm hiểu thêm
+              %i.fa.fa-long-arrow-right.fa-fw
+            %button.btn.btn-outline-light
+              Đăng ký ngay
+              %i.fa.fa-long-arrow-right.fa-fw
+        .col-md-8.col-md-pull-4.hidden-xs
+          %img.img-responsive.portfolio-image{:style => "width: 100%; max-height: 1000px", :alt => "", :src => "assets/tablet-screens.png"}/
+        
+
