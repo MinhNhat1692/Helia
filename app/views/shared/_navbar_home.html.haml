@@ -7,7 +7,7 @@
         %span.icon-bar
         %span.icon-bar
         %span.icon-bar
-      %a.navbar-brand.page-scroll{:href => "#page-top"}
+      %a.navbar-brand.page-scroll{:href => root_url}
         %h3{:style => "margin-top:10px"} Prolife
     / Collect the nav links, forms, and other content for toggling
     #bs-example-navbar-collapse-1.collapse.navbar-collapse
@@ -21,10 +21,14 @@
         %li
           %a{:href => ""} Hướng dẫn sử dụng
         - if logged_in?
-          %li= link_to "Thông tin tài khoản", '#'
-          %li= link_to "Đăng xuất", logout_path, method: "delete"
+          %li
+            %a{:href => "/user"} Thông tin tài khoản
+          %li
+            %a{:href => "/logout"} Đăng xuất
         - else
-          %li= link_to "Đăng nhập", login_path
-          %li= link_to "Đăng ký", signup_path
+          %li
+            %a{:href => "/login"} Đăng nhập
+          %li
+            %a{:href => "/signup"} Đăng ký
     / /.navbar-collapse
   / /.container

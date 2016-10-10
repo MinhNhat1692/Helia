@@ -3,10 +3,10 @@ class ProfilesController < ApplicationController
 
   def new
 		if has_profile?
-			@pro = Profile.find_by(user_id: current_user.id)
+			@pro = current_profile
 			render 'show'
 		else
-			@profile = Profile.new
+			render 'new'
 		end
   end
 
@@ -18,6 +18,7 @@ class ProfilesController < ApplicationController
   
   def create
 		if has_profile?
+			@pro = current_profile
 			render 'show'	
 		else
 			@profile = Profile.new(user_id: current_user.id, fname: params[:profile][:fname], lname: params[:profile][:lname], dob: params[:profile][:dob], gender: params[:profile][:gender], country: params[:profile][:country], city: params[:profile][:city], province: params[:profile][:province], address: params[:profile][:address], pnumber: params[:profile][:pnumber], noid: params[:profile][:noid], issue_date: params[:profile][:issue_date], issue_place: params[:profile][:issue_place], avatar: params[:profile][:avatar])
@@ -29,14 +30,4 @@ class ProfilesController < ApplicationController
 			end
 		end
   end
-  
-  private
-  	# Confirms a logged-in user.
-		def logged_in_user
-			unless logged_in?
-				store_location
-				flash[:danger] = "Please log in."
-				redirect_to login_url
-			end
-		end
 end

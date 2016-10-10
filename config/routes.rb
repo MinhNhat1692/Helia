@@ -178,16 +178,14 @@ Rails.application.routes.draw do
   get '/station', to: 'station#new'
   post '/station',   to: 'station#create'
   
-  get '/profiles', to: 'profiles#new'
-  post '/profiles',   to: 'profiles#create'
-  
-  get '/dprofiles', to: 'doctor_profile#new'
-  post '/dprofiles',   to: 'doctor_profile#create'
+  get '/dprofile', to: 'doctor_profile#new'
+  post '/dprofile',   to: 'doctor_profile#create'
   
   root "home#index"
   
-  get  '/signup',  to: 'users#new'
+  get  '/signup',  to: 'users#usershow'
   post '/signup',  to: 'users#create'
+  get '/user', to: 'users#show'
   
   get 'users/check_email', to: "users#check_email"
   
@@ -196,10 +194,12 @@ Rails.application.routes.draw do
   delete '/logout',  to: 'sessions#destroy'
   get '/logout',  to: 'sessions#destroy'
   
+  get '/profile', to: 'profiles#new'
+  post '/profile', to: 'profiles#create'
+  
   resources :users
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
-  resources :profiles
   resources :doctor_profile
   resources :station
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

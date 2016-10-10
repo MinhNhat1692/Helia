@@ -1,5 +1,10 @@
 class SessionsController < ApplicationController
   def new
+    if logged_in?
+      redirect_to root_url
+    else
+      render 'new'  
+    end
   end
   
   def create
@@ -9,7 +14,7 @@ class SessionsController < ApplicationController
       if @user.activated?
         log_in @user
         params[:session][:remember_me] == '1' ? remember(@user) : forget(@user)
-        redirect_back_or @user
+        redirect_back_or user_path
       else
         message  = "Account not activated. "
         message += "Check your email for the activation link."

@@ -1,30 +1,27 @@
 %body.blank
-  .wrapper
-    / Main content
-    %section.content
-      .back-link
-        %a.btn.btn-accent{:href => "index.html"} Back to Dashboard
-      .container-center.lg.animated.slideInDown
-        .view-header
-          .header-icon
-            %i.pe.page-header-icon.pe-7s-add-user
-          .header-title
-            %h3 Register
-            %small
-              Please enter your data to register.
-        .panel.panel-filled
-          .panel-body
-            = form_for(@profile , html: {multipart: true}) do |f|
-              .row
-                .form-group.col-lg-4
-                  = f.label :fname
-                  = f.text_field :fname, class: 'form-control', placeholder: 'Type your firstname', 'data-placement': 'bottom'
-                .form-group.col-lg-4
-                  = f.label :lname
-                  = f.text_field :lname, class: 'form-control', placeholder: 'Type your lastname', 'data-placement': 'bottom'
-                .form-group.col-lg-4
-                  = f.label :dob
-                  = f.text_field :dob, class: 'form-control', placeholder: 'Type your lastname', 'data-placement': 'bottom'
+.login-content
+  / Main content
+  .lc-block
+    .container-center.animated.slideInDown
+      .panel.panel-filled
+        .panel-body.row
+          = form_for(:profile, url: profile_path, html: {multipart: true}) do |f|
+            .col-md-6
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Họ và đệm
+                .col-md-9
+                  = f.text_field :fname, class: 'form-control', placeholder: 'Họ và đệm'
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Tên
+                .col-md-9
+                  = f.text_field :lname, class: 'form-control', placeholder: 'Tên'
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Ngày sinh
+                .col-md-9
+                  = f.text_field :dob, class: 'form-control', placeholder: 'Ngày sinh'
                   :javascript
                     $(function () {
                       $('#profile_dob').datetimepicker({
@@ -33,23 +30,42 @@
                         format: 'DD/MM/YYYY'
                       });
                     });
-                .form-group.col-lg-3
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Giới tính
+                .col-md-9
                   = f.collection_select :gender, Gender.where(lang: "vi"), :id, :name, {prompt: "Giới tính"}, {class: "form-control"}
-                .form-group.col-lg-3
-                  = f.collection_select :country, Nation.where(lang: "vi"), :id, :name, {prompt: "Địa chỉ"}, {class: "form-control"}
-                .form-group.col-lg-3
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Quốc tịch
+                .col-md-9
+                  = f.collection_select :country, Nation.where(lang: "vi"), :id, :name, {prompt: "Quốc tịch"}, {class: "form-control"}
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Tỉnh/ TP
+                .col-md-9
                   = f.collection_select :city, City.where(lang: "vi", nation_id: 1), :id, :name, {prompt: "Tỉnh/ TP"}, {class: "form-control"}
-                .form-group.col-lg-3
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Quận/ Huyện
+                .col-md-9
                   = f.collection_select :province, Province.where(lang: "vi", city_id: 1), :id, :name, {prompt: "Quận/ Huyện"}, {class: "form-control"}
-                .form-group.col-lg-12
-                  = f.label :address
-                  = f.text_field :address, class: 'form-control', placeholder: 'Type your address', 'data-placement': 'bottom'
-                .form-group.col-lg-4
-                  = f.label :noid
-                  = f.text_field :noid, class: 'form-control', placeholder: 'Type your ID', 'data-placement': 'bottom'
-                .form-group.col-lg-4
-                  = f.label :issue_date
-                  = f.text_field :issue_date, class: 'form-control', placeholder: 'Type your date get', 'data-placement': 'bottom'
+            .col-md-6
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Địa chỉ
+                .col-md-9
+                  = f.text_field :address, class: 'form-control', placeholder: 'Địa chỉ'
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Số CMTND
+                .col-md-9
+                  = f.text_field :noid, class: 'form-control', placeholder: 'CMTND'
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Ngày cấp
+                .col-md-9
+                  = f.text_field :issue_date, class: 'form-control', placeholder: 'Ngày cấp'
                   :javascript
                     $(function () {
                       $('#profile_issue_date').datetimepicker({
@@ -58,16 +74,21 @@
                         format: 'DD/MM/YYYY'
                       });
                     });
-                .form-group.col-lg-4
-                  = f.label :issue_place
-                  = f.text_field :issue_place, class: 'form-control', placeholder: 'Type your issue place', 'data-placement': 'bottom'
-                .form-group.col-lg-4
-                  = f.label :pnumber
-                  = f.text_field :pnumber, class: 'form-control', placeholder: 'Type your phonenumber', 'data-placement': 'bottom'
-                .form-group.col-lg-4
-                  = f.label :avatar
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Nơi cấp
+                .col-md-9
+                  = f.text_field :issue_place, class: 'form-control', placeholder: 'Nơi cấp'
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Số điện thoại
+                .col-md-9
+                  = f.text_field :pnumber, class: 'form-control', placeholder: 'Số điện thoại'
+              .row.m-b-20
+                .col-md-3.hidden-xs
+                  %span Ảnh đại diện
+                .col-md-9
                   = f.file_field :avatar
-                .form-group.col-lg-4
-                  = f.submit "Xác nhận", class: "btn btn-primary", style: "width:100%;margin-right: 20px;margin-top: 20px"
-            
-            
+            %div
+              = button_tag(type: 'submit', class: "btn btn-default btn-float btn-login") do
+                %i.zmdi.zmdi-check

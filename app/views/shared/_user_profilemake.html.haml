@@ -1,0 +1,61 @@
+%section#pricing.pricing{:style => "background-image: url('assets/bg-pricing.jpg')"}
+  .container.wow.fadeIn.animated{:style => "visibility: visible; animation-name: fadeIn;"}
+    .row.text-center
+      .col-lg-12
+        %h2 Khởi tạo
+        %hr.colored/
+        %p Mời các bạn khởi tạo các thông tin cần thiết trước khi sử dụng hệ thống.
+    .row.content-row
+      .col-md-4
+        .pricing-item.featured-first
+          %h3 Hồ sơ khám bệnh cá nhân
+          %hr.colored/
+          .price
+            %span.number
+              %sup> Miễn phí
+          %ul.list-group
+            %li.list-group-item Không giới hạn lữu trữ kết quả khám
+            %li.list-group-item Không giới hạn lưu trữ đơn thuốc
+            %li.list-group-item Hỗ trợ tìm kiếm phòng khám phù hợp
+            %li.list-group-item Hỗ trợ 24/24
+          - if has_profile
+            %a.btn.btn-outline-dark{:href => profile_path} Sử dụng
+          - else
+            %a.btn.btn-outline-dark{:href => profile_path} Khởi tạo
+      .col-md-4
+        .pricing-item.featured
+          %h3 Quản lý phòng khám
+          %hr.colored/
+          .price
+            %span.number
+              120.000
+              %sup> VNĐ
+            \/ tháng
+          %ul.list-group
+            %li.list-group-item
+              %strong Không giới hạn 
+              người dùng
+            %li.list-group-item Không giới hạn sử dụng
+            %li.list-group-item Hỗ trợ bảo vệ dữ liệu
+            %li.list-group-item Hỗ trợ 24/24
+            %li.list-group-item Cập nhật thường xuyên
+          - if has_station
+            %a.btn.btn-outline-dark{:href => station_path} Sử dụng
+          - else
+            %a.btn.btn-outline-dark{:href => station_path} Khởi tạo
+      .col-md-4
+        .pricing-item.featured-last
+          %h3 Hồ sơ bác sỹ
+          %hr.colored/
+          .price
+            %span.number
+              %sup> Miễn phí
+          %ul.list-group
+            %li.list-group-item Không giới hạn truy câp
+            %li.list-group-item Không giới hạn lưu trữ đơn thuốc
+            %li.list-group-item Hỗ trợ hệ thống làm việc với trình quản lý phòng khám
+            %li.list-group-item Hỗ trợ 24/24
+          - if has_dprofile
+            %a.btn.btn-outline-dark{:href => dprofile_path} Sử dụng
+          - else
+            %a.btn.btn-outline-dark{:href => dprofile_path} Khởi tạo
