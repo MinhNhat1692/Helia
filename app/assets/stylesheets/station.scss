@@ -248,6 +248,45 @@ dl, ol, ul {
     background-color: #eee;
 }
 
+//TabNav
+.tab-nav{
+    width: 100%;
+    height: 48px;
+    display: block;
+}
+
+.tab-cell-3{
+    width: 25%;
+    padding: 15px;
+    color: rgba(255,255,255,.4);
+    display: inline-block;
+    text-align: center;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-bottom: 2px solid rgba(255,255,255,.1);
+    -webkit-transition: all;
+    -o-transition: all;
+    transition: all;
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms;
+    cursor: pointer;
+}
+
+.tab-nav .active{
+    border-bottom: 2px solid #FFFFFF;
+    color: rgba(255,255,255,.9);
+}
+
+.tab-cell-3:hover{
+    color: rgba(255,255,255,.75);
+}
+
+.tab-content .row p{
+    text-align: justify;
+}
+
 //Section code
 #main {
     padding-bottom: 110px;
@@ -347,7 +386,7 @@ section{
 .submenu-plus, .submenu-minus {
     position: absolute;
     top: 50%;
-    margin-top: -11px;
+    margin-top: -17px;
     font-size: 17px;
     right: 15px;
     -webkit-transition: all;
@@ -1084,6 +1123,13 @@ tbody>.toggled{
 }
 .modal-body{
     background: #1E262B;
+}
+
+.modal-navbar{
+    background: #1E262B;
+    position: relative;
+    padding: 0px;
+    padding-bottom: 4px;
 }
 
 @media (min-width: 1200px){    
@@ -1880,14 +1926,4 @@ option {
 
 span{
   line-height: 35px;
-}
-
-.datepicker {
-  background-color: rgba(0,0,0,0.2);
-  border-color: rgba(0,0,0,0.2);
-  color: #000;
-}
-
-.datepicker th{
-  color: #000000;
 }

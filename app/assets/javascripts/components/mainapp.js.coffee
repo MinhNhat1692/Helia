@@ -47,6 +47,8 @@
       React.createElement MainPart, data: @props.data, datatype: 'medicine_stock_record' #task = code = 51
     RoomManager: ->
       React.createElement RoomManager, data: @props.data #task = code = 60
+    DoctorRoom: ->
+      React.createElement MainPart, data: @props.data, datatype: 'doctor_room' #task = code = 63
     render: ->
       switch @props.task
         when 5
@@ -101,3 +103,10 @@
           @MedicineStockRecord()
         when 60
           @RoomManager()
+        when 61
+          @RoomManager()
+        when 62
+          @RoomManager()
+        when 63
+          @DoctorRoom()
+            

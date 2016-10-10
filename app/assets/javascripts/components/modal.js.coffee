@@ -3021,17 +3021,33 @@
       type: @props.type
       autoComplete: null
       code: null
-    sampleRender: ->
+    doctorRoomRender: ->
       React.DOM.div className: 'modal fade', id: @props.id,
         React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
           React.DOM.div className: 'modal-content',
-            React.DOM.div className: 'modal-header text-center',
-              React.DOM.h4 className: 'modal-title', @props.title
-              React.DOM.small null, @props.undertitle
-            React.DOM.div className: 'modal-body',
-              React.DOM.div className: 'row',
-                React.DOM.div className: 'col-md-12',
+            React.DOM.div className: 'modal-navbar',
+              React.DOM.div className: 'tab-nav',
+                React.DOM.div className: 'tab-cell-3 active', onClick: @Trigger, 'Thông tin bệnh nhân'
+                React.DOM.div className: 'tab-cell-3', onClick: @Trigger, 'Thông tin điều trị'
+                React.DOM.div className: 'tab-cell-3', onClick: @Trigger, 'Khám lâm sàng'
+                React.DOM.div className: 'tab-cell-3', onClick: @Trigger, 'Dịch vụ thêm'
+              React.DOM.div className: 'tab-content-list',
+                React.DOM.div className: 'tab-content active',
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-9', style: {'padding': '40px 55px 0px 42px'},
+                      React.DOM.div className: 'tab-content-header',
+                        React.DOM.h3 null,
+                          React.DOM.i className: 'zmdi zmdi-equalizer'
+                          ' Thông tin sơ bộ'
+                      React.DOM.p null, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
+                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
+                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
+                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
+                React.DOM.div className: 'tab-content'
+                React.DOM.div className: 'tab-content'
+                React.DOM.div className: 'tab-content'
             React.DOM.div className: 'modal-footer',
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
     render: ->
-      @sampleRender()
+      if @props.datatype == 'doctor_room'
+        @doctorRoomRender()

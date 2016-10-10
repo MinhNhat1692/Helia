@@ -43,9 +43,9 @@
         type: 2, className: 'fa fa-user-md', active: false, name: "Thông tin quản lý phòng",
         records: [
           {code: 60, active: false, name: 'Theo ngày'}
-          {code: 61, active: false, name: 'Theo tuần'}
-          {code: 62, active: false, name: 'Theo tháng'}
-          {code: 63, active: false, name: 'Theo năm'}
+          {code: 61, active: false, name: 'Theo tháng'}
+          {code: 62, active: false, name: 'Theo năm'}
+          {code: 63, active: false, name: 'Trình quản lý phòng'}
         ]
       Pharmacy:
         type: 2, className: 'fa fa-medkit', active: false, name: "Quản lý thuốc",
@@ -564,45 +564,59 @@
           type: 2, className: 'fa fa-user-md', active: true, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: true, name: 'Theo ngày'}
-            {code: 61, active: false, name: 'Theo tuần'}
-            {code: 62, active: false, name: 'Theo tháng'}
-            {code: 63, active: false, name: 'Theo năm'}
+            {code: 61, active: false, name: 'Theo tháng'}
+            {code: 62, active: false, name: 'Theo năm'}
+            {code: 63, active: false, name: 'Trình quản lý phòng'}
           ]
       else if code == 61
+        data =
+          task: 61
+          link: '/room_manager/list'
+          formData: {length: 30}
+        @handleGetdataAlt(data)
         @setState Doctor:
           type: 2, className: 'fa fa-user-md', active: true, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: false, name: 'Theo ngày'}
-            {code: 61, active: true, name: 'Theo tuần'}
-            {code: 62, active: false, name: 'Theo tháng'}
-            {code: 63, active: false, name: 'Theo năm'}
+            {code: 61, active: true, name: 'Theo tháng'}
+            {code: 62, active: false, name: 'Theo năm'}
+            {code: 63, active: false, name: 'Trình quản lý phòng'}
           ]
       else if code == 62
+        data =
+          task: 62
+          link: '/room_manager/list'
+          formData: {length: 365}
+        @handleGetdataAlt(data)
         @setState Doctor:
           type: 2, className: 'fa fa-user-md', active: true, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: false, name: 'Theo ngày'}
-            {code: 61, active: false, name: 'Theo tuần'}
-            {code: 62, active: true, name: 'Theo tháng'}
-            {code: 63, active: false, name: 'Theo năm'}
+            {code: 61, active: false, name: 'Theo tháng'}
+            {code: 62, active: true, name: 'Theo năm'}
+            {code: 63, active: false, name: 'Trình quản lý phòng'}
           ]
       else if code == 63
+        data =
+          task: 63
+          link: '/order_map/list'
+        @handleGetdata(data)
         @setState Doctor:
           type: 2, className: 'fa fa-user-md', active: true, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: false, name: 'Theo ngày'}
-            {code: 61, active: false, name: 'Theo tuần'}
-            {code: 62, active: false, name: 'Theo tháng'}
-            {code: 63, active: true, name: 'Theo năm'}
+            {code: 61, active: false, name: 'Theo tháng'}
+            {code: 62, active: false, name: 'Theo năm'}
+            {code: 63, active: true, name: 'Trình quản lý phòng'}
           ]
       else
         @setState Doctor:
           type: 2, className: 'fa fa-user-md', active: false, name: "Thông tin quản lý phòng",
           records: [
             {code: 60, active: false, name: 'Theo ngày'}
-            {code: 61, active: false, name: 'Theo tuần'}
-            {code: 62, active: false, name: 'Theo tháng'}
-            {code: 63, active: false, name: 'Theo năm'}
+            {code: 61, active: false, name: 'Theo tháng'}
+            {code: 62, active: false, name: 'Theo năm'}
+            {code: 63, active: false, name: 'Trình quản lý phòng'}
           ]
     handleGetdata: (data) ->
       $.ajax

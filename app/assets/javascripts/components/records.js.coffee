@@ -2473,6 +2473,22 @@
                         React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+    doctorRoomRender: ->
+      React.DOM.div className: 'container',
+        React.DOM.div className: 'block-header',
+          React.DOM.h2 null, 'Danh sách bệnh nhân đang khám và chờ khám'
+        React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.DOM.button type: 'button', className: 'btn btn-info', 'data-toggle': 'modal', 'data-target': '#modal1', 'Open Modal'
+          React.DOM.div className: 'card-body table-responsive',
+            React.DOM.table className: 'table table-hover table-condensed',
+              React.DOM.thead null,
+                React.DOM.tr null,
+                  React.DOM.th null, 'Tên dịch vụ'
+                  React.DOM.th null, 'Tên khách hàng'
+                  React.DOM.th null, 'Tình trạng'
+                  React.DOM.th null, 'Ghi chú'
+        React.createElement ModalOutside, id: 'modal1', title: 'nope', undertitle: 'nope', datatype: @props.datatype
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()
@@ -2518,3 +2534,5 @@
         @doctorCheckInfoRender()
       else if @props.datatype == "bill_info"
         @billInfoRender()
+      else if @props.datatype == "doctor_room"
+        @doctorRoomRender()
