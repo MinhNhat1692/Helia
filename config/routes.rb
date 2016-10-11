@@ -19,7 +19,8 @@ Rails.application.routes.draw do
   post '/check_info/list', to: 'check_info#list'
   post '/check_info/search', to: 'check_info#search'
   post '/check_info/find', to: 'check_info#find'
-
+  
+  post '/doctor_room/extra', to: 'order_map#extra'
   delete '/order_map', to: 'order_map#destroy'
   put '/order_map', to: 'order_map#update'
   post '/order_map', to: 'order_map#create'

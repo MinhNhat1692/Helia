@@ -926,7 +926,7 @@
             else
               ""
           React.DOM.td null,
-            if @props.record.dob != null && @props.record.dob != undefined  
+            if @props.record.dob != null and @props.record.dob != undefined
               @calAge(@props.record.dob,2).years
             else
               ""
@@ -936,8 +936,6 @@
           React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.issue_date
           React.DOM.td null, @props.record.issue_place
-          React.DOM.td null,
-            React.DOM.a href: @props.record.avatar, className: 'btn btn-default', target: '_blank', style: {margin: '5px'}, 'Avatar'
       else
         React.DOM.tr onClick: @selectRecord,
           React.DOM.td null, @props.record.cname
@@ -957,8 +955,6 @@
           React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.issue_date
           React.DOM.td null, @props.record.issue_place
-          React.DOM.td null,
-            React.DOM.a href: @props.record.avatar, className: 'btn btn-default', target: '_blank', style: {margin: '5px'}, 'Avatar'
     CustomerRecordMini: ->
       for gender in @props.gender
         if @props.record.gender == gender.id
@@ -1025,6 +1021,28 @@
           React.DOM.td null, @props.record.tpayment
           React.DOM.td null, @props.record.discount
           React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @props.record.remark
+    DoctorRoom: ->
+      switch Number(@props.record.status)
+        when 1
+          @state.typeName = "Chưa thanh toán, chưa khám bệnh"
+        when 2
+          @state.typeName = "Đã thanh toán, đang chờ khám"
+        when 3
+          @state.typeName = "Đã thanh toán, đã khám bệnh"
+        when 4
+          @state.typeName = "Chưa thanh toán, đã khám bệnh"
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.sername
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @props.record.remark
+      else
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.sername
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @state.typeName
           React.DOM.td null, @props.record.remark
     CheckInfo: ->
       switch Number(@props.record.status)
@@ -1184,6 +1202,8 @@
         @ServiceMini()
       else if @props.datatype == 'employee_mini'
         @EmployeeMini()
+      else if @props.datatype == 'doctor_room'
+        @DoctorRoom()
         
 
   @ListgroupSample = React.createClass

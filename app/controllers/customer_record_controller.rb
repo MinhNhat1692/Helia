@@ -1,15 +1,15 @@
 class CustomerRecordController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :create, :update, :destroy, :list, :find_record, :add_record, :link_record, :clear_link_record, :update_record]
+  before_action :logged_in_user, only: [ :create, :update, :destroy, :list, :find_record, :add_record, :link_record, :clear_link_record, :update_record, :search, :find]
   
   def create
 		if has_station?
 			@station = Station.find_by(user_id: current_user.id)
 			if params.has_key?(:email)
-				@checkuser = User.find_by(email: params[:email])
-				if @checkuser != nil
-					@checkprofile = Profile.find_by(user_id: @checkuser.id)
+				@profile = User.find_by(email: params[:email])
+				if @profile != nil
+					@checkprofile = Profile.find_by(user_id: @profile.id)
 					if @checkprofile != nil
-						@customer = CustomerRecord.new(user_id: @checkuser.id, station_id: @station.id, cname: @checkuser.lname + " " + @checkuser.fname, address: @checkuser.address, pnumber: @checkuser.pnumber, avatar: @checkuser.avatar, gender: @checkuser.gender, noid: @checkuser.noid, country: @checkuser.country, city: @checkuser.city, province: @checkuser.province, issue_date: @checkuser.issue_date, issue_place: @checkuser.issue_place, dob: @checkuser.dob)
+						@customer = CustomerRecord.new(user_id: @profile.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, address: @profile.address, pnumber: @profile.pnumber, avatar: @profile.avatar, gender: @profile.gender, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, dob: @profile.dob, work_place: @profile.work_place, self_history: @profile.self_history, family_history: @profile.family_history, drug_history: @profile.drug_history)
 						if @customer.save
 							render json: @customer
 						else
@@ -19,14 +19,14 @@ class CustomerRecordController < ApplicationController
 				end
 			else
 				if params.has_key?(:avatar)
-					@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], avatar: params[:avatar], gender: params[:gender], noid: params[:noid], dob: params[:dob])
+					@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], avatar: params[:avatar], gender: params[:gender], noid: params[:noid], dob: params[:dob], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
 					if @customer.save
 						render json: @customer
 					else
 						render json: @customer.errors, status: :unprocessable_entity
 					end
 				else
-					@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], gender: params[:gender], noid: params[:noid], dob: params[:dob])
+					@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], gender: params[:gender], noid: params[:noid], dob: params[:dob], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
 					if @customer.save
 						render json: @customer
 					else
@@ -45,13 +45,13 @@ class CustomerRecordController < ApplicationController
 			@customer = CustomerRecord.find(params[:id])
 			if @customer.station_id == @station.id
 				if params.has_key?(:avatar)
-					if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender],avatar: params[:avatar],dob: params[:dob])
+					if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender],avatar: params[:avatar],dob: params[:dob], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
 						render json: @customer
 					else
 						render json: @customer.errors, status: :unprocessable_entity
 					end
 				else
-					if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender], dob: params[:dob])
+					if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender], dob: params[:dob], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
 						render json: @customer
 					else
 						render json: @customer.errors, status: :unprocessable_entity
@@ -129,7 +129,7 @@ class CustomerRecordController < ApplicationController
 					if @profile != nil
 					  @record = CustomerRecord.find_by(customer_id: params[:id], station_id: @station.id)
 				    if @record == nil
-					    @record = CustomerRecord.new(customer_id: @customeruser.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, dob: @profile.dob, gender: @profile.gender, country: @profile.country, city: @profile.city, province: @profile.province, address: @profile.address, pnumber: @profile.pnumber, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, avatar: @profile.avatar)
+					    @record = CustomerRecord.new(customer_id: @customeruser.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, dob: @profile.dob, gender: @profile.gender, address: @profile.address, pnumber: @profile.pnumber, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, avatar: @profile.avatar, work_place: @profile.work_place, self_history: @profile.self_history, family_history: @profile.family_history, drug_history: @profile.drug_history)
 							if @record.save
 								render json: @record
 							else
@@ -193,7 +193,7 @@ class CustomerRecordController < ApplicationController
 					if @profile != nil
 						@record = CustomerRecord.find_by(id: params[:idrecord], customer_id: @customeruser.id, station_id: @station.id)
 						if @record != nil
-					    if @record.update(customer_id: @customeruser.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, dob: @profile.dob, gender: @profile.gender, country: @profile.country, city: @profile.city, province: @profile.province, address: @profile.address, pnumber: @profile.pnumber, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, avatar: @profile.avatar)
+					    if @record.update(customer_id: @customeruser.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, dob: @profile.dob, gender: @profile.gender, country: @profile.country, city: @profile.city, province: @profile.province, address: @profile.address, pnumber: @profile.pnumber, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, avatar: @profile.avatar, work_place: @profile.work_place, self_history: @profile.self_history, family_history: @profile.family_history, drug_history: @profile.drug_history)
 							  render json: @record
 						  else
 							  render json: @record.errors, status: :unprocessable_entity
@@ -206,8 +206,6 @@ class CustomerRecordController < ApplicationController
 			redirect_to root_path
 		end
 	end
-	
-  
   
   def search
     if params.has_key?(:id_station)
@@ -215,29 +213,30 @@ class CustomerRecordController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
-        if params.has_key?(:namestring)
-					if params[:namestring].include? ","
-						stringCheck = params[:namestring].split(",")
-						if stringCheck[1].include? "/"
-					    dobString = stringCheck[1].split("/")
-					    if dobString.length > 2
-							  @supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{dobString[2] + "-" + dobString[1] + "-" + dobString[0]}%" , @station.id).limit(5)
-			          render json:@supplier
-							else
-								@supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{dobString[1] + "-" + dobString[0]}%" , @station.id).limit(5)
-			          render json:@supplier
-							end
-					  else
-						  @supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{stringCheck[1]}%" , @station.id).limit(5)
-			        render json:@supplier
-			      end
-					else
-            @supplier = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:namestring]}%", @station.id).limit(5)
-			      render json:@supplier
-			    end
+        if params.has_key?(:cname)
+					@customer_record = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).group(:cname).order(updated_at: :desc).limit(5)
+			    render json:@customer_record
         elsif params.has_key?(:address)
-				  @supplier = CustomerRecord.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).group(:address).limit(3)
-			    render json:@supplier
+				  @customer_record = CustomerRecord.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).group(:address).order(updated_at: :desc).limit(5)
+			    render json:@customer_record
+			  elsif params.has_key?(:pnumber)
+				  @customer_record = CustomerRecord.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id).group(:pnumber).order(updated_at: :desc).limit(5)
+			    render json:@customer_record
+			  elsif params.has_key?(:noid)
+				  @customer_record = CustomerRecord.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id).group(:noid).order(updated_at: :desc).limit(5)
+			    render json:@customer_record
+			  elsif params.has_key?(:work_place)
+				  @customer_record = CustomerRecord.where("work_place LIKE ? and station_id = ?" , "%#{params[:work_place]}%", @station.id).group(:work_place).order(updated_at: :desc).limit(5)
+			    render json:@customer_record
+			  elsif params.has_key?(:self_history)
+				  @customer_record = CustomerRecord.where("self_history LIKE ? and station_id = ?" , "%#{params[:self_history]}%", @station.id).group(:self_history).order(updated_at: :desc).limit(5)
+			    render json:@customer_record
+			  elsif params.has_key?(:family_history)
+				  @customer_record = CustomerRecord.where("family_history LIKE ? and station_id = ?" , "%#{params[:family_history]}%", @station.id).group(:family_history).order(updated_at: :desc).limit(5)
+			    render json:@customer_record
+			  elsif params.has_key?(:drug_history)
+				  @customer_record = CustomerRecord.where("drug_history LIKE ? and station_id = ?" , "%#{params[:drug_history]}%", @station.id).group(:drug_history).order(updated_at: :desc).limit(5)
+			    render json:@customer_record
 			  end
       else
         redirect_to root_path
@@ -251,41 +250,36 @@ class CustomerRecordController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
-        if params.has_key?(:namestring)
-					if params[:namestring].include? ","
-						stringCheck = params[:namestring].split(",")
-						if stringCheck[1].include? "/"
-					    dobString = stringCheck[1].split("/")
-					    if dobString.length > 2
-							  @supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{dobString[2] + "-" + dobString[1] + "-" + dobString[0]}%" , @station.id)
-			          render json:@supplier
-							else
-								@supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{dobString[1] + "-" + dobString[0]}%" , @station.id)
-			          render json:@supplier
-							end
-					  else
-						  @supplier = CustomerRecord.where("cname LIKE ? and dob LIKE ? and station_id = ?" , "%#{stringCheck[0]}%", "%#{stringCheck[1]}%" , @station.id)
-			        render json:@supplier
-			      end
-					else
-            @supplier = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:namestring]}%", @station.id)
-			      render json:@supplier
-			    end
-        elsif params.has_key?(:dob)
-				  @supplier = CustomerRecord.where("dob = ? and station_id = ?" , params[:dob], @station.id).group(:address)
-			    render json:@supplier
-			  elsif params.has_key?(:gender)
-				  @supplier = CustomerRecord.where("gender = ? and station_id = ?" , params[:gender], @station.id).group(:address)
-			    render json:@supplier
-			  elsif params.has_key?(:address)
-				  @supplier = CustomerRecord.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).group(:address)
-			    render json:@supplier
+        if params.has_key?(:cname)
+					@customer_record = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
+        elsif params.has_key?(:address)
+				  @customer_record = CustomerRecord.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
 			  elsif params.has_key?(:pnumber)
-				  @supplier = CustomerRecord.where("pnumber = ? and station_id = ?" , params[:pnumber], @station.id).group(:address)
-			    render json:@supplier
+				  @customer_record = CustomerRecord.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
 			  elsif params.has_key?(:noid)
-				  @supplier = CustomerRecord.where("noid = ? and station_id = ?" , params[:noid], @station.id).group(:address)
-			    render json:@supplier
+				  @customer_record = CustomerRecord.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
+			  elsif params.has_key?(:work_place)
+				  @customer_record = CustomerRecord.where("work_place LIKE ? and station_id = ?" , "%#{params[:work_place]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
+			  elsif params.has_key?(:self_history)
+				  @customer_record = CustomerRecord.where("self_history LIKE ? and station_id = ?" , "%#{params[:self_history]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
+			  elsif params.has_key?(:family_history)
+				  @customer_record = CustomerRecord.where("family_history LIKE ? and station_id = ?" , "%#{params[:family_history]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
+			  elsif params.has_key?(:drug_history)
+				  @customer_record = CustomerRecord.where("drug_history LIKE ? and station_id = ?" , "%#{params[:drug_history]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
+			  elsif params.has_key?(:dob)
+				  @customer_record = CustomerRecord.where("dob = ? and station_id = ?" , params[:dob], @station.id).order(updated_at: :desc)
+			    render json:@customer_record
+			  elsif params.has_key?(:gender)
+				  @customer_record = CustomerRecord.where("gender = ? and station_id = ?" , params[:gender], @station.id).order(updated_at: :desc)
+			    render json:@customer_record
 			  end
       else
         redirect_to root_path

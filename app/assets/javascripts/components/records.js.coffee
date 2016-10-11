@@ -204,6 +204,7 @@
       userlink: null
       autoComplete: null
       filteredRecord: null
+      extradata: null
     componentWillMount: ->
       $(APP).on 'rebuild', ((e) ->
         @setState
@@ -256,6 +257,27 @@
       @setState
         record: result
         selected: result.id
+    selectRecordAlt: (result) ->
+      if @props.datatype == "doctor_room"
+        formData = new FormData
+        formData.append 'order_map_id', result.id
+      if formData != undefined
+        $.ajax
+          url: '/' + @props.datatype + '/extra'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((data) ->
+            @setState
+              extradata: data
+              record: result
+              selected: result.id
+            $('#modal1').modal({backdrop: 'static', keyboard: false})  
+            return
+          ).bind(this)
     trigger: (e) ->
       console.log(1)
     triggerInput: (text,type,check1) ->
@@ -1395,6 +1417,8 @@
       @setState
         autoComplete: null
         filteredRecord: null
+    triggerFillModal: ->
+      $(APP).trigger('fillmodal')
     toggleSideBar: ->
       if @state.classSideBar == 'sidebar'
         @setState classSideBar: 'sidebar toggled'
@@ -1507,6 +1531,12 @@
           data: {id: @state.record.id}
           success: () =>
             @deleteRecord @state.record
+    OpenModalAdd1: ->
+      @setState
+        record: null
+        selected: null
+      $(APP).trigger('clearmodal')
+      $('#modal1').modal({backdrop: 'static', keyboard: false})  
     employeeRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
@@ -1758,13 +1788,15 @@
           React.DOM.div className: 'card',
             React.DOM.div className: 'card-header',
               React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-exchange', text: ' Toggle Sidebar', type: 1, Clicked: @toggleSideBar
-              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Add Record', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: "add"
-              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-pencil-square-o', text: ' Edit', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: "edit", record: @state.record
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @OpenModalAdd1
+              React.DOM.button className: 'btn btn-default', onClick: @triggerFillModal, 'data-target':'#modal1', 'data-toggle': 'modal', 'data-backdrop':'static', 'data-keyboard':'false', type: 'button',
+                React.DOM.i className: 'fa fa-pencil-square-o'
+                'Sửa'
               React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Delete', type: 1, Clicked: @deleteRecord
               React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Thêm yêu cầu khám bệnh', type: 2, trigger: @trigger, datatype: 'order_map', prefix: "add", extra: {datatype: @props.datatype, data: @state.record}
               React.DOM.br null
               React.DOM.br null
-              React.createElement FilterForm, datatype: 'customer_record', autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
             React.DOM.div className: 'card-body table-responsive',
               React.DOM.table className: 'table table-hover table-condensed',
                 React.DOM.thead null,
@@ -1778,7 +1810,6 @@
                     React.DOM.th null, 'CMTND'
                     React.DOM.th null, 'Ngày cấp'
                     React.DOM.th null, 'Nơi cấp'
-                    React.DOM.th null, 'Ảnh đại diện'
                 React.DOM.tbody null,
                   if @state.filteredRecord != null
                     for record in @state.filteredRecord
@@ -1798,6 +1829,7 @@
                           React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
         React.DOM.div className: 'col-md-3',
           if @state.record != null
             React.createElement PatientProfile, gender: @props.data[1], record: @state.record, style: 'normal', clearLinkListener: @ClearlinkRecordAlt
@@ -2476,10 +2508,9 @@
     doctorRoomRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
-          React.DOM.h2 null, 'Danh sách bệnh nhân đang khám và chờ khám'
+          React.DOM.h2 null, 'Danh sách bệnh nhân'
         React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.DOM.button type: 'button', className: 'btn btn-info', 'data-toggle': 'modal', 'data-target': '#modal1', 'Open Modal'
+          React.DOM.div className: 'card-header'
           React.DOM.div className: 'card-body table-responsive',
             React.DOM.table className: 'table table-hover table-condensed',
               React.DOM.thead null,
@@ -2488,7 +2519,26 @@
                   React.DOM.th null, 'Tên khách hàng'
                   React.DOM.th null, 'Tình trạng'
                   React.DOM.th null, 'Ghi chú'
-        React.createElement ModalOutside, id: 'modal1', title: 'nope', undertitle: 'nope', datatype: @props.datatype
+              React.DOM.tbody null,
+                if @state.filteredRecord != null
+                  for record in @state.filteredRecord
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecordAlt
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
+                else
+                  for record in @state.records
+                    if @state.selected != null
+                      if record.id == @state.selected
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecordAlt
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
+                    else
+                      React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
+        React.createElement ModalOutside, id: 'modal1', title: 'nope', undertitle: 'nope', datatype: @props.datatype, record: @state.extradata
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()

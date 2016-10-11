@@ -1,5 +1,5 @@
 class OrderMapController < ApplicationController
-  before_action :logged_in_user, only: [:update, :create, :list, :destroy, :search, :find]
+  before_action :logged_in_user, only: [:update, :create, :list, :destroy, :search, :find, :extra]
   
   def update
     if params.has_key?(:id_station)
@@ -155,4 +155,24 @@ class OrderMapController < ApplicationController
       end
     end
   end
+
+  def extra
+		if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+			  @station = Station.find_by(user_id: current_user.id)
+			  if params.has_key?(:order_map_id)
+			    @ordermap = OrderMap.find_by(id: params[:order_map_id], station_id: @station.id)
+			    @data = []
+			    @data[0] = CustomerRecord.find_by(id: @ordermap.customer_record_id, station_id: @station.id)
+			    @data[1] = CheckInfo.find_by(order_map_id: @ordermap.id, station_id: @station.id)
+			    @data[2] = DoctorCheckInfo.find_by(order_map_id: @ordermap.id, station_id: @station.id)
+			    render json: @data
+			  end
+		  else
+        redirect_to root_path
+      end
+    end
+	end
 end
