@@ -16,5 +16,6 @@
         onChange: @trigger
         onBlur: @trigger2
         onFocus: @trigger3
-        defaultValue: @props.defaultValue                
+        defaultValue: @props.defaultValue
+        step: @props.step
     

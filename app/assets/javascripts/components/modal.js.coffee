@@ -3043,61 +3043,820 @@
         return
       return
     componentWillMount: ->
-      $(APP).on 'fillmodal', ((e) ->
-        @triggerUpdateFormValue()
+      $(APP).on 'fillmodal', ((e,code) ->
+        @triggerUpdateFormValue(code)
       ).bind(this)
-      $(APP).on 'clearmodal', ((e) ->
-        @triggerClearFormValue()
+      $(APP).on 'clearmodal', ((e,code) ->
+        @triggerClearFormValue(code)
       ).bind(this)
-    triggerUpdateFormValue: ->
-      if @props.datatype == "customer_record"
-        $('#form_name').val(@props.record.cname)
-        $('#form_dob').val(@props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4))
-        $('#form_address').val(@props.record.address)
-        $('#form_pnumber').val(@props.record.pnumber)
-        $('#form_noid').val(@props.record.noid)
-        $('#form_work_place').val(@props.record.work_place)
-        $('#form_self_history').val(@props.record.self_history)
-        $('#form_family_history').val(@props.record.family_history)
-        $('#form_drug_history').val(@props.record.drug_history)
+    triggersafe: ->
+    trigger: ->
+      @props.trigger 1
+      $('#' + @props.id).modal('hide')
+    triggerUpdateFormValue: (code) ->
+      if code == "customer_record" and @props.record != null and @props.record != undefined
+        $('#' + @props.id + ' #form_name').val(@props.record.cname)
+        $('#' + @props.id + ' #form_dob').val(@props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4))
+        $('#' + @props.id + ' #form_address').val(@props.record.address)
+        $('#' + @props.id + ' #form_pnumber').val(@props.record.pnumber)
+        $('#' + @props.id + ' #form_noid').val(@props.record.noid)
+        $('#' + @props.id + ' #form_work_place').val(@props.record.work_place)
+        $('#' + @props.id + ' #form_self_history').val(@props.record.self_history)
+        $('#' + @props.id + ' #form_family_history').val(@props.record.family_history)
+        $('#' + @props.id + ' #form_drug_history').val(@props.record.drug_history)
+        $('#' + @props.id + ' #form_avatar').val("")
         document.getElementById('results').innerHTML = '<img id="sample_avatar" class="" style="max-width: 100%;max-height: 240px" src="' + @props.record.avatar + '"/>'
-    triggerClearFormValue: ->
-      if @props.datatype == "customer_record"
-        $('#form_name').val("")
-        $('#form_dob').val("")
-        $('#form_address').val("")
-        $('#form_pnumber').val("")
-        $('#form_noid').val("")
-        $('#form_work_place').val("")
-        $('#form_self_history').val("")
-        $('#form_family_history').val("")
-        $('#form_drug_history').val("")
+      else if code == 'employee' and @props.record != null and @props.record != undefined
+        $('#' + @props.id + ' #form_ename').val(@props.record.ename)
+        $('#' + @props.id + ' #form_address').val(@props.record.address)
+        $('#' + @props.id + ' #form_pnumber').val(@props.record.pnumber)
+        $('#' + @props.id + ' #form_noid').val(@props.record.noid)
+        $('#' + @props.id + ' #form_avatar').val("")
+        document.getElementById('results').innerHTML = '<img id="sample_avatar" class="" style="max-width: 100%;max-height: 240px" src="' + @props.record.avatar + '"/>'
+      else if code == 'room' and @props.record != null and @props.record != undefined
+        $('#' + @props.id + ' #form_name').val(@props.record.name)
+        $('#' + @props.id + ' #form_lang').val(@props.record.lang)
+        $('#' + @props.id + ' #form_map').val("")
+      else if code == 'position'
+        if @props.room != null and @props.room != undefined
+          $('#' + @props.id + ' #form_r_id').val(@props.room.id)
+          $('#' + @props.id + ' #form_rname').val(@props.room.name)
+        if @props.record != null and @props.record != undefined
+          $('#' + @props.id + ' #form_rname').val(@props.record.rname)
+          $('#' + @props.id + ' #form_r_id').val(@props.record.room_id)
+          $('#' + @props.id + ' #form_pname').val(@props.record.pname)
+          $('#' + @props.id + ' #form_lang').val(@props.record.lang)
+          $('#' + @props.id + ' #form_description').val(@props.record.description)
+          $('#' + @props.id + ' #form_file').val("")
+      else if code == 'service' and @props.record != null and @props.record != undefined
+        $('#' + @props.id + ' #form_sname').val(@props.record.sname)
+        $('#' + @props.id + ' #form_lang').val(@props.record.lang)
+        $('#' + @props.id + ' #form_price').val(@props.record.price)
+        $('#' + @props.id + ' #form_currency').val(@props.record.currency)
+        $('#' + @props.id + ' #form_description').val(@props.record.description)
+        $('#' + @props.id + ' #form_file').val("")
+      else if code == 'posmap'
+        if @props.employee != null and @props.employee != undefined
+          $('#' + @props.id + ' #form_e_id').val(@props.employee.id)
+          $('#' + @props.id + ' #form_ename').val(@props.employee.ename)
+        if @props.position != null and @props.position != undefined
+          $('#' + @props.id + ' #form_p_id').val(@props.position.id)
+          $('#' + @props.id + ' #form_pname').val(@props.position.pname)
+        if @props.record != null and @props.record != undefined
+          $('#' + @props.id + ' #form_e_id').val(@props.record.position_id)
+          $('#' + @props.id + ' #form_ename').val(@props.record.ename)
+          $('#' + @props.id + ' #form_p_id').val(@props.record.employee_id)
+          $('#' + @props.id + ' #form_pname').val(@props.record.pname)
+      else if code == 'sermap'
+        if @props.room != null and @props.room != undefined
+          $('#' + @props.id + ' #form_r_id').val(@props.room.id)
+          $('#' + @props.id + ' #form_rname').val(@props.room.name)
+        if @props.service != null and @props.service != undefined
+          $('#' + @props.id + ' #form_s_id').val(@props.service.id)
+          $('#' + @props.id + ' #form_sname').val(@props.service.sname)
+        if @props.record != null and @props.record != undefined
+          $('#' + @props.id + ' #form_sname').val(@props.record.sname)
+          $('#' + @props.id + ' #form_s_id').val(@props.record.service_id)
+          $('#' + @props.id + ' #form_rname').val(@props.record.rname)
+          $('#' + @props.id + ' #form_r_id').val(@props.record.room_id)
+      else if code == 'order_map'
+        if @props.customer != null and @props.customer != undefined
+          $('#' + @props.id + ' #form_c_id').val(@props.customer.id)
+          $('#' + @props.id + ' #form_cname').val(@props.customer.cname)
+        if @props.service != null and @props.service != undefined
+          $('#' + @props.id + ' #form_s_id').val(@props.service.id)
+          $('#' + @props.id + ' #form_sname').val(@props.service.sname)
+        if @props.record != null and @props.record != undefined
+          $('#' + @props.id + ' #form_c_id').val(@props.record.customer_record_id)
+          $('#' + @props.id + ' #form_cname').val(@props.record.cname)
+          $('#' + @props.id + ' #form_s_id').val(@props.record.service_id)
+          $('#' + @props.id + ' #form_sname').val(@props.record.sname)
+          $('#' + @props.id + ' #form_remark').val(@props.record.remark)
+          $('#' + @props.id + ' #form_tpayment').val(@props.record.tpayment)
+          $('#' + @props.id + ' #form_discount').val(@props.record.discount)
+          $('#' + @props.id + ' #form_discount_percent').val(@props.record.discount/@props.record.tpayment * 100)
+          $('#' + @props.id + ' #form_tpayout').val(@props.record.tpayout)
+    triggerClearFormValue: (code) ->
+      if code == "customer_record"
+        $('#' + @props.id + ' #form_name').val("")
+        $('#' + @props.id + ' #form_dob').val("")
+        $('#' + @props.id + ' #form_address').val("")
+        $('#' + @props.id + ' #form_pnumber').val("")
+        $('#' + @props.id + ' #form_noid').val("")
+        $('#' + @props.id + ' #form_work_place').val("")
+        $('#' + @props.id + ' #form_self_history').val("")
+        $('#' + @props.id + ' #form_family_history').val("")
+        $('#' + @props.id + ' #form_drug_history').val("")
+        $('#' + @props.id + ' #form_avatar').val("")
         document.getElementById('results').innerHTML = '<img id="sample_avatar" class="" style="max-width: 100%;max-height: 240px" src="https://www.twomargins.com/images/noavatar.jpg"/>'
+      else if code == 'employee'
+        $('#' + @props.id + ' #form_ename').val("")
+        $('#' + @props.id + ' #form_address').val("")
+        $('#' + @props.id + ' #form_pnumber').val("")
+        $('#' + @props.id + ' #form_noid').val("")
+        $('#' + @props.id + ' #form_avatar').val("")
+        document.getElementById('results').innerHTML = '<img id="sample_avatar" class="" style="max-width: 100%;max-height: 240px" src="https://www.twomargins.com/images/noavatar.jpg"/>'
+      else if code == 'room'
+        $('#' + @props.id + ' #form_name').val("")
+        $('#' + @props.id + ' #form_lang').val("vi")
+        $('#' + @props.id + ' #form_map').val("")
+      else if code == 'position'
+        $('#' + @props.id + ' #form_rname').val("")
+        $('#' + @props.id + ' #form_r_id').val("")
+        $('#' + @props.id + ' #form_pname').val("")
+        $('#' + @props.id + ' #form_lang').val("vi")
+        $('#' + @props.id + ' #form_description').val("")
+        $('#' + @props.id + ' #form_file').val("")
+      else if code == 'service'
+        $('#' + @props.id + ' #form_sname').val('')
+        $('#' + @props.id + ' #form_lang').val('vi')
+        $('#' + @props.id + ' #form_price').val(0)
+        $('#' + @props.id + ' #form_currency').val("VND")
+        $('#' + @props.id + ' #form_description').val('')
+        $('#' + @props.id + ' #form_file').val("")
+      else if code == 'posmap'
+        $('#' + @props.id + ' #form_e_id').val("")
+        $('#' + @props.id + ' #form_ename').val("")
+        $('#' + @props.id + ' #form_p_id').val("")
+        $('#' + @props.id + ' #form_pname').val("")
+      else if code == 'sermap'
+        $('#' + @props.id + ' #form_sname').val('')
+        $('#' + @props.id + ' #form_s_id').val('')
+        $('#' + @props.id + ' #form_rname').val('')
+        $('#' + @props.id + ' #form_r_id').val('')
+      else if code == 'order_map'
+        $('#' + @props.id + ' #form_c_id').val("")
+        $('#' + @props.id + ' #form_cname').val("")
+        $('#' + @props.id + ' #form_s_id').val("")
+        $('#' + @props.id + ' #form_sname').val("")
+        $('#' + @props.id + ' #form_remark').val("")
+        $('#' + @props.id + ' #form_tpayment').val(0)
+        $('#' + @props.id + ' #form_discount').val(0)
+        $('#' + @props.id + ' #form_discount_percent').val(0)
+        $('#' + @props.id + ' #form_tpayout').val(0)
+    triggerAutoCompleteInput: (e) ->
+      if @state.type == 'medicine_sample'
+        if $('#medicine_sample_company').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_sample_company').val().toLowerCase()
+          $.ajax
+            url: '/medicine_company/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
+      else if @state.type == 'medicine_bill_in'
+        if $('#medicine_bill_in_supplier').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_bill_in_supplier').val().toLowerCase()
+          $.ajax
+            url: '/medicine_supplier/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
+      else if @state.type == 'medicine_bill_record'
+        if $('#medicine_bill_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_bill_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
+      else if @state.type == 'medicine_price'
+        if $('#medicine_price_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_price_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState autoComplete: result
+              return
+            ).bind(this)
+    triggerAutoCompleteInputAlt: (code) ->
+      if code == 'medicine_prescript_external_cname'
+        if $('#medicine_prescript_external_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#medicine_prescript_external_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: 'medicine_prescript_external_cname'
+              return
+            ).bind(this)
+      else if code == 'medicine_prescript_external_ename'
+        if $('#medicine_prescript_external_ename').val().length > 1
+          formData = new FormData
+          formData.append 'ename', $('#medicine_prescript_external_ename').val().toLowerCase()
+          $.ajax
+            url: '/employee/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: 'medicine_prescript_external_ename'
+              return
+            ).bind(this)
+      else if code == 'medicine_external_record_script_code'
+        if $('#medicine_external_record_script_code').val().length > 1
+          formData = new FormData
+          formData.append 'code', $('#medicine_external_record_script_code').val().toLowerCase()
+          $.ajax
+            url: '/medicine_prescript_external/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_external_record_name'
+        if $('#medicine_external_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_external_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_external_record_cname'
+        if $('#medicine_external_record_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#medicine_external_record_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: 'medicine_external_record_cname'
+              return
+            ).bind(this)
+      else if code == 'medicine_external_record_price'
+        if $('#medicine_external_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_external_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_price/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_prescript_internal_cname'
+        if $('#medicine_prescript_internal_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#medicine_prescript_internal_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_prescript_internal_ename'
+        if $('#medicine_prescript_internal_ename').val().length > 1
+          formData = new FormData
+          formData.append 'ename', $('#medicine_prescript_internal_ename').val().toLowerCase()
+          $.ajax
+            url: '/employee/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_prescript_internal_preparer'
+        if $('#medicine_prescript_internal_preparer').val().length > 1
+          formData = new FormData
+          formData.append 'ename', $('#medicine_prescript_internal_preparer').val().toLowerCase()
+          $.ajax
+            url: '/employee/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_internal_record_script_code'
+        if $('#medicine_internal_record_script_code').val().length > 1
+          formData = new FormData
+          formData.append 'code', $('#medicine_internal_record_script_code').val().toLowerCase()
+          $.ajax
+            url: '/medicine_prescript_internal/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_internal_record_name'
+        if $('#medicine_internal_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_internal_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_internal_record_cname'
+        if $('#medicine_internal_record_cname').val().length > 1
+          formData = new FormData
+          formData.append 'cname', $('#medicine_internal_record_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: 'medicine_internal_record_cname'
+              return
+            ).bind(this)
+      else if code == 'medicine_internal_record_price'
+        if $('#medicine_internal_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_internal_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_price/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_stock_record_name'
+        if $('#medicine_stock_record_name').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_stock_record_name').val().toLowerCase()
+          $.ajax
+            url: '/medicine_sample/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'medicine_stock_record_supplier'
+        if $('#medicine_stock_record_supplier').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#medicine_stock_record_supplier').val().toLowerCase()
+          $.ajax
+            url: '/medicine_supplier/search'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'cname'
+        if $('#' + @props.id + ' #form_cname').val().length > 3
+          formData = new FormData
+          formData.append 'cname', $('#' + @props.id + ' #form_cname').val().toLowerCase()
+          $.ajax
+            url: '/customer_record/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'ename'
+        if $('#' + @props.id + ' #form_ename').val().length > 1
+          formData = new FormData
+          formData.append 'ename', $('#' + @props.id + ' #form_ename').val().toLowerCase()
+          $.ajax
+            url: '/employee/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'sname'
+        if $('#' + @props.id + ' #form_sname').val().length > 1
+          formData = new FormData
+          formData.append 'sname', $('#' + @props.id + ' #form_sname').val().toLowerCase()
+          $.ajax
+            url: '/service/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'pname'
+        if $('#' + @props.id + ' #form_pname').val().length > 1
+          formData = new FormData
+          formData.append 'pname', $('#' + @props.id + ' #form_pname').val().toLowerCase()
+          $.ajax
+            url: '/position/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+      else if code == 'rname'
+        if $('#' + @props.id + ' #form_rname').val().length > 1
+          formData = new FormData
+          formData.append 'name', $('#' + @props.id + ' #form_rname').val().toLowerCase()
+          $.ajax
+            url: '/room/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+              @setState
+                autoComplete: result
+                code: code
+              return
+            ).bind(this)
+    triggerAutoComplete: (record) ->
+      if @state.type == 'medicine_sample'
+        $('#medicine_sample_company').val(record.name)
+        @setState autoComplete: null
+      else if @state.type == 'medicine_bill_in'
+        $('#medicine_bill_in_supplier').val(record.name)
+        @setState autoComplete: null
+      else if @state.type == 'medicine_bill_record'
+        $('#medicine_bill_record_name').val(record.name)
+        $('#medicine_bill_record_company').val(record.company)
+        @setState autoComplete: null
+      else if @state.type == 'medicine_price'
+        $('#medicine_price_name').val(record.name)
+        @setState autoComplete: null
+      if @state.code == 'medicine_prescript_external_cname'
+        $('#medicine_prescript_external_customer_id').val(record.id)
+        $('#medicine_prescript_external_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_external_ename'
+        $('#medicine_prescript_external_employee_id').val(record.id)
+        $('#medicine_prescript_external_ename').val(record.ename)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_external_record_script_code'
+        $('#medicine_external_record_script_id').val(record.id)
+        $('#medicine_external_record_script_code').val(record.code)
+        $('#medicine_external_record_customer_id').val(record.customer_id)
+        $('#medicine_external_record_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_external_record_name'
+        $('#medicine_external_record_name').val(record.name)
+        $('#medicine_external_record_company').val(record.company)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_external_record_cname'
+        $('#medicine_external_record_customer_id').val(record.id)
+        $('#medicine_external_record_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_external_record_price'
+        $('#medicine_external_record_price').val(record.price)
+        @triggerRecalPayment()
+        @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_internal_cname'
+        $('#medicine_prescript_internal_customer_id').val(record.id)
+        $('#medicine_prescript_internal_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_internal_ename'
+        $('#medicine_prescript_internal_employee_id').val(record.id)
+        $('#medicine_prescript_internal_ename').val(record.ename)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_prescript_internal_preparer'
+        $('#medicine_prescript_internal_preparer_id').val(record.id)
+        $('#medicine_prescript_internal_preparer').val(record.ename)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_internal_record_script_code'
+        $('#medicine_internal_record_script_id').val(record.id)
+        $('#medicine_internal_record_script_code').val(record.code)
+        $('#medicine_internal_record_customer_id').val(record.customer_id)
+        $('#medicine_internal_record_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_internal_record_name'
+        $('#medicine_internal_record_name').val(record.name)
+        $('#medicine_internal_record_company').val(record.company)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_internal_record_cname'
+        $('#medicine_internal_record_customer_id').val(record.id)
+        $('#medicine_internal_record_cname').val(record.cname)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_internal_record_price'
+        $('#medicine_internal_record_price').val(record.price)
+        @triggerRecalPayment()
+        @setState autoComplete: null
+      else if @state.code == 'medicine_stock_record_name'
+        $('#medicine_stock_record_name').val(record.name)
+        $('#medicine_stock_record_company').val(record.company)
+        @setState autoComplete: null
+      else if @state.code == 'medicine_stock_record_supplier'
+        $('#medicine_stock_record_supplier').val(record.name)
+        @setState autoComplete: null
+      else if @state.code == 'cname'
+        $('#' + @props.id + ' #form_cname').val(record.cname)
+        $('#' + @props.id + ' #form_c_id').val(record.id)
+        @setState autoComplete: null
+      else if @state.code == 'ename'
+        $('#' + @props.id + ' #form_ename').val(record.ename)
+        $('#' + @props.id + ' #form_e_id').val(record.id)
+        @setState autoComplete: null
+      else if @state.code == 'sname'
+        $('#' + @props.id + ' #form_sname').val(record.sname)
+        $('#' + @props.id + ' #form_tpayment').val(record.price)
+        $('#' + @props.id + ' #form_tpayout').val(record.price)
+        $('#' + @props.id + ' #form_s_id').val(record.id)
+        @setState autoComplete: null
+      else if @state.code == 'pname'
+        $('#' + @props.id + ' #form_pname').val(record.pname)
+        $('#' + @props.id + ' #form_p_id').val(record.id)
+        @setState autoComplete: null
+      else if @state.code == 'rname'
+        $('#' + @props.id + ' #form_rname').val(record.name)
+        $('#' + @props.id + ' #form_r_id').val(record.id)
+        @setState autoComplete: null
+    triggerRecalPayment: (e) ->
+      if @state.type == 'medicine_bill_in'
+        if $('#medicine_bill_in_tpayment').val() > 0
+          if $('#medicine_bill_in_discount').val() > 0
+            $('#medicine_bill_in_discount_percent').val(Number($('#medicine_bill_in_discount').val())/Number($('#medicine_bill_in_tpayment').val())*100)
+            $('#medicine_bill_in_tpayout').val(Number($('#medicine_bill_in_tpayment').val()) - Number($('#medicine_bill_in_discount').val()))
+          else
+            if $('#medicine_bill_in_discount_percent').val() > 0
+              $('#medicine_bill_in_discount').val(Number($('#medicine_bill_in_discount_percent').val()) * Number($('#medicine_bill_in_tpayment').val()) / 100)
+              $('#medicine_bill_in_tpayout').val(Number($('#medicine_bill_in_tpayment').val()) - Number($('#medicine_bill_in_discount').val()))
+            else
+              $('#medicine_bill_in_tpayout').val(Number($('#medicine_bill_in_tpayment').val()) - Number($('#medicine_bill_in_discount').val()))
+      if @state.type == 'medicine_external_record'
+        $('#medicine_external_record_total').val(Number($('#medicine_external_record_price').val()) * Number($('#medicine_external_record_amount').val()))
+      if @state.type == 'medicine_prescript_internal'
+        if $('#medicine_prescript_internal_tpayment').val() > 0
+          if $('#medicine_prescript_internal_discount').val() > 0
+            $('#medicine_prescript_internal_discount_percent').val(Number($('#medicine_prescript_internal_discount').val())/Number($('#medicine_prescript_internal_tpayment').val())*100)
+            $('#medicine_prescript_internal_tpayout').val(Number($('#medicine_prescript_internal_tpayment').val()) - Number($('#medicine_prescript_internal_discount').val()))
+          else
+            if $('#medicine_prescript_internal_discount_percent').val() > 0
+              $('#medicine_prescript_internal_discount').val(Number($('#medicine_prescript_internal_discount_percent').val()) * Number($('#medicine_prescript_internal_tpayment').val()) / 100)
+              $('#medicine_prescript_internal_tpayout').val(Number($('#medicine_prescript_internal_tpayment').val()) - Number($('#medicine_prescript_internal_discount').val()))
+            else
+              $('#medicine_prescript_internal_tpayout').val(Number($('#medicine_prescript_internal_tpayment').val()) - Number($('#medicine_prescript_internal_discount').val()))
+      if @state.type == 'medicine_internal_record'
+        $('#medicine_internal_record_tpayment').val(Number($('#medicine_internal_record_price').val()) * Number($('#medicine_internal_record_amount').val()))
+      if @props.datatype == 'order_map'
+        if $('#' + @props.id + ' #form_tpayment').val() > 0
+          if $('#' + @props.id + ' #form_discount').val() > 0
+            $('#' + @props.id + ' #form_discount_percent').val(Number($('#' + @props.id + ' #form_discount').val())/Number($('#' + @props.id + ' #form_tpayment').val())*100)
+            $('#' + @props.id + ' #form_tpayout').val(Number($('#' + @props.id + ' #form_tpayment').val()) - Number($('#' + @props.id + ' #form_discount').val()))
+          else
+            if $('#' + @props.id + ' #form_discount_percent').val() > 0
+              $('#' + @props.id + ' #form_discount').val(Number($('#' + @props.id + ' #form_discount_percent').val()) * Number($('#' + @props.id + ' #form_tpayment').val()) / 100)
+              $('#' + @props.id + ' #form_tpayout').val(Number($('#' + @props.id + ' #form_tpayment').val()) - Number($('#' + @props.id + ' #form_discount').val()))
+            else
+              $('#' + @props.id + ' #form_tpayout').val(Number($('#' + @props.id + ' #form_tpayment').val()) - Number($('#' + @props.id + ' #form_discount').val()))
     handleSubmit: (e) ->
       e.preventDefault()
       formData = new FormData
       if @props.datatype == 'customer_record'
         if @props.record != null
           formData.append 'id', @props.record.id
-          if $('#form_gender').val() == "Giới tính"
+          if $('#' + @props.id + ' #form_gender').val() == "Giới tính"
             formData.append 'gender', @props.record.gender
           else
-            formData.append 'gender', $('#form_gender').val()
+            formData.append 'gender', $('#' + @props.id + ' #form_gender').val()
         else
-          formData.append 'gender', $('#form_gender').val()
-        formData.append 'cname', $('#form_name').val()
-        formData.append 'dob', $('#form_dob').val()
-        formData.append 'address', $('#form_address').val()
-        formData.append 'pnumber', $('#form_pnumber').val()
-        formData.append 'noid', $('#form_noid').val()
-        formData.append 'work_place', $('#form_work_place').val()
-        formData.append 'self_history', $('#form_self_history').val()
-        formData.append 'family_history', $('#form_family_history').val()
-        formData.append 'drug_history', $('#form_drug_history').val()
-        if $('#form_avatar')[0].files[0] != undefined
-          formData.append 'avatar', $('#form_avatar')[0].files[0]
-        else if $('#webcamout').attr('src') != undefined
-          formData.append 'avatar', $('#webcamout').attr('src')
+          formData.append 'gender', $('#' + @props.id + ' #form_gender').val()
+        formData.append 'cname', $('#' + @props.id + ' #form_name').val()
+        formData.append 'dob', $('#' + @props.id + ' #form_dob').val()
+        formData.append 'address', $('#' + @props.id + ' #form_address').val()
+        formData.append 'pnumber', $('#' + @props.id + ' #form_pnumber').val()
+        formData.append 'noid', $('#' + @props.id + ' #form_noid').val()
+        formData.append 'work_place', $('#' + @props.id + ' #form_work_place').val()
+        formData.append 'self_history', $('#' + @props.id + ' #form_self_history').val()
+        formData.append 'family_history', $('#' + @props.id + ' #form_family_history').val()
+        formData.append 'drug_history', $('#' + @props.id + ' #form_drug_history').val()
+        if $('#' + @props.id + ' #form_avatar')[0].files[0] != undefined
+          formData.append 'avatar', $('#' + @props.id + ' #form_avatar')[0].files[0]
+        else if $('#' + @props.id + ' #webcamout').attr('src') != undefined
+          formData.append 'avatar', $('#' + @props.id + ' #webcamout').attr('src')
+      else if @props.datatype == 'employee'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+          if $('#' + @props.id + ' #form_gender').val() == 'Giới tính'
+            formdata.append 'gender', @props.record.gender
+          else
+            formData.append 'gender', $('#' + @props.id + ' #form_gender').val()
+        else
+          formData.append 'gender', $('#' + @props.id + ' #form_gender').val()
+        formData.append 'ename', $('#' + @props.id + ' #form_ename').val()
+        formData.append 'address', $('#' + @props.id + ' #form_address').val()
+        formData.append 'pnumber', $('#' + @props.id + ' #form_pnumber').val()
+        formData.append 'noid', $('#' + @props.id + ' #form_noid').val()
+        if $('#' + @props.id + ' #form_avatar')[0].files[0] != undefined
+          formData.append 'avatar', $('#' + @props.id + ' #form_avatar')[0].files[0]
+        else if $('#' + @props.id + ' #webcamout').attr('src') != undefined
+          formData.append 'avatar', $('#' + @props.id + ' #webcamout').attr('src')
+      else if @props.datatype == 'room'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+        formData.append 'name', $('#' + @props.id + ' #form_name').val()
+        formData.append 'lang', $('#' + @props.id + ' #form_lang').val()
+        if $('#' + @props.id + ' #form_map')[0].files[0] != undefined
+          formData.append 'map', $('#' + @props.id + ' #form_map')[0].files[0]
+      else if @props.datatype == 'position'
+        if @props.record != null
+          formData.append 'id', @props.record.id  
+        formData.append 'rname', $('#' + @props.id + ' #form_rname').val()
+        formData.append 'r_id', $('#' + @props.id + ' #form_r_id').val()
+        formData.append 'pname', $('#' + @props.id + ' #form_pname').val()
+        formData.append 'lang', $('#' + @props.id + ' #form_lang').val()
+        formData.append 'description', $('#' + @props.id + ' #form_description').val()
+        if $('#' + @props.id + ' #form_file')[0].files[0] != undefined
+          formData.append 'file', $('#' + @props.id + ' #form_file')[0].files[0]
+      else if @props.datatype == 'service'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+        formData.append 'sname', $('#' + @props.id + ' #form_sname').val()
+        formData.append 'lang', $('#' + @props.id + ' #form_lang').val()
+        formData.append 'price', $('#' + @props.id + ' #form_price').val()
+        formData.append 'currency', $('#' + @props.id + ' #form_currency').val()
+        formData.append 'description', $('#' + @props.id + ' #form_description').val()
+        if $('#' + @props.id + ' #form_file')[0].files[0] != undefined
+          formData.append 'file', $('#' + @props.id + ' #form_file')[0].files[0]
+      else if @props.datatype == 'posmap'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+        formData.append 'ename', $('#' + @props.id + ' #form_ename').val()
+        formData.append 'e_id', $('#' + @props.id + ' #form_e_id').val()
+        formData.append 'pname', $('#' + @props.id + ' #form_pname').val()
+        formData.append 'p_id', $('#' + @props.id + ' #form_p_id').val()
+      else if @props.datatype == 'sermap'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+        formData.append 'sname', $('#' + @props.id + ' #form_sname').val()
+        formData.append 's_id', $('#' + @props.id + ' #form_s_id').val()
+        formData.append 'rname', $('#' + @props.id + ' #form_rname').val()
+        formData.append 'r_id', $('#' + @props.id + ' #form_r_id').val()
+      else if @props.datatype == 'order_map'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+          if $('#' + @props.id + ' #form_status').val() == ''
+            formData.append 'status', @props.record.status
+          else
+            formData.append 'status', $('#' + @props.id + ' #form_status').val()
+        else
+          formData.append 'status', $('#' + @props.id + ' #form_status').val()
+        formData.append 'remark', $('#' + @props.id + ' #form_remark').val()
+        formData.append 'customer_id', $('#' + @props.id + ' #form_c_id').val()
+        formData.append 'cname', $('#' + @props.id + ' #form_cname').val()
+        formData.append 'service_id', $('#' + @props.id + ' #form_s_id').val()
+        formData.append 'sername', $('#' + @props.id + ' #form_sname').val()
+        formData.append 'tpayment', $('#' + @props.id + ' #form_tpayment').val()
+        formData.append 'discount', $('#' + @props.id + ' #form_discount').val()
+        formData.append 'tpayout', $('#' + @props.id + ' #form_tpayout').val()
       if @props.record != null
         $.ajax
           url: '/' + @props.datatype
@@ -3109,6 +3868,7 @@
           processData: false
           success: ((result) ->
             @props.trigger2 @props.record, result
+            $('#' + @props.id).modal('hide')
             return
           ).bind(this)
       else
@@ -3122,7 +3882,7 @@
           processData: false
           success: ((result) ->
             @props.trigger result
-            @setState @getInitialState()
+            $('#' + @props.id).modal('hide')
             return
           ).bind(this)     
     doctorRoomRender: ->
@@ -3403,6 +4163,214 @@
                       React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
                       React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
                       React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
+    employeeForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin nhân viên'
+              React.DOM.small null, 'Description'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-7',
+                  React.DOM.form autoComplete: 'off', className: 'form-horizontal', onSubmit: @handleSubmit,
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label', 'Họ và Tên'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_ename', type: 'text', className: 'form-control', placeholder: 'Họ và tên'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label', 'Địa chỉ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_address', type: 'text', className: 'form-control', placeholder: 'Địa chỉ'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label', 'Số ĐT'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_pnumber', type: 'number', className: 'form-control', placeholder: 'Số ĐT'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label', 'Số hiệu NV'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_noid', type: 'number', className: 'form-control', placeholder: 'Số hiệu NV'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label', 'Giới tính'
+                      React.DOM.div className: 'col-sm-3',
+                        React.DOM.select id: 'form_gender', className: 'form-control',
+                          React.DOM.option value: '', 'Giới tính'
+                          React.DOM.option value: '1', 'Nam'
+                          React.DOM.option value: '2', 'Nữ'
+                      React.DOM.label className: 'col-sm-3 control-label', 'Ảnh đại diện'
+                      React.DOM.div className: 'col-sm-3',
+                        React.DOM.input id: 'form_avatar', type: 'file', className: 'form-control'
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+                React.DOM.div className: 'col-md-5', style: {'alignContent': 'center'},
+                  React.DOM.div id: 'results',
+                    React.DOM.img id: 'sample_avatar', style: {'maxWidth': '100%', 'maxHeight': '240px'}, src: 'https://www.twomargins.com/images/noavatar.jpg'
+                  React.DOM.div id: 'my_camera'
+                  React.DOM.button type: 'button', className: 'btn btn-default', onClick: @setup_webcam, 'Setup'
+                  React.DOM.button type: 'button', className: 'btn btn-default', value: 'take Large Snapshot', onClick: @take_snapshot, 'Capture'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    roomForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin phòng'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', autoComplete: 'off', onSubmit: @handleSubmit,
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Tên phòng'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_name', type: 'text', className: 'form-control', placeholder: 'Tên phòng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Ngôn ngữ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ', defaultValue: "vi"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Bản đồ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_map', type: 'file', className: 'form-control'
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    positionForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin chức vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Tên phòng'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_r_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_rname', className: 'form-control', type: 'text', code: 'rname', placeholder: 'Tên phòng', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'rname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'room_mini', header: [{id: 1,name: "Tên phòng"},{id: 2,name: "Ngôn ngữ"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Tên chức vụ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_pname', type: 'text', className: 'form-control', placeholder: 'Tên chức vụ'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Ngôn ngữ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_lang', type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ', defaultValue: "vi"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Miêu tả ngắn'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.textarea id: 'form_description', type: 'text', className: 'form-control', placeholder: 'Miêu tả ngắn'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'File đính kèm'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_file', type: 'file', className: 'form-control',
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'  
+    serviceForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin dịch vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', autoComplete: 'off', onSubmit: @handleSubmit,
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Tên dịch vụ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_sname', type: 'text', className: 'form-control', placeholder: 'Tên dịch vụ'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label','Ngôn ngữ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_lang',type: 'text', className: 'form-control', placeholder: 'Ngôn ngữ', defaultValue: "vi"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Giá'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_price', type: 'number', className: 'form-control', placeholder: 'Giá'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Đơn vị tiền'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_currency', type: 'text', className: 'form-control', placeholder: 'Đơn vị tiền', defaultValue: "VND"
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Mô tả ngắn'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_description', type: 'text', className: 'form-control', placeholder: 'Mô tả ngắn'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label', 'Logo'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_file', type: 'file', className: 'form-control'
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button','Close'
+    posmapForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu định chức vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên nhân viên'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_e_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_ename', className: 'form-control', type: 'text', code: 'ename', placeholder: 'Tên nhân viên', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'ename'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'employee_mini', header: [{id: 1,name: "Mã nhân viên"},{id: 2, name: "Tên"},{id: 3, name: "Số điện thoại"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên chức vụ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_p_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_pname', className: 'form-control', type: 'text', code: 'pname', placeholder: 'Tên chức vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'pname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'position_mini', header: [{id: 1,name: "Tên phòng"},{id: 2, name: "Tên chức vụ"},{id: 3, name: "Diễn giải"}], trigger: @triggerAutoComplete
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+    sermapForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu định phòng cho dịch vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Tên dịch vụ'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'sname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Tên phòng'
+                      React.DOM.div className: 'col-sm-8',
+                        React.DOM.input id: 'form_r_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_rname', className: 'form-control', type: 'text', code: 'rname', placeholder: 'Tên phòng', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'rname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'room_mini', header: [{id: 1,name: "Tên phòng"},{id: 2,name: "Ngôn ngữ"}], trigger: @triggerAutoComplete
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
     customerForm: ->
       React.DOM.div className: 'modal fade', id: @props.id,
         React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
@@ -3469,11 +4437,90 @@
                   React.DOM.button type: 'button', className: 'btn btn-default', value: 'take Large Snapshot', onClick: @take_snapshot, 'Capture'
             React.DOM.div className: 'modal-footer',
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    orderMapForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Bản ghi dịch vụ'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
+                      React.DOM.div className: 'col-sm-5',
+                        React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Chưa thanh toán, chưa khám bệnh'},{id: 2, name: 'Đã thanh toán, đang chờ khám'},{id: 3, name: 'Đã thanh toán, đã khám bệnh'},{id: 4, name: 'Chưa thanh toán, đã khám bệnh'}], text: 'Tình trạng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'cname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên dịch vụ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'sid'
+                        React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete", id: "sname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'sname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-8',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ghi chú'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú'
+                      React.DOM.div className: 'col-md-4',
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggersafe
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', step: 'any', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
+                        React.DOM.div className: 'col-sm-6',
+                          React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close' 
+    deleteForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-sm',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row', style: {'textAlign': 'center'},
+                React.DOM.h4 null, "Bạn có chắc chắn muốn xóa"
+                React.DOM.br null
+                React.DOM.button className: 'btn btn-default btn-fixed', 'data-dismiss': 'modal', type: 'button', 'Không'
+                React.createElement ButtonGeneral, className: 'btn btn-default btn-fixed bg-teal', icon: 'fa fa-check', text: ' Đồng ý', type: 1, Clicked: @trigger
     render: ->
       if @props.datatype == 'doctor_room'
         @doctorRoomRender()
+      else if @props.datatype == 'delete_form'
+        @deleteForm()
+      else if @props.datatype == 'employee'
+        @employeeForm()
+      else if @props.datatype == 'room'
+        @roomForm()
+      else if @props.datatype == 'position'
+        @positionForm()
+      else if @props.datatype == 'service'
+        @serviceForm()
+      else if @props.datatype == 'sermap'
+        @sermapForm()
+      else if @props.datatype == 'posmap'
+        @posmapForm()
       else if @props.datatype == 'customer_record'
         @customerForm()
+      else if @props.datatype == 'order_map'
+        @orderMapForm()
+      
 
   @TabNavCell = React.createClass
     getInitialState: ->

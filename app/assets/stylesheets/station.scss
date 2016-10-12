@@ -1019,11 +1019,10 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
 .auto-complete{
     position: absolute;
     top: 35px;
-    max-height: 94px;
+    max-height: 250px;
     width: calc(100% - 30px);
     overflow-x: hidden;
     overflow-y: auto;
-    padding-left: 10px;
     background-color: #1E262B;
     z-index: 10;
 }
@@ -1158,6 +1157,10 @@ select option {
     background: #2b343a;
     color:#fff;
     text-shadow:0 1px 0 rgba(0,0,0,0.4);
+}
+
+.btn-fixed {
+    min-width: 112px;
 }
 
 .btn[class*=bg-]:not(.bg-white) {

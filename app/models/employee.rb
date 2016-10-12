@@ -3,7 +3,7 @@ class Employee < ApplicationRecord
   attr_accessor :activation_token
   belongs_to :station
   before_create :create_activation_digest
-  has_attached_file :avatar
+  has_attached_file :avatar, :default_url => "assets/noavatar.jpg"
   validates_attachment :avatar, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
   
   def Employee.digest(string)

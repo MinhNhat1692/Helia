@@ -748,8 +748,6 @@
           React.DOM.td null, @props.record.price
           React.DOM.td null, @props.record.currency
           React.DOM.td null, @props.record.description
-          React.DOM.td null,
-            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'Logo'
       else
         React.DOM.tr onClick: @selectRecord,
           React.DOM.td null, @props.record.sname
@@ -757,8 +755,6 @@
           React.DOM.td null, @props.record.price
           React.DOM.td null, @props.record.currency
           React.DOM.td null, @props.record.description
-          React.DOM.td null,
-            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'Logo'
     ServiceMini: ->
       if @props.selected
         React.DOM.tr className: "toggled",
@@ -782,8 +778,6 @@
           React.DOM.td null, @props.record.pnumber
           React.DOM.td null, @props.record.noid
           React.DOM.td null, @state.typeName
-          React.DOM.td null,
-            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.avatar, 'AVATAR'
       else
         React.DOM.tr onClick: @selectRecord,
           React.DOM.td null, @props.record.ename
@@ -791,8 +785,6 @@
           React.DOM.td null, @props.record.pnumber
           React.DOM.td null, @props.record.noid
           React.DOM.td null, @state.typeName
-          React.DOM.td null,
-            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.avatar, 'AVATAR'  
     EmployeeMini: ->
       if @props.selected
         React.DOM.tr className: "toggled",
@@ -809,19 +801,6 @@
         React.DOM.tr className: "toggled",
           React.DOM.td null, @props.record.name
           React.DOM.td null, @props.record.lang
-          React.DOM.td null,
-            React.DOM.a className: 'btn btn-default btn-xs',style: {margin: '5px'}, href: @props.record.map, 'Bản đồ'
-      else
-        React.DOM.tr onClick: @selectRecord,
-          React.DOM.td null, @props.record.name
-          React.DOM.td null, @props.record.lang
-          React.DOM.td null,
-            React.DOM.a className: 'btn btn-default btn-xs',style: {margin: '5px'}, href: @props.record.map, 'Bản đồ'
-    RoomMini: ->
-      if @props.selected
-        React.DOM.tr className: "toggled",
-          React.DOM.td null, @props.record.name
-          React.DOM.td null, @props.record.lang
       else
         React.DOM.tr onClick: @selectRecord,
           React.DOM.td null, @props.record.name
@@ -833,16 +812,12 @@
           React.DOM.td null, @props.record.pname
           React.DOM.td null, @props.record.lang
           React.DOM.td null, @props.record.description
-          React.DOM.td null,
-            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'File'
       else
         React.DOM.tr onClick: @selectRecord,
           React.DOM.td null, @props.record.rname
           React.DOM.td null, @props.record.pname
           React.DOM.td null, @props.record.lang
           React.DOM.td null, @props.record.description
-          React.DOM.td null,
-            React.DOM.a className: 'btn btn-default btn-xs', style: {margin: '5px'}, href: @props.record.file, 'File'
     PositionMini: ->
       if @props.selected
         React.DOM.tr className: "toggled",
@@ -1174,10 +1149,8 @@
         @Service()
       else if @props.datatype == 'employee'
         @Employee()
-      else if @props.datatype == 'room'
+      else if @props.datatype == 'room' or @props.datatype == 'room_mini'
         @Room()
-      else if @props.datatype == 'room_mini'
-        @RoomMini()
       else if @props.datatype == 'position'
         @Position()
       else if @props.datatype == 'position_mini'
