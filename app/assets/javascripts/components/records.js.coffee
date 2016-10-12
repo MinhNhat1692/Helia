@@ -1887,9 +1887,9 @@
           React.DOM.h2 null, 'Nguồn cấp thuốc'
         React.DOM.div className: 'card',
           React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
             React.DOM.br null
             React.DOM.br null
             React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
@@ -1929,15 +1929,18 @@
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
     medicineCompanyRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Doanh nghiệp sản xuất'
         React.DOM.div className: 'card',
           React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add'
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm mẫu thuốc', code: 'medicine_sample', type: 3, Clicked: @OpenModalAdd2
             React.DOM.br null
             React.DOM.br null
             React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
@@ -1970,17 +1973,20 @@
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                     else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord 
+                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+            React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_sample', typemedicine: @props.data[2], groupmedicine: @props.data[1], company: @state.record, record: null, trigger: @trigger, trigger2: @trigger
     medicineSampleRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Mẫu thuốc'
         React.DOM.div className: 'card',
           React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', type: 2, trigger: @addRecord, datatype: @props.datatype, prefix: 'add', extra: [{data: @props.data[1]},{data: @props.data[2]}]
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', type: 2, trigger2: @updateRecord, datatype: @props.datatype, prefix: 'edit', record: @state.record, extra: [{data: @props.data[1]},{data: @props.data[2]}]
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm công ty sản xuất', type: 2, datatype: 'medicine_company', prefix: 'add'
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm công ty sản xuất', code: 'medicine_company', type: 3, Clicked: @OpenModalAdd2
             React.DOM.br null
             React.DOM.br null
             React.createElement FilterForm, datatype: @props.datatype, grouplist: @props.data[1], typelist: @props.data[2], autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
@@ -2016,6 +2022,9 @@
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, typemedicine: @props.data[2], groupmedicine: @props.data[1], company: null, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+            React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_company', record: null, trigger: @trigger, trigger2: @trigger
     medicineBillInRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',

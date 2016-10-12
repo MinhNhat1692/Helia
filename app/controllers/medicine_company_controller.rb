@@ -9,6 +9,8 @@ class MedicineCompanyController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
 			  @data[0] = MedicineCompany.where(station_id: @station.id)
+			  @data[1] = MedicineGroup.all
+			  @data[2] = MedicineType.all
 			  render json: @data
 		  else
         redirect_to root_path

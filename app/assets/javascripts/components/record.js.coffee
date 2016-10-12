@@ -362,6 +362,17 @@
           React.DOM.td null, @props.record.email
           React.DOM.td null, @props.record.website
           React.DOM.td null, @props.record.taxcode
+    MedicineCompanyMini: ->
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
     MedicineSample: ->
       for typemedicine in @props.typelist
         if @props.record.typemedicine == typemedicine.id
@@ -1121,6 +1132,8 @@
         @MedicineSupplier()
       else if @props.datatype == "medicine_company"
         @MedicineCompany()
+      else if @props.datatype == "medicine_company_mini"
+        @MedicineCompanyMini()
       else if @props.datatype == "medicine_sample"
         @MedicineSample()
       else if @props.datatype == "medicine_bill_in"
