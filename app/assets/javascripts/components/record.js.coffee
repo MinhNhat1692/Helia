@@ -341,6 +341,21 @@
           React.DOM.td null, @props.record.twitter
           React.DOM.td null, @props.record.fax
           React.DOM.td null, @props.record.taxcode
+    MedicineSupplierMini: ->
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.contactname
+          React.DOM.td null, @props.record.pnumber
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.contactname
+          React.DOM.td null, @props.record.pnumber
     MedicineCompany: ->
       if @props.selected
         React.DOM.tr
@@ -406,6 +421,31 @@
           React.DOM.td null, @props.record.weight
           React.DOM.td null, @props.record.remark
           React.DOM.td null, @props.record.expire
+    MedicineSampleMini: ->
+      for typemedicine in @props.typelist
+        if @props.record.typemedicine == typemedicine.id
+          @state.typeName = typemedicine.name
+          break
+      for group in @props.grouplist
+        if @props.record.groupmedicine == group.id
+          @state.groupName = group.name
+          break
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @state.groupName
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @state.groupName
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
     MedicineBillIn: ->
       switch Number(@props.record.pmethod)
         when 1
@@ -463,6 +503,47 @@
           React.DOM.td null, @state.typeName
           React.DOM.td null, @props.record.remark
           React.DOM.td null, @state.groupName
+    MedicineBillInMini: ->
+      switch Number(@props.record.pmethod)
+        when 1
+          @state.typeName = "Tiền mặt"
+        when 2
+          @state.typeName = "Chuyển khoản"
+        when 3
+          @state.typeName = "Khác"
+      switch Number(@props.record.status)
+        when 1
+          @state.groupName = "Lưu kho"
+        when 2
+          @state.groupName = "Đang di chuyển"
+        when 3
+          @state.groupName = "Trả lại"
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.billcode
+          React.DOM.td null,
+            if @props.record.dayin != null and @props.record.dayin != undefined 
+              @props.record.dayin.substring(8, 10) + "/" + @props.record.dayin.substring(5, 7) + "/" + @props.record.dayin.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.supplier
+          React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @state.groupName
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.billcode
+          React.DOM.td null, 
+            if @props.record.dayin != null and @props.record.dayin != undefined 
+              @props.record.dayin.substring(8, 10) + "/" + @props.record.dayin.substring(5, 7) + "/" + @props.record.dayin.substring(0, 4)
+            else
+              ""
+          React.DOM.td null, @props.record.supplier
+          React.DOM.td null, @props.record.tpayout
+          React.DOM.td null, @state.typeName
+          React.DOM.td null, @state.groupName
     MedicineBillRecord: ->
       switch Number(@props.record.pmethod)
         when 1
@@ -475,12 +556,12 @@
           React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.signid
           React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.company
           React.DOM.td null,
             if @props.record.expire != null and @props.record.expire != undefined
               @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
             else
               ""
-          React.DOM.td null, @props.record.company
           React.DOM.td null, @props.record.qty
           React.DOM.td null, @props.record.taxrate
           React.DOM.td null, @props.record.price
@@ -492,12 +573,12 @@
           React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.signid
           React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.company
           React.DOM.td null,
             if @props.record.expire != null and @props.record.expire != undefined
               @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
             else
               ""
-          React.DOM.td null, @props.record.company
           React.DOM.td null, @props.record.qty
           React.DOM.td null, @props.record.taxrate
           React.DOM.td null, @props.record.price
@@ -549,6 +630,29 @@
           React.DOM.td null, @props.record.number_id
           React.DOM.td null, @props.record.address
           React.DOM.td null, @props.record.remark
+    MedicinePrescriptExternalMini: ->
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.code
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null,
+            if @props.record.date != null and @props.record.date != undefined
+              @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+            else
+              ""
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.code
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null,
+            if @props.record.date != null and @props.record.date != undefined
+              @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+            else
+              ""
     MedicineExternalRecord: ->
       if @props.selected
         React.DOM.tr
@@ -620,6 +724,29 @@
           React.DOM.td null, @props.record.result_id
           React.DOM.td null, @props.record.number_id
           React.DOM.td null, @props.record.remark
+    MedicinePrescriptInternalMini: ->
+      if @props.selected
+        React.DOM.tr
+          className: "toggled"
+          React.DOM.td null, @props.record.code
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null,
+            if @props.record.date != null and @props.record.date != undefined
+              @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+            else
+              ""
+      else
+        React.DOM.tr
+          onClick: @selectRecord
+          React.DOM.td null, @props.record.code
+          React.DOM.td null, @props.record.cname
+          React.DOM.td null, @props.record.ename
+          React.DOM.td null,
+            if @props.record.date != null and @props.record.date != undefined
+              @props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4)
+            else
+              ""
     MedicineInternalRecord: ->
       switch Number(@props.record.status)
         when 1
@@ -1130,24 +1257,34 @@
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
+      else if @props.datatype == "medicine_supplier_mini"
+        @MedicineSupplierMini()
       else if @props.datatype == "medicine_company"
         @MedicineCompany()
       else if @props.datatype == "medicine_company_mini"
         @MedicineCompanyMini()
       else if @props.datatype == "medicine_sample"
         @MedicineSample()
+      else if @props.datatype == "medicine_sample_mini"
+        @MedicineSampleMini()
       else if @props.datatype == "medicine_bill_in"
         @MedicineBillIn()
+      else if @props.datatype == "medicine_bill_in_mini"
+        @MedicineBillInMini()
       else if @props.datatype == "medicine_bill_record"
         @MedicineBillRecord()
       else if @props.datatype == 'medicine_price'
         @MedicinePrice()
       else if @props.datatype == 'medicine_prescript_external'
         @MedicinePrescriptExternal()
+      else if @props.datatype == 'medicine_prescript_external_mini'
+        @MedicinePrescriptExternalMini()
       else if @props.datatype == 'medicine_external_record'
         @MedicineExternalRecord()
       else if @props.datatype == 'medicine_prescript_internal'
         @MedicinePrescriptInternal()
+      else if @props.datatype == 'medicine_prescript_internal_mini'
+        @MedicinePrescriptInternalMini()
       else if @props.datatype == 'medicine_internal_record'
         @MedicineInternalRecord()
       else if @props.datatype == 'medicine_stock_record'

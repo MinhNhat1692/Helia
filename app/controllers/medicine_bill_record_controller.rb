@@ -9,6 +9,8 @@ class MedicineBillRecordController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
 			  @data[0] = MedicineBillRecord.where(station_id: @station.id)
+			  @data[1] = MedicineGroup.all
+			  @data[2] = MedicineType.all
 			  render json: @data
 		  else
         redirect_to root_path
@@ -22,21 +24,23 @@ class MedicineBillRecordController < ApplicationController
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
-			  @billin = MedicineBillIn.find_by(billcode: params[:billcode], station_id: @station.id)
-			  if @billin != nil
-          @supplier = MedicineBillRecord.new(station_id: @station.id, bill_id: @billin.id, name: params[:name], company: params[:company], noid: params[:noid], signid: params[:signid], expire: params[:expire], pmethod: params[:pmethod], qty: params[:qty], taxrate: params[:taxrate], price: params[:price], remark: params[:remark])
-          if @supplier.save
-            render json: @supplier
-          else
-          	render json: @supplier.errors, status: :unprocessable_entity
-          end
+			  @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
+		    if !@sample_id.nil?
+				  @sample_id = @sample_id.id
+		    end
+			  @company_id = MedicineCompany.find_by(id: params[:company_id], name: params[:company], station_id: @station.id)
+		    if !@company_id.nil?
+				  @company_id = @company_id.id
+		    end
+		    @billcode_id = MedicineBillIn.find_by(id: params[:billcode_id], billcode: params[:billcode], station_id: @station.id)
+		    if !@billcode_id.nil?
+				  @billcode_id = @billcode_id.id
+		    end
+			  @supplier = MedicineBillRecord.new(station_id: @station.id, billcode: params[:billcode], bill_id: @billcode_id, sample_id: @sample_id, name: params[:name], company_id: @company_id, company: params[:company], noid: params[:noid], signid: params[:signid], expire: params[:expire], pmethod: params[:pmethod], qty: params[:qty], taxrate: params[:taxrate], price: params[:price], remark: params[:remark])
+        if @supplier.save
+          render json: @supplier
         else
-          @supplier = MedicineBillRecord.new(station_id: @station.id, name: params[:name], company: params[:company], noid: params[:noid], signid: params[:signid], expire: params[:expire], pmethod: params[:pmethod], qty: params[:qty], taxrate: params[:taxrate], price: params[:price], remark: params[:remark])
-          if @supplier.save
-            render json: @supplier
-          else
-          	render json: @supplier.errors, status: :unprocessable_entity
-          end
+        	render json: @supplier.errors, status: :unprocessable_entity
         end
 		  else
         redirect_to root_path
@@ -53,7 +57,19 @@ class MedicineBillRecordController < ApplicationController
         if params.has_key?(:id)
           @supplier = MedicineBillRecord.find(params[:id])
 			    if @supplier.station_id == @station.id
-            if @supplier.update(name: params[:name], company: params[:company], noid: params[:noid], signid: params[:signid], expire: params[:expire], pmethod: params[:pmethod], qty: params[:qty], taxrate: params[:taxrate], price: params[:price], remark: params[:remark])
+            @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
+		        if !@sample_id.nil?
+				      @sample_id = @sample_id.id
+		        end
+			      @company_id = MedicineCompany.find_by(id: params[:company_id], name: params[:company], station_id: @station.id)
+		        if !@company_id.nil?
+				      @company_id = @company_id.id
+		        end
+		        @billcode_id = MedicineBillIn.find_by(id: params[:billcode_id], billcode: params[:billcode], station_id: @station.id)
+		        if !@billcode_id.nil?
+				      @billcode_id = @billcode_id.id
+		        end
+            if @supplier.update(billcode: params[:billcode], bill_id: @billcode_id, sample_id: @sample_id, name: params[:name], company_id: @company_id, company: params[:company], noid: params[:noid], signid: params[:signid], expire: params[:expire], pmethod: params[:pmethod], qty: params[:qty], taxrate: params[:taxrate], price: params[:price], remark: params[:remark])
 				      render json: @supplier
 				    else
 				      render json: @supplier.errors, status: :unprocessable_entity
@@ -148,6 +164,9 @@ class MedicineBillRecordController < ApplicationController
 			    render json:@supplier
 			  elsif params.has_key?(:remark)
 				  @supplier = MedicineBillRecord.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+			    render json:@supplier
+			  elsif params.has_key?(:bill_id)
+				  @supplier = MedicineBillRecord.where("bill_id = ? and station_id = ?" , params[:bill_id], @station.id)
 			    render json:@supplier
 			  end
       else

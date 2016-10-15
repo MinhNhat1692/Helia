@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161012124447) do
+ActiveRecord::Schema.define(version: 20161015052859) do
 
   create_table "bill_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "remark",       limit: 65535
@@ -179,14 +179,15 @@ ActiveRecord::Schema.define(version: 20161012124447) do
     t.string   "supplier"
     t.date     "daybook"
     t.integer  "pmethod"
-    t.float    "tpayment",   limit: 24
-    t.float    "discount",   limit: 24
-    t.float    "tpayout",    limit: 24
-    t.text     "remark",     limit: 65535
+    t.float    "tpayment",    limit: 24
+    t.float    "discount",    limit: 24
+    t.float    "tpayout",     limit: 24
+    t.text     "remark",      limit: 65535
     t.integer  "status"
     t.integer  "station_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "supplier_id"
     t.index ["station_id"], name: "index_medicine_bill_ins_on_station_id", using: :btree
   end
 
@@ -205,6 +206,9 @@ ActiveRecord::Schema.define(version: 20161012124447) do
     t.text     "remark",     limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.string   "billcode"
+    t.integer  "sample_id"
+    t.integer  "company_id"
     t.index ["station_id"], name: "index_medicine_bill_records_on_station_id", using: :btree
   end
 
@@ -236,6 +240,8 @@ ActiveRecord::Schema.define(version: 20161012124447) do
     t.datetime "updated_at",                null: false
     t.string   "cname"
     t.string   "script_code"
+    t.integer  "sample_id"
+    t.integer  "company_id"
     t.index ["station_id"], name: "index_medicine_external_records_on_station_id", using: :btree
   end
 
@@ -264,6 +270,8 @@ ActiveRecord::Schema.define(version: 20161012124447) do
     t.datetime "updated_at",                null: false
     t.string   "cname"
     t.string   "script_code"
+    t.integer  "sample_id"
+    t.integer  "company_id"
     t.index ["station_id"], name: "index_medicine_internal_records_on_station_id", using: :btree
   end
 
@@ -315,6 +323,7 @@ ActiveRecord::Schema.define(version: 20161012124447) do
     t.text     "remark",     limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.integer  "sample_id"
     t.index ["station_id"], name: "index_medicine_prices_on_station_id", using: :btree
   end
 

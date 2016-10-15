@@ -9,6 +9,8 @@ class MedicinePrescriptInternalController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
 			  @data[0] = MedicinePrescriptInternal.where(station_id: @station.id)
+			  @data[1] = MedicineGroup.all
+			  @data[2] = MedicineType.all
 			  render json: @data
 		  else
         redirect_to root_path
@@ -36,6 +38,18 @@ class MedicinePrescriptInternalController < ApplicationController
 				end
 		    @supplier = MedicinePrescriptInternal.new(station_id: @station.id, code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], remark: params[:remark], preparer: params[:preparer], preparer_id: @preparer_id, payer: params[:payer], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], pmethod: params[:pmethod])
 				if @supplier.save
+					for internal_record in JSON.parse(params[:list_internal_record]) do
+            @sample_id = MedicineSample.find_by(id: internal_record["sample_id"], name: internal_record["name"], station_id: @station.id)
+		        if !@sample_id.nil?
+				      @sample_id = @sample_id.id
+		        end
+            @company_id = MedicineCompany.find_by(id: internal_record["company_id"], name: internal_record["company"], station_id: @station.id)
+		        if !@company_id.nil?
+				      @company_id = @company_id.id
+		        end
+            @internalrecord = MedicineInternalRecord.new(station_id: @station.id, cname: @supplier.cname, customer_id: @supplier.customer_id, script_id: @supplier.id, script_code: @supplier.code, name: internal_record["name"], sample_id: @sample_id, company: internal_record["company"], company_id: @company_id, amount: internal_record["amount"], remark: internal_record["remark"], price: internal_record["price"], tpayment: internal_record["tpayment"], status: internal_record["status"])
+            @internalrecord.save
+          end
 				  render json: @supplier
 				else
 					render json: @supplier.errors, status: :unprocessable_entity

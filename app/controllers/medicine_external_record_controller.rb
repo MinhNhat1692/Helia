@@ -9,6 +9,8 @@ class MedicineExternalRecordController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
 			  @data[0] = MedicineExternalRecord.where(station_id: @station.id)
+			  @data[1] = MedicineGroup.all
+			  @data[2] = MedicineType.all
 			  render json: @data
 		  else
         redirect_to root_path
@@ -30,7 +32,15 @@ class MedicineExternalRecordController < ApplicationController
 		    if !@script_id.nil?
 					@script_id = @script_id.id
 		    end
-		    @supplier = MedicineExternalRecord.new(station_id: @station.id, customer_id: @customer_id, cname: params[:cname], script_id: @script_id, script_code: params[:script_code], name: params[:name], amount: params[:amount], remark: params[:remark], company: params[:company], price: params[:price], total: params[:total])
+		    @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
+		    if !@sample_id.nil?
+					@sample_id = @sample_id.id
+		    end
+		    @company_id = MedicineCompany.find_by(id: params[:company_id], name: params[:company], station_id: @station.id)
+		    if !@company_id.nil?
+				  @company_id = @company_id.id
+		    end
+		    @supplier = MedicineExternalRecord.new(station_id: @station.id, customer_id: @customer_id, cname: params[:cname], sample_id: @sample_id, script_id: @script_id, script_code: params[:script_code], name: params[:name], amount: params[:amount], remark: params[:remark], company_id: @company_id, company: params[:company], price: params[:price], total: params[:total])
 				if @supplier.save
 				  render json: @supplier
 				else
@@ -59,7 +69,15 @@ class MedicineExternalRecordController < ApplicationController
 		        if !@script_id.nil?
 					    @script_id = @script_id.id
 		        end
-		        if @supplier.update(customer_id: @customer_id, cname: params[:cname], script_id: @script_id, script_code: params[:script_code], name: params[:name], amount: params[:amount], remark: params[:remark], company: params[:company], price: params[:price], total: params[:total])
+		        @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
+		        if !@sample_id.nil?
+					    @sample_id = @sample_id.id
+		        end
+		        @company_id = MedicineCompany.find_by(id: params[:company_id], name: params[:company], station_id: @station.id)
+		        if !@company_id.nil?
+				      @company_id = @company_id.id
+		        end
+		        if @supplier.update(customer_id: @customer_id, cname: params[:cname], sample_id: @sample_id, script_id: @script_id, script_code: params[:script_code], name: params[:name], amount: params[:amount], remark: params[:remark], company_id: @company_id, company: params[:company], price: params[:price], total: params[:total])
 				      render json: @supplier
 				    else
 				      render json: @supplier.errors, status: :unprocessable_entity
@@ -148,6 +166,9 @@ class MedicineExternalRecordController < ApplicationController
 			    render json:@supplier
 			  elsif params.has_key?(:total)
 				  @supplier = MedicineExternalRecord.where("total = ? and station_id = ?" , params[:total], @station.id)
+			    render json:@supplier
+			  elsif params.has_key?(:script_id)
+				  @supplier = MedicineExternalRecord.where("script_id = ? and station_id = ?" , params[:script_id], @station.id)
 			    render json:@supplier
 			  end
       else

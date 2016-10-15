@@ -24,7 +24,11 @@ class MedicinePriceController < ApplicationController
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
-		    @supplier = MedicinePrice.new(station_id: @station.id, name: params[:name], minam: params[:minam], price: params[:price], remark: params[:remark])
+			  @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
+		    if !@sample_id.nil?
+				  @sample_id = @sample_id.id
+		    end
+		    @supplier = MedicinePrice.new(station_id: @station.id, sample_id: @sample_id, name: params[:name], minam: params[:minam], price: params[:price], remark: params[:remark])
 				if @supplier.save
 				  render json: @supplier
 				else
@@ -45,7 +49,11 @@ class MedicinePriceController < ApplicationController
         if params.has_key?(:id)
           @supplier = MedicinePrice.find(params[:id])
 			    if @supplier.station_id == @station.id
-            if @supplier.update(name: params[:name], minam: params[:minam], price: params[:price], remark: params[:remark])
+            @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
+		        if !@sample_id.nil?
+				      @sample_id = @sample_id.id
+		        end
+            if @supplier.update(sample_id: @sample_id, name: params[:name], minam: params[:minam], price: params[:price], remark: params[:remark])
 				      render json: @supplier
 				    else
 				      render json: @supplier.errors, status: :unprocessable_entity

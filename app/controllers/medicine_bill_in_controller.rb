@@ -9,6 +9,8 @@ class MedicineBillInController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
 			  @data[0] = MedicineBillIn.where(station_id: @station.id)
+			  @data[1] = MedicineGroup.all
+			  @data[2] = MedicineType.all
 			  render json: @data
 		  else
         redirect_to root_path
@@ -21,9 +23,25 @@ class MedicineBillInController < ApplicationController
       redirect_to root_path
     else
       if has_station?
-			  @station = Station.find_by(user_id: current_user.id)
-		    @supplier = MedicineBillIn.new(station_id: @station.id, billcode: params[:billcode], dayin: params[:dayin], supplier: params[:supplier], daybook: params[:daybook], pmethod: params[:pmethod], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], remark: params[:remark], status: params[:status])
+				@station = Station.find_by(user_id: current_user.id)
+			  @supplier_id = MedicineSupplier.find_by(id: params[:supplier_id], name: params[:supplier], station_id: @station.id)
+		    if !@supplier_id.nil?
+				  @supplier_id = @supplier_id.id
+		    end
+		    @supplier = MedicineBillIn.new(station_id: @station.id, supplier_id: @supplier_id, billcode: params[:billcode], dayin: params[:dayin], supplier: params[:supplier], daybook: params[:daybook], pmethod: params[:pmethod], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], remark: params[:remark], status: params[:status])
 				if @supplier.save
+					for bill_record in JSON.parse(params[:list_bill_record]) do
+            @sample_id = MedicineSample.find_by(id: bill_record["sample_id"], name: bill_record["name"], station_id: @station.id)
+		        if !@sample_id.nil?
+				      @sample_id = @sample_id.id
+		        end
+            @company_id = MedicineCompany.find_by(id: bill_record["company_id"], name: bill_record["company"], station_id: @station.id)
+		        if !@company_id.nil?
+				      @company_id = @company_id.id
+		        end
+            @billrecord = MedicineBillRecord.new(station_id: @station.id, bill_id: @supplier.id, billcode: @supplier.billcode, name: bill_record["name"], company: bill_record["company"], company_id: @company_id, sample_id: @sample_id, noid: bill_record["noid"], signid: bill_record["signid"], expire: bill_record["expire"], pmethod: bill_record["pmethod"], qty: bill_record["qty"], taxrate: bill_record["taxrate"], price: bill_record["price"], remark: bill_record["remark"])
+            @billrecord.save
+          end
 				  render json: @supplier
 				else
 					render json: @supplier.errors, status: :unprocessable_entity
@@ -43,6 +61,10 @@ class MedicineBillInController < ApplicationController
         if params.has_key?(:id)
           @supplier = MedicineBillIn.find(params[:id])
 			    if @supplier.station_id == @station.id
+            @supplier_id = MedicineSupplier.find_by(id: params[:supplier_id], name: params[:supplier], station_id: @station.id)
+		        if !@supplier_id.nil?
+				      @supplier_id = @supplier_id.id
+		        end
             if @supplier.update(billcode: params[:billcode], dayin: params[:dayin], supplier: params[:supplier], daybook: params[:daybook], pmethod: params[:pmethod], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], remark: params[:remark], status: params[:status])
 				      render json: @supplier
 				    else

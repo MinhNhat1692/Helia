@@ -9,6 +9,8 @@ class MedicinePrescriptExternalController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
 			  @data[0] = MedicinePrescriptExternal.where(station_id: @station.id)
+			  @data[1] = MedicineGroup.all
+			  @data[2] = MedicineType.all
 			  render json: @data
 		  else
         redirect_to root_path
@@ -32,6 +34,18 @@ class MedicinePrescriptExternalController < ApplicationController
 		    end
 		    @supplier = MedicinePrescriptExternal.new(station_id: @station.id, code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], address: params[:address], remark: params[:remark])
 				if @supplier.save
+					for external_record in JSON.parse(params[:list_external_record]) do
+            @sample_id = MedicineSample.find_by(id: external_record["sample_id"], name: external_record["name"], station_id: @station.id)
+		        if !@sample_id.nil?
+				      @sample_id = @sample_id.id
+		        end
+            @company_id = MedicineCompany.find_by(id: external_record["company_id"], name: external_record["company"], station_id: @station.id)
+		        if !@company_id.nil?
+				      @company_id = @company_id.id
+		        end
+            @externalrecord = MedicineExternalRecord.new(station_id: @station.id, cname: @supplier.cname, customer_id: @supplier.customer_id, script_id: @supplier.id, script_code: @supplier.code, name: external_record["name"], sample_id: @sample_id, company: external_record["company"], company_id: @company_id, amount: external_record["amount"], remark: external_record["remark"], price: external_record["price"], total: external_record["total"])
+            @externalrecord.save
+          end
 				  render json: @supplier
 				else
 					render json: @supplier.errors, status: :unprocessable_entity
@@ -59,7 +73,7 @@ class MedicinePrescriptExternalController < ApplicationController
 		        if !@employee_id.nil?
 				  	  @employee_id = @employee_id.id
 		        end
-		        if @supplier.update(code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], address: params[:address], remark: params[:remark])
+		        if @supplier.update( code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], address: params[:address], remark: params[:remark])
 				      render json: @supplier
 				    else
 				      render json: @supplier.errors, status: :unprocessable_entity

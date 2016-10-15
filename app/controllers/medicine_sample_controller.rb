@@ -24,7 +24,11 @@ class MedicineSampleController < ApplicationController
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
-		    @supplier = MedicineSample.new(station_id: @station.id, name: params[:name], typemedicine: params[:typemedicine], groupmedicine: params[:groupmedicine], company: params[:company], price: params[:price], weight: params[:weight], remark: params[:remark], noid: params[:noid], expire: params[:expire])
+		    @company_id = MedicineCompany.find_by(id: params[:company_id], name: params[:company], station_id: @station.id)
+		    if !@company_id.nil?
+					@company_id = @company_id.id
+		    end
+		    @supplier = MedicineSample.new(station_id: @station.id, company_id: @company_id, name: params[:name], typemedicine: params[:typemedicine], groupmedicine: params[:groupmedicine], company: params[:company], price: params[:price], weight: params[:weight], remark: params[:remark], noid: params[:noid], expire: params[:expire])
 				if @supplier.save
 				  render json: @supplier
 				else
@@ -45,7 +49,11 @@ class MedicineSampleController < ApplicationController
         if params.has_key?(:id)
           @supplier = MedicineSample.find(params[:id])
 			    if @supplier.station_id == @station.id
-            if @supplier.update(name: params[:name], typemedicine: params[:typemedicine], groupmedicine: params[:groupmedicine], company: params[:company], price: params[:price], weight: params[:weight], remark: params[:remark], noid: params[:noid], expire: params[:expire])
+						@company_id = MedicineCompany.find_by(id: params[:company_id], name: params[:company], station_id: @station.id)
+		        if !@company_id.nil?
+					    @company_id = @company_id.id
+		        end
+            if @supplier.update(name: params[:name], company_id: @company_id, typemedicine: params[:typemedicine], groupmedicine: params[:groupmedicine], company: params[:company], price: params[:price], weight: params[:weight], remark: params[:remark], noid: params[:noid], expire: params[:expire])
 				      render json: @supplier
 				    else
 				      render json: @supplier.errors, status: :unprocessable_entity
@@ -122,6 +130,15 @@ class MedicineSampleController < ApplicationController
 			    render json:@supplier
         elsif params.has_key?(:name)
 				  @supplier = MedicineSample.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+			    render json:@supplier
+			  elsif params.has_key?(:name_sell)
+				  @supplier = MedicineSample.where("name LIKE ? and station_id = ?" , "%#{params[:name_sell]}%", @station.id)
+				  for sample in @supplier do
+						@sellprice = MedicinePrice.find_by(sample_id: sample.id, station_id: sample.station_id)
+						if !@sellprice.nil?
+							sample.price = @sellprice.price
+						end
+					end
 			    render json:@supplier
 			  elsif params.has_key?(:company)
 				  @supplier = MedicineSample.where("company LIKE ? and station_id = ?" , "%#{params[:company]}%", @station.id)
