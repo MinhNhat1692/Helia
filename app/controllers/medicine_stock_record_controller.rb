@@ -9,6 +9,8 @@ class MedicineStockRecordController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
 			  @data[0] = MedicineStockRecord.where(station_id: @station.id)
+			  @data[1] = MedicineGroup.all
+			  @data[2] = MedicineType.all
 			  render json: @data
 		  else
         redirect_to root_path
@@ -22,7 +24,23 @@ class MedicineStockRecordController < ApplicationController
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
-		    @supplier = MedicineStockRecord.new(station_id: @station.id, typerecord: params[:typerecord], name: params[:name], noid: params[:noid], signid: params[:signid], amount: params[:amount], expire: params[:expire], supplier: params[:supplier], remark: params[:remark], internal_record_id: params[:internal_record_id], bill_in_id: params[:bill_in_id], internal_record_code: params[:internal_record_code], bill_in_code: params[:bill_in_code])
+			  @supplier_id = MedicineSupplier.find_by(id: params[:supplier_id], name: params[:supplier], station_id: @station.id)
+		    if !@supplier_id.nil?
+					@supplier_id = @supplier_id.id
+				end
+		    @script_id = MedicinePrescriptInternal.find_by(id: params[:internal_record_id], code: params[:internal_record_code], station_id: @station.id)
+		    if !@script_id.nil?
+					@script_id = @script_id.id
+		    end
+		    @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
+		    if !@sample_id.nil?
+					@sample_id = @sample_id.id
+		    end
+		    @billin_id = MedicineBillIn.find_by(id: params[:bill_in_id], billcode: params[:bill_in_code], station_id: @station.id)
+		    if !@billin_id.nil?
+				  @billin_id = @billin_id.id
+		    end
+		    @supplier = MedicineStockRecord.new(station_id: @station.id, typerecord: params[:typerecord], sample_id: @sample_id, supplier_id: @supplier_id, name: params[:name], noid: params[:noid], signid: params[:signid], amount: params[:amount], expire: params[:expire], supplier: params[:supplier], remark: params[:remark], internal_record_id: @script_id, bill_in_id: @billin_id, internal_record_code: params[:internal_record_code], bill_in_code: params[:bill_in_code])
 				if @supplier.save
 				  render json: @supplier
 				else
@@ -43,7 +61,23 @@ class MedicineStockRecordController < ApplicationController
         if params.has_key?(:id)
           @supplier = MedicineStockRecord.find(params[:id])
 			    if @supplier.station_id == @station.id
-            if @supplier.update(typerecord: params[:typerecord], name: params[:name], noid: params[:noid], signid: params[:signid], amount: params[:amount], expire: params[:expire], supplier: params[:supplier], remark: params[:remark], internal_record_id: params[:internal_record_id], bill_in_id: params[:bill_in_id], internal_record_code: params[:internal_record_code], bill_in_code: params[:bill_in_code])
+						@supplier_id = MedicineSupplier.find_by(id: params[:supplier_id], name: params[:supplier], station_id: @station.id)
+		        if !@supplier_id.nil?
+					    @supplier_id = @supplier_id.id
+				    end
+		        @script_id = MedicinePrescriptInternal.find_by(id: params[:internal_record_id], code: params[:internal_record_code], station_id: @station.id)
+		        if !@script_id.nil?
+					    @script_id = @script_id.id
+		        end
+		        @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
+		        if !@sample_id.nil?
+					    @sample_id = @sample_id.id
+		        end
+		        @billin_id = MedicineBillIn.find_by(id: params[:bill_in_id], billcode: params[:bill_in_code], station_id: @station.id)
+		        if !@billin_id.nil?
+				      @billin_id = @billin_id.id
+		        end
+            if @supplier.update(typerecord: params[:typerecord], sample_id: @sample_id, supplier_id: @supplier_id, name: params[:name], noid: params[:noid], signid: params[:signid], amount: params[:amount], expire: params[:expire], supplier: params[:supplier], remark: params[:remark], internal_record_id: @script_id, bill_in_id: @billin_id, internal_record_code: params[:internal_record_code], bill_in_code: params[:bill_in_code])
 				      render json: @supplier
 				    else
 				      render json: @supplier.errors, status: :unprocessable_entity

@@ -3162,7 +3162,7 @@
           $('#' + @props.id + ' #form_c_id').val(@props.record.customer_record_id)
           $('#' + @props.id + ' #form_cname').val(@props.record.cname)
           $('#' + @props.id + ' #form_s_id').val(@props.record.service_id)
-          $('#' + @props.id + ' #form_sname').val(@props.record.sname)
+          $('#' + @props.id + ' #form_sname').val(@props.record.sername)
           $('#' + @props.id + ' #form_remark').val(@props.record.remark)
           $('#' + @props.id + ' #form_tpayment').val(@props.record.tpayment)
           $('#' + @props.id + ' #form_discount').val(@props.record.discount)
@@ -3317,6 +3317,74 @@
           $('#' + @props.id + ' #form_tpayment').val(@props.record.tpayment)
           $('#' + @props.id + ' #form_noid').val(@props.record.noid)
           $('#' + @props.id + ' #form_signid').val(@props.record.signid)
+      else if code == 'medicine_stock_record'
+        if @props.billin != null and @props.billin != undefined
+          $('#' + @props.id + ' #form_billcode_id').val(@props.billin.id)
+          $('#' + @props.id + ' #form_billcode').val(@props.billin.billcode)
+        if @props.prescript != null and @props.prescript != undefined
+          $('#' + @props.id + ' #form_script_id').val(@props.prescript.id)
+          $('#' + @props.id + ' #form_script_code').val(@props.prescript.code)  
+        if @props.record != null and @props.record != undefined
+          $('#' + @props.id + ' #form_sample').val(@props.record.name)
+          $('#' + @props.id + ' #form_sample_id').val(@props.record.sample_id)
+          $('#' + @props.id + ' #form_script_id').val(@props.record.internal_record_id)
+          $('#' + @props.id + ' #form_script_code').val(@props.record.internal_record_code)
+          $('#' + @props.id + ' #form_remark').val(@props.record.remark)
+          $('#' + @props.id + ' #form_amount').val(@props.record.amount)
+          $('#' + @props.id + ' #form_noid').val(@props.record.noid)
+          $('#' + @props.id + ' #form_signid').val(@props.record.signid)
+          if @props.record.expire != null
+            $('#' + @props.id + ' #form_expire').val(@props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4))
+          $('#' + @props.id + ' #form_supplier').val(@props.record.supplier)
+          $('#' + @props.id + ' #form_supplier_id').val(@props.record.supplier_id)
+          $('#' + @props.id + ' #form_billcode_id').val(@props.record.bill_in_id)
+          $('#' + @props.id + ' #form_billcode').val(@props.record.bill_in_code)
+      else if code == 'check_info'
+        if @props.employee != null and @props.employee != undefined
+          $('#' + @props.id + ' #form_e_id').val(@props.employee.id)
+          $('#' + @props.id + ' #form_ename').val(@props.employee.ename)
+        if @props.customer != null and @props.customer_id != undefined
+          $('#' + @props.id + ' #form_c_id').val(@props.customer_id.id)
+          $('#' + @props.id + ' #form_c_name').val(@props.customer_id.cname)  
+        if @props.record != null and @props.record != undefined
+          $('#' + @props.id + ' #form_ename').val(@props.record.ename)
+          $('#' + @props.id + ' #form_e_id').val(@props.record.e_id)
+          $('#' + @props.id + ' #form_c_id').val(@props.record.c_id)
+          $('#' + @props.id + ' #form_cname').val(@props.record.c_name)
+          $('#' + @props.id + ' #form_kluan').val(@props.record.kluan)
+          $('#' + @props.id + ' #form_cdoan').val(@props.record.cdoan)
+          $('#' + @props.id + ' #form_hdieutri').val(@props.record.hdieutri)
+          if @props.record.daystart != null
+            $('#' + @props.id + ' #form_daystart').val(@props.record.daystart.substring(8, 10) + "/" + @props.record.daystart.substring(5, 7) + "/" + @props.record.daystart.substring(0, 4))
+          if @props.record.dayend != null
+            $('#' + @props.id + ' #form_dayend').val(@props.record.dayend.substring(8, 10) + "/" + @props.record.dayend.substring(5, 7) + "/" + @props.record.dayend.substring(0, 4))
+      else if code == 'doctor_check_info'
+        if @props.employee != null and @props.employee != undefined
+          $('#' + @props.id + ' #form_e_id').val(@props.employee.id)
+          $('#' + @props.id + ' #form_ename').val(@props.employee.ename)
+        if @props.customer != null and @props.customer_id != undefined
+          $('#' + @props.id + ' #form_c_id').val(@props.customer_id.id)
+          $('#' + @props.id + ' #form_c_name').val(@props.customer_id.cname)  
+        if @props.record != null and @props.record != undefined
+          $('#' + @props.id + ' #form_ename').val(@props.record.ename)
+          $('#' + @props.id + ' #form_e_id').val(@props.record.e_id)
+          $('#' + @props.id + ' #form_c_id').val(@props.record.c_id)
+          $('#' + @props.id + ' #form_cname').val(@props.record.c_name)
+          $('#' + @props.id + ' #form_qtbenhly').val(@props.record.qtbenhly)
+          $('#' + @props.id + ' #form_klamsang').val(@props.record.klamsang)
+          $('#' + @props.id + ' #form_nhiptim').val(@props.record.nhiptim)
+          $('#' + @props.id + ' #form_nhietdo').val(@props.record.nhietdo)
+          $('#' + @props.id + ' #form_hamin').val(@props.record.hamin)
+          $('#' + @props.id + ' #form_hamax').val(@props.record.hamax)
+          $('#' + @props.id + ' #form_ntho').val(@props.record.ntho)
+          $('#' + @props.id + ' #form_cnang').val(@props.record.cnang)
+          $('#' + @props.id + ' #form_cao').val(@props.record.cao)
+          $('#' + @props.id + ' #form_cdbandau').val(@props.record.cdbandau)
+          $('#' + @props.id + ' #form_bktheo').val(@props.record.bktheo)
+          $('#' + @props.id + ' #form_cdicd').val(@props.record.cdicd)
+          $('#' + @props.id + ' #form_kluan').val(@props.record.kluan)
+          if @props.record.daycheck != null
+            $('#' + @props.id + ' #form_daycheck').val(@props.record.daycheck.substring(8, 10) + "/" + @props.record.daycheck.substring(5, 7) + "/" + @props.record.daycheck.substring(0, 4))
     triggerClearFormValue: (code) ->
       if code == "customer_record"
         $('#' + @props.id + ' #form_name').val("")
@@ -3492,6 +3560,20 @@
         $('#' + @props.id + ' #form_tpayment').val(0)
         $('#' + @props.id + ' #form_noid').val('')
         $('#' + @props.id + ' #form_signid').val('')
+      else if code == 'medicine_stock_record'
+        $('#' + @props.id + ' #form_sample').val('')
+        $('#' + @props.id + ' #form_sample_id').val('')
+        $('#' + @props.id + ' #form_script_id').val('')
+        $('#' + @props.id + ' #form_remark').val('')
+        $('#' + @props.id + ' #form_amount').val(0)
+        $('#' + @props.id + ' #form_script_code').val('')
+        $('#' + @props.id + ' #form_noid').val('')
+        $('#' + @props.id + ' #form_signid').val('')
+        $('#' + @props.id + ' #form_expire').val(moment().format('DD/MM/YYYY'))
+        $('#' + @props.id + ' #form_supplier').val('')
+        $('#' + @props.id + ' #form_supplier_id').val('')
+        $('#' + @props.id + ' #form_billcode_id').val('')
+        $('#' + @props.id + ' #form_billcode').val('')
     triggerAutoCompleteInputAlt: (code) ->
       if code == 'cname'
         if $('#' + @props.id + ' #form_cname').val().length > 3
@@ -4101,6 +4183,67 @@
         formData.append 'tpayment', $('#' + @props.id + ' #form_tpayment').val()
         formData.append 'noid', $('#' + @props.id + ' #form_noid').val()
         formData.append 'signid', $('#' + @props.id + ' #form_signid').val()
+      else if @props.datatype == 'medicine_stock_record'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+          if $('#' + @props.id + ' #form_typerecord').val() == "Trạng thái"
+            formData.append 'typerecord', @props.record.typerecord
+          else
+            formData.append 'typerecord', $('#' + @props.id + ' #form_typerecord').val()
+        else
+          formData.append 'typerecord', $('#' + @props.id + ' #form_typerecord').val()
+        formData.append 'name', $('#' + @props.id + ' #form_sample').val()
+        formData.append 'sample_id', $('#' + @props.id + ' #form_sample_id').val()
+        formData.append 'noid', $('#' + @props.id + ' #form_noid').val()
+        formData.append 'signid', $('#' + @props.id + ' #form_signid').val()
+        formData.append 'amount', $('#' + @props.id + ' #form_amount').val()
+        formData.append 'expire', $('#' + @props.id + ' #form_expire').val()
+        formData.append 'supplier', $('#' + @props.id + ' #form_supplier').val()
+        formData.append 'supplier_id', $('#' + @props.id + ' #form_supplier_id').val()
+        formData.append 'internal_record_id', $('#' + @props.id + ' #form_script_id').val()
+        formData.append 'bill_in_id', $('#' + @props.id + ' #form_billcode_id').val()
+        formData.append 'bill_in_code', $('#' + @props.id + ' #form_billcode').val()
+        formData.append 'internal_record_code', $('#' + @props.id + ' #form_script_code').val()
+        formData.append 'remark', $('#' + @props.id + ' #form_remark').val()
+      else if @props.datatype == 'check_info'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+          if $('#' + @props.id + ' #form_status').val() == ''
+            formData.append 'status', @props.record.status
+          else
+            formData.append 'status', $('#' + @props.id + ' #form_status').val()
+        else
+          formData.append 'status', $('#' + @props.id + ' #form_status').val()
+        formData.append 'ename', $('#' + @props.id + ' #form_ename').val()
+        formData.append 'e_id', $('#' + @props.id + ' #form_e_id').val()
+        formData.append 'c_name', $('#' + @props.id + ' #form_cname').val()
+        formData.append 'c_id', $('#' + @props.id + ' #form_c_id').val()
+        formData.append 'kluan', $('#' + @props.id + ' #form_kluan').val()
+        formData.append 'cdoan', $('#' + @props.id + ' #form_cdoan').val()
+        formData.append 'hdieutri', $('#' + @props.id + ' #form_hdieutri').val()
+        formData.append 'daystart', $('#' + @props.id + ' #form_daystart').val()
+        formData.append 'dayend', $('#' + @props.id + ' #form_dayend').val()
+      else if @props.datatype == 'doctor_check_info'
+        if @props.record != null
+          formData.append 'id', @props.record.id
+        formData.append 'daycheck', $('#' + @props.id + ' #form_daycheck').val()
+        formData.append 'ename', $('#' + @props.id + ' #form_ename').val()
+        formData.append 'e_id', $('#' + @props.id + ' #form_e_id').val()
+        formData.append 'c_id', $('#' + @props.id + ' #form_c_id').val()
+        formData.append 'c_name', $('#' + @props.id + ' #form_cname').val()
+        formData.append 'qtbenhly', $('#' + @props.id + ' #form_qtbenhly').val()
+        formData.append 'klamsang', $('#' + @props.id + ' #form_klamsang').val()
+        formData.append 'nhiptim', $('#' + @props.id + ' #form_nhiptim').val()
+        formData.append 'nhietdo', $('#' + @props.id + ' #form_nhietdo').val()
+        formData.append 'hamin', $('#' + @props.id + ' #form_hamin').val()
+        formData.append 'hamax', $('#' + @props.id + ' #form_hamax').val()
+        formData.append 'ntho', $('#' + @props.id + ' #form_ntho').val()
+        formData.append 'cnang', $('#' + @props.id + ' #form_cnang').val()
+        formData.append 'cao', $('#' + @props.id + ' #form_cao').val()
+        formData.append 'cdbandau', $('#' + @props.id + ' #form_cdbandau').val()
+        formData.append 'bktheo', $('#' + @props.id + ' #form_bktheo').val()
+        formData.append 'cdicd', $('#' + @props.id + ' #form_cdicd').val()
+        formData.append 'kluan', $('#' + @props.id + ' #form_kluan').val()
       if @props.record != null
         $.ajax
           url: '/' + @props.datatype
@@ -5590,6 +5733,219 @@
                     React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
             React.DOM.div className: 'modal-footer',
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    medicineStockRecordForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Mẫu thông tin kho thuốc'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Trạng thái'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement SelectBox, id: 'form_typerecord', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Nhập'},{id: 2, name: 'Xuất'},{id: 3, name: 'Vô hiệu'}], text: 'Trạng thái'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Mã hóa đơn'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_billcode_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_billcode', className: 'form-control', type: 'text', code: 'billcode', placeholder: 'Mã hóa đơn', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'billcode'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_bill_in_mini', grouplist: @props.grouplist, typelist: @props.typelist, header: [{id: 1,name: "Mã hóa đơn"},{id: 2, name: "Ngày nhập"},{id: 3, name: "Người cung cấp"},{id: 4, name: "Tổng giá thanh toán"},{id: 5, name: "Cách thanh toán"},{id: 6, name: "Tình trạng"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Mã đơn thuốc'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_script_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_script_code', className: 'form-control', type: 'text', code: 'script_in', placeholder: 'Mã đơn thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete", id: "script_in_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'script_in'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_prescript_internal_mini', header: [{id: 1,name: "Mã đơn thuốc"},{id: 2,name: "Tên bệnh nhân"},{id: 3, name: "Người kê"},{id: 4, name: "Ngày kê"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên thuốc'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_sample_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_sample', className: 'form-control', type: 'text', code: 'sample', placeholder: 'Tên thuốc', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'sample'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_sample_mini', grouplist: @props.grouplist, typelist: @props.typelist, header: [{id: 1,name: "Tên thuốc"},{id: 2, name: "Loại thuốc"},{id: 3, name: "Nhóm thuốc"},{id: 4, name: "Công ty sản xuất"},{id: 5, name: "Giá"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'form_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'form_signid', className: 'form-control', type: 'text', code: '', placeholder: 'Ký hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hết hạn'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'form_expire', className: 'form-control', type: 'text', code: '', placeholder: 'Hết hạn', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên nhà cung cấp'
+                      React.DOM.div className: 'col-sm-6',
+                        React.DOM.input id: 'form_supplier_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_supplier', className: 'form-control', type: 'text', code: 'supplier', placeholder: 'Nguồn cung cấp', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'supplier'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_supplier_mini', header: [{id: 1,name: "Mã"},{id: 2, name: "Tên nguồn"},{id: 3, name: "Người liên lạc"},{id: 4, name: "Điện thoại"}], trigger: @triggerAutoComplete
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số lượng'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'form_amount', className: 'form-control', type: 'number', code: 'form_amount', placeholder: 'Số lượng', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ghi chú'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú'
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    checkInfoForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Thông tin điều trị'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng'
+                      React.DOM.div className: 'col-sm-5',
+                        React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Chưa khám'},{id: 2, name: 'Đang khám'},{id: 3, name: 'Kết thúc khám'}], text: 'Tình trạng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'cname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên bác sỹ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_e_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_ename', className: 'form-control', type: 'text', code: 'ename', placeholder: 'Tên nhân viên', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'ename'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'employee_mini', header: [{id: 1,name: "Mã nhân viên"},{id: 2, name: "Tên"},{id: 3, name: "Số điện thoại"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Kết luận'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_kluan', className: 'form-control', placeholder: 'Kết luận'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Chuẩn đoán'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_cdoan', className: 'form-control', placeholder: 'Chuẩn đoán'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hướng điều trị'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_hdieutri', className: 'form-control', placeholder: 'Hướng điều trị'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ngày bắt đầu'
+                        React.DOM.div className: 'col-sm-3',
+                          React.DOM.input id: 'form_daystart', type: 'text', className: 'form-control', placeholder: 'Ngày bắt đầu'
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ngày kết thúc'
+                        React.DOM.div className: 'col-sm-3',
+                          React.DOM.input id: 'form_dayend', type: 'text', className: 'form-control', placeholder: 'Ngày kết thúc'
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
+    doctorCheckInfoForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-lg',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-header text-center',
+              React.DOM.h4 className: 'modal-title', 'Thông tin khám'
+              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row',
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.form className: 'form-horizontal', onSubmit: @handleSubmit, autoComplete: 'off',
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ngày khám'
+                        React.DOM.div className: 'col-sm-4',
+                          React.DOM.input id: 'form_daycheck', type: 'text', className: 'form-control', placeholder: 'Ngày khám'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên bệnh nhân'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                          if @state.autoComplete != null and @state.code == 'cname'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên bác sỹ'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_e_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                        React.createElement InputField, id: 'form_ename', className: 'form-control', type: 'text', code: 'ename', placeholder: 'Tên nhân viên', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                        React.DOM.div className: "auto-complete",
+                          if @state.autoComplete != null and @state.code == 'ename'
+                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'employee_mini', header: [{id: 1,name: "Mã nhân viên"},{id: 2, name: "Tên"},{id: 3, name: "Số điện thoại"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Quá trình bệnh lý'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_qtbenhly', className: 'form-control', placeholder: 'Quá trình bệnh lý'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Khám lâm sàng'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_klamsang', className: 'form-control', placeholder: 'Khám lâm sàng'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhịp tim'
+                        React.DOM.div className: 'col-sm-2',
+                          React.DOM.input id: 'form_nhiptim', type: 'number', className: 'form-control', placeholder: 'Nhịp tim'
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhiệt độ'
+                        React.DOM.div className: 'col-sm-2',
+                          React.DOM.input id: 'form_nhietdo', type: 'number', className: 'form-control', placeholder: 'Nhiệt độ'
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhịp thở'
+                        React.DOM.div className: 'col-sm-2',
+                          React.DOM.input id: 'form_ntho', type: 'number', className: 'form-control', placeholder: 'Nhịp thở'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Huyết áp min'
+                        React.DOM.div className: 'col-sm-1',
+                          React.DOM.input id: 'form_hamin', type: 'number', className: 'form-control', placeholder: 'Huyết ap min'
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Huyết áp max'
+                        React.DOM.div className: 'col-sm-1',
+                          React.DOM.input id: 'form_hamax', type: 'number', className: 'form-control', placeholder: 'Huyết áp max'
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Cân nặng'
+                        React.DOM.div className: 'col-sm-1',
+                          React.DOM.input id: 'form_cnang', type: 'number', className: 'form-control', placeholder: 'Cân nặng'
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Chiều cao'
+                        React.DOM.div className: 'col-sm-1',
+                          React.DOM.input id: 'form_cao', type: 'number', className: 'form-control', placeholder: 'Chiều cao'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Chuẩn đoán ban đầu'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_cdbandau', className: 'form-control', placeholder: 'Chuẩn đoán ban đầu'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Bệnh kèm theo'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_bktheo', className: 'form-control', placeholder: 'Bệnh kèm theo'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Chuẩn đoán ICD'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_cdicd', className: 'form-control', placeholder: 'Chuẩn đoán ICD'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-12',
+                        React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Kết luận'
+                        React.DOM.div className: 'col-sm-9',
+                          React.DOM.textarea id: 'form_kluan', className: 'form-control', placeholder: 'Kết luận'
+                    React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
+            React.DOM.div className: 'modal-footer',
+              React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
     deleteForm: ->
       React.DOM.div className: 'modal fade', id: @props.id,
         React.DOM.div className: 'modal-dialog modal-sm',
@@ -5647,6 +6003,12 @@
         @medicineInternalRecordForm()
       else if @props.datatype == 'medicine_internal_record_mini'
         @medicineInternalRecordMiniForm()
+      else if @props.datatype == 'medicine_stock_record'
+        @medicineStockRecordForm()
+      else if @state.type == 'check_info'
+        @checkInfoForm()
+      else if @state.type == 'doctor_check_info'
+        @doctorCheckInfoForm()
       
 
   @TabNavCell = React.createClass

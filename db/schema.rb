@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161015052859) do
+ActiveRecord::Schema.define(version: 20161015105601) do
 
   create_table "bill_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "remark",       limit: 65535
@@ -369,6 +369,8 @@ ActiveRecord::Schema.define(version: 20161015052859) do
     t.string   "bill_in_code"
     t.string   "internal_record_code"
     t.text     "remark",               limit: 65535
+    t.integer  "sample_id"
+    t.integer  "supplier_id"
     t.index ["station_id"], name: "index_medicine_stock_records_on_station_id", using: :btree
   end
 
