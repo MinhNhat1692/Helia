@@ -31,6 +31,28 @@ class CheckInfoController < ApplicationController
     end
   end
 
+  def updatesmall
+    if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+			  @station = Station.find_by(user_id: current_user.id)
+			  if params.has_key?(:id)
+          @supplier = CheckInfo.find(params[:id])
+          if @supplier.station_id == @station.id
+            if @supplier.update(kluan: params[:kluan], cdoan: params[:cdoan], hdieutri: params[:hdieutri])
+  		  		  render json: @supplier
+	  		  	else
+		  		  	render json: @supplier.errors, status: :unprocessable_entity
+  		  		end
+	  	    end
+	      end
+	    else
+        redirect_to root_path
+      end
+    end
+  end
+
   def destroy
     if params.has_key?(:id_station)
       redirect_to root_path

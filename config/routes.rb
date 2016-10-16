@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   
   delete '/check_info', to: 'check_info#destroy'
   put '/check_info', to: 'check_info#update'
+  put '/check_info/order_map', to: 'check_info#updatesmall'
   post '/check_info/list', to: 'check_info#list'
   post '/check_info/search', to: 'check_info#search'
   post '/check_info/find', to: 'check_info#find'
@@ -128,6 +129,7 @@ Rails.application.routes.draw do
   
   delete '/customer_record', to: 'customer_record#destroy'
   put '/customer_record', to: 'customer_record#update'
+  put '/customer_record/order_map', to: 'customer_record#update'
   post '/customer_record', to: 'customer_record#create'
   post '/customer_record/list', to: 'customer_record#list'
   post '/customer_record/find_record', to: 'customer_record#find_record'

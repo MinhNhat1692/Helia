@@ -5,12 +5,25 @@
       selected: 1
       selectRecord: null
       selectRecordId: null
+      record1: null
+      record2: null
+      record3: null
+      editing: false
+      editcode: null
     selectCode: (code)->
       @setState selected: code
     selectRecord: (result) ->
       @setState
         selectRecord: result
         selectRecordId: result.id
+    changeEditCode: (code) ->
+      @setState
+        editing: true
+        editcode: code
+    cancelEditCode: (code) ->
+      @setState
+        editing: false
+        editcode: null
     handleDelete: (e) ->
       @props.triggerDelete @state.selectRecord
     refreshChildRecord: (code) ->
@@ -74,6 +87,9 @@
         $('#' + @props.id + ' #form_address').val(@props.record.address)
         $('#' + @props.id + ' #form_pnumber').val(@props.record.pnumber)
         $('#' + @props.id + ' #form_noid').val(@props.record.noid)
+        $('#' + @props.id + ' #form_issue_place').val(@props.record.issue_place)
+        if @props.record.issue_date != null
+          $('#' + @props.id + ' #form_issue_date').val(@props.record.issue_date.substring(8, 10) + "/" + @props.record.issue_date.substring(5, 7) + "/" + @props.record.issue_date.substring(0, 4))
         $('#' + @props.id + ' #form_work_place').val(@props.record.work_place)
         $('#' + @props.id + ' #form_self_history').val(@props.record.self_history)
         $('#' + @props.id + ' #form_family_history').val(@props.record.family_history)
@@ -902,6 +918,8 @@
         formData.append 'address', $('#' + @props.id + ' #form_address').val()
         formData.append 'pnumber', $('#' + @props.id + ' #form_pnumber').val()
         formData.append 'noid', $('#' + @props.id + ' #form_noid').val()
+        formData.append 'issue_date', $('#' + @props.id + ' #form_issue_date').val()
+        formData.append 'issue_place', $('#' + @props.id + ' #form_issue_place').val()
         formData.append 'work_place', $('#' + @props.id + ' #form_work_place').val()
         formData.append 'self_history', $('#' + @props.id + ' #form_self_history').val()
         formData.append 'family_history', $('#' + @props.id + ' #form_family_history').val()
@@ -1310,6 +1328,26 @@
       if result != undefined
         @props.trigger result
         $('#' + @props.id).modal('hide')
+    handleSubmitContentTab: (record,code) ->
+      if record != null
+        $.ajax
+          url: '/' + code + '/order_map'
+          type: 'PUT'
+          data: record
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @setState
+              editing: false
+              editcode: null
+            if code == 'customer_record'
+              @setState record1: result
+            else if code == 'check_info'
+              @setState record2: result
+            return
+          ).bind(this)
     doctorRoomRender: ->
       React.DOM.div className: 'modal fade', id: @props.id,
         React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
@@ -1321,89 +1359,8 @@
                 React.createElement TabNavCell, className: 'tab-cell-3', code: 3, text: ' Khám lâm sàng', selected: @state.selected, trigger: @selectCode
                 React.createElement TabNavCell, className: 'tab-cell-3', code: 4, text: ' Đơn thuốc', selected: @state.selected, trigger: @selectCode
               React.DOM.div className: 'tab-content-list',
-                React.createElement TabContentCell, code: 1, selected: @state.selected, record:
-                  if @props.record != null
-                    @props.record[0]
-                  else
-                    null
-                React.DOM.div className: 'tab-content',
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-9', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.div className: 'tab-content-header',
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Tiểu sử bệnh'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                      React.DOM.p style: {'paddingLeft': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                      React.DOM.p style: {'paddingLeft': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                    React.DOM.div className: 'col-md-3', style: {'textAlign':'center', 'paddingTop': '30px'},
-                      React.DOM.div className: 'pmo-pic',
-                        React.DOM.div className: 'p-relative',
-                          React.DOM.a href: '',
-                            React.DOM.img className: 'img-responsive', src: 'http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/profile-pic-2.jpg'
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.h4 null,
-                        React.DOM.i className: 'fa fa-user'
-                        ' Thông tin cá nhân'
-                    React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Full Name'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'Mallinda Hollaway'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Gender'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'Nam'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Birthday'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'June 23, 1990'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Tuổi'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '26'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Phone Number'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '01290898923'
-                    React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Địa chỉ'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '267 B Vĩnh Hưng, Hoàng Mai, Hà Nội'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Noid'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '01290898923'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Ngày cấp'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'June 23, 1990'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Nơi cấp'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'Hoàng Mai, Hà Nội'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Nơi làm việc'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '267 B Vĩnh Hưng, Hoàng Mai, Hà Nội'
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
+                React.createElement TabContentCell, code: 1, editmode: @state.editing, id: 'tabcontent_customer_record', datatype: 'customer_record', editcode: @state.editcode, selected: @state.selected, triggerSubmit: @handleSubmitContentTab, triggerCancelEdit: @cancelEditCode, triggerEdit: @changeEditCode, customer: @state.record1, checkinfo: @state.record2, doctorcheck: @state.record3 , record: @props.record
+                React.createElement TabContentCell, code: 2, editmode: @state.editing, id: 'tabcontent_check_info', datatype: 'check_info', editcode: @state.editcode, selected: @state.selected, triggerSubmit: @handleSubmitContentTab, triggerCancelEdit: @cancelEditCode, triggerEdit: @changeEditCode, customer: @state.record1, checkinfo: @state.record2, doctorcheck: @state.record3 , record: @props.record
                 React.DOM.div className: 'tab-content',
                   React.DOM.div className: 'row',
                     React.DOM.div className: 'col-md-8', style: {'padding': '40px 40px 0px 40px'},
@@ -1827,6 +1784,14 @@
                       React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'CMTND'
                       React.DOM.div className: 'col-sm-9',
                         React.DOM.input id: 'form_noid', type: 'number', className: 'form-control', placeholder: 'Số CMTND'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'Ngày cấp'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_issue_date', type: 'text', className: 'form-control', placeholder: '31/01/2016'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'Nơi cấp'
+                      React.DOM.div className: 'col-sm-9',
+                        React.DOM.input id: 'form_issue_place', type: 'text', className: 'form-control', placeholder: 'Nơi cấp'
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'Nơi làm việc'
                       React.DOM.div className: 'col-sm-9',
@@ -3009,78 +2974,425 @@
   @TabContentCell = React.createClass
     getInitialState: ->
       editmode: false
+    changeEditState: ->
+      @props.triggerEdit @props.code
+    triggerCancelEdit: ->
+      @props.triggerCancelEdit @props.code
+    triggerSubmit: (e) ->
+      e.preventDefault()
+      if @props.datatype == 'customer_record'
+        formData = new FormData
+        if @props.record != null
+          formData.append 'id', @props.record[0].id
+          if $('#' + @props.id + ' #form_gender').val() == "Giới tính"
+            formData.append 'gender', @props.record[0].gender
+          else
+            formData.append 'gender', $('#' + @props.id + ' #form_gender').val()
+        else
+          formData.append 'gender', $('#' + @props.id + ' #form_gender').val()
+        formData.append 'cname', $('#' + @props.id + ' #form_cname').val()
+        formData.append 'dob', $('#' + @props.id + ' #form_dob').val()
+        formData.append 'address', $('#' + @props.id + ' #form_address').val()
+        formData.append 'pnumber', $('#' + @props.id + ' #form_pnumber').val()
+        formData.append 'noid', $('#' + @props.id + ' #form_noid').val()
+        formData.append 'issue_date', $('#' + @props.id + ' #form_issue_date').val()
+        formData.append 'issue_place', $('#' + @props.id + ' #form_issue_place').val()
+        formData.append 'work_place', $('#' + @props.id + ' #form_work_place').val()
+        formData.append 'self_history', $('#' + @props.id + ' #form_self_history').val()
+        formData.append 'family_history', $('#' + @props.id + ' #form_family_history').val()
+        formData.append 'drug_history', $('#' + @props.id + ' #form_drug_history').val()
+      else if @props.datatype == 'check_info'
+        formData = new FormData
+        if @props.record != null
+          formData.append 'id', @props.record[1].id
+        formData.append 'kluan', $('#' + @props.id + ' #form_kluan').val()
+        formData.append 'cdoan', $('#' + @props.id + ' #form_cdoan').val()
+        formData.append 'hdieutri', $('#' + @props.id + ' #form_hdieutri').val()
+      if formData != undefined
+        @props.triggerSubmit formData, @props.datatype
     trigger: ->
       @props.trigger
-    doctorRoom1Render: ->
-      if @props.selected == @props.code and !@state.editmode and @props.record != null
-        React.DOM.div className: 'tab-content active',
-          React.DOM.div className: 'row',
-            React.DOM.div className: 'col-md-9', style: {'padding': '40px 40px 0px 40px'},
-              React.DOM.div className: 'tab-content-header',
+    triggersafe: ->
+    calAge: (dob, style) ->
+      now = new Date
+      today = new Date(now.getYear(), now.getMonth(), now.getDate())
+      yearNow = now.getYear()
+      monthNow = now.getMonth()
+      dateNow = now.getDate()
+      if style == 1
+        dob = new Date(dob.substring(6, 10), dob.substring(3, 5) - 1, dob.substring(0, 2))
+      else
+        dob = new Date(dob.substring(0, 4), dob.substring(5, 7) - 1, dob.substring(8, 10))
+      yearDob = dob.getYear()
+      monthDob = dob.getMonth()
+      dateDob = dob.getDate()
+      yearAge = yearNow - yearDob
+      if monthNow >= monthDob
+        monthAge = monthNow - monthDob
+      else
+        yearAge--
+        monthAge = 12 + monthNow - monthDob
+      if dateNow >= dateDob
+        dateAge = dateNow - dateDob
+      else
+        monthAge--
+        dateAge = 31 + dateNow - dateDob
+        if monthAge < 0
+          monthAge = 11
+          yearAge--
+      age =
+        years: yearAge
+        months: monthAge
+        days: dateAge
+      return age
+    customerRecordRender: ->
+      if @props.record == null
+        record = null
+      else
+        if @props.customer != null and @props.record[0].id == @props.customer.id
+          record = @props.customer  
+        else
+          record = @props.record[0]
+      if @props.selected == @props.code and record != null
+        if !@props.editmode or @props.editcode != @props.code
+          React.DOM.div className: 'tab-content active',
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-9', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.div className: 'tab-content-header',
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Tiểu sử bệnh'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.self_history
+                React.DOM.p style: {'paddingLeft': '20px'}, record.family_history
+                React.DOM.p style: {'paddingLeft': '20px'}, record.drug_history
+              React.DOM.div className: 'col-md-3', style: {'textAlign':'center', 'paddingTop': '30px'},
+                React.DOM.div className: 'pmo-pic',
+                  React.DOM.div className: 'p-relative',
+                    React.DOM.a href: '',
+                      React.DOM.img className: 'img-responsive', src: record.avatar
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
                 React.DOM.h4 null,
-                  React.DOM.i className: 'zmdi zmdi-equalizer'
-                  ' Tiểu sử bệnh'
-              React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, @props.record.self_history
-              React.DOM.p style: {'paddingLeft': '20px'}, @props.record.family_history
-              React.DOM.p style: {'paddingLeft': '20px'}, @props.record.drug_history
-            React.DOM.div className: 'col-md-3', style: {'textAlign':'center', 'paddingTop': '30px'},
-              React.DOM.div className: 'pmo-pic',
-                React.DOM.div className: 'p-relative',
-                  React.DOM.a href: '',
-                    React.DOM.img className: 'img-responsive', src: @props.record.avatar
-          React.DOM.div className: 'row',
-            React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
-              React.DOM.h4 null,
-                React.DOM.i className: 'fa fa-user'
-                ' Thông tin cá nhân'
-              React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Full Name'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, 'Mallinda Hollaway'
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Gender'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, 'Nam'
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Birthday'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, 'June 23, 1990'
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Tuổi'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, '26'
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Phone Number'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, '01290898923'
-              React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Địa chỉ'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, '267 B Vĩnh Hưng, Hoàng Mai, Hà Nội'
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Noid'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, '01290898923'
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Ngày cấp'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, 'June 23, 1990'
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Nơi cấp'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, 'Hoàng Mai, Hà Nội'
-                React.DOM.div className: 'col-md-4',
-                  React.DOM.p style: {'fontWeight':'600'}, 'Nơi làm việc'
-                React.DOM.div className: 'col-md-8',
-                  React.DOM.p null, '267 B Vĩnh Hưng, Hoàng Mai, Hà Nội'
-          React.DOM.div className: 'row',
-            React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-              React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
-              React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @trigger
-              React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Thêm', type: 1, Clicked: @trigger
+                  React.DOM.i className: 'fa fa-user'
+                  ' Thông tin cá nhân'
+                React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Họ và tên'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null, record.cname
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Giới tính'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null,
+                        if record.gender == 1
+                          "Nam"
+                        else
+                          "Nữ"
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Ngày sinh'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null,
+                        if record.dob != null and record.dob != undefined
+                          record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4)
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Tuổi'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null,
+                        if record.dob != null and record.dob != undefined
+                          @calAge(record.dob,2).years
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Số điện thoại'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null, record.pnumber
+                React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Địa chỉ'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null, record.address
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'CMTND'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null, record.noid
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Ngày cấp'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null,
+                        if record.issue_date != null and record.issue_date != undefined
+                          record.issue_date.substring(8, 10) + "/" + record.issue_date.substring(5, 7) + "/" + record.issue_date.substring(0, 4)
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Nơi cấp'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null, record.issue_place
+                  React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-4',
+                      React.DOM.p style: {'fontWeight':'600'}, 'Nơi làm việc'
+                    React.DOM.div className: 'col-md-8',
+                      React.DOM.p null, record.work_place
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
+                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
+        else
+          React.DOM.div className: 'tab-content active', id: @props.id,
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-9', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.div className: 'tab-content-header',
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Tiểu sử bệnh'
+                React.createElement InputField, id: 'form_self_history', className: 'form-control', type: 'text', code: 'self_history', placeholder: 'Tiểu sử bệnh bản thân', style: '', defaultValue: record.self_history, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                React.createElement InputField, id: 'form_family_history', className: 'form-control', type: 'text', code: 'family_history', placeholder: 'Tiểu sử bệnh gia đình', style: '', defaultValue: record.family_history, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                React.createElement InputField, id: 'form_drug_history', className: 'form-control', type: 'text', code: 'drug_history', placeholder: 'Dị ứng thuốc', style: '', defaultValue: record.drug_history, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+              React.DOM.div className: 'col-md-3', style: {'textAlign':'center', 'paddingTop': '30px'},
+                React.DOM.div className: 'pmo-pic',
+                  React.DOM.div className: 'p-relative',
+                    React.DOM.a href: '',
+                      React.DOM.img className: 'img-responsive', src: record.avatar
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.h4 null,
+                  React.DOM.i className: 'fa fa-user'
+                  ' Thông tin cá nhân'
+                React.DOM.form className: 'form-horizontal', autoComplete: 'off',                  
+                  React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Họ và tên'
+                      React.DOM.div className: 'col-md-8',
+                        React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Họ và tên', style: '', defaultValue: record.cname, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Giới tính'
+                      React.DOM.div className: 'col-md-8',
+                        React.DOM.select id: 'form_gender', className: 'form-control',
+                          React.DOM.option value: '', 'Giới tính'
+                          React.DOM.option value: '1', 'Nam'
+                          React.DOM.option value: '2', 'Nữ'
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Ngày sinh'
+                      React.DOM.div className: 'col-md-8',
+                        React.createElement InputField, id: 'form_dob', className: 'form-control', type: 'text', code: 'dob', placeholder: '31/01/2016', style: '', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe, defaultValue:
+                          if record.dob != null
+                            record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4)
+                          else
+                            ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Tuổi'
+                      React.DOM.div className: 'col-md-8',
+                        React.DOM.p null,
+                          if record.dob != null
+                            @calAge(record.dob,2).years
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Số điện thoại'
+                      React.DOM.div className: 'col-md-8',
+                        React.createElement InputField, id: 'form_pnumber', className: 'form-control', type: 'text', code: 'pnumber', placeholder: 'Số điện thoại', style: '', defaultValue: record.pnumber, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                  React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Địa chỉ'
+                      React.DOM.div className: 'col-md-8',
+                        React.createElement InputField, id: 'form_address', className: 'form-control', type: 'text', code: 'address', placeholder: 'Địa chỉ', style: '', defaultValue: record.address, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'CMTND'
+                      React.DOM.div className: 'col-md-8',
+                        React.createElement InputField, id: 'form_noid', className: 'form-control', type: 'text', code: 'noid', placeholder: 'CMTND', style: '', defaultValue: record.noid, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Ngày cấp'
+                      React.DOM.div className: 'col-md-8',
+                        React.createElement InputField, id: 'form_issue_date', className: 'form-control', type: 'text', code: 'issue_date', placeholder: '31/01/2016', style: '', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe, defaultValue:
+                          if record.issue_date != null
+                            record.issue_date.substring(8, 10) + "/" + record.issue_date.substring(5, 7) + "/" + record.issue_date.substring(0, 4)
+                          else
+                            ''
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Nơi cấp'
+                      React.DOM.div className: 'col-md-8',
+                        React.createElement InputField, id: 'form_issue_place', className: 'form-control', type: 'text', code: 'issue_place', placeholder: 'Nơi cấp', style: '', defaultValue: record.issue_place, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                    React.DOM.div className: 'form-group',
+                      React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Nơi làm việc'
+                      React.DOM.div className: 'col-md-8',
+                        React.createElement InputField, id: 'form_work_place', className: 'form-control', type: 'text', code: 'work_place', placeholder: 'Nơi làm việc', style: '', defaultValue: record.work_place, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
+                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
+      else
+        React.DOM.div className: 'tab-content'
+    checkInfoRender: ->
+      if @props.record == null
+        customer = null
+      else
+        if @props.customer != null and @props.record[0].id == @props.customer.id
+          customer = @props.customer
+        else
+          customer = @props.record[0]
+      if @props.record == null
+        record = null
+      else
+        if @props.checkinfo != null and @props.record[1].id == @props.checkinfo.id
+          record = @props.checkinfo
+        else
+          record = @props.record[1]
+      if @props.selected == @props.code and record != null
+        if !@props.editmode or @props.editcode != @props.code
+          React.DOM.div className: 'tab-content active',
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-8', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.div className: 'tab-content-header',
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Kết luận'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.kluan
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Chuẩn đoán'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.cdoan
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Hướng điều trị'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.hdieutri
+              React.DOM.div className: 'col-md-4', style: {'textAlign':'center', 'paddingTop': '30px'},
+                React.DOM.div className: 'pmo-pic',
+                  React.DOM.div className: 'p-relative',
+                    React.DOM.a href: '',
+                      React.DOM.img className: 'img-responsive', src: customer.avatar
+                React.DOM.div className: 'col-md-12', style: {'paddingTop': '20px'},
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Tên bệnh nhân'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null, record.c_name
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Tình trạng'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null,
+                      switch Number(record.status)
+                        when 1
+                          @state.typeName = "Chưa khám"
+                        when 2
+                          @state.typeName = "Đang khám"
+                        when 3
+                          @state.typeName = "Kết thúc khám"
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Người khám'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null, record.ename
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Ngày bắt đầu'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null,
+                      if record.daystart != null
+                        record.daystart.substring(8, 10) + "/" + record.daystart.substring(5, 7) + "/" + record.daystart.substring(0, 4)
+                      else
+                        ''
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Ngày kết thúc'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null,
+                      if record.dayend != null
+                        record.dayend.substring(8, 10) + "/" + record.dayend.substring(5, 7) + "/" + record.dayend.substring(0, 4)
+                      else
+                        ''
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
+                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
+        else
+          React.DOM.div className: 'tab-content active', id: @props.id,
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-8', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.div className: 'tab-content-header',
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Kết luận'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_kluan', className: 'form-control', placeholder: 'Kết luận', defaultValue: record.kluan
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Chuẩn đoán'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_cdoan', className: 'form-control', placeholder: 'Chuẩn đoán', defaultValue: record.cdoan
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Hướng điều trị'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_hdieutri', className: 'form-control', placeholder: 'Hướng điều trị', defaultValue: record.hdieutri
+              React.DOM.div className: 'col-md-4', style: {'textAlign':'center', 'paddingTop': '30px'},
+                React.DOM.div className: 'pmo-pic',
+                  React.DOM.div className: 'p-relative',
+                    React.DOM.a href: '',
+                      React.DOM.img className: 'img-responsive', src: customer.avatar
+                React.DOM.div className: 'col-md-12', style: {'paddingTop': '20px'},
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Tên bệnh nhân'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null, record.c_name
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Tình trạng'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null,
+                      switch Number(record.status)
+                        when 1
+                          @state.typeName = "Chưa khám"
+                        when 2
+                          @state.typeName = "Đang khám"
+                        when 3
+                          @state.typeName = "Kết thúc khám"
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Người khám'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null, record.ename
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Ngày bắt đầu'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null,
+                      if record.daystart != null
+                        record.daystart.substring(8, 10) + "/" + record.daystart.substring(5, 7) + "/" + record.daystart.substring(0, 4)
+                      else
+                        ''
+                React.DOM.div className: 'col-md-12',
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Ngày kết thúc'
+                  React.DOM.div className: 'col-md-6',
+                    React.DOM.p null,
+                      if record.dayend != null
+                        record.dayend.substring(8, 10) + "/" + record.dayend.substring(5, 7) + "/" + record.dayend.substring(0, 4)
+                      else
+                        ''
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
+                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
       else
         React.DOM.div className: 'tab-content'
     render: ->
-      @doctorRoom1Render()
+      if @props.datatype == 'customer_record'
+        @customerRecordRender()
+      else if @props.datatype == 'check_info'
+        @checkInfoRender()

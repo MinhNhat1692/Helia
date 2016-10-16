@@ -289,7 +289,7 @@
               extradata: data
               record: result
               selected: result.id
-            $('#modal1').modal({backdrop: 'static', keyboard: false})  
+            $('#modal1').modal({backdrop: 'static', keyboard: false})
             return
           ).bind(this)
     trigger: (e) ->
