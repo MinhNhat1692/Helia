@@ -37,7 +37,6 @@
           {code: 32, active: false, name: 'Danh sách phiếu khám'}
           {code: 33, active: false, name: 'Thông tin điều trị'}
           {code: 34, active: false, name: 'Thông tin khám'}
-          {code: 35, active: false, name: 'Danh sách hóa đơn'}
         ]    
       Doctor:
         type: 2, className: 'fa fa-user-md', active: false, name: "Thông tin quản lý phòng",
@@ -250,7 +249,6 @@
             {code: 32, active: false, name: 'Danh sách phiếu khám'}
             {code: 33, active: false, name: 'Thông tin điều trị'}
             {code: 34, active: false, name: 'Thông tin khám'}
-            {code: 35, active: false, name: 'Danh sách hóa đơn'}
           ]
       else if code == 32
         data =
@@ -264,7 +262,6 @@
             {code: 32, active: true, name: 'Danh sách phiếu khám'}
             {code: 33, active: false, name: 'Thông tin điều trị'}
             {code: 34, active: false, name: 'Thông tin khám'}
-            {code: 35, active: false, name: 'Danh sách hóa đơn'}
           ]
       else if code == 33
         data =
@@ -278,7 +275,6 @@
             {code: 32, active: false, name: 'Danh sách phiếu khám'}
             {code: 33, active: true, name: 'Thông tin điều trị'}
             {code: 34, active: false, name: 'Thông tin khám'}
-            {code: 35, active: false, name: 'Danh sách hóa đơn'}
           ]
       else if code == 34
         data =
@@ -292,21 +288,6 @@
             {code: 32, active: false, name: 'Danh sách phiếu khám'}
             {code: 33, active: false, name: 'Thông tin điều trị'}
             {code: 34, active: true, name: 'Thông tin khám'}
-            {code: 35, active: false, name: 'Danh sách hóa đơn'}
-          ]
-      else if code == 35
-        data =
-          task: 35
-          link: '/bill_info/list'
-        @handleGetdata(data)
-        @setState Patient:
-          type: 2, className: 'zmdi zmdi-account', active: true, name: "Bệnh nhân",
-          records: [
-            {code: 31, active: false, name: 'Danh sách bệnh nhân'}
-            {code: 32, active: false, name: 'Danh sách phiếu khám'}
-            {code: 33, active: false, name: 'Thông tin điều trị'}
-            {code: 34, active: false, name: 'Thông tin khám'}
-            {code: 35, active: true, name: 'Danh sách hóa đơn'}
           ]
       else
         @setState Patient:
@@ -316,7 +297,6 @@
             {code: 32, active: false, name: 'Danh sách phiếu khám'}
             {code: 33, active: false, name: 'Thông tin điều trị'}
             {code: 34, active: false, name: 'Thông tin khám'}
-            {code: 35, active: false, name: 'Danh sách hóa đơn'}
           ]
       if code == 41 #Pharmacy list
         data =

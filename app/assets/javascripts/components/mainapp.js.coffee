@@ -21,8 +21,6 @@
       React.createElement MainPart, data: @props.data, datatype: 'check_info'
     DoctorCheckInfo: ->
       React.createElement MainPart, data: @props.data, datatype: 'doctor_check_info'
-    BillInfo: ->
-      React.createElement MainPart, data: @props.data, datatype: 'bill_info'
     MedicineSupplier: ->
       React.createElement MainPart, data: @props.data, datatype: 'medicine_supplier' #task = code = 41
     MedicineCompany: ->
@@ -77,8 +75,6 @@
           @CheckInfo()
         when 34
           @DoctorCheckInfo()
-        when 35
-          @BillInfo()
         when 41
           @MedicineSupplier()
         when 42

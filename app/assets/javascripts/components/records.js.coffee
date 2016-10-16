@@ -2569,54 +2569,11 @@
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
             React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
-    billInfoRender: ->
-      React.DOM.div className: 'container',
-        React.DOM.div className: 'block-header',
-          React.DOM.h2 null, 'Danh sách hóa đơn'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @trigger
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'fa fa-trash-o', text: ' Xóa', code: @props.datatype, type: 3, Clicked: @trigger
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, dvi: @props.data[1], autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên bệnh nhân'
-                  React.DOM.th null, 'Diễn giải'
-                  React.DOM.th null, 'Đơn vị'
-                  React.DOM.th null, 'Số lượng'
-                  React.DOM.th null, 'Đơn giá'
-                  React.DOM.th null, 'Giảm giá'
-                  React.DOM.th null, 'Thanh toán'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
     doctorRoomRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Danh sách bệnh nhân'
         React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header'
           React.DOM.div className: 'card-body table-responsive',
             React.DOM.table className: 'table table-hover table-condensed',
               React.DOM.thead null,
@@ -2688,7 +2645,5 @@
         @checkInfoRender()
       else if @props.datatype == "doctor_check_info"
         @doctorCheckInfoRender()
-      else if @props.datatype == "bill_info"
-        @billInfoRender()
       else if @props.datatype == "doctor_room"
         @doctorRoomRender()
