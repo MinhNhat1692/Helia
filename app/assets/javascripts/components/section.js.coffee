@@ -638,8 +638,8 @@
               'sidebar toggled'
           React.DOM.ul className: 'main-menu',
             React.createElement MenuAside, submenu: @state.profile, Trigger: @Trigger      
-            React.createElement MenuAside, submenu: @state.homeMenu, Trigger: @Trigger 
-            React.createElement MenuAside, submenu: @state.Header, Trigger: @Trigger
+            #React.createElement MenuAside, submenu: @state.homeMenu, Trigger: @Trigger 
+            #React.createElement MenuAside, submenu: @state.Header, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.Doctor, Trigger: @Trigger 
             React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.Patient, Trigger: @Trigger

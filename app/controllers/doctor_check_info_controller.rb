@@ -31,6 +31,28 @@ class DoctorCheckInfoController < ApplicationController
     end
   end
 
+  def updatesmall
+    if params.has_key?(:id_station)
+      redirect_to root_path
+    else
+      if has_station?
+		    @station = Station.find_by(user_id: current_user.id)
+		    if params.has_key?(:id)
+          @supplier = DoctorCheckInfo.find(params[:id])
+          if @supplier.station_id == @station.id
+						if @supplier.update(qtbenhly: params[:qtbenhly], klamsang: params[:klamsang], nhiptim: params[:nhiptim], nhietdo: params[:nhietdo], hamin: params[:hamin], hamax: params[:hamax], ntho: params[:ntho], cnang: params[:cnang], cao: params[:cao], cdbandau: params[:cdbandau], bktheo: params[:bktheo], cdicd: params[:cdicd], kluan: params[:kluan])
+  		  	    render json: @supplier
+	  		    else
+		  	      render json: @supplier.errors, status: :unprocessable_entity
+  		  	  end
+		      end
+	      end
+	    else
+        redirect_to root_path
+      end
+    end
+  end
+
   def destroy
     if params.has_key?(:id_station)
       redirect_to root_path

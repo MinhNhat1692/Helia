@@ -1147,12 +1147,14 @@
           @state.typeName = "Chưa thanh toán, đã khám bệnh"
       if @props.selected
         React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.id
           React.DOM.td null, @props.record.sername
           React.DOM.td null, @props.record.cname
           React.DOM.td null, @state.typeName
           React.DOM.td null, @props.record.remark
       else
         React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.id
           React.DOM.td null, @props.record.sername
           React.DOM.td null, @props.record.cname
           React.DOM.td null, @state.typeName

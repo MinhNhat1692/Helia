@@ -26,6 +26,8 @@
         editcode: null
     handleDelete: (e) ->
       @props.triggerDelete @state.selectRecord
+    triggerDelete: (record) ->
+      @props.triggerDelete record
     refreshChildRecord: (code) ->
       if code == 'medicine_bill_record' and @props.record != null
         formData = new FormData
@@ -277,14 +279,21 @@
           $('#' + @props.id + ' #form_price').val(@props.record.price)
           $('#' + @props.id + ' #form_total').val(@props.record.total)
       else if code == 'medicine_prescript_internal'
+        if @props.ordermap != null and @props.ordermap != undefined
+          $('#' + @props.id + ' #form_number_id').val(@props.ordermap.id)
+          $('#' + @props.id + ' #form_c_id').val(@props.ordermap.customer_record_id)
+          $('#' + @props.id + ' #form_cname').val(@props.ordermap.cname)
+          $('#' + @props.id + ' #form_date').val(moment().format('DD/MM/YYYY'))
         if @props.record != null and @props.record != undefined
           $('#' + @props.id + ' #form_code').val(@props.record.code)
           $('#' + @props.id + ' #form_c_id').val(@props.record.customer_id)
           $('#' + @props.id + ' #form_cname').val(@props.record.cname)
           $('#' + @props.id + ' #form_e_id').val(@props.record.employee_id)
           $('#' + @props.id + ' #form_ename').val(@props.record.ename)
-          if @props.record.date != null
+          if @props.record.date != null and @props.record.date != undefined
             $('#' + @props.id + ' #form_date').val(@props.record.date.substring(8, 10) + "/" + @props.record.date.substring(5, 7) + "/" + @props.record.date.substring(0, 4))
+          else
+            $('#' + @props.id + ' #form_date').val(moment().format('DD/MM/YYYY'))
           $('#' + @props.id + ' #form_result_id').val(@props.record.result_id)
           $('#' + @props.id + ' #form_number_id').val(@props.record.number_id)
           $('#' + @props.id + ' #form_remark').val(@props.record.remark)
@@ -901,6 +910,8 @@
         for record in @props.internal_record
           sumout += Number(record.tpayment)
         $('#' + @props.id + ' #form_tpayment').val(Number(sumout))
+    triggerChildRefresh: (result) ->
+      @props.triggerChildRefresh result
     handleSubmit: (e) ->
       e.preventDefault()
       formData = new FormData
@@ -1346,6 +1357,8 @@
               @setState record1: result
             else if code == 'check_info'
               @setState record2: result
+            else if code == 'doctor_check_info'
+              @setState record3: result
             return
           ).bind(this)
     doctorRoomRender: ->
@@ -1354,197 +1367,13 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-navbar',
               React.DOM.div className: 'tab-nav',
-                React.createElement TabNavCell, className: 'tab-cell-3', code: 1, text: ' Thông tin bệnh nhân', selected: @state.selected, trigger: @selectCode
-                React.createElement TabNavCell, className: 'tab-cell-3', code: 2, text: ' Thông tin điều trị', selected: @state.selected, trigger: @selectCode
-                React.createElement TabNavCell, className: 'tab-cell-3', code: 3, text: ' Khám lâm sàng', selected: @state.selected, trigger: @selectCode
-                React.createElement TabNavCell, className: 'tab-cell-3', code: 4, text: ' Đơn thuốc', selected: @state.selected, trigger: @selectCode
+                React.createElement TabNavCell, className: 'tab-cell-4', code: 1, text: ' Thông tin bệnh nhân', selected: @state.selected, trigger: @selectCode
+                React.createElement TabNavCell, className: 'tab-cell-4', code: 2, text: ' Thông tin điều trị', selected: @state.selected, trigger: @selectCode
+                React.createElement TabNavCell, className: 'tab-cell-4', code: 3, text: ' Khám lâm sàng', selected: @state.selected, trigger: @selectCode
               React.DOM.div className: 'tab-content-list',
                 React.createElement TabContentCell, code: 1, editmode: @state.editing, id: 'tabcontent_customer_record', datatype: 'customer_record', editcode: @state.editcode, selected: @state.selected, triggerSubmit: @handleSubmitContentTab, triggerCancelEdit: @cancelEditCode, triggerEdit: @changeEditCode, customer: @state.record1, checkinfo: @state.record2, doctorcheck: @state.record3 , record: @props.record
                 React.createElement TabContentCell, code: 2, editmode: @state.editing, id: 'tabcontent_check_info', datatype: 'check_info', editcode: @state.editcode, selected: @state.selected, triggerSubmit: @handleSubmitContentTab, triggerCancelEdit: @cancelEditCode, triggerEdit: @changeEditCode, customer: @state.record1, checkinfo: @state.record2, doctorcheck: @state.record3 , record: @props.record
-                React.DOM.div className: 'tab-content',
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-8', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.div className: 'tab-content-header',
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Kết luận'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                      React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Chuẩn đoán'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                      React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Hướng điều trị'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                    React.DOM.div className: 'col-md-4', style: {'textAlign':'center', 'paddingTop': '30px'},
-                      React.DOM.div className: 'pmo-pic',
-                        React.DOM.div className: 'p-relative',
-                          React.DOM.a href: '',
-                            React.DOM.img className: 'img-responsive', src: 'http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/profile-pic-2.jpg'
-                      React.DOM.div className: 'col-md-12', style: {'paddingTop': '20px'},
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p style: {'fontWeight':'600'}, 'Tên bệnh nhân'
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p null, 'Mallinda Hollaway'
-                      React.DOM.div className: 'col-md-12',
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p style: {'fontWeight':'600'}, 'Tình trạng'
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p null, 'Chưa khám'
-                      React.DOM.div className: 'col-md-12',
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p style: {'fontWeight':'600'}, 'Người khám'
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p null, 'Trần Minh Hoàng'
-                      React.DOM.div className: 'col-md-12',
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p style: {'fontWeight':'600'}, 'Ngày bắt đầu'
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p null, '12/05/2016'
-                      React.DOM.div className: 'col-md-12',
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p style: {'fontWeight':'600'}, 'Ngày kết thúc'
-                        React.DOM.div className: 'col-md-6',
-                          React.DOM.p null, '12/05/2016'
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                React.DOM.div className: 'tab-content',
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-9', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.div className: 'tab-content-header',
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Quá trình bệnh lý'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                      React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Khám lâm sàng'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                    React.DOM.div className: 'col-md-3', style: {'textAlign':'center', 'paddingTop': '30px'},
-                      React.DOM.div className: 'pmo-pic',
-                        React.DOM.div className: 'p-relative',
-                          React.DOM.a href: '',
-                            React.DOM.img className: 'img-responsive', src: 'http://byrushan.com/projects/ma/1-6-1/jquery/dark/img/profile-pics/profile-pic-2.jpg'
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.h4 null,
-                        React.DOM.i className: 'fa fa-user'
-                        ' Thông tin cá nhân'
-                    React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Full Name'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'Mallinda Hollaway'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Gender'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'Nam'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Birthday'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'June 23, 1990'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Tuổi'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '26'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Phone Number'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '01290898923'
-                    React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Địa chỉ'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '267 B Vĩnh Hưng, Hoàng Mai, Hà Nội'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Noid'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '01290898923'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Ngày cấp'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'June 23, 1990'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Nơi cấp'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, 'Hoàng Mai, Hà Nội'
-                      React.DOM.div className: 'col-md-4',
-                        React.DOM.p style: {'fontWeight':'600'}, 'Nơi làm việc'
-                      React.DOM.div className: 'col-md-8',
-                        React.DOM.p null, '267 B Vĩnh Hưng, Hoàng Mai, Hà Nội'
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-12', style: {'padding': '10px 40px 15px 40px'},
-                      React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Chuẩn đoán ban đầu'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                      React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Bệnh kèm theo'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                      React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Chuẩn đoán ICD'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                      React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
-                        React.DOM.h4 null,
-                          React.DOM.i className: 'zmdi zmdi-equalizer'
-                          ' Kết luận'
-                      React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, 'Sed eu est vulputate, fringilla ligula ac, maximus arcu. Donec sed felis vel
-                                        magna mattis ornare ut non turpis. Sed id arcu elit. Sed nec sagittis tortor.
-                                        Mauris ante urna, ornare sit amet mollis eu, aliquet ac ligula. Nullam dolor
-                                        metus, suscipit ac imperdiet nec, consectetur sed ex. Sed cursus porttitor leo.'
-                React.DOM.div className: 'tab-content',
-                  React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
-                      React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Close'
+                React.createElement TabContentCell, code: 3, editmode: @state.editing, id: 'tabcontent_doctor_check_info', datatype: 'doctor_check_info', editcode: @state.editcode, selected: @state.selected, triggerSubmit: @handleSubmitContentTab, triggerCancelEdit: @cancelEditCode, triggerEdit: @changeEditCode, customer: @state.record1, checkinfo: @state.record2, doctorcheck: @state.record3 , record: @props.record
     employeeForm: ->
       React.DOM.div className: 'modal fade', id: @props.id,
         React.DOM.div className: 'modal-dialog modal-lg modal-sp-lg',
@@ -2974,8 +2803,28 @@
   @TabContentCell = React.createClass
     getInitialState: ->
       editmode: false
+      selectRecord: null
+      selectRecordId: null
+      script: null
     changeEditState: ->
       @props.triggerEdit @props.code
+    handleDelete: (e) ->
+      @props.triggerDelete @state.selectRecord
+    selectRecord: (result) ->
+      @setState
+        selectRecord: result
+        selectRecordId: result.id
+    triggerUpdateFormValue: (code, record) ->
+      if code == 'medicine_prescript_internal'
+        if record != null and record != undefined
+          $('#' + @props.id + ' #form_code').val(record.code)
+          if record.date != null
+            $('#' + @props.id + ' #form_date').val(record.date.substring(8, 10) + "/" + record.date.substring(5, 7) + "/" + record.date.substring(0, 4))
+          $('#' + @props.id + ' #form_remark').val(record.remark)
+          $('#' + @props.id + ' #form_payer').val(record.payer)
+          $('#' + @props.id + ' #form_tpayment').val(record.tpayment)
+          $('#' + @props.id + ' #form_discount').val(record.discount)
+          $('#' + @props.id + ' #form_tpayout').val(record.tpayout)
     triggerCancelEdit: ->
       @props.triggerCancelEdit @props.code
     triggerSubmit: (e) ->
@@ -3008,11 +2857,81 @@
         formData.append 'kluan', $('#' + @props.id + ' #form_kluan').val()
         formData.append 'cdoan', $('#' + @props.id + ' #form_cdoan').val()
         formData.append 'hdieutri', $('#' + @props.id + ' #form_hdieutri').val()
+      else if @props.datatype == 'doctor_check_info'
+        formData = new FormData
+        if @props.record != null
+          formData.append 'id', @props.record[2].id
+        formData.append 'qtbenhly', $('#' + @props.id + ' #form_qtbenhly').val()
+        formData.append 'klamsang', $('#' + @props.id + ' #form_klamsang').val()
+        formData.append 'nhiptim', $('#' + @props.id + ' #form_nhiptim').val()
+        formData.append 'nhietdo', $('#' + @props.id + ' #form_nhietdo').val()
+        formData.append 'hamin', $('#' + @props.id + ' #form_hamin').val()
+        formData.append 'hamax', $('#' + @props.id + ' #form_hamax').val()
+        formData.append 'ntho', $('#' + @props.id + ' #form_ntho').val()
+        formData.append 'cnang', $('#' + @props.id + ' #form_cnang').val()
+        formData.append 'cao', $('#' + @props.id + ' #form_cao').val()
+        formData.append 'cdbandau', $('#' + @props.id + ' #form_cdbandau').val()
+        formData.append 'bktheo', $('#' + @props.id + ' #form_bktheo').val()
+        formData.append 'cdicd', $('#' + @props.id + ' #form_cdicd').val()
+        formData.append 'kluan', $('#' + @props.id + ' #form_kluan').val()
       if formData != undefined
         @props.triggerSubmit formData, @props.datatype
+    loadData: (code) ->
+      if code == 'medicine_prescript_internal'
+        formData = new FormData
+        formData.append 'result_id', @props.record[1].order_map_id
+      if formData != undefined
+        $.ajax
+          url: '/' + code + '/find'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @setState script: result
+            @triggerUpdateFormValue(code, result)
+            return
+          ).bind(this)
     trigger: ->
       @props.trigger
     triggersafe: ->
+    triggerSumChild: (code) ->
+      if code == 'bill_record'
+        sumout = 0
+        for record in @props.bill_record
+          sumout += record.price * record.qty
+        $('#' + @props.id + ' #form_tpayment').val(sumout)
+      else if code == 'internal_record'
+        sumout = 0
+        for record in @props.internal_record
+          sumout += Number(record.tpayment)
+        $('#' + @props.id + ' #form_tpayment').val(Number(sumout))
+    refreshChildRecord: (code) ->
+      if code == 'medicine_bill_record' and @props.record != null
+        formData = new FormData
+        formData.append 'bill_id', @props.record.id
+      if code == 'medicine_external_record' and @props.record != null
+        formData = new FormData
+        formData.append 'script_id', @props.record.id
+      if code == 'medicine_internal_record' and @state.script != null
+        if @state.script.result_id != @props.record[1].order_map_id
+          formData = new FormData
+          formData.append 'script_id', @state.script.id
+      if formData != undefined
+        $.ajax
+          url: '/' + code + '/find'
+          type: 'POST'
+          data: formData
+          async: false
+          cache: false
+          contentType: false
+          processData: false
+          success: ((result) ->
+            @props.triggerChildRefresh result
+            return
+          ).bind(this)
     calAge: (dob, style) ->
       now = new Date
       today = new Date(now.getYear(), now.getMonth(), now.getDate())
@@ -3391,8 +3310,216 @@
                 React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
       else
         React.DOM.div className: 'tab-content'
+    doctorCheckInfoRender: ->
+      if @props.record == null
+        customer = null
+      else
+        if @props.customer != null and @props.record[0].id == @props.customer.id
+          customer = @props.customer
+        else
+          customer = @props.record[0]
+      if @props.record == null
+        record = null
+      else
+        if @props.doctorcheck != null and @props.record[2].id == @props.doctorcheck.id
+          record = @props.doctorcheck
+        else
+          record = @props.record[2]
+      if @props.selected == @props.code and record != null
+        if !@props.editmode or @props.editcode != @props.code
+          React.DOM.div className: 'tab-content active',
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-9', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.div className: 'tab-content-header',
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Quá trình bệnh lý'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.qtbenhly
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Khám lâm sàng'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.klamsang
+              React.DOM.div className: 'col-md-3', style: {'textAlign':'center', 'paddingTop': '30px'},
+                React.DOM.div className: 'pmo-pic',
+                  React.DOM.div className: 'p-relative',
+                    React.DOM.a href: '',
+                      React.DOM.img className: 'img-responsive', src: customer.avatar
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.h4 null,
+                  React.DOM.i className: 'fa fa-user'
+                  ' Thông tin khám'
+              React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-4',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Nhịp tim'
+                  React.DOM.div className: 'col-md-8',
+                    React.DOM.p null, record.nhiptim
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-4',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Nhiệt độ'
+                  React.DOM.div className: 'col-md-8',
+                    React.DOM.p null, record.nhietdo
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-4',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Huyết áp min'
+                  React.DOM.div className: 'col-md-8',
+                    React.DOM.p null, record.hamin
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-4',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Huyết áp max'
+                  React.DOM.div className: 'col-md-8',
+                    React.DOM.p null, record.hamax
+              React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-4',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Nhịp thở'
+                  React.DOM.div className: 'col-md-8',
+                    React.DOM.p null, record.ntho
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-4',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Cân nặng'
+                  React.DOM.div className: 'col-md-8',
+                    React.DOM.p null, record.cnang
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-4',
+                    React.DOM.p style: {'fontWeight':'600'}, 'Chiều cáo'
+                  React.DOM.div className: 'col-md-8',
+                    React.DOM.p null, record.cao
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '10px 40px 15px 40px'},
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Chuẩn đoán ban đầu'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.cdbandau
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Bệnh kèm theo'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.bktheo
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Chuẩn đoán ICD'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.cdicd
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Kết luận'
+                React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.kluan
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
+                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
+        else
+          React.DOM.div className: 'tab-content active', id: @props.id,
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-9', style: {'padding': '40px 40px 0px 40px'},
+                React.DOM.div className: 'tab-content-header',
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Quá trình bệnh lý'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_qtbenhly', className: 'form-control', placeholder: 'Quá trình bệnh lý', defaultValue: record.qtbenhly
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Khám lâm sàng'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_klamsang', className: 'form-control', placeholder: 'Khám lâm sàng', defaultValue: record.klamsang
+              React.DOM.div className: 'col-md-3', style: {'textAlign':'center', 'paddingTop': '30px'},
+                React.DOM.div className: 'pmo-pic',
+                  React.DOM.div className: 'p-relative',
+                    React.DOM.a href: '',
+                      React.DOM.img className: 'img-responsive', src: customer.avatar
+            React.DOM.div className: 'row',
+              React.DOM.form className: 'form-horizontal', autoComplete: 'off',
+                React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 0px 40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'fa fa-user'
+                    ' Thông tin khám'
+                React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
+                  React.DOM.div className: 'form-group',
+                    React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Nhịp tim'
+                    React.DOM.div className: 'col-md-8',
+                      React.createElement InputField, id: 'form_nhiptim', className: 'form-control', type: 'number', code: 'nhiptim', placeholder: 'Nhịp tim', style: '', defaultValue: record.nhiptim, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                  React.DOM.div className: 'form-group',
+                    React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Nhiệt độ'
+                    React.DOM.div className: 'col-md-8',
+                      React.createElement InputField, id: 'form_nhietdo', className: 'form-control', type: 'number', code: 'nhietdo', placeholder: 'Nhiệt độ', style: '', defaultValue: record.nhietdo, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                  React.DOM.div className: 'form-group',
+                    React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Huyết áp min'
+                    React.DOM.div className: 'col-md-8',
+                      React.createElement InputField, id: 'form_hamin', className: 'form-control', type: 'number', code: 'hamin', placeholder: 'Huyết áp min', style: '', defaultValue: record.hamin, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                  React.DOM.div className: 'form-group',
+                    React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Huyết áp max'
+                    React.DOM.div className: 'col-md-8',
+                      React.createElement InputField, id: 'form_hamax', className: 'form-control', type: 'number', code: 'hamax', placeholder: 'Huyết áp max', style: '', defaultValue: record.hamax, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                React.DOM.div className: 'col-md-6', style: {'padding': '40px 40px 0px 40px'},
+                  React.DOM.div className: 'form-group',
+                    React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Nhịp thở'
+                    React.DOM.div className: 'col-md-8',
+                      React.createElement InputField, id: 'form_ntho', className: 'form-control', type: 'number', code: 'ntho', placeholder: 'Nhịp thở', style: '', defaultValue: record.ntho, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                  React.DOM.div className: 'form-group',
+                    React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Cân nặng'
+                    React.DOM.div className: 'col-md-8',
+                      React.createElement InputField, id: 'form_cnang', className: 'form-control', type: 'number', code: 'cnang', placeholder: 'Cân nặng', style: '', defaultValue: record.cnang, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                  React.DOM.div className: 'form-group',
+                    React.DOM.div className: 'col-md-4 hidden-xs control-label', 'Chiều cao'
+                    React.DOM.div className: 'col-md-8',
+                      React.createElement InputField, id: 'form_cao', className: 'form-control', type: 'number', code: 'cao', placeholder: 'Chiều cao', style: '', defaultValue: record.cao, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '10px 40px 15px 40px'},
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Chuẩn đoán ban đầu'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_cdbandau', className: 'form-control', placeholder: 'Chuẩn đoán ban đầu', defaultValue: record.cdbandau
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Bệnh kèm theo'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_bktheo', className: 'form-control', placeholder: 'Bênh kèm theo', defaultValue: record.bktheo
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Chuẩn đoán ICD'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_cdicd', className: 'form-control', placeholder: 'Chuẩn đoán ICD', defaultValue: record.cdicd
+                React.DOM.div className: 'tab-content-header', style: {'paddingTop': '40px'},
+                  React.DOM.h4 null,
+                    React.DOM.i className: 'zmdi zmdi-equalizer'
+                    ' Kết luận'
+                React.DOM.div className: 'form-group', style: {'marginTop': '20px', 'marginBottom': '20px'},
+                  React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'col-sm-12',
+                      React.DOM.textarea id: 'form_kluan', className: 'form-control', placeholder: 'Kết luận', defaultValue: record.kluan
+            React.DOM.div className: 'row',
+              React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
+                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
+                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
+      else
+        React.DOM.div className: 'tab-content'
     render: ->
       if @props.datatype == 'customer_record'
         @customerRecordRender()
       else if @props.datatype == 'check_info'
         @checkInfoRender()
+      else if @props.datatype == 'doctor_check_info'
+        @doctorCheckInfoRender()

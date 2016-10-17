@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   
   delete '/doctor_check_info', to: 'doctor_check_info#destroy'
   put '/doctor_check_info', to: 'doctor_check_info#update'
+  put '/doctor_check_info/order_map', to: 'doctor_check_info#updatesmall'
   post '/doctor_check_info/list', to: 'doctor_check_info#list'
   post '/doctor_check_info/search', to: 'doctor_check_info#search'
   post '/doctor_check_info/find', to: 'doctor_check_info#find'

@@ -289,7 +289,7 @@
               extradata: data
               record: result
               selected: result.id
-            $('#modal1').modal({backdrop: 'static', keyboard: false})
+            $('#modaldoctorview').modal({backdrop: 'static', keyboard: false})
             return
           ).bind(this)
     trigger: (e) ->
@@ -2574,10 +2574,15 @@
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Danh sách bệnh nhân'
         React.DOM.div className: 'card',
+          React.DOM.div className: 'card-header',
+            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Thêm đơn thuốc', modalid: 'modal1', code: 'medicine_prescript_internal', type: 4, Clicked: @triggerFillModal
+            React.DOM.br null
+            React.DOM.br null
           React.DOM.div className: 'card-body table-responsive',
             React.DOM.table className: 'table table-hover table-condensed',
               React.DOM.thead null,
                 React.DOM.tr null,
+                  React.DOM.th null, 'Số khám bệnh'
                   React.DOM.th null, 'Tên dịch vụ'
                   React.DOM.th null, 'Tên khách hàng'
                   React.DOM.th null, 'Tình trạng'
@@ -2601,7 +2606,13 @@
                         React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
                     else
                       React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
-        React.createElement ModalOutside, id: 'modal1', title: 'nope', undertitle: 'nope', datatype: @props.datatype, record: @state.extradata
+            React.createElement ModalOutside, id: 'modaldoctorview', datatype: @props.datatype, record: @state.extradata
+            React.createElement ModalOutside, id: 'modal1', datatype: 'medicine_prescript_internal', internal_record: @state.addRecordChild, ordermap: @state.record, record: null, trigger: @trigger, trigger2: @trigger, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
+            React.createElement ModalOutside, id: 'modalinternalrecordmini', datatype: 'medicine_internal_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
+              if @state.addRecordChild.length == 0
+                1
+              else
+                @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()

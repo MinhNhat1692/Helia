@@ -74,6 +74,8 @@ class OrderMapController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
 			  @data[0] = OrderMap.where(station_id: @station.id).order(updated_at: :desc).limit(200)
+			  @data[1] = MedicineGroup.all
+			  @data[2] = MedicineType.all
 			  render json: @data
 		  else
         redirect_to root_path
