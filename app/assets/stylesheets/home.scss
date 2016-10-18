@@ -1391,3 +1391,78 @@ label {
     -webkit-transition-duration: .2s;
     transition-duration: .2s;
 }
+
+.clog{
+  text-align: center;
+  color: #fff;
+}
+
+.clog-top-img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -5;
+}
+
+.clog-content{
+  color: #333;
+  text-align: justify;
+  margin-top: 200px;
+}
+
+.clog-content h1,.clog-content h2,.clog-content h3,.clog-content h4,.clog-content h5{
+  color: #205081;
+}
+
+.clog-body{
+  overflow: hidden;
+  padding: 15px;
+  background-color: #fff;
+  border : 1px solid #205081;
+  border-radius: 1px;
+}
+
+.news-body, .news-recommend, .news-mostview{
+  background-color: #fff;
+  padding: 25px;
+  margin-top: 20px;
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.2);
+  -webkit-transition: width 0.5s; /* Safari */
+  transition: width 0.5s;
+}
+
+.news-recommend, .news-mostview{
+  margin-bottom: 20px;
+  padding: 10px 20px 10px 20px;
+}
+
+.news-recommend p, .news-mostview p{
+  font-size: 13px;
+}
+
+.news-list-img{
+  width: 100%;
+}
+
+.news-content-img{
+  max-width: 100%
+}
+
+.news-block{
+  padding: 8px;
+}
+
+.news-block .datetime{
+  font-size: 10px;
+}
+
+.clog-box{
+  border : 1px solid #205081;
+  border-radius: 1px;
+  background-color: #fff;
+  overflow: hidden;
+  padding: 10px;
+}

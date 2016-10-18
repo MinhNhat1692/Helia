@@ -1,0 +1,2 @@
+class CLog < ApplicationRecord
+end

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cat: 1
+  image_f: MyString
+  title: MyText
+  des: MyText
+  view: 1
+  recomend: false
+
+two:
+  cat: 1
+  image_f: MyString
+  title: MyText
+  des: MyText
+  view: 1
+  recomend: false

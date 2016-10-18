@@ -186,6 +186,11 @@ Rails.application.routes.draw do
   post '/dprofile',   to: 'doctor_profile#create'
   
   root "home#index"
+  get '/changelogs', to: 'home#changelog'
+  post '/changelogs', to: 'home#changelogfind'
+  get '/news', to: 'home#news'
+  post '/news', to: 'home#newsfind'
+  
   
   get  '/signup',  to: 'users#usershow'
   post '/signup',  to: 'users#create'

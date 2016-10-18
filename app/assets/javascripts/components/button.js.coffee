@@ -35,35 +35,11 @@
         React.DOM.i className: @props.icon
         if @props.text.length > 0
           @props.text
-    buttonModal: ->
-      React.DOM.div
-        style: {'display': 'inline-block'}
-        React.DOM.button
-          className: @props.className
-          type: 'button'
-          onClick: @handleToggleModal
-          React.DOM.i
-            className: @props.icon
-          if @props.text.length > 0
-            @props.text
-        if @state.showModal
-          if @props.record != undefined
-            if @props.extra != undefined
-              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, prefix: @props.prefix, record: @props.record, extra: @props.extra, handleHideModal: @handleHideModal
-            else
-              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, prefix: @props.prefix, record: @props.record, handleHideModal: @handleHideModal
-          else
-            if @props.extra != undefined
-              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, prefix: @props.prefix, record: null, extra: @props.extra, handleHideModal: @handleHideModal
-            else
-              React.createElement Modal, trigger: @trigger, trigger2: @trigger2, type: @props.datatype, prefix: @props.prefix, record: null, handleHideModal: @handleHideModal
-        else
-          null
     render: ->
       if @state.type == 1
         @buttonNormal()
       else if @state.type == 2
-        @buttonModal()
+        @buttonNormal()
       else if @state.type == 3
         @buttonTriggerCode()
       else if @state.type == 4

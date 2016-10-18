@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  news_header: one
+  content: MyText
+
+two:
+  news_header: two
+  content: MyText

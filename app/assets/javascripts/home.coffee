@@ -4,3 +4,8 @@
 //= require bootstrap.min
 //= require cbpAnimatedHeader
 //= require classie
+//= require react
+//= require react_ujs
+//= require ./components/changelog
+//= require ./components/news
+//= require ./components/button

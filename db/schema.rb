@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161015105601) do
+ActiveRecord::Schema.define(version: 20161018093954) do
 
   create_table "bill_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "remark",       limit: 65535
@@ -27,6 +27,14 @@ ActiveRecord::Schema.define(version: 20161015105601) do
     t.string   "c_name"
     t.index ["order_map_id"], name: "index_bill_infos_on_order_map_id", using: :btree
     t.index ["station_id"], name: "index_bill_infos_on_station_id", using: :btree
+  end
+
+  create_table "c_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.date     "d_a"
+    t.text     "c_c",        limit: 65535
+    t.text     "c_content",  limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "check_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -408,6 +416,25 @@ ActiveRecord::Schema.define(version: 20161015105601) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "news_contents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "news_header_id"
+    t.text     "content",        limit: 65535
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.index ["news_header_id"], name: "index_news_contents_on_news_header_id", using: :btree
+  end
+
+  create_table "news_headers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "cat"
+    t.string   "image_f"
+    t.text     "title",      limit: 65535
+    t.text     "des",        limit: 65535
+    t.integer  "view"
+    t.boolean  "recomend"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
   create_table "order_maps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "customer_record_id"
     t.integer  "service_id"
@@ -660,6 +687,7 @@ ActiveRecord::Schema.define(version: 20161015105601) do
   add_foreign_key "medicine_samples", "stations"
   add_foreign_key "medicine_stock_records", "stations"
   add_foreign_key "medicine_suppliers", "stations"
+  add_foreign_key "news_contents", "news_headers"
   add_foreign_key "order_maps", "customer_records"
   add_foreign_key "order_maps", "services"
   add_foreign_key "order_maps", "stations"

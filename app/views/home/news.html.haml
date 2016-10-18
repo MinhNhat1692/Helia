@@ -1,0 +1,4 @@
+%body{:style => "color: #333;background-color: #f7f7f7;"}
+  = render 'shared/navbar_home'
+  = react_component 'news', { header: @headers, recommend: @recommend, mostview: @mostview }
+  = render 'shared/home_footer'

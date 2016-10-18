@@ -1,0 +1,4 @@
+%body{:style => "color: #333;background-color: #f7f7f7;"}
+  = render 'shared/navbar_home'
+  = react_component 'clog', { lcl: @lcl, data: @records }
+  = render 'shared/home_footer'
