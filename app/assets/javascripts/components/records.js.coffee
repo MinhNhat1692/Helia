@@ -220,6 +220,21 @@
           filteredRecord: null
           addRecordChild: []
       ).bind(this)
+    showtoast: (message,toasttype) ->
+	    toastr.options =
+        closeButton: true
+        progressBar: true
+        positionClass: 'toast-top-right'
+        showMethod: 'slideDown'
+        hideMethod: 'fadeOut'
+        timeOut: 4000
+      if toasttype == 1
+        toastr.success message
+      else if toasttype == 2
+        toastr.info(message)
+      else if toasttype == 3
+        toastr.error(message)
+      return
     changeSearchRecord: (data) ->
       @state.userlink = data[2]
       if data[1] != null
@@ -293,7 +308,6 @@
             return
           ).bind(this)
     trigger: (e) ->
-      console.log(1)
     triggerInput: (text,type,check1) ->
       if type != '' && text.length > 1
         if !check1.option1
@@ -1536,14 +1550,61 @@
             return
           ).bind(this)
     handleDelete: ->
+      if @props.datatype == 'customer_record'
+        message = "thông tin khách hàng"
+      else if @props.datatype == 'employee'
+        message = "thông tin nhân viên"
+      else if @props.datatype == 'room'
+        message = "thông phòng"
+      else if @props.datatype == 'position'
+        message = "thông tin chức vụ"
+      else if @props.datatype == 'service'
+        message = "thông tin dịch vụ"
+      else if @props.datatype == 'posmap'
+        message = "thông tin định chức vụ"
+      else if @props.datatype == 'sermap'
+        message = "thông tin định dịch vụ"
+      else if @props.datatype == 'order_map'
+        message = "thông tin đăng ký khám bệnh"
+      else if @props.datatype == 'medicine_supplier'
+        message = "thông tin nguồn cung cấp thuốc"
+      else if @props.datatype == 'medicine_company'
+        message = "thông tin công ty sản xuất thuốc"
+      else if @props.datatype == 'medicine_sample'
+        message = "thông tin mẫu thuốc"
+      else if @props.datatype == 'medicine_bill_in'
+        message = "thông tin hóa đơn thuốc vào"
+      else if @props.datatype == 'medicine_bill_record'
+        message = "thông tin thành phần hóa đơn thuốc vào"
+      else if @props.datatype == 'medicine_price'
+        message = "thông tin giá thuốc"
+      else if @props.datatype == 'medicine_prescript_external'
+        message = "thông tin đơn thuốc kê ngoài"
+      else if @props.datatype == 'medicine_external_record'
+        message = "thông tin thuốc trong đơn kê ngoài"
+      else if @props.datatype == 'medicine_prescript_internal'
+        message = "thông tin đơn thuốc kê trong"
+      else if @props.datatype == 'medicine_internal_record'
+        message = "thông tin thuốc trong đơn kê trong"
+      else if @props.datatype == 'medicine_stock_record'
+        message = "thông tin thuốc trong kho"
+      else if @props.datatype == 'check_info'
+        message = "thông tin điều trị"
+      else if @props.datatype == 'doctor_check_info'
+        message = "thông tin khám lâm sàng"
       if @state.record != null
         $.ajax
           method: 'DELETE'
           url: "/" + @props.datatype
           dataType: 'JSON'
           data: {id: @state.record.id}
+          error: ((result) ->
+            @showtoast("Xóa " + message + " thất bại",3)
+            return
+          ).bind(this)
           success: () =>
             @deleteRecord @state.record
+            @showtoast("Xóa " + message + " thành công",1)
     OpenModalAdd1: (code) ->
       @setState
         record: null

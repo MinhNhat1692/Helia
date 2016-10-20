@@ -10,6 +10,21 @@
       record3: null
       editing: false
       editcode: null
+    showtoast: (message,toasttype) ->
+	    toastr.options =
+        closeButton: true
+        progressBar: true
+        positionClass: 'toast-top-right'
+        showMethod: 'slideDown'
+        hideMethod: 'fadeOut'
+        timeOut: 4000
+      if toasttype == 1
+        toastr.success message
+      else if toasttype == 2
+        toastr.info(message)
+      else if toasttype == 3
+        toastr.error(message)
+      return
     selectCode: (code)->
       @setState selected: code
     selectRecord: (result) ->
@@ -939,6 +954,7 @@
           formData.append 'avatar', $('#' + @props.id + ' #form_avatar')[0].files[0]
         else if $('#' + @props.id + ' #webcamout').attr('src') != undefined
           formData.append 'avatar', $('#' + @props.id + ' #webcamout').attr('src')
+        message = "thông tin khách hàng"
       else if @props.datatype == 'employee'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -956,6 +972,7 @@
           formData.append 'avatar', $('#' + @props.id + ' #form_avatar')[0].files[0]
         else if $('#' + @props.id + ' #webcamout').attr('src') != undefined
           formData.append 'avatar', $('#' + @props.id + ' #webcamout').attr('src')
+        message = "thông tin nhân viên"
       else if @props.datatype == 'room'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -963,6 +980,7 @@
         formData.append 'lang', $('#' + @props.id + ' #form_lang').val()
         if $('#' + @props.id + ' #form_map')[0].files[0] != undefined
           formData.append 'map', $('#' + @props.id + ' #form_map')[0].files[0]
+        message = "thông phòng"
       else if @props.datatype == 'position'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -973,6 +991,7 @@
         formData.append 'description', $('#' + @props.id + ' #form_description').val()
         if $('#' + @props.id + ' #form_file')[0].files[0] != undefined
           formData.append 'file', $('#' + @props.id + ' #form_file')[0].files[0]
+        message = "thông tin chức vụ"
       else if @props.datatype == 'service'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -983,6 +1002,7 @@
         formData.append 'description', $('#' + @props.id + ' #form_description').val()
         if $('#' + @props.id + ' #form_file')[0].files[0] != undefined
           formData.append 'file', $('#' + @props.id + ' #form_file')[0].files[0]
+        message = "thông tin dịch vụ"
       else if @props.datatype == 'posmap'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -990,6 +1010,7 @@
         formData.append 'e_id', $('#' + @props.id + ' #form_e_id').val()
         formData.append 'pname', $('#' + @props.id + ' #form_pname').val()
         formData.append 'p_id', $('#' + @props.id + ' #form_p_id').val()
+        message = "thông tin định chức vụ"
       else if @props.datatype == 'sermap'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -997,6 +1018,7 @@
         formData.append 's_id', $('#' + @props.id + ' #form_s_id').val()
         formData.append 'rname', $('#' + @props.id + ' #form_rname').val()
         formData.append 'r_id', $('#' + @props.id + ' #form_r_id').val()
+        message = "thông tin định dịch vụ"
       else if @props.datatype == 'order_map'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1014,6 +1036,7 @@
         formData.append 'tpayment', $('#' + @props.id + ' #form_tpayment').val()
         formData.append 'discount', $('#' + @props.id + ' #form_discount').val()
         formData.append 'tpayout', $('#' + @props.id + ' #form_tpayout').val()
+        message = "thông tin đăng ký khám bệnh"
       else if @props.datatype == 'medicine_supplier'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1030,6 +1053,7 @@
         formData.append 'twitter', $('#' + @props.id + ' #form_twitter').val()
         formData.append 'fax', $('#' + @props.id + ' #form_fax').val()
         formData.append 'taxcode', $('#' + @props.id + ' #form_taxcode').val()
+        message = "thông tin nguồn cung cấp thuốc"
       else if @props.datatype == 'medicine_company'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1040,6 +1064,7 @@
         formData.append 'email', $('#' + @props.id + ' #form_email').val()
         formData.append 'website', $('#' + @props.id + ' #form_website').val()
         formData.append 'taxcode', $('#' + @props.id + ' #form_taxcode').val()
+        message = "thông tin công ty sản xuất thuốc"
       else if @props.datatype == 'medicine_sample'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1062,6 +1087,7 @@
         formData.append 'weight', $('#' + @props.id + ' #form_weight').val()
         formData.append 'remark', $('#' + @props.id + ' #form_remark').val()
         formData.append 'expire', $('#' + @props.id + ' #form_expire').val()
+        message = "thông tin mẫu thuốc"
       else if @props.datatype == 'medicine_bill_in'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1086,6 +1112,7 @@
         formData.append 'tpayout', $('#' + @props.id + ' #form_tpayout').val()
         formData.append 'remark', $('#' + @props.id + ' #form_remark').val()
         formData.append 'list_bill_record', JSON.stringify(@props.bill_record)
+        message = "thông tin hóa đơn thuốc vào"
       else if @props.datatype == 'medicine_bill_record'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1108,6 +1135,7 @@
         formData.append 'qty', $('#' + @props.id + ' #form_qty').val()
         formData.append 'taxrate', $('#' + @props.id + ' #form_taxrate').val()
         formData.append 'price', $('#' + @props.id + ' #form_price').val()
+        message = "thông tin thành phần hóa đơn thuốc vào"
       else if @props.datatype == 'medicine_price'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1116,6 +1144,7 @@
         formData.append 'minam', $('#' + @props.id + ' #form_minam').val()
         formData.append 'price', $('#' + @props.id + ' #form_price').val()
         formData.append 'remark', $('#' + @props.id + ' #form_remark').val()
+        message = "thông tin giá thuốc"
       else if @props.datatype == 'medicine_prescript_external'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1130,6 +1159,7 @@
         formData.append 'address', $('#' + @props.id + ' #form_address').val()
         formData.append 'remark', $('#' + @props.id + ' #form_remark').val()
         formData.append 'list_external_record', JSON.stringify(@props.external_record)
+        message = "thông tin đơn thuốc kê ngoài"
       else if @props.datatype == 'medicine_external_record'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1145,6 +1175,7 @@
         formData.append 'script_code', $('#' + @props.id + ' #form_script_code').val()
         formData.append 'price', $('#' + @props.id + ' #form_price').val()
         formData.append 'total', $('#' + @props.id + ' #form_total').val()
+        message = "thông tin thuốc trong đơn kê ngoài"
       else if @props.datatype == 'medicine_prescript_internal'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1170,6 +1201,7 @@
         formData.append 'tpayout', $('#' + @props.id + ' #form_tpayout').val()
         formData.append 'preparer_id', $('#' + @props.id + ' #form_e_p_id').val()
         formData.append 'list_internal_record', JSON.stringify(@props.internal_record)
+        message = "thông tin đơn thuốc kê trong"
       else if @props.datatype == 'medicine_internal_record'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1194,6 +1226,7 @@
         formData.append 'tpayment', $('#' + @props.id + ' #form_tpayment').val()
         formData.append 'noid', $('#' + @props.id + ' #form_noid').val()
         formData.append 'signid', $('#' + @props.id + ' #form_signid').val()
+        message = "thông tin thuốc trong đơn kê trong"
       else if @props.datatype == 'medicine_stock_record'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1216,6 +1249,7 @@
         formData.append 'bill_in_code', $('#' + @props.id + ' #form_billcode').val()
         formData.append 'internal_record_code', $('#' + @props.id + ' #form_script_code').val()
         formData.append 'remark', $('#' + @props.id + ' #form_remark').val()
+        message = "thông tin thuốc trong kho"
       else if @props.datatype == 'check_info'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1234,6 +1268,7 @@
         formData.append 'hdieutri', $('#' + @props.id + ' #form_hdieutri').val()
         formData.append 'daystart', $('#' + @props.id + ' #form_daystart').val()
         formData.append 'dayend', $('#' + @props.id + ' #form_dayend').val()
+        message = "thông tin điều trị"
       else if @props.datatype == 'doctor_check_info'
         if @props.record != null
           formData.append 'id', @props.record.id
@@ -1255,6 +1290,7 @@
         formData.append 'bktheo', $('#' + @props.id + ' #form_bktheo').val()
         formData.append 'cdicd', $('#' + @props.id + ' #form_cdicd').val()
         formData.append 'kluan', $('#' + @props.id + ' #form_kluan').val()
+        message = "thông tin khám lâm sàng"
       if @props.record != null
         $.ajax
           url: '/' + @props.datatype
@@ -1264,7 +1300,12 @@
           cache: false
           contentType: false
           processData: false
+          error: ((result) ->
+            @showtoast("Thay đổi " + message + " thất bại",3)
+            return
+          ).bind(this)
           success: ((result) ->
+            @showtoast("Thay đổi " + message + " thành công",1)
             @props.trigger2 @props.record, result
             $('#' + @props.id).modal('hide')
             return
@@ -1278,7 +1319,12 @@
           cache: false
           contentType: false
           processData: false
+          error: ((result) ->
+            @showtoast("Thêm " + message + " thất bại",3)
+            return
+          ).bind(this)
           success: ((result) ->
+            @showtoast("Thêm " + message + " thành công",1)
             @props.trigger result
             $('#' + @props.id).modal('hide')
             return

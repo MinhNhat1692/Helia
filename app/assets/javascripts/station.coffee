@@ -11,5 +11,6 @@
 //= require react
 //= require react_ujs
 //= require chart
+//= require toastr.min
 //= require webcam
 //= require_tree ./components
