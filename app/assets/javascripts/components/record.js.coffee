@@ -1523,3 +1523,161 @@
         @smallModeRender()
       else if @props.datatype == 'expand'
         @expandModeRender()
+  
+  
+  #Paginate
+  #input: className - of container
+  # tp: total page, cp: currentpage
+  # tr: total record, rpp: record per page, cp: curren page
+  #output:
+  # triggerLeftMax, triggerLeft, triggerRight, triggerRightMax
+  # triggerPage: with page number wanna trigger
+  @Paginate = React.createClass
+    getInitialState: ->
+      datatype: 1
+    triggerLeftMax: (e) ->
+      @props.triggerLeftMax e
+    triggerLeft: (e) ->
+      @props.triggerLeft e
+    triggerRightMax: (e) ->
+      @props.triggerRightMax e
+    triggerRight: (e) ->
+      @props.triggerRight e
+    triggerPage: (page) ->
+      @props.triggerPage page
+    normalRender: ->
+      if @props.tp < 4
+        React.DOM.div className: @props.className,
+          React.DOM.button className: 'btn btn-default', onClick: @triggerLeftMax,
+            React.DOM.i className: 'fa fa-angle-double-left'
+          React.DOM.button className: 'btn btn-default', onClick: @triggerLeft,
+            React.DOM.i className: 'fa fa-angle-left'
+          for i in [1...@props.tp + 1]
+            if i == @props.cp
+              React.createElement ButtonGeneral, key: i, className: 'btn btn-default bg-green', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+            else
+              React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+          React.DOM.button className: 'btn btn-default', onClick: @triggerRight,
+            React.DOM.i className: 'fa fa-angle-right'
+          React.DOM.button className: 'btn btn-default', onClick: @triggerRightMax,
+            React.DOM.i className: 'fa fa-angle-double-right'
+      else
+        if @props.cp == 1
+          React.DOM.div className: @props.className,
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeftMax,
+              React.DOM.i className: 'fa fa-angle-double-left'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeft,
+              React.DOM.i className: 'fa fa-angle-left'
+            for i in [1...3]
+              if i == @props.cp
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default bg-green', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+              else
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default',
+              React.DOM.i className: 'zmdi zmdi-more-horiz'
+            React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: @props.tp + '', code: @props.tp, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRight,
+              React.DOM.i className: 'fa fa-angle-right'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRightMax,
+              React.DOM.i className: 'fa fa-angle-double-right'
+        else if @props.cp == 2
+          React.DOM.div className: @props.className,
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeftMax,
+              React.DOM.i className: 'fa fa-angle-double-left'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeft,
+              React.DOM.i className: 'fa fa-angle-left'
+            for i in [1...4]
+              if i == @props.cp
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default bg-green', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+              else
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default',
+              React.DOM.i className: 'zmdi zmdi-more-horiz'
+            React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: @props.tp + '', code: @props.tp, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRight,
+              React.DOM.i className: 'fa fa-angle-right'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRightMax,
+              React.DOM.i className: 'fa fa-angle-double-right'
+        else if @props.cp == (@props.tp - 1)
+          React.DOM.div className: @props.className,
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeftMax,
+              React.DOM.i className: 'fa fa-angle-double-left'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeft,
+              React.DOM.i className: 'fa fa-angle-left'
+            React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: '1', code: 1, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default',
+              React.DOM.i className: 'zmdi zmdi-more-horiz'
+            for i in [@props.tp - 2...@props.tp + 1]
+              if i == @props.cp
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default bg-green', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+              else
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRight,
+              React.DOM.i className: 'fa fa-angle-right'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRightMax,
+              React.DOM.i className: 'fa fa-angle-double-right'
+        else if @props.cp == @props.tp
+          React.DOM.div className: @props.className,
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeftMax,
+              React.DOM.i className: 'fa fa-angle-double-left'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeft,
+              React.DOM.i className: 'fa fa-angle-left'
+            React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: '1', code: 1, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default',
+              React.DOM.i className: 'zmdi zmdi-more-horiz'
+            for i in [@props.tp - 1...@props.tp + 1]
+              if i == @props.cp
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default bg-green', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+              else
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRight,
+              React.DOM.i className: 'fa fa-angle-right'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRightMax,
+              React.DOM.i className: 'fa fa-angle-double-right'
+        else
+          React.DOM.div className: @props.className,
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeftMax,
+              React.DOM.i className: 'fa fa-angle-double-left'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerLeft,
+              React.DOM.i className: 'fa fa-angle-left'
+            React.DOM.button className: 'btn btn-default',
+              React.DOM.i className: 'zmdi zmdi-more-horiz'
+            for i in [@props.cp - 1...@props.cp + 2]
+              if i == @props.cp
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default bg-green', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+              else
+                React.createElement ButtonGeneral, key: i, className: 'btn btn-default', icon: '', text: i + '', code: i, type: 3, Clicked: @triggerPage
+            React.DOM.button className: 'btn btn-default',
+              React.DOM.i className: 'zmdi zmdi-more-horiz'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRight,
+              React.DOM.i className: 'fa fa-angle-right'
+            React.DOM.button className: 'btn btn-default', onClick: @triggerRightMax,
+              React.DOM.i className: 'fa fa-angle-double-right'
+    render: ->
+      @normalRender()
+      
+      
+  #Table Header
+  #input: header - array of header and var code, csc - current sort code 
+  #Ex: [{id: 1, name: 'Mã', code: 'noid'},{id: 2, name: 'Mã', code: 'noid'}]
+  #output: triggerClick(code) -> sortcode
+  @TableHeader = React.createClass
+    getInitialState: ->
+      datatype: 1
+    triggerClick: (code) ->
+      @props.triggerClick code
+    normalRender: ->
+      React.DOM.thead null,
+        React.DOM.tr null,
+          for record in @props.header
+            if record.code == @props.csc
+              React.DOM.th key: record.id,
+                React.createElement IconClick, className: 'zmdi zmdi-sort-amount-asc', code: '-' + record.code, triggerClick: @triggerClick
+                ' ' + record.name
+            else
+              React.DOM.th key: record.id,
+                React.createElement IconClick, className: 'zmdi zmdi-sort-amount-desc', code: record.code, triggerClick: @triggerClick
+                ' ' + record.name
+    render: ->
+      @normalRender()
+          

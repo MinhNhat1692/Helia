@@ -1,3 +1,9 @@
+#Input field
+#input id, type, className, placeholder, defaultValue, step - for number
+# out put:
+# trigger: onChange
+# trigger2: onBlur
+# trigger3: onFocus
 @InputField = React.createClass
     getInitialState: ->
       type: 1
@@ -18,4 +24,15 @@
         onFocus: @trigger3
         defaultValue: @props.defaultValue
         step: @props.step
+        min: @props.min
     
+#IconClick
+#input code, className
+#output triggerClick
+@IconClick = React.createClass
+    getInitialState: ->
+      type: 1
+    triggerClick: (e) ->
+      @props.triggerClick @props.code
+    render: ->
+      React.DOM.i className: @props.className, style: {'cursor':'pointer'}, onClick: @triggerClick

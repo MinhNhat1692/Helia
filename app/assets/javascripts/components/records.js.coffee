@@ -206,6 +206,15 @@
       filteredRecord: null
       extradata: null
       addRecordChild: []
+      lastsorted: null
+      viewperpage: 10
+      currentpage: 1
+      firstcount: 0
+      lastcount:
+        if @props.data[0].length < 10
+          @props.data[0].length
+        else
+          10
     componentWillMount: ->
       $(APP).on 'rebuild', ((e) ->
         @setState
@@ -219,6 +228,15 @@
           autoComplete: null
           filteredRecord: null
           addRecordChild: []
+          lastsorted: null
+          viewperpage: 10
+          currentpage: 1
+          firstcount: 0
+          lastcount:
+            if @props.data[0].length < 10
+              @props.data[0].length
+            else
+              10  
       ).bind(this)
     showtoast: (message,toasttype) ->
 	    toastr.options =
@@ -235,6 +253,14 @@
       else if toasttype == 3
         toastr.error(message)
       return
+    dynamicSort: (property) ->
+      sortOrder = 1
+      if property[0] == '-'
+        sortOrder = -1
+        property = property.substr(1)
+      (a, b) ->
+        result = if a[property] < b[property] then -1 else if a[property] > b[property] then 1 else 0
+        result * sortOrder
     changeSearchRecord: (data) ->
       @state.userlink = data[2]
       if data[1] != null
@@ -308,6 +334,77 @@
             return
           ).bind(this)
     trigger: (e) ->
+    triggerSort: (code) ->
+      if @state.filteredRecord != null
+        @setState
+          filteredRecord: @state.filteredRecord.sort(@dynamicSort(code))
+          lastsorted: code
+      else
+        @setState
+          filteredRecord: @state.records.sort(@dynamicSort(code))
+          lastsorted: code
+    triggerPage: (page) ->
+      @setState
+        currentpage: page
+        firstcount: (page - 1)*@state.viewperpage
+        lastcount:
+          if @state.filteredRecord != null
+            if @state.filteredRecord.length < page * @state.viewperpage
+              @state.filteredRecord.length
+            else
+              page * @state.viewperpage
+          else
+            if @state.records.length < page * @state.viewperpage
+              @state.records.length
+            else
+              page * @state.viewperpage
+    triggerLeftMax: ->
+      @triggerPage(1)
+    triggerLeft: ->
+      if @state.currentpage > 1
+        @triggerPage(@state.currentpage - 1)
+    triggerRight: ->
+      if @state.filteredRecord != null
+        if @state.currentpage < Math.ceil(@state.filteredRecord.length/@state.viewperpage)
+          @triggerPage(@state.currentpage + 1)
+      else
+        if @state.currentpage < Math.ceil(@state.records.length/@state.viewperpage)
+          @triggerPage(@state.currentpage + 1)
+    triggerRightMax: ->
+      if @state.filteredRecord != null
+        @triggerPage(Math.ceil(@state.filteredRecord.length/@state.viewperpage))
+      else
+        @triggerPage(Math.ceil(@state.records.length/@state.viewperpage))
+    triggerChangeRPP: ->
+      if Number($('#record_per_page').val()) > 0
+        @setState
+          viewperpage: Number($('#record_per_page').val())
+          currentpage: 1
+          firstcount: 0
+          lastcount:
+            if @state.filteredRecord != null
+              if @state.filteredRecord.length < Number($('#record_per_page').val())
+                @state.filteredRecord.length
+              else
+                Number($('#record_per_page').val())
+            else
+              if @state.records.length < Number($('#record_per_page').val())
+                @state.records.length
+              else
+                Number($('#record_per_page').val())
+      else
+        @showtoast('Số bạn nhập không phù hợp',3)
+    triggerChangePage: ->
+      if @state.filteredRecord != null
+        if Number($('#page_number').val()) <= Math.ceil(@state.filteredRecord.length/@state.viewperpage) and Number($('#page_number').val()) > 0
+          @triggerPage(Number($('#page_number').val()))
+        else
+          @showtoast("Số trang bạn muốn chuyển tới không phù hợp", 3)
+      else
+        if Number($('#page_number').val()) <= Math.ceil(@state.records.length/@state.viewperpage) and Number($('#page_number').val()) > 0
+          @triggerPage(Number($('#page_number').val()))
+        else
+          @showtoast("Số trang bạn muốn chuyển tới không phù hợp", 3)
     triggerInput: (text,type,check1) ->
       if type != '' && text.length > 1
         if !check1.option1
@@ -1437,14 +1534,30 @@
     triggerSubmit: (result) ->
       @setState
         autoComplete: null
+        lastsorted: null
         filteredRecord: result
+        currentpage: 1
+        firstcount: 0
+        lastcount:
+          if result.length < @state.viewperpage
+            result.length
+          else
+            @state.viewperpage
     triggerChose: (result) ->
       @setState
         autoComplete: null
     triggerClear: (e) ->
       @setState
         autoComplete: null
+        lastsorted: null
         filteredRecord: null
+        currentpage: 1
+        firstcount: 0
+        lastcount:
+          if @state.records.length < @state.viewperpage
+            @state.records.length
+          else
+            @state.viewperpage
     triggerFillModal: (code)->
       $(APP).trigger('fillmodal',[code])
     toggleSideBar: ->
@@ -1629,276 +1742,428 @@
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Nhân viên'
         React.createElement AsideMenu, style: 2, record: @state.searchRecord, gender: @props.data[1], className: @state.classSideBar, existed: @state.existed, userlink: @state.userlink, handleSearch: @changeSearchRecord, addListener: @addRecordAlt, linkListener: @linkRecordAlt, updateListener: @updateRecordAlt
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-link', text: ' Liên kết', type: 1, Clicked: @toggleSideBar
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-flash-off', text: ' Bỏ liên kết', type: 1, Clicked: @ClearlinkRecordAlt
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ cho nhân viên', code: 'posmap', type: 3, Clicked: @OpenModalAdd2
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ', code: 'position', type: 3, Clicked: @OpenModalAdd3
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Name'
-                  React.DOM.th null, 'Address'
-                  React.DOM.th null, 'Phone Number'
-                  React.DOM.th null, 'Ma NV'
-                  React.DOM.th null, 'Gioi tinh'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, 0
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, 0
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, 0
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, 0
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-link', text: ' Liên kết', type: 1, Clicked: @toggleSideBar
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-flash-off', text: ' Bỏ liên kết', type: 1, Clicked: @ClearlinkRecordAlt
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ cho nhân viên', code: 'posmap', type: 3, Clicked: @OpenModalAdd2
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ', code: 'position', type: 3, Clicked: @OpenModalAdd3
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id:1,name: 'Họ và tên', code: 'ename'}
+                  {id:2, name: 'Địa chỉ', code: 'address'}
+                  {id:3, name: 'Số điện thoại', code: 'pnumber'}
+                  {id:4, name: 'Mã nhân viên', code: 'noid'}
+                  {id: 5, name: 'Giới tính', code: 'gender'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'posmap', record: null, employee: @state.record, position: null, trigger: @trigger, trigger2: @trigger
-            React.createElement ModalOutside, id: 'modal3', datatype: 'position', record: null, room: null, trigger: @trigger, trigger2: @trigger
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'posmap', record: null, employee: @state.record, position: null, trigger: @trigger, trigger2: @trigger
+              React.createElement ModalOutside, id: 'modal3', datatype: 'position', record: null, room: null, trigger: @trigger, trigger2: @trigger
     roomRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Phòng'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ cho phòng', code: 'position', type: 3, Clicked: @OpenModalAdd2
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm dịch vụ cho phòng', code: 'sermap', type: 3, Clicked: @OpenModalAdd3
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm dịch vụ', code: 'service', type: 3, Clicked: @OpenModalAdd4
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên phòng'
-                  React.DOM.th null, 'Ngôn ngữ'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, 0
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, 0
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, 0
+        React.DOM.div className: 'col-md-3',
+          React.DOM.div className: 'mini-charts-item',
+            React.DOM.div className: 'chart stats-bar',
+              React.DOM.i className: 'fa fa-wheelchair fa-3x',
+            React.DOM.div className: 'count',
+              React.DOM.small null, 'Số người chờ khám'
+              React.DOM.h2 null, 0
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ cho phòng', code: 'position', type: 3, Clicked: @OpenModalAdd2
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm dịch vụ cho phòng', code: 'sermap', type: 3, Clicked: @OpenModalAdd3
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm dịch vụ', code: 'service', type: 3, Clicked: @OpenModalAdd4
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id:1,name: 'Tên phòng', code: 'name'}
+                  {id:2, name: 'Ngôn ngữ', code: 'lang'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-          React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
-          React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-          React.createElement ModalOutside, id: 'modal2', datatype: 'position', record: null, room: @state.record, trigger: @trigger, trigger2: @trigger
-          React.createElement ModalOutside, id: 'modal3', datatype: 'sermap', record: null, room: @state.record, service: null, trigger: @trigger, trigger2: @trigger
-          React.createElement ModalOutside, id: 'modal4', datatype: 'service', record: null, trigger: @trigger, trigger2: @trigger
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+            React.createElement ModalOutside, id: 'modal2', datatype: 'position', record: null, room: @state.record, trigger: @trigger, trigger2: @trigger
+            React.createElement ModalOutside, id: 'modal3', datatype: 'sermap', record: null, room: @state.record, service: null, trigger: @trigger, trigger2: @trigger
+            React.createElement ModalOutside, id: 'modal4', datatype: 'service', record: null, trigger: @trigger, trigger2: @trigger
     positionRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Chức vụ'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Gán chức vụ cho nhân viên', code: 'posmap', type: 3, Clicked: @OpenModalAdd2
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm nhân viên', code: 'employee', type: 3, Clicked: @OpenModalAdd3
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, rooms: @props.data[1], datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên phòng'
-                  React.DOM.th null, 'Tên vị trí'
-                  React.DOM.th null, 'Ngôn ngữ'
-                  React.DOM.th null, 'Miêu tả ngắn'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Gán chức vụ cho nhân viên', code: 'posmap', type: 3, Clicked: @OpenModalAdd2
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm nhân viên', code: 'employee', type: 3, Clicked: @OpenModalAdd3
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, rooms: @props.data[1], datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id:1,name: 'Tên phòng', code: 'rname'}
+                  {id:2, name: 'Tên vị trí', code: 'pname'}
+                  {id:3, name: 'Ngôn ngữ', code: 'lang'}
+                  {id:4, name: 'Diễn giải', code: 'description'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, room: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, room: null, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'posmap', record: null, employee: null, position: @state.record, trigger: @trigger, trigger2: @trigger
-            React.createElement ModalOutside, id: 'modal3', datatype: 'employee', record: null, trigger: @trigger, trigger2: @trigger
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, room: null, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'posmap', record: null, employee: null, position: @state.record, trigger: @trigger, trigger2: @trigger
+              React.createElement ModalOutside, id: 'modal3', datatype: 'employee', record: null, trigger: @trigger, trigger2: @trigger
     serviceRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Dịch vụ'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Gán dịch vụ cho phòng', code: 'sermap', type: 3, Clicked: @OpenModalAdd2
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm phòng', code: 'room', type: 3, Clicked: @OpenModalAdd3
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên dịch vụ'
-                  React.DOM.th null, 'Ngôn ngữ'
-                  React.DOM.th null, 'Giá'
-                  React.DOM.th null, 'Đơn vị tiền'
-                  React.DOM.th null, 'Mô tả dịch vụ'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Gán dịch vụ cho phòng', code: 'sermap', type: 3, Clicked: @OpenModalAdd2
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm phòng', code: 'room', type: 3, Clicked: @OpenModalAdd3
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort,  header: [
+                  {id:1,name: 'Tên dịch vụ', code: 'sname'}
+                  {id:2, name: 'Ngôn ngữ', code: 'lang'}
+                  {id:3, name: 'Giá', code: 'price'}
+                  {id:4, name: 'Đơn vị tiền', code: 'currency'}
+                  {id: 5, name: 'Diễn giải', code: 'description'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-          React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
-          React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-          React.createElement ModalOutside, id: 'modal2', datatype: 'sermap', record: null, room: null, service: @state.record, trigger: @trigger, trigger2: @trigger
-          React.createElement ModalOutside, id: 'modal3', datatype: 'room', record: null, trigger: @trigger, trigger2: @trigger
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+            React.createElement ModalOutside, id: 'modal2', datatype: 'sermap', record: null, room: null, service: @state.record, trigger: @trigger, trigger2: @trigger
+            React.createElement ModalOutside, id: 'modal3', datatype: 'room', record: null, trigger: @trigger, trigger2: @trigger
     posmapRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Định chức vụ cho nhân viên'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm nhân viên', code: 'employee', type: 3, Clicked: @OpenModalAdd2
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ', code: 'position', type: 3, Clicked: @OpenModalAdd3
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên nhân viên'
-                  React.DOM.th null, 'Tên chức vụ'
-                  React.DOM.th null, 'Cập nhật lần cuối'
-                  React.DOM.th null, 'Khởi tạo lúc'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm nhân viên', code: 'employee', type: 3, Clicked: @OpenModalAdd2
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm chức vụ', code: 'position', type: 3, Clicked: @OpenModalAdd3
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort,  header: [
+                  {id:1,name: 'Tên nhân viên', code: 'ename'}
+                  {id:2, name: 'Tên chức vụ', code: 'pname'}
+                  {id:3, name: 'Cập nhật lần cuối', code: 'updated_at'}
+                  {id:4, name: 'Khởi tạo lúc', code: 'created_at'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, employee: null, position: null, trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'employee', record: null, trigger: @trigger, trigger2: @trigger
-            React.createElement ModalOutside, id: 'modal3', datatype: 'position', record: null, room: null, trigger: @trigger, trigger2: @trigger
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, employee: null, position: null, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'employee', record: null, trigger: @trigger, trigger2: @trigger
+              React.createElement ModalOutside, id: 'modal3', datatype: 'position', record: null, room: null, trigger: @trigger, trigger2: @trigger
     sermapRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Định dịch vụ cho từng phòng'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm dịch vụ', code: 'service', type: 3, Clicked: @OpenModalAdd2
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm phòng', code: 'room', type: 3, Clicked: @OpenModalAdd3
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên dịch vụ'
-                  React.DOM.th null, 'Tên phòng'
-                  React.DOM.th null, 'Cập nhật lần cuối'
-                  React.DOM.th null, 'Khởi tạo lúc'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm dịch vụ', code: 'service', type: 3, Clicked: @OpenModalAdd2
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm phòng', code: 'room', type: 3, Clicked: @OpenModalAdd3
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id:1,name: 'Tên dịch vụ', code: 'sname'}
+                  {id:2, name: 'Tên phòng', code: 'rname'}
+                  {id:3, name: 'Cập nhật lần cuối', code: 'updated_at'}
+                  {id:4, name: 'Khởi tạo', code: 'created_at'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, service: null, room: null, trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'service', record: null, trigger: @trigger, trigger2: @trigger
-            React.createElement ModalOutside, id: 'modal3', datatype: 'room', record: null, trigger: @trigger, trigger2: @trigger
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, service: null, room: null, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'service', record: null, trigger: @trigger, trigger2: @trigger
+              React.createElement ModalOutside, id: 'modal3', datatype: 'room', record: null, trigger: @trigger, trigger2: @trigger
     customerRecordRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
@@ -1919,22 +2184,31 @@
               React.DOM.br null
               React.DOM.br null
               React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
             React.DOM.div className: 'card-body table-responsive',
               React.DOM.table className: 'table table-hover table-condensed',
-                React.DOM.thead null,
-                  React.DOM.tr null,
-                    React.DOM.th null, 'Họ và tên'
-                    React.DOM.th null, 'Ngày sinh'
-                    React.DOM.th null, 'Tuổi'
-                    React.DOM.th null, 'Giới tính'
-                    React.DOM.th null, 'Địa chỉ'
-                    React.DOM.th null, 'Số điện thoại'
-                    React.DOM.th null, 'CMTND'
-                    React.DOM.th null, 'Ngày cấp'
-                    React.DOM.th null, 'Nơi cấp'
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id:1, name: 'Họ và tên', code: 'ename'}
+                  {id:2, name: 'Ngày sinh', code: 'dob'}
+                  {id:3, name: 'Giới tính', code: 'gender'}
+                  {id:4, name: 'Địa chỉ', code: 'address'}
+                  {id:5, name: 'Số điện thoại', code: 'pnumber'}
+                  {id:6, name: 'CMTND', code: 'noid'}
+                  {id:7, name: 'Ngày cấp', code: 'issue_date'}
+                  {id:8, name: 'Nơi cấp', code: 'issue_place'}
+                ]
                 React.DOM.tbody null,
                   if @state.filteredRecord != null
-                    for record in @state.filteredRecord
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
                       if @state.selected != null
                         if record.id == @state.selected
                           React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
@@ -1943,7 +2217,7 @@
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                   else
-                    for record in @state.records
+                    for record in @state.records[@state.firstcount...@state.lastcount]
                       if @state.selected != null
                         if record.id == @state.selected
                           React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecord
@@ -1951,6 +2225,11 @@
                           React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, gender: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
             React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
             React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
             React.createElement ModalOutside, id: 'modal2', datatype: 'order_map', record: null, service: null, customer: @state.record, trigger: @trigger, trigger2: @trigger
@@ -1961,719 +2240,960 @@
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Nguồn cấp thuốc'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Mã'
-                  React.DOM.th null, 'Tên nguồn'
-                  React.DOM.th null, 'Người liên lạc'
-                  React.DOM.th null, 'Số ĐT cố định'
-                  React.DOM.th null, 'Số ĐT di động'
-                  React.DOM.th null, 'Địa chỉ 1'
-                  React.DOM.th null, 'Địa chỉ 2'
-                  React.DOM.th null, 'Địa chỉ 3'
-                  React.DOM.th null, 'Email'
-                  React.DOM.th null, 'Link Facebook'
-                  React.DOM.th null, 'Twitter'
-                  React.DOM.th null, 'Số fax'
-                  React.DOM.th null, 'Mã số thuế'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id:1,name: 'Mã', code: 'noid'}
+                  {id:2,name: 'Tên nguồn', code: 'name'}
+                  {id:3,name: 'Người liên lạc', code: 'contactname'}
+                  {id:4,name: 'Số ĐT cố định', code: 'spnumber'}
+                  {id:5,name: 'Số ĐT di động', code: 'pnumber'}
+                  {id:6,name: 'Địa chỉ 1', code: 'address1'}
+                  {id:7,name: 'Địa chỉ 2', code: 'address2'}
+                  {id:8,name: 'Địa chỉ 3', code: 'address3'}
+                  {id:9,name: 'Email', code: 'email'}
+                  {id:10,name: 'Facebook', code: 'facebook'}
+                  {id:11,name: 'Twitter', code: 'twitter'}
+                  {id:12,name: 'Fax', code: 'fax'}
+                  {id:13,name: 'Mã số thuế', code: 'taxcode'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
     medicineCompanyRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Doanh nghiệp sản xuất'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm mẫu thuốc', code: 'medicine_sample', type: 3, Clicked: @OpenModalAdd2
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Mã'
-                  React.DOM.th null, 'Tên Doanh Nghiệp'
-                  React.DOM.th null, 'Số ĐT'
-                  React.DOM.th null, 'Địa chỉ'
-                  React.DOM.th null, 'Email'
-                  React.DOM.th null, 'Website'
-                  React.DOM.th null, 'Mã số thuế'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm mẫu thuốc', code: 'medicine_sample', type: 3, Clicked: @OpenModalAdd2
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Mã', code: 'noid'}
+                  {id: 2, name: 'Tên doanh nghiệp', code: 'name'}
+                  {id: 3, name: 'Số điện thoại', code: 'pnumber'}
+                  {id: 4, name: 'Địa chỉ', code: 'address'}
+                  {id: 5, name: 'Email', code: 'email'}
+                  {id: 6, name: 'Website', code: 'website'}
+                  {id: 7, name: 'Mã số thuế', code: 'taxcode'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_sample', typemedicine: @props.data[2], groupmedicine: @props.data[1], company: @state.record, record: null, trigger: @trigger, trigger2: @trigger
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_sample', typemedicine: @props.data[2], groupmedicine: @props.data[1], company: @state.record, record: null, trigger: @trigger, trigger2: @trigger
     medicineSampleRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Mẫu thuốc'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm công ty sản xuất', code: 'medicine_company', type: 3, Clicked: @OpenModalAdd2
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm giá thuốc', code: 'medicine_price', type: 3, Clicked: @OpenModalAdd3
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, grouplist: @props.data[1], typelist: @props.data[2], autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Mã'
-                  React.DOM.th null, 'Tên thuốc'
-                  React.DOM.th null, 'Loại thuốc'
-                  React.DOM.th null, 'Nhóm thuốc'
-                  React.DOM.th null, 'Công ty sản xuất'
-                  React.DOM.th null, 'Giá'
-                  React.DOM.th null, 'Khối lượng'
-                  React.DOM.th null, 'Ghi chú'
-                  React.DOM.th null, 'Hạn sử dụng'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm công ty sản xuất', code: 'medicine_company', type: 3, Clicked: @OpenModalAdd2
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm giá thuốc', code: 'medicine_price', type: 3, Clicked: @OpenModalAdd3
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, grouplist: @props.data[1], typelist: @props.data[2], autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Mã', code: 'noid'}
+                  {id: 2, name: 'Tên thuốc', code: 'name'}
+                  {id: 3, name: 'Loại thuốc', code: 'typemedicine'}
+                  {id: 4, name: 'Nhóm thuốc', code: 'groupmedicine'}
+                  {id: 5, name: 'Công ty sản xuất', code: 'company'}
+                  {id: 6, name: 'Giá', code: 'price'}
+                  {id: 7, name: 'Khối lượng', code: 'weight'}
+                  {id: 8, name: 'Diễn giải', code: 'remark'}
+                  {id: 9, name: 'Hạn sử dụng', code: 'expire'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
                       else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, typemedicine: @props.data[2], groupmedicine: @props.data[1], company: null, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_company', record: null, trigger: @trigger, trigger2: @trigger
-            React.createElement ModalOutside, id: 'modal3', datatype: 'medicine_price', sample: @state.record, record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecord, trigger2: @updateRecord
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]              
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, typemedicine: @props.data[2], groupmedicine: @props.data[1], company: null, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_company', record: null, trigger: @trigger, trigger2: @trigger
+              React.createElement ModalOutside, id: 'modal3', datatype: 'medicine_price', sample: @state.record, record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecord, trigger2: @updateRecord
     medicineBillInRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Hóa đơn nhập thuốc'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm thông tin thuốc nhập kho', code: 'medicine_bill_record', type: 3, Clicked: @OpenModalAdd2
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Số hóa đơn'
-                  React.DOM.th null, 'Ngày nhập'
-                  React.DOM.th null, 'Người cung cấp'
-                  React.DOM.th null, 'Ngày đặt hàng'
-                  React.DOM.th null, 'Tổng giá hàng hóa'
-                  React.DOM.th null, 'Giảm giá'
-                  React.DOM.th null, 'Tổng giá thanh toán'
-                  React.DOM.th null, 'Cách thanh toán'
-                  React.DOM.th null, 'Ghi chú'
-                  React.DOM.th null, 'Tình trạng hóa đơn'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, bill_record: @state.addRecordChild, record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_bill_record', record: null, bill_in: @state.record, grouplist: @props.data[1], typelist: @props.data[2], trigger: @trigger, trigger2: @trigger
-            React.createElement ModalOutside, id: 'modalbillrecordmini', datatype: 'medicine_bill_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
-              if @state.addRecordChild.length == 0
-                1
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm thông tin thuốc nhập kho', code: 'medicine_bill_record', type: 3, Clicked: @OpenModalAdd2
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
               else
-                @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Số hóa đơn', code: 'billcode'}
+                  {id: 2, name: 'Ngày nhập', code: 'dayin'}
+                  {id: 3, name: 'Người cung cấp', code: 'supplier'}
+                  {id: 4, name: 'Ngày đặt hàng', code: 'daybook'}
+                  {id: 5, name: 'Tổng giá hàng hóa', code: 'tpayment'}
+                  {id: 6, name: 'Giảm giá', code: 'discount'}
+                  {id: 7, name: 'Tổng tiền thanh toán', code: 'tpayout'}
+                  {id: 8, name: 'Cách thanh toán', code: 'pmethod'}
+                  {id: 9, name: 'Ghi chú', code: 'remark'}
+                  {id: 10, name: 'Tình trạng hóa đơn', code: 'status'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, bill_record: @state.addRecordChild, record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_bill_record', record: null, bill_in: @state.record, grouplist: @props.data[1], typelist: @props.data[2], trigger: @trigger, trigger2: @trigger
+              React.createElement ModalOutside, id: 'modalbillrecordmini', datatype: 'medicine_bill_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
+                if @state.addRecordChild.length == 0
+                  1
+                else
+                  @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
     medicineBillRecordRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Thông tin thuốc nhập kho'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Số hiệu'
-                  React.DOM.th null, 'Ký hiệu'
-                  React.DOM.th null, 'Tên thuốc'
-                  React.DOM.th null, 'Công ty sản xuất'
-                  React.DOM.th null, 'Hạn sử dụng'
-                  React.DOM.th null, 'Số lượng'
-                  React.DOM.th null, '% thuế'
-                  React.DOM.th null, 'Giá trên đơn vị'
-                  React.DOM.th null, 'Ghi chú'
-                  React.DOM.th null, 'Cách mua'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Số hiệu', code: 'noid'}
+                  {id: 2, name: 'Ký hiệu', code: 'signid'}
+                  {id: 3, name: 'Tên thuốc', code: 'name'}
+                  {id: 4, name: 'Công ty sản xuất', code: 'company'}
+                  {id: 5, name: 'Hạn sử dụng', code: 'expire'}
+                  {id: 6, name: 'Số lượng', code: 'qty'}
+                  {id: 7, name: '% thuế', code: 'taxrate'}
+                  {id: 8, name: 'Giá/đơn vị', code: 'price'}
+                  {id: 9, name: 'Ghi chú', code: 'remark'}
+                  {id: 10, name: 'Cách mua', code: 'pmethod'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, bill_in: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, bill_in: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
     medicinePriceRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Thông tin giá thuốc'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm mẫu thuốc', code: 'medicine_sample', type: 3, Clicked: @OpenModalAdd2
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên thuốc'
-                  React.DOM.th null, 'Số lượng ít nhất'
-                  React.DOM.th null, 'Giá thuốc'
-                  React.DOM.th null, 'Ghi chú'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm mẫu thuốc', code: 'medicine_sample', type: 3, Clicked: @OpenModalAdd2
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Tên thuốc', code: 'name'}
+                  {id: 2, name: 'Số lượng ít nhất', code: 'minam'}
+                  {id: 3, name: 'Giá thuốc', code: 'price'}
+                  {id: 4, name: 'Ghi chú', code: 'remark'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord, grouplist: @props.data[1], typelist: @props.data[2]
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, sample: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_sample', typemedicine: @props.data[2], groupmedicine: @props.data[1], company: null, record: null, trigger: @trigger, trigger2: @trigger
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, sample: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_sample', typemedicine: @props.data[2], groupmedicine: @props.data[1], company: null, record: null, trigger: @trigger, trigger2: @trigger
     medicinePrescriptExternalRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Đơn thuốc ngoài'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm thuốc kê ngoài vào đơn', code: 'medicine_external_record', type: 3, Clicked: @OpenModalAdd2
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Mã đơn thuốc'
-                  React.DOM.th null, 'Bệnh nhân'
-                  React.DOM.th null, 'Người kê đơn'
-                  React.DOM.th null, 'Ngày kê'
-                  React.DOM.th null, 'Kết quả khám'
-                  React.DOM.th null, 'Số khám bệnh'
-                  React.DOM.th null, 'Địa chỉ mua thuốc'
-                  React.DOM.th null, 'Ghi chú'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, external_record: @state.addRecordChild, record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_external_record', record: null, prescript: @state.record, grouplist: @props.data[1], typelist: @props.data[2], trigger: @trigger, trigger2: @trigger
-            React.createElement ModalOutside, id: 'modalexternalrecordmini', datatype: 'medicine_external_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
-              if @state.addRecordChild.length == 0
-                1
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm thuốc kê ngoài vào đơn', code: 'medicine_external_record', type: 3, Clicked: @OpenModalAdd2
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
               else
-                @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Mã đơn thuốc', code: 'code'}
+                  {id: 2, name: 'Bệnh nhân', code: 'cname'}
+                  {id: 3, name: 'Người kê đơn', code: 'ename'}
+                  {id: 4, name: 'Ngày kê', code: 'date'}
+                  {id: 5, name: 'Kết quả khám', code: 'result_id'}
+                  {id: 6, name: 'Số khám bệnh', code: 'number_id'}
+                  {id: 7, name: 'Địa chỉ mua thuốc', code: 'address'}
+                  {id: 8, name: 'Ghi chú', code: 'remark'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, external_record: @state.addRecordChild, record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_external_record', record: null, prescript: @state.record, grouplist: @props.data[1], typelist: @props.data[2], trigger: @trigger, trigger2: @trigger
+              React.createElement ModalOutside, id: 'modalexternalrecordmini', datatype: 'medicine_external_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
+                if @state.addRecordChild.length == 0
+                  1
+                else
+                  @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
     medicineExternalRecordRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Thông tin thuốc kê ngoài'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Mã đơn thuốc'
-                  React.DOM.th null, 'Tên thuốc'
-                  React.DOM.th null, 'Tên bệnh nhân'
-                  React.DOM.th null, 'Liều lượng'
-                  React.DOM.th null, 'Ghi chú'
-                  React.DOM.th null, 'Công ty sản xuất'
-                  React.DOM.th null, 'Giá'
-                  React.DOM.th null, 'Tổng tiền'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Mã đơn thuốc', code: 'script_code'}
+                  {id: 2, name: 'Tên thuốc', code: 'name'}
+                  {id: 3, name: 'Tên bệnh nhân', code: 'cname'}
+                  {id: 4, name: 'Liều lượng', code: 'amount'}
+                  {id: 5, name: 'Ghi chú', code: 'remark'}
+                  {id: 6, name: 'Công ty sản xuất', code: 'company'}
+                  {id: 7, name: 'Giá', code: 'price'}
+                  {id: 8, name: 'Tổng tiền', code: 'total'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, prescript: null, grouplist: @props.data[1], typelist: @props.data[2], record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, prescript: null, grouplist: @props.data[1], typelist: @props.data[2], record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
     medicinePrescriptInternalRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Đơn thuốc trong'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm thuốc kê trong vào đơn', code: 'medicine_internal_record', type: 3, Clicked: @OpenModalAdd2
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Mã đơn thuốc'
-                  React.DOM.th null, 'Bệnh nhân'
-                  React.DOM.th null, 'Người kê đơn'
-                  React.DOM.th null, 'Ngày kê'
-                  React.DOM.th null, 'Người chuẩn bị thuốc'
-                  React.DOM.th null, 'Người thanh toán'
-                  React.DOM.th null, 'Tổng giá trị'
-                  React.DOM.th null, 'Giảm giá'
-                  React.DOM.th null, 'Tổng tiền thanh toán'
-                  React.DOM.th null, 'Cách thanh toán'
-                  React.DOM.th null, 'Số kết quả khám'
-                  React.DOM.th null, 'Số khám bệnh'
-                  React.DOM.th null, 'Ghi chú'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, internal_record: @state.addRecordChild, record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
-            React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_internal_record', record: null, prescript: @state.record, grouplist: @props.data[1], typelist: @props.data[2], trigger: @trigger, trigger2: @trigger
-            React.createElement ModalOutside, id: 'modalinternalrecordmini', datatype: 'medicine_internal_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
-              if @state.addRecordChild.length == 0
-                1
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm thuốc kê trong vào đơn', code: 'medicine_internal_record', type: 3, Clicked: @OpenModalAdd2
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
               else
-                @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Mã đơn thuốc', code: 'code'}
+                  {id: 2, name: 'Bệnh nhân', code: 'cname'}
+                  {id: 3, name: 'Người kê đơn', code: 'ename'}
+                  {id: 4, name: 'Ngày kê', code: 'date'}
+                  {id: 5, name: 'Người chuẩn bị thuốc', code: 'preparer'}
+                  {id: 6, name: 'Người thanh toán', code: 'payer'}
+                  {id: 7, name: 'Tổng giá trị', code: 'tpayment'}
+                  {id: 8, name: 'Giảm giá', code: 'discount'}
+                  {id: 9, name: 'Tổng tiền thanh toán', code: 'tpayout'}
+                  {id: 10, name: 'Cách thanh toán', code: 'pmethod'}
+                  {id: 11, name: 'Số kết quả khám', code: 'result_id'}
+                  {id: 12, name: 'Số khám bệnh', code: 'number_id'}
+                  {id: 13, name: 'Ghi chú', code: 'remark'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, internal_record: @state.addRecordChild, record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_internal_record', record: null, prescript: @state.record, grouplist: @props.data[1], typelist: @props.data[2], trigger: @trigger, trigger2: @trigger
+              React.createElement ModalOutside, id: 'modalinternalrecordmini', datatype: 'medicine_internal_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
+                if @state.addRecordChild.length == 0
+                  1
+                else
+                  @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
     medicineInternalRecordRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Thông tin thuốc kê trong'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Mã đơn thuốc'
-                  React.DOM.th null, 'Tên thuốc'
-                  React.DOM.th null, 'Tên bệnh nhân'
-                  React.DOM.th null, 'Liều lượng'
-                  React.DOM.th null, 'Ghi chú'
-                  React.DOM.th null, 'Công ty sản xuất'
-                  React.DOM.th null, 'Giá'
-                  React.DOM.th null, 'Giảm giá'
-                  React.DOM.th null, 'Tổng giá trị'
-                  React.DOM.th null, 'Tình trạng'
-                  React.DOM.th null, 'Số kiệu'
-                  React.DOM.th null, 'Ký hiệu'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Mã đơn thuốc', code: 'script_code'}
+                  {id: 2, name: 'Tên thuốc', code: 'name'}
+                  {id: 3, name: 'Tên bệnh nhân', code: 'cname'}
+                  {id: 4, name: 'Liều lượng', code: 'amount'}
+                  {id: 5, name: 'Ghi chú', code: 'remark'}
+                  {id: 6, name: 'Công ty sản xuất', code: 'company'}
+                  {id: 7, name: 'Giá', code: 'price'}
+                  {id: 8, name: 'Giảm giá', code: 'discount'}
+                  {id: 9, name: 'Tổng giá trị', code: 'tpayment'}
+                  {id: 10, name: 'Tình trạng', code: 'status'}
+                  {id: 11, name: 'Số kiệu', code: 'noid'}
+                  {id: 12, name: 'Ký hiệu', code: 'signid'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, prescript: null, grouplist: @props.data[1], typelist: @props.data[2], record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, prescript: null, grouplist: @props.data[1], typelist: @props.data[2], record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
     medicineStockRecordRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Thông tin thống kê kho thuốc'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tình trạng'
-                  React.DOM.th null, 'Tên thuốc'
-                  React.DOM.th null, 'Kí hiệu'
-                  React.DOM.th null, 'Số hiệu'
-                  React.DOM.th null, 'Số lượng'
-                  React.DOM.th null, 'Hạn sử dụng'
-                  React.DOM.th null, 'Nguồn cung cấp'
-                  React.DOM.th null, 'Ghi chú'
-                  React.DOM.th null, 'Mã hóa đơn vào'
-                  React.DOM.th null, 'Mã đơn thuốc trong'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Tình trạng', code: 'typerecord'}
+                  {id: 2, name: 'Tên thuốc', code: 'name'}
+                  {id: 3, name: 'Kí hiệu', code: 'noid'}
+                  {id: 4, name: 'Số hiệu', code: 'signid'}
+                  {id: 5, name: 'Số lượng', code: 'amount'}
+                  {id: 6, name: 'Hạn sử dụng', code: 'expire'}
+                  {id: 7, name: 'Nguồn cung cấp', code: 'supplier'}
+                  {id: 8, name: 'Ghi chú', code: 'remark'}
+                  {id: 9, name: 'Mã hóa đơn vào', code: 'bill_in_code'}
+                  {id: 10, name: 'Mã đơn thuốc trong', code: 'internal_record_code'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, prescript: null, billin: null, grouplist: @props.data[1], typelist: @props.data[2], record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, prescript: null, billin: null, grouplist: @props.data[1], typelist: @props.data[2], record: @state.record, trigger: @addRecord, trigger2: @updateRecord, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
     orderMapRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Danh sách phiếu khám'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên dịch vụ'
-                  React.DOM.th null, 'Tên khách hàng'
-                  React.DOM.th null, 'Tình trạng'
-                  React.DOM.th null, 'Tổng đơn giá'
-                  React.DOM.th null, 'Giảm giá'
-                  React.DOM.th null, 'Tổng thanh toán'
-                  React.DOM.th null, 'Ghi chú'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Tên dịch vụ', code: 'sername'}
+                  {id: 2, name: 'Tên khách hàng', code: 'cname'}
+                  {id: 3, name: 'Tình trạng', code: 'status'}
+                  {id: 4, name: 'Tổng đơn giá', code: 'tpayment'}
+                  {id: 5, name: 'Giảm giá', code: 'discount'}
+                  {id: 6, name: 'Tổng thanh toán', code: 'tpayout'}
+                  {id: 7, name: 'Ghi chú', code: 'remark'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, service:null, customer: null, trigger: @addRecord, trigger2: @updateRecord
-            React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, service:null, customer: null, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
     checkInfoRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Thông tin điều trị'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @trigger
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'fa fa-trash-o', text: ' Xóa', code: @props.datatype, type: 3, Clicked: @trigger
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên bệnh nhân'
-                  React.DOM.th null, 'Tên bác sỹ'
-                  React.DOM.th null, 'Kết luận'
-                  React.DOM.th null, 'Chuẩn đoán'
-                  React.DOM.th null, 'Hướng điều trị'
-                  React.DOM.th null, 'Tình trạng'
-                  React.DOM.th null, 'Ngày bắt đầu'
-                  React.DOM.th null, 'Ngày kết thúc'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @trigger
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'fa fa-trash-o', text: ' Xóa', code: @props.datatype, type: 3, Clicked: @trigger
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Tên bệnh nhân', code: 'c_name'}
+                  {id: 2, name: 'Tên bác sỹ', code: 'ename'}
+                  {id: 3, name: 'Kết luận', code: 'kluan'}
+                  {id: 4, name: 'Chuẩn đoán', code: 'cdoan'}
+                  {id: 5, name: 'Hướng điều trị', code: 'hdieutri'}
+                  {id: 6, name: 'Tình trạng', code: 'status'}
+                  {id: 7, name: 'Ngày bắt đầu', code: 'daystart'}
+                  {id: 8, name: 'Ngày kết thúc', code: 'dayend'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
     doctorCheckInfoRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Thông tin khám'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @trigger
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
-            React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'fa fa-trash-o', text: ' Xóa', code: @props.datatype, type: 3, Clicked: @trigger
-            React.DOM.br null
-            React.DOM.br null
-            React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Tên bệnh nhân'
-                  React.DOM.th null, 'Tên bác sỹ'
-                  React.DOM.th null, 'Quá trình bệnh lý'
-                  React.DOM.th null, 'Khám lâm sàng'
-                  React.DOM.th null, 'Chuẩn đoán ban đầu'
-                  React.DOM.th null, 'Bệnh kèm theo'
-                  React.DOM.th null, 'Chuẩn đoán ICD'
-                  React.DOM.th null, 'Kết luận'
-                  React.DOM.th null, 'Ngày kiểm tra'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+        React.DOMdiv className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @trigger
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+              React.createElement ButtonGeneral, className: 'btn btn-default disabled', icon: 'fa fa-trash-o', text: ' Xóa', code: @props.datatype, type: 3, Clicked: @trigger
+              React.DOM.br null
+              React.DOM.br null
+              React.createElement FilterForm, datatype: @props.datatype, autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Tên bệnh nhân', code: 'c_name'}
+                  {id: 2, name: 'Tên bác sỹ', code: 'ename'}
+                  {id: 3, name: 'Quá trình bệnh lý', code: 'qtbenhly'}
+                  {id: 4, name: 'Khám lâm sàng', code: 'klamsang'}
+                  {id: 5, name: 'Chuẩn đoán ban đầu', code: 'cdbandau'}
+                  {id: 6, name: 'Bệnh kèm theo', code: 'bktheo'}
+                  {id: 7, name: 'Chuẩn đoán ICD', code: 'cdicd'}
+                  {id: 8, name: 'Kết luận', code: 'kluan'}
+                  {id: 9, name: 'Ngày kiểm tra', code: 'daycheck'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: true, selectRecord: @selectRecord
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
                       else
                         React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.datatype, selected: false, selectRecord: @selectRecord
-            React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
     doctorRoomRender: ->
       React.DOM.div className: 'container',
         React.DOM.div className: 'block-header',
           React.DOM.h2 null, 'Danh sách bệnh nhân'
-        React.DOM.div className: 'card',
-          React.DOM.div className: 'card-header',
-            React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Thêm đơn thuốc', modalid: 'modal1', code: 'medicine_prescript_internal', type: 4, Clicked: @triggerFillModal
-            React.DOM.br null
-            React.DOM.br null
-          React.DOM.div className: 'card-body table-responsive',
-            React.DOM.table className: 'table table-hover table-condensed',
-              React.DOM.thead null,
-                React.DOM.tr null,
-                  React.DOM.th null, 'Số khám bệnh'
-                  React.DOM.th null, 'Tên dịch vụ'
-                  React.DOM.th null, 'Tên khách hàng'
-                  React.DOM.th null, 'Tình trạng'
-                  React.DOM.th null, 'Ghi chú'
-              React.DOM.tbody null,
-                if @state.filteredRecord != null
-                  for record in @state.filteredRecord
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecordAlt
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
-                else
-                  for record in @state.records
-                    if @state.selected != null
-                      if record.id == @state.selected
-                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecordAlt
-                      else
-                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
-                    else
-                      React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
-            React.createElement ModalOutside, id: 'modaldoctorview', datatype: @props.datatype, record: @state.extradata
-            React.createElement ModalOutside, id: 'modal1', datatype: 'medicine_prescript_internal', internal_record: @state.addRecordChild, ordermap: @state.record, record: null, trigger: @trigger, trigger2: @trigger, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
-            React.createElement ModalOutside, id: 'modalinternalrecordmini', datatype: 'medicine_internal_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
-              if @state.addRecordChild.length == 0
-                1
+        React.DOM.div className: 'col-md-12',
+          React.DOM.div className: 'card',
+            React.DOM.div className: 'card-header',
+              React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'zmdi zmdi-edit', text: ' Thêm đơn thuốc', modalid: 'modal1', code: 'medicine_prescript_internal', type: 4, Clicked: @triggerFillModal
+              React.DOM.br null
+              React.DOM.br null
+              React.DOM.br null
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+              React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
               else
-                @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
+                React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.DOM.br null
+            React.DOM.div className: 'card-body table-responsive',
+              React.DOM.table className: 'table table-hover table-condensed',
+                React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort, header: [
+                  {id: 1, name: 'Số khám bệnh', code: 'id'}
+                  {id: 2, name: 'Tên dịch vụ', code: 'sername'}
+                  {id: 3, name: 'Tên khách hàng', code: 'cname'}
+                  {id: 4, name: 'Tình trạng', code: 'status'}
+                  {id: 5, name: 'Ghi chú', code: 'remark'}
+                ]
+                React.DOM.tbody null,
+                  if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecordAlt
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
+                  else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                      if @state.selected != null
+                        if record.id == @state.selected
+                          React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: true, selectRecord: @selectRecordAlt
+                        else
+                          React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
+                      else
+                        React.createElement RecordGeneral, key: record.id, record: record, dvi: @props.data[1], datatype: @props.datatype, selected: false, selectRecord: @selectRecordAlt
+              React.DOM.br null
+              if @state.filteredRecord != null
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              else
+                React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+              React.createElement ModalOutside, id: 'modaldoctorview', datatype: @props.datatype, record: @state.extradata
+              React.createElement ModalOutside, id: 'modal1', datatype: 'medicine_prescript_internal', internal_record: @state.addRecordChild, ordermap: @state.record, record: null, trigger: @trigger, trigger2: @trigger, triggerDelete: @deleteRecordChild, triggerChildRefresh: @triggerChildRecord
+              React.createElement ModalOutside, id: 'modalinternalrecordmini', datatype: 'medicine_internal_record_mini', record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecordChild, trigger2: @trigger, record_id:
+                if @state.addRecordChild.length == 0
+                  1
+                else
+                  @state.addRecordChild[@state.addRecordChild.length - 1].id + 1
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()
