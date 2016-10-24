@@ -30,7 +30,7 @@
             className: "hi-logo hidden-xs"
             React.DOM.a
               href: ''
-              "Helia"
+              "PROLIFE"
           React.DOM.li
             className: "pull-right right-menu"
             React.DOM.ul
@@ -63,7 +63,7 @@
     getInitialState: ->
       headerClassName: 'clearfix'
     NormalRender: ->
-      React.DOM.footer id: 'footer', 'Copyright © 2016 Helia',
+      React.DOM.footer id: 'footer', 'Copyright © 2016 PROLIFE',
         React.DOM.ul className: 'f-menu',
           React.DOM.li null,
             React.DOM.a href: '', 'Home'

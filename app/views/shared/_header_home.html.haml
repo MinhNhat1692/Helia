@@ -1,19 +1,346 @@
-%header
-  .background-img{:style => "background-image: url('assets/bg-header.jpg');"}
-  .intro-content
-    .row
-      .col-md-4.col-md-push-8
-        .project-details
-          %span.project-name ProLife
-          %span.project-description Ứng dụng quản lý phòng khám
-          %hr.colored/
-          %button.btn.btn-outline-light
-            Tìm hiểu thêm
-            %i.fa.fa-long-arrow-right.fa-fw
-          %button.btn.btn-outline-light
-            Đăng ký ngay
-            %i.fa.fa-long-arrow-right.fa-fw
-      .col-md-8.col-md-pull-4.hidden-xs
-        %img.img-responsive.portfolio-image{:style => "width: 100%; max-height: 1000px", :alt => "", :src => "assets/tablet-screens.png"}/
-        
-
+#product
+  .hero
+    .container.text-center
+      %h1
+        All the features you need, out of the box
+        %small The Easiest Way To Build All Kinds of Search Experiences
+      .spacer40
+      .row.text-center
+        .col-sm-4
+          %img.m100p{:height => "160", :src => "https://www.algolia.com/static_assets/images/flat2/temp/autocomplete-440a4583.png"}/
+          %h3.color-white Auto-complete
+          .spacer50.visible-xs
+        .col-sm-4
+          %img.m100p{:height => "160", :src => "https://www.algolia.com/static_assets/images/flat2/temp/instant-9c36d04f.png"}/
+          %h3.color-white Instant Results Page
+          .spacer50.visible-xs
+        .col-sm-4
+          %img.m100p{:height => "160", :src => "https://www.algolia.com/static_assets/images/flat2/temp/mobile-33c6a9e1.png"}/
+          %h3.color-white Mobile Search
+      .spacer40
+  %section.evenbg
+    .container.text-center
+      %h2.text-center.underlined Unparalleled Speed
+      %p.section-heading Get results faster than you type, no matter where you are
+      .row
+        .col-sm-10.col-sm-offset-1
+          .row
+            .col-sm-6
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/temp/ultra-fast-backend-d5b9bf6e.png"}/
+              %h3 Ultra Fast Backend
+              %p We have built our technology from the ground up with speed in mind. We track every millisecond to optimize it!
+              .spacer40.visible-xs
+            .col-sm-6
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/temp/worldwide-performance-b6b2f6ef.png"}/
+              %h3 Worldwide Performance
+              %p
+                Our Distributed Search Network synchronizes your data across the world and routes the queries of your users to our closest servers, wherever they are.
+                %a{:href => "/infra"} See our map
+  .press-quote-container
+    .container
+      %i.fa.fa-quote-left
+      Compare your average website to Algolia; it’s night and day — Algolia feels like using OS X’s Spotlight feature on the web.
+      %i.fa.fa-quote-right
+      %img.quote-techcrunch-logo{:height => "24", :src => "https://www.algolia.com/static_assets/images/flat2/logos/techcrunch-c53ab2d5.png"}/
+  %section.oddbg
+    .container
+      %h2.text-center.underlined Intuitive Ranking
+      %p.section-heading The easiest way to provide the right results to your users
+      .row
+        .col-sm-8.col-sm-offset-2
+          .media
+            .media-left
+              %img.media-object{:height => "80", :src => "https://www.algolia.com/static_assets/images/flat2/temp/tuning-ac2ca9ca.png"}/
+            .media-body
+              %h3.media-heading Transparent and easy tuning
+              %p Our tie breaking algorithm outperforms classical approaches in relevance and simplicity. Count on our dedicated customer success team if you need help to tune it.
+          .spacer20
+          .media
+            .media-left
+              %img.media-object{:height => "80", :src => "https://www.algolia.com/static_assets/images/flat2/temp/relevance-a3bd1e24.png"}/
+            .media-body
+              %h3.media-heading Improve relevance with your business metrics
+              %p Implement a feedback loop in no time based on your numbers of views, sales, likes, or any other business metric. It has never been so easy to implement an adaptable search!
+          .spacer20
+          .media
+            .media-left
+              %img.media-object{:height => "80", :src => "https://www.algolia.com/static_assets/images/flat2/temp/typo-tolerance-98564f58.png"}/
+            .media-body
+              %h3.media-heading Advanced query flexibility
+              %p Automatically handle results with typing mistakes, concatenation &amp; split ("front end" vs "frontend"), and conversion between simplified and traditional Chinese.
+  %section.evenbg
+    .container
+      %h2.text-center.underlined Unique Architecture
+      .m800.m-l-r-auto
+        %p.section-heading Taking search hosting to a new level
+        .text-center
+          %img.m100p.m-b.m-t{:src => "https://www.algolia.com/static_assets/images/flat2/temp/first-class-hosting-1790136d.png"}/
+          %h3 First-class hosting
+        .spacer20
+        .row
+          .col-sm-6
+            %ul.list-unstyled
+              %li
+                %h4
+                  %img{:height => "25", :src => "https://www.algolia.com/static_assets/images/flat2/temp/bullet-check-747558b6.png"}/
+                  Always up to date
+                %p You are always using the latest version of the API. All our deployments are done without service interruption and we ensure backward compatibility.
+          .col-sm-6
+            %ul.list-unstyled
+              %li
+                %h4
+                  %img{:height => "25", :src => "https://www.algolia.com/static_assets/images/flat2/temp/bullet-check-747558b6.png"}/
+                  100% SLA
+                %p Your data is automatically replicated across three independent locations. Every component of our stack offers double or triple redundancy, including at the DNS level.
+        .spacer20
+        .line
+        .spacer20
+        .text-center
+          %img.m100p.m-b.m-t{:src => "https://www.algolia.com/static_assets/images/flat2/temp/seamless-indexing-d6710499.png"}/
+          %h3 Seamless Indexing
+        .spacer20
+        .row
+          .col-sm-6
+            %ul.list-unstyled
+              %li
+                %h4
+                  %img{:height => "25", :src => "https://www.algolia.com/static_assets/images/flat2/temp/bullet-check-747558b6.png"}/
+                  Schema-Less JSON
+                %p Whatever the type of your object or its number of attributes, just push your data and start searching.
+                .spacer10
+              %li
+                %h4
+                  %img{:height => "25", :src => "https://www.algolia.com/static_assets/images/flat2/temp/bullet-check-747558b6.png"}/
+                  Type detection
+                %p The type of each attribute to be indexed is automatically detected.
+                .spacer10
+              %li
+                %h4
+                  %img{:height => "25", :src => "https://www.algolia.com/static_assets/images/flat2/temp/bullet-check-747558b6.png"}/
+                  Order your attributes
+                %p Easily set the relative importance of each searchable attribute.
+          .col-sm-6
+            %ul.list-unstyled
+              %li
+                %h4
+                  %img{:height => "25", :src => "https://www.algolia.com/static_assets/images/flat2/temp/bullet-check-747558b6.png"}/
+                  Automatic reindexing
+                %p We automatically update your indices when you modify your configuration. Use our API to follow your jobs’ status.
+                .spacer10
+              %li
+                %h4
+                  %img{:height => "25", :src => "https://www.algolia.com/static_assets/images/flat2/temp/bullet-check-747558b6.png"}/
+                  On the fly indexing
+                %p Indexing won’t impact the performance of your search. You can update your data whenever you want!
+        .spacer20
+        .line
+        .spacer20
+      .m600.m-l-r-auto
+        .text-center
+          %img.m100p.m-b.m-t{:src => "https://www.algolia.com/static_assets/images/flat2/temp/highly-secure-be78a474.png"}/
+          %h3 Highly Secure
+        .spacer20
+        %p We are security freaks: our API was designed with all the potential security flaws in mind. The access to your data is highly secured. We are in control of the entire stack on our servers, starting with the OS.
+  %section.oddbg
+    .container
+      %h2.text-center.underlined Build the perfect experience
+      %p.section-heading A suite of features that allows you to meet your Users’ expectations
+      .m800.m-l-r-auto
+        .row
+          .col-sm-5
+            .text-center
+              %img.img-responsive{:src => "https://www.algolia.com/static_assets/images/flat2/temp/feat-facets-338d1d66.png"}/
+          .col-sm-6
+            .spacer30
+            .row
+              .col-xs-3
+                .spacer40
+                %img.img-responsive{:src => "https://www.algolia.com/static_assets/images/flat2/temp/feat-icon-facets-92cec507.png"}/
+              .col-xs-8
+                %h3 Instant faceting
+                %p Provide as-you-type updated filters and make your search bar a powerful browsing tool.
+        .spacer20
+        .line
+        .spacer20
+        .row
+          .col-sm-6.col-sm-offset-1
+            .spacer30
+            .row
+              .col-xs-3
+                .spacer40
+                %img.img-responsive{:src => "https://www.algolia.com/static_assets/images/flat2/temp/feat-icon-languages-910ee57a.png"}/
+              .col-xs-8
+                %h3 Languages
+                %p Algolia works for all languages without extra work. Speed and ranking perform just as well!
+          .col-sm-5
+            .text-center
+              %img.img-responsive{:src => "https://www.algolia.com/static_assets/images/flat2/temp/feat-languages-99de127f.png"}/
+        .spacer20
+        .line
+        .spacer20
+        .row
+          .col-sm-5
+            .text-center
+              %img.img-responsive{:src => "https://www.algolia.com/static_assets/images/flat2/temp/feat-geosearch-b963ed54.png"}/
+          .col-sm-6
+            .spacer30
+            .row
+              .col-xs-3
+                .spacer40
+                %img.img-responsive{:src => "https://www.algolia.com/static_assets/images/flat2/temp/feat-icon-geosearch-4ef3f9c7.png"}/
+              .col-xs-8
+                %h3 Geo-Search
+                %p Built into our API, you can use the geolocation of your users to optimize their results on the go.
+        .spacer20
+        .line
+        .spacer20
+        .row
+          .col-sm-6.col-sm-offset-1
+            %h3 Perfect for Mobile-Search
+            %ul.list-unstyled
+              %li
+                %i.icon-check
+                Find-as-you-type, from the first keystroke
+              %li
+                %i.icon-check
+                Forget about fat fingers with our spell checker
+              %li
+                %i.icon-check
+                Native SDKs for Android, iOS and Windows Phone
+          .col-sm-5.hidden-xs
+            .spacer20
+            %img{:src => "https://www.algolia.com/static_assets/images/flat2/temp/perfect-mobile-ad13867f.png"}/
+        .spacer40
+        .line
+        .spacer40
+        .row
+          .col-sm-6
+            .browser-content.thumbnail{:style => "overflow: hidden; height: 260px;"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/captures/dashboard-382227ac.jpg"}/
+            %h3.text-center Intuitive Dashboard
+            %p Configure, debug and optimize the relevance of your search results from one single interface.
+            .spacer40.visible-xs
+          .col-sm-6
+            .browser-content.thumbnail{:style => "overflow: hidden; height: 260px;"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/captures/capture_analytics_queries-52cfef0a.png"}/
+            %h3.text-center Analytics
+            %p Learn what and how people search on your service: most popular queries, queries without results, etc.
+  %section.evenbg
+    .container
+      %h2.text-center.underlined Passionate Support
+      %p.section-heading The entire Algolia team is committed to help you build the best search experiences.
+      %ul.success-team.list-inline.text-center
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-gianluca.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-julien.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-nicolas.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-matthieu.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-olivier-2.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-rebecca.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-gaetan.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-vvo.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-adam.jpg", :width => "70"}/
+        %li
+          %img.img-circle{:src => "https://www.algolia.com/static_assets/images/about-xavier.jpg", :width => "70"}/
+      .spacer30
+      %p.text-center
+        We listen to your needs and propose to you ways to build what is best for your users.
+        %br/
+        We will always go the extra mile to make sure you’re making the most out of Algolia: consider us part of your team!
+  %section.oddbg
+    .container
+      .m800.m-l-r-auto.text-center
+        %h2.underlined Integration
+        %p.section-heading Save time! With our resources, we’ve got you covered.
+        %h3 Developer-friendly API
+        %p
+          %a{"data-no-turbolink" => "true", :href => "/doc/rest"} Our REST API
+          comes with
+          %a{:href => "/integrations"} 11 API clients
+          and
+          %a{:href => "/integrations"} 4 mobile SDKs
+        .spacer20
+        %ul.list-inline.text-center
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/ruby"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/ruby-00bdd41f.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/rails"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/rails-4117f95b.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/python"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/python-dd5a8a8d.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/django"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/django-d5bec8bf.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/php"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/php-53888094.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/symfony"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/symfony-b588c4b4.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/javascript"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/javascript-c258d2e7.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/java"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/java-65dd222f.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/scala"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/scala-bce891cf.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/go"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/go-5f1359de.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/csharp"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/csharp-67d39797.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/swift"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/swift-64eb7a48.svg", :width => "36"}/
+          %li
+            %a{"data-no-turbolink" => "true", :href => "/doc/android"}
+              %img{:src => "https://www.algolia.com/static_assets/images/flat2/languages/android-f03624e7.svg", :width => "36"}/
+        .spacer40
+        %h3 Platform integrations
+        %p Use Algolia with popular CMS &amp; Platforms.
+        .spacer20
+        %a{"data-no-turbolink" => "true", :href => "https://community.algolia.com/magento"}
+          %span
+            %img.img-thumbnail.bg-color-white{:src => "https://www.algolia.com/static_assets/images/flat2/integrations/magento-1cf57ff8.jpg", :width => "60"}/
+        %a{"data-no-turbolink" => "true", :href => "https://github.com/algolia/algoliasearch-wordpress"}
+          %span
+            %img.img-thumbnail.bg-color-white{:src => "https://www.algolia.com/static_assets/images/flat2/integrations/wordpress-f74c353e.jpg", :width => "60"}/
+        %a{"data-no-turbolink" => "true", :href => "/doc/tutorials/parse-algolia"}
+          %span
+            %img.img-thumbnail.bg-color-white{:src => "https://www.algolia.com/static_assets/images/flat2/integrations/parse-bd5bc40b.jpg", :width => "60"}/
+        %a{"data-no-turbolink" => "true", :href => "/doc/tutorials/firebase-algolia"}
+          %span
+            %img.img-thumbnail.bg-color-white{:src => "https://www.algolia.com/static_assets/images/flat2/integrations/firebase-e05ef0d3.jpg", :width => "60"}/
+        .spacer20
+        %a{:href => "/integrations"} See all integrations
+        .spacer40
+        %h3 Developer resources
+        %p
+          Use our
+          %a{"data-no-turbolink" => "true", :href => "/doc"} Step-by-step tutorials
+          and our
+          = succeed "." do
+            %a{:href => "/integrations"} code resources on Github
+      .spacer40
+  %section.evenbg.signup-footer
+    .container
+      %p.section-heading.text-center
+        Don't wait! Try Algolia!
+        %a.btn.btn-static-primary.m-l{"data-no-turbolink" => "true", :href => "/users/sign_up"}
+          Start Using it Now
+          %i.icon-caret-right
+      %p.small.text-center.text-muted No credit card required. Try Algolia for free for 14 days.
+      %p

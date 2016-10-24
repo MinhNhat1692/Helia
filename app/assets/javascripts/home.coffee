@@ -2,8 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 //= require bootstrap.min
-//= require cbpAnimatedHeader
-//= require classie
 //= require react
 //= require react_ujs
 //= require ./components/changelog

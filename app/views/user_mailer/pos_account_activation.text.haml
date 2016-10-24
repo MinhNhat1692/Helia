@@ -1,0 +1,5 @@
+Xin chào #{@user.name},
+
+Mời bạn truy cập vào đường dẫn sau để kích hoạt tài khoản
+
+\#{edit_account_activation_url(@user.activation_token, email: @user.email)}

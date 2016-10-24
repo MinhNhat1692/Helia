@@ -13,4 +13,10 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.password_reset
   end
 
+  def pos_account_activation
+    user = User.first
+    user.activation_token = User.new_token
+    UserMailer.pos_account_activation(user)
+  end
+
 end
