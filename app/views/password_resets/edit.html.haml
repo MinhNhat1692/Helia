@@ -1,22 +1,29 @@
-%body.blank
-.login-content
-  / Main content
-  .lc-block
-    .container-center.animated.slideInDown
-      .panel.panel-filled
+%body
+  .blurred-dashboard.clear-page
+    .text-center.dark
+      %a{:href => "/"}
+        %img{:alt => "Algolia504x160 dark", :height => "82.5", :src => "https://www.algolia.com/assets/flat2/algolia/algolia504x160_dark-d92e7dab9af1342a881f1d8cd252ae56.png", :width => "260"}/
+      %h1.h3 Quản lý theo cách của bạn bằng công cụ của chúng tôi
+      .spacer20
+    .container
+      %section.m400.m-l-r-auto.fill-white
+        .panel-heading
+          %h2.text-center Quên mật khẩu?
         .panel-body
           = form_for(@user, url: password_reset_path(params[:id])) do |f|
+            %p Mời bạn nhập mật khẩu mới
+            %br/
             = hidden_field_tag :email, @user.email
-            .input-group.m-b-20
-              %span.input-group-addon
-                %i.fa.fa-lock
-              .fg-line
+            .form-group.email.optional.user_email
+              .input-group
+                %span.input-group-addon
+                  %i.fa.fa-lock.icon-fw
                 = f.password_field :password, class: 'form-control', placeholder: 'Nhập mật khẩu mới'
-            .input-group.m-b-20
-              %span.input-group-addon
-                %i.fa.fa-unlock-alt
-              .fg-line
+            .form-group.email.optional.user_email
+              .input-group
+                %span.input-group-addon
+                  %i.fa.fa-lock.icon-fw
                 = f.password_field :password_confirmation, class: 'form-control', placeholder: 'Nhập lại mật khẩu mới'
-            %div
-              = button_tag(type: 'submit', class: "btn btn-default btn-float btn-login") do
-                %i.zmdi.zmdi-arrow-forward
+            .spacer20
+            %a.btn.btn-default.btn-small{:href => "/login"} Quay lại đăng nhập
+            %input.btn.btn-default.pull-right{:name => "commit", :type => "submit", :value => "Đặt mật khẩu mới"}/

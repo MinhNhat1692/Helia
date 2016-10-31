@@ -1,0 +1,65 @@
+%header#header.navbar.navbar-fixed-top
+  .container
+    .navbar-header
+      %a.logo{:href => "/"}
+        %img{:height => "48", :src => "https://www.algolia.com/static_assets/images/flat2/algolia/algolia256x80_dark-b5d00e91.png", :width => "140"}/
+      %button.mobile-menu.navbar-toggle.collapsed{"data-target" => "#main-navigation-collapsed", "data-toggle" => "collapse", :type => "button"}
+        %i.fa.fa-align-justify
+        MENU
+    %nav#main-navigation-collapsed.collapse.navbar-collapse
+      %ul.nav.nav-pills.pull-left
+        %li
+          %a.active{"data-no-turbolink" => "true", :href => "/features"} Sản phẩm
+        %li
+          %a{"data-no-turbolink" => "true", :href => "/pricing"} Biểu giá
+        %li.dropdown.hidden-xs
+          %a{"data-no-turbolink" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+            Trung tâm y tế
+            %i.fa.fa-caret-down
+          %ul.dropdown-menu
+            %li
+              %a{"data-no-turbolink" => "true", :href => "/enterprise"} Giới thiệu
+            %li
+              %a{"data-no-turbolink" => "true", :href => "/enterprise/demo"} Đặt lịch demo sản phẩm
+        %li.dropdown.hidden-xs
+          %a{"data-no-turbolink" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+            Thông tin
+            %i.fa.fa-caret-down
+          %ul.dropdown-menu
+            %li
+              %a{"data-no-turbolink" => "true", :href => "/changelogs"} Cập nhật
+            %li
+              %a{"data-no-turbolink" => "true", :href => "/documentation"}
+                %img{:src => "https://www.algolia.com/static_assets/images/svg/logo-community-sm-86de0024.svg", :width => "32"}/
+                Trung tâm hướng dẫn
+        %li.visible-xs
+          %a{"data-no-turbolink" => "true", :href => "/features"} Sản phẩm
+        %li.visible-xs
+          %a{"data-no-turbolink" => "true", :href => "/pricing"} Biểu giá
+        %li.visible-xs
+          %a{"data-no-turbolink" => "true", :href => "/enterprise"} Giới thiệu
+        %li.visible-xs
+          %a{"data-no-turbolink" => "true", :href => "/enterprise/demo"} Đặt lịch demo sản phẩm
+        %li.visible-xs
+          %a{"data-no-turbolink" => "true", :href => "changelogs"} Cập nhật
+        %li.visible-xs
+          %a{"data-no-turbolink" => "true", :href => "documentation"}
+            %img{:src => "https://www.algolia.com/static_assets/images/svg/logo-community-sm-86de0024.svg", :width => "32"}/
+            Trung tâm hướng dẫn
+      %ul.nav.nav-pills.pull-right.al-wait-current-user{:style => "display: block;"}
+        - if logged_in?
+          %li.al-visible-current-user
+            %a{"data-no-turbolink" => "true", :href => "/station"} Bảng điều khiển
+          %li.header-sign-out.al-visible-current-user
+            %a#signout-link{"data-no-turbolink" => "true", :href => "/logout"}
+              %i.hidden-xs.fa.fa-power-off
+              %span.visible-xs
+                Đăng xuất
+                %i.fa.fa-power-off
+        - else
+          %li.al-hidden-current-user{:style => "display: list-item;"}
+            %a{"data-no-turbolink" => "true", :href => "/login"} Đăng nhập
+          %li.header-separator.hidden-xs.hidden-sm.al-hidden-current-user{:style => "display: list-item;"} or
+          %li.header-registration.al-hidden-current-user{:style => "display: list-item;"}
+            %a{"data-no-turbolink" => "true", :href => "/signup"} Đăng ký miễn phí
+        

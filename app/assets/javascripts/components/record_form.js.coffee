@@ -751,16 +751,18 @@
                     React.createElement AutoComplete, key: record.id, text: record.fax, record: record, trigger: @triggerAutoComplete
                   else if Number($('#filter_type_select').val()) == 13
                     React.createElement AutoComplete, key: record.id, text: record.taxcode, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicineCompany: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -793,16 +795,18 @@
                     React.createElement AutoComplete, key: record.id, text: record.website, record: record, trigger: @triggerAutoComplete
                   else if Number($('#filter_type_select').val()) == 7
                     React.createElement AutoComplete, key: record.id, text: record.taxcode, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicineSample: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -840,16 +844,18 @@
                     React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
                   else if Number($('#filter_type_select').val()) == 9
                     React.createElement AutoComplete, key: record.id, text: record.expire, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicineBillIn: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -880,16 +886,18 @@
                     React.createElement AutoComplete, key: record.id, text: record.supplier, record: record, trigger: @triggerAutoComplete
                   else if Number($('#filter_type_select').val()) == 3
                     React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close',
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicineBillRecord: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -925,16 +933,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.signid, record: record, trigger: @triggerAutoComplete
                     when 5
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicinePrice: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -955,16 +965,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.name, record: record, trigger: @triggerAutoComplete
                     when 2
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicinePrescriptExternal: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -997,16 +1009,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.address, record: record, trigger: @triggerAutoComplete
                     when 6
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicineExternalRecord: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1037,16 +1051,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
                     when 5
                       React.createElement AutoComplete, key: record.id, text: record.company, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close',
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicinePrescriptInternal: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1089,16 +1105,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.preparer, record: record, trigger: @triggerAutoComplete
                     when 7
                       React.createElement AutoComplete, key: record.id, text: record.payer, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicineInternalRecord: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1140,16 +1158,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.noid, record: record, trigger: @triggerAutoComplete
                     when 7
                       React.createElement AutoComplete, key: record.id, text: record.signid, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     MedicineStockRecord: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1189,16 +1209,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.internal_record_code, record: record, trigger: @triggerAutoComplete
                     when 7
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     CustomerRecord: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1228,16 +1250,18 @@
                           record.cname
                     when 4
                       React.createElement AutoComplete, key: record.id, text: record.address, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Về ban đầu'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
-            "Tìm kỹ (chậm và đầy đủ)"    
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     Service: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1260,16 +1284,18 @@
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.sname
                     when 3
                       React.createElement AutoComplete, key: record.id, text: record.description, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Về ban đầu',
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
-            "Tìm kỹ (chậm và đầy đủ)"    
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     Employee: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1298,16 +1324,18 @@
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.noid
                     when 4
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.pnumber                    
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Về ban đầu'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
-            "Tìm kỹ (chậm và đầy đủ)"    
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"    
     Room: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1326,16 +1354,18 @@
                   switch Number($('#filter_type_select').val())
                     when 1
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.name
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Về ban đầu',
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
-            "Tìm kỹ (chậm và đầy đủ)"    
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     Position: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1360,16 +1390,18 @@
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.description
                     when 3
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.rname                      
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Về ban đầu',
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
-            "Tìm kỹ (chậm và đầy đủ)"      
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     PosMap: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1391,16 +1423,18 @@
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.ename
                     when 2
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.pname                     
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Về ban đầu',
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
-            "Tìm kỹ (chậm và đầy đủ)"      
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     SerMap: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1422,16 +1456,18 @@
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.sname
                     when 2
                       React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoComplete, text: record.name                      
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-2 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Về ban đầu',
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input id: 'checkbox_db', type: 'checkbox'  
-            "Tìm kỹ (chậm và đầy đủ)"      
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     OrderMap: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1460,16 +1496,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.sername, record: record, trigger: @triggerAutoComplete
                     when 3
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     CheckInfo: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1501,16 +1539,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.cdoan, record: record, trigger: @triggerAutoComplete
                     when 5
                       React.createElement AutoComplete, key: record.id, text: record.hdieutri, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     DoctorCheckInfo: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1550,16 +1590,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.cdicd, record: record, trigger: @triggerAutoComplete
                     when 8
                       React.createElement AutoComplete, key: record.id, text: record.kluan, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     BillInfo: ->
       React.DOM.form className: 'form-horizontal row', autoComplete: 'off', onSubmit: @handleSubmit,
         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
@@ -1586,16 +1628,18 @@
                       React.createElement AutoComplete, key: record.id, text: record.remark, record: record, trigger: @triggerAutoComplete
                     when 2
                       React.createElement AutoComplete, key: record.id, text: record.c_name, record: record, trigger: @triggerAutoComplete
-        React.DOM.button type: 'submit', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6',
-          React.DOM.i className: 'zmdi zmdi-search'
-          ' Tìm kiếm'
-        React.DOM.button type: 'button', className: 'btn bg-green col-lg-1 col-md-4 col-sm-6', onClick: @triggerClear,
-          React.DOM.i className: 'zmdi zmdi-close'
-          ' Clear'
-        React.DOM.div className: 'form-group col-lg-4 col-sm-12',
-          React.DOM.label className: 'checkbox checkbox-inline m-r-20',
-            React.DOM.input type: 'checkbox', id: 'checkbox_db'
-            "Tìm kỹ (chậm và đầy đủ)"
+        React.DOM.div className: 'col-lg-6 text-center',
+          React.DOM.div className: 'btn-group col-sm-9 text-center',
+            React.DOM.button type: 'submit', className: 'btn btn-group-left',
+              React.DOM.i className: 'zmdi zmdi-search'
+              ' Tìm kiếm'
+            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+              React.DOM.i className: 'zmdi zmdi-close'
+              ' Về ban đầu'
+          React.DOM.div className: 'form-group col-sm-3',
+            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+              React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+              "Gợi ý"
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()

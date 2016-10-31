@@ -1,5 +1,10 @@
-%body{:style => "color: #333;background-color: #fff;"}
-  = render 'shared/navbar_home'
-  = render 'shared/header_home'
+%body
+  = render 'shared/homepage/navbar_home'
+  #product
+    = render 'shared/homepage/header_homepage'
+    = render 'shared/homepage/info1_homepage'
+    = render 'shared/homepage/info2_homepage'
+    = render 'shared/homepage/info3_homepage'
+    = render 'shared/homepage/info4_homepage'
   = render 'shared/home_footer'
   

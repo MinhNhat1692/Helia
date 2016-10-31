@@ -1,27 +1,38 @@
-%body.blank
-.login-content
-  / Main content
-  .lc-block
-    .container-center.animated.slideInDown
-      .panel.panel-filled
+%body
+  .blurred-dashboard.clear-page
+    .text-center.dark
+      %a{:href => "/"}
+        %img{:alt => "Algolia504x160 dark", :height => "82.5", :src => "https://www.algolia.com/assets/flat2/algolia/algolia504x160_dark-d92e7dab9af1342a881f1d8cd252ae56.png", :width => "260"}/
+      %h1.h3 Quản lý theo cách của bạn bằng công cụ của chúng tôi
+      .spacer20
+    .container
+      %section.m400.m-l-r-auto.fill-white
+        .panel-heading
+          %h2.text-center Sign in
         .panel-body
           = form_for(:session, url: login_path) do |f|
-            .input-group.m-b-20
-              %span.input-group-addon
-                %i.fa.fa-envelope
-              .fg-line
-                = f.text_field :email, class: 'form-control', placeholder: 'Email'
-            .input-group.m-b-20
-              %span.input-group-addon
-                %i.fa.fa-lock
-              .fg-line
-                = f.password_field :password, class: 'form-control', placeholder: 'Mật khẩu'
-            = f.label :remember_me, class: "checkbox inline" do
+            .form-group.email.optional.user_email
+              .input-group
+                %span.input-group-addon
+                  %i.fa.fa-envelope-o.icon-fw
+                = f.text_field :email, class: 'form-control string.email optional', placeholder: 'Email'
+            .form-group.password.optional.user_password
+              .input-group
+                %span.input-group-addon
+                  %i.fa.fa-key.icon-fw
+                = f.password_field :password, class: 'form-control password optional', placeholder: 'Mật khẩu'
+            .spacer10
+            = button_tag(type: 'submit', class: "btn btn-default btn-success btn-lg btn-block") do
+              Đăng nhập
+            .spacer10
+            .pull-right
+              %small
+                %a{:href => new_password_reset_path} Quên mật khẩu?
+            = f.label :remember_me, class: "boolean optional" do
               = f.check_box :remember_me
-              %p Ghi nhớ
-            %div
-              = button_tag(type: 'submit', class: "btn btn-default btn-float btn-login") do
-                %i.zmdi.zmdi-arrow-forward
-    .lcb-navigation
-      %a.btn.btn-default{:href => signup_path, style: "margin: 5px"} Đăng ký
-      %a.btn.btn-default{:href => new_password_reset_path, style: "margin: 5px"} Quên mật khẩu
+              Ghi nhớ
+      .spacer30
+      %p.lead.text-center.color-white
+        Chưa có tài khoản?
+        %a{:href => "/signup"} Tạo ngay      
+            

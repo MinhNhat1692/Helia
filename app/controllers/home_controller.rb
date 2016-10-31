@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
   def index
     if logged_in?
+			flash[:success] = "Chào mừng " + current_user.name
 			@user = current_user
 		  @has_profile = has_profile?
 		  @has_station = has_station?
@@ -18,14 +19,14 @@ class HomeController < ApplicationController
 		  @has_profile = has_profile?
 		  @has_station = has_station?
 		  @has_dprofile = has_doctor_profile?
-		  @lcl = CLog.all().group(:d_a).order(d_a: :desc).limit(100)
-		  @records = CLog.where("d_a = ?" , @lcl[0].d_a).order(updated_at: :desc)
+		  @lcl = CLog.all().group(:d_a).order(d_a: :desc)
+		  @records = CLog.all().order(d_a: :desc)
 		else
       @has_profile = false
 		  @has_station = false
 		  @has_dprofile = false
-		  @lcl = CLog.all().group(:d_a).order(d_a: :desc).limit(100)
-		  @records = CLog.where("d_a = ?" , @lcl[0].d_a).order(updated_at: :desc)
+		  @lcl = CLog.all().group(:d_a).order(d_a: :desc)
+		  @records = CLog.all().order(d_a: :desc)
     end
 	end
   
@@ -67,4 +68,78 @@ class HomeController < ApplicationController
 			render json:@data
 		end
 	end
+  
+  def features
+    if logged_in?
+			@user = current_user
+		  @has_profile = has_profile?
+		  @has_station = has_station?
+		  @has_dprofile = has_doctor_profile?
+		else
+      @has_profile = false
+		  @has_station = false
+		  @has_dprofile = false
+    end
+  end
+  
+  def pricing
+    if logged_in?
+			@user = current_user
+		  @has_profile = has_profile?
+		  @has_station = has_station?
+		  @has_dprofile = has_doctor_profile?
+		else
+      @has_profile = false
+		  @has_station = false
+		  @has_dprofile = false
+    end
+  end
+  
+  def enterprise
+    if logged_in?
+			@user = current_user
+		  @has_profile = has_profile?
+		  @has_station = has_station?
+		  @has_dprofile = has_doctor_profile?
+		else
+      @has_profile = false
+		  @has_station = false
+		  @has_dprofile = false
+    end
+  end
+  
+  def demo
+    if logged_in?
+			@user = current_user
+		  @has_profile = has_profile?
+		  @has_station = has_station?
+		  @has_dprofile = has_doctor_profile?
+		else
+      @has_profile = false
+		  @has_station = false
+		  @has_dprofile = false
+    end
+  end
+  
+  def demoadd
+		@room = DemoRequest.new(fname: params[:fname], lname: params[:lname], email: params[:email], sname: params[:sname], pnumber: params[:pnumber])
+  	if @room.save
+	    render json: @room
+		else
+		  render json: @room.errors, status: :unprocessable_entity
+		end
+  end
+  
+  def documentation
+    if logged_in?
+			@user = current_user
+		  @has_profile = has_profile?
+		  @has_station = has_station?
+		  @has_dprofile = has_doctor_profile?
+		else
+      @has_profile = false
+		  @has_station = false
+		  @has_dprofile = false
+    end
+  end
 end

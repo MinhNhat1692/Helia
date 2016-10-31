@@ -4,4 +4,5 @@
 //= require bootstrap.min
 //= require jquery.validate.min
 //= require live_validation_login
+//= require toastr.min
 //= require jquery-validate.bootstrap-tooltip

@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 		  @has_profile = has_profile?
 		  @has_station = has_station?
 		  @has_dprofile = has_doctor_profile?
-		  render 'show'
+		  redirect_to root_url
 		else
 			redirect_to signup_path
 		end
@@ -13,7 +13,11 @@ class UsersController < ApplicationController
 
   def usershow
 		if logged_in?
-			redirect_to user_path
+			@user = current_user
+		  @has_profile = has_profile?
+		  @has_station = has_station?
+		  @has_dprofile = has_doctor_profile?
+			redirect_to root_url
 		else
 			render 'new'
 		end

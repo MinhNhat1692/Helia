@@ -30,6 +30,16 @@ module SessionsHelper
         end
     end
     
+    def current_apikey
+        if (user_id = session[:user_id])
+            @current_apikey ||= Apikey.find_by(user_id: user_id)
+        end
+    end
+    
+    def has_apikey?
+        !current_apikey.nil?
+    end
+    
     def current_profile
         if (user_id = session[:user_id])
             @current_profile ||= Profile.find_by(user_id: user_id)

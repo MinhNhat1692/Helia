@@ -1,0 +1,11 @@
+- flash.each do |message_type, message|
+  :javascript
+    toastr.options = {
+    	closeButton: true,
+    	progressBar: true,
+    	positionClass: "toast-top-right",
+    	showMethod: "slideDown",
+    	hideMethod: "fadeOut",
+    	timeOut: 4000
+    };
+    toastr.#{message_type}("#{message}");

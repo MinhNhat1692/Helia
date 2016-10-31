@@ -1335,15 +1335,15 @@
     getInitialState: ->
       type: 1
     employeeRender: ->
-      React.DOM.div className: 'list-group',
+      React.DOM.ul className: 'list-details list-unstyled',
         for record in @props.records
           if record.room_id == @props.room_id
             for posmap in record.position_mappings
-              React.createElement ListgroupDetail, key: record.id, datatype: 'noImg', bigtext: posmap.ename, smalltext: posmap.pname
+              React.createElement ListgroupDetail, key: record.id + posmap.ename + posmap.pname + posmap.created_at, bigtext: posmap.ename, smalltext: posmap.pname
     serviceRender: ->
-      React.DOM.div className: 'list-group',
+      React.DOM.ul className: 'list-details list-unstyled',
         for record in @props.records
-          React.createElement ListgroupDetail, key: record.id, datatype: 'noImg', bigtext: record.sname, smalltext: ''
+          React.createElement ListgroupDetail, key: record.id + record.created_at, bigtext: record.sname, smalltext: ''
     render: ->
       if @props.datatype == 'employee_group'
         @employeeRender()
@@ -1353,23 +1353,12 @@
   @ListgroupDetail = React.createClass
     getInitialState: ->
       type: 1
-    haveImgRender: ->
-      React.DOM.a className: 'list-group-item media', href: '',
-        React.DOM.div className: 'pull-left',
-          React.DOM.img className: 'lgi-img', src: @props.img, alt: ''
-        React.DOM.div className: 'media-body',
-          React.DOM.div className: 'lgi-heading', @props.bigtext
-          React.DOM.small className: 'lgi-text', @props.smalltext
     noImgRender: ->
-      React.DOM.a className: 'list-group-item media', href: '',
-        React.DOM.div className: 'media-body',
-          React.DOM.div className: 'lgi-heading', @props.bigtext
-          React.DOM.small className: 'lgi-text', @props.smalltext
+      React.DOM.li key: null,
+        React.DOM.span null, @props.bigtext
+        React.DOM.span className: 'count', @props.smalltext
     render: ->
-      if @props.datatype == 'haveImg'
-        @haveImgRender()
-      else if @props.datatype == 'noImg'
-        @noImgRender()
+      @noImgRender()
 
   @RoomSample = React.createClass
     getInitialState: ->
@@ -1396,6 +1385,17 @@
         myDoughnutChart = new Chart(canvas, {
           type: 'doughnut',
           data: @getCustomerChartData()
+        })
+    drawLineIncome: ->
+      canvas = document.getElementById('roomCanvas' + @props.data.id)
+      if canvas != null
+        myLineChart = new Chart(canvas, {
+          type: 'line',
+          data: @getIncomeLineChartData()
+          options: { 
+            responsive: true
+            maintainAspectRatio: true
+          }
         })
     getIncomeChartData: ->
       labellist = []
@@ -1454,6 +1454,99 @@
         }]
       }
       return dataOut
+    getIncomeLineChartData: ->
+      labellist= []
+      if @props.timelong == '1 năm'
+        for i in [12...0]
+          monthnumber = (new Date).getMonth()-i + 2
+          if monthnumber <= 0
+            monthnumber = monthnumber + 12
+          labellist.push('Tháng ' + monthnumber)
+      else if @props.timelong == '1 tháng'
+        for i in [31...0]
+          datenumber = (new Date).getDate()-i + 1
+          if datenumber <= 0
+            monthnumber = (new Date).getMonth()
+            if monthnumber != 0
+              datenumber = datenumber + new Date((new Date).getYear(), monthnumber - 1, 0).getDate()
+            else
+              datenumber += 31
+          labellist.push(datenumber)
+      else if @props.timelong == '24h'
+        for i in [24...0]
+          hournumber = (new Date).getHours()-i + 1
+          if hournumber <= 0
+            hournumber += 24
+          labellist.push(hournumber)
+      datanumber = []
+      incomesnumber = 0
+      if @props.timelong == '1 năm'
+        for i in [12...0]
+          incomesnumber = 0
+          for service in @props.data.service_maps
+            now = new Date
+            thentime = new Date
+            for statincome in @props.statincome_detail
+              if statincome.service_id == service.service_id and Date.parse(statincome.updated_at) >= now.setMonth((new Date).getMonth()-i) and Date.parse(statincome.updated_at) < thentime.setMonth((new Date).getMonth()-i+1)
+                incomesnumber+= statincome.sum
+          datanumber.push(incomesnumber)
+      else if @props.timelong == '1 tháng'
+        for i in [31...0]
+          incomesnumber = 0
+          for service in @props.data.service_maps
+            now = new Date
+            thentime = new Date
+            for statincome in @props.statincome_detail
+              if statincome.service_id == service.service_id and Date.parse(statincome.updated_at) >= now.setDate((new Date).getDate()-i) and Date.parse(statincome.updated_at) < thentime.setDate((new Date).getDate()-i+1)
+                incomesnumber+= statincome.sum
+          datanumber.push(incomesnumber)
+      else if @props.timelong == '24h'
+        for i in [24...0]
+          incomesnumber = 0
+          for service in @props.data.service_maps
+            now = new Date
+            thentime = new Date
+            for statincome in @props.statincome_detail
+              if statincome.service_id == service.service_id and Date.parse(statincome.updated_at) >= now.setHours((new Date).getHours()-i) and Date.parse(statincome.updated_at) < thentime.setHours((new Date).getHours()-i+1)
+                incomesnumber+= statincome.sum
+          datanumber.push(incomesnumber)
+      dataOut = {
+        labels: labellist
+        datasets: [{
+          label: "Thu nhập"
+          fill: true
+          lineTension: 0.1
+          backgroundColor: "rgba(75,192,192,0.4)"
+          borderColor: "rgba(75,192,192,1)"
+          borderCapStyle: 'butt'
+          borderDash: []
+          borderDashOffset: 0.0
+          borderJoinStyle: 'miter'
+          pointBorderColor: "rgba(75,192,192,1)"
+          pointBackgroundColor: "#fff"
+          pointBorderWidth: 1
+          pointHoverRadius: 5
+          pointHoverBackgroundColor: "rgba(75,192,192,1)"
+          pointHoverBorderColor: "rgba(220,220,220,1)"
+          pointHoverBorderWidth: 2
+          pointRadius: 1
+          pointHitRadius: 10
+          data: datanumber
+          spanGaps: true
+        }]
+      }
+      return dataOut
+    getTotalposition: ->
+      output = 0
+      for record in @props.position
+        if record.room_id == @props.data.id
+          output+= 1
+      return output
+    getTotalService: ->
+      output = 0
+      for record in @props.data
+        output+= record.service_maps.length
+      return output
     smallModeRender: ->
       @state.wait = 0
       @state.customer = 0
@@ -1470,53 +1563,81 @@
         for service in @props.data.service_maps
           if statincome.service_id == service.service_id
             @state.income+= statincome.sum
-      React.DOM.div className: 'card',
-        React.DOM.div className: 'col-md-9', style: {'marginBottom':'10px'},
-          React.DOM.div className: 'card-header', style: {'background': '#2b343a'},
-            React.DOM.h2 null, @props.data.name,
-              React.DOM.small null, 'Thống kê tóm tắt'
-            React.DOM.ul className: 'actions',
-              React.DOM.li null,
-                React.DOM.a href: '',
-                  React.DOM.i className: 'zmdi zmdi-refresh-alt'
-          React.DOM.div className: 'card-body card-padding card-style', style: {'background': '#2b343a'},
-            React.DOM.div className: 'col-md-4', style: {'textAlign': 'center'},
-              React.DOM.div className: 'btn-group',
-                React.DOM.button type: 'button', onClick: @drawDoughnutIncome, className: 'btn btn-default', 'Income'
-                React.DOM.button type: 'button', onClick: @drawDoughnutWait, className: 'btn btn-default', 'Wait'
-                React.DOM.button type: 'button', onClick: @drawDoughnutCustomer, className: 'btn btn-default', 'Customer'
-              React.DOM.canvas id: 'roomCanvas' + @props.data.id, width: 120, height: 120
-            React.DOM.div className: 'col-md-4', style: {'borderLeft': '1px solid rgba(255, 255, 255, 0.04)'},
-              React.DOM.p null, "Danh sách nhân viên"
-              if @props.position.length > 0
-                React.createElement ListgroupSample, room_id: @props.data.id, records: @props.position, datatype: 'employee_group'
-              else
-                React.DOM.p null, "Không có nhân viên trong phòng"
-            React.DOM.div className: 'col-md-4', style: {'borderLeft': '1px solid rgba(255, 255, 255, 0.04)'},
-              React.DOM.p null, "Danh sách dịch vụ"
-              if @props.data.service_maps.length > 0 and @props.data.service_maps != null
-                React.createElement ListgroupSample, records: @props.data.service_maps, datatype: 'service_group'
-              else
-                React.DOM.p null, "Không có dịch vụ trong phòng"
-        React.DOM.div className: 'col-md-3',
-          React.DOM.div className: 'mini-charts-item',
-            React.DOM.div className: 'chart stats-bar',
-              React.DOM.i className: 'fa fa-wheelchair fa-3x',
-            React.DOM.div className: 'count',
-              React.DOM.small null, 'Số người chờ khám'
-              React.DOM.h2 null, @state.wait
-          React.DOM.div className: 'mini-charts-item',
-            React.DOM.div className: 'chart stats-bar',
-              React.DOM.i className: 'fa fa-user fa-3x',
-            React.DOM.div className: 'count',
-              React.DOM.small null, 'Số khách khám'
-              React.DOM.h2 null, @state.customer
-          React.DOM.div className: 'mini-charts-item',
-            React.DOM.div className: 'chart stats-bar',
-              React.DOM.i className: 'fa fa-money fa-3x',
-            React.DOM.div className: 'count',
-              React.DOM.small null, 'Doanh thu'
-              React.DOM.h2 null, @state.income  
+      React.DOM.div className: 'row',
+          React.DOM.div className: 'col-sm-12 hidden-xs',
+            React.DOM.div className: 'panel',
+              React.DOM.div className: 'panel-heading',
+                React.DOM.h3 null, @props.data.name
+              React.DOM.div className: 'panel-body',
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-3 text-center',
+                    React.DOM.h4 null,
+                      React.DOM.span className: 'gfx-range', @props.timelong
+                      React.DOM.br null
+                      "Số người chờ"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.wait
+                  React.DOM.div className: 'col-md-3 text-center',
+                    React.DOM.h4 null,
+                      React.DOM.span className: 'gfx-range', @props.timelong
+                      React.DOM.br null
+                      "Số khách"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.customer
+                  React.DOM.div className: 'col-md-3 text-center',
+                    React.DOM.h4 null,
+                      React.DOM.span className: 'gfx-range', @props.timelong
+                      React.DOM.br null
+                      "Doanh thu"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.income
+                  React.DOM.div className: 'col-md-3 text-center',
+                    React.DOM.h4 null,
+                      React.DOM.span className: 'gfx-range', @props.timelong
+                      React.DOM.br null
+                      "Queries"
+                    React.DOM.div className: 'row text-center',
+                      React.DOM.span className: 'text-muted', "Under"
+                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "3"
+                      "ms"
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'spacer30'
+                  React.DOM.div className: 'col-sm-6',
+                    React.DOM.div className: 'col-sm-2 text-center',
+                      React.DOM.i className: 'fa fa-list fa-3x'
+                    React.DOM.div className: 'col-sm-10',
+                      React.DOM.h4 null, 'Danh sách nhân viên'
+                      React.DOM.span className: 'number-lg text-operation', @getTotalposition()
+                      "/"
+                      React.DOM.span null, @props.position.length
+                      React.DOM.div className: 'progress',
+                        React.DOM.div className: 'progress-bar bg-operation', style: {'width': (@getTotalposition() / @props.position.length)*100 + '%'}
+                      if @props.position.length > 0 and @getTotalposition() > 0
+                        React.createElement ListgroupSample, room_id: @props.data.id, records: @props.position, datatype: 'employee_group'
+                      else if @props.position.length > 0 and @getTotalposition() == 0
+                        React.DOM.p null, "Không có nhân viên trong phòng"
+                      else
+                        React.DOM.p null, "Không có nhân viên trong phòng"
+                  React.DOM.div className: 'col-sm-6',
+                    React.DOM.div className: 'col-sm-2 text-center',
+                      React.DOM.i className: 'fa fa-th-list fa-3x'
+                    React.DOM.div className: 'col-sm-10',
+                      React.DOM.h4 null, 'Danh sách dịch vụ'
+                      React.DOM.span className: 'number-lg text-operation', @props.data.service_maps.length
+                      "/"
+                      React.DOM.span null, @props.data.service_maps.length
+                      React.DOM.div className: 'progress',
+                        React.DOM.div className: 'progress-bar bg-operation', style: {'width': (@props.data.service_maps.length/ @props.data.service_maps.length)*100 + '%'}
+                      if @props.data.service_maps.length > 0
+                        React.createElement ListgroupSample, records: @props.data.service_maps, datatype: 'service_group'
+                      else
+                        React.DOM.p null, "Không có dịch vụ trong phòng"
+              React.DOM.div className: 'panel-heading',
+                React.DOM.h3 null, 'Thống kê biểu đồ tóm tắt'
+                React.DOM.div className: 'panel-toolbar',
+                  React.DOM.div className: 'btn-group',
+                    React.DOM.button className: 'btn btn-default btn-sm', onClick: @drawLineIncome, 'Thu nhập'
+                    React.DOM.button className: 'btn btn-default btn-sm', onClick: @drawDoughnutCustomer, 'Tổng số khách'
+              React.DOM.div className: 'panel-body',
+                React.DOM.div className: 'row', style: {'overflow':'auto'},
+                  React.DOM.canvas id: 'roomCanvas' + @props.data.id
     expandModeRender: ->
     render: ->
       if @props.datatype == 'normal'

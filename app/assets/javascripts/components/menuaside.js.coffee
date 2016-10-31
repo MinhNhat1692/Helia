@@ -13,20 +13,15 @@
       @setState toggled: !@state.toggled
     NoSubmenu: ->
       if @props.submenu.active
-        React.DOM.li
-          className: 'active'
-          onClick: @Trigger
+        React.DOM.li className: 'active', onClick: @Trigger,
           React.DOM.a null,
-            React.DOM.i
-              className: @props.submenu.className
-            @props.submenu.name
+            React.DOM.i className: @props.submenu.className
+          React.DOM.span className: 'hidden-xs', @props.submenu.name
       else
-        React.DOM.li
-          onClick: @Trigger
+        React.DOM.li onClick: @Trigger,
           React.DOM.a null,
-            React.DOM.i
-              className: @props.submenu.className
-            @props.submenu.name
+            React.DOM.i className: @props.submenu.className
+          React.DOM.span className: 'hidden-xs', @props.submenu.name
     HasSubmenu: ->
       if @props.submenu.active
         if @state.toggled
@@ -106,13 +101,46 @@
       @props.Trigger @props.submenu.code
     SubMenuRender: ->
       if @props.submenu.active
-        React.DOM.li
-          className: 'active'
-          onClick: @Trigger
+        React.DOM.li className: 'active', onClick: @Trigger,
           React.DOM.a null, @props.submenu.name
       else
-        React.DOM.li
-          onClick: @Trigger
+        React.DOM.li onClick: @Trigger,
           React.DOM.a null, @props.submenu.name
+    render: ->
+      @SubMenuRender()
+      
+@MainHeader = React.createClass
+    getInitialState: ->
+      type: 1
+    Trigger: (e) ->
+      @props.Trigger @props.submenu.code
+    TriggerCode: (code) ->
+      @props.Trigger code
+    Toggled: (e) ->
+      @setState toggled: !@state.toggled
+    HasSubmenu: ->
+      React.DOM.div className: 'dashboard-header',
+        React.DOM.h1 null, @props.data.name
+        React.DOM.div className: 'tabbable',
+          React.DOM.ul className: "nav nav-tabs",
+            for submenu in @props.data.records
+              React.createElement SubMenuHeader, key: submenu.code, task: @props.task, submenu: submenu, Trigger: @TriggerCode  
+    render: ->
+      @HasSubmenu()
+
+@SubMenuHeader = React.createClass
+    Trigger: (e) ->
+      @props.Trigger @props.submenu.code
+    SubMenuRender: ->
+      if @props.submenu.code == @props.task
+        React.DOM.li className: 'active', onClick: @Trigger,
+          React.DOM.a null,
+            React.DOM.i className: @props.submenu.icon
+            @props.submenu.name
+      else
+        React.DOM.li className: '', onClick: @Trigger,
+          React.DOM.a null,
+            React.DOM.i className: @props.submenu.icon
+            @props.submenu.name
     render: ->
       @SubMenuRender()

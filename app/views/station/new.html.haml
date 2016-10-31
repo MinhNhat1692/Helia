@@ -1,52 +1,79 @@
-%body.blank
-.login-content
-  / Main content
-  .lc-block
-    .container-center.animated.slideInDown
-      .panel.panel-filled
-        .panel-body.row
-          = form_for(:station , url: station_path, html: {multipart: true}) do |f|
-            .col-md-12
-              .row.m-b-20
-                .col-md-3.hidden-xs
-                  %span Tên phòng khám
-                .col-md-9
-                  = f.text_field :sname, class: 'form-control', placeholder: 'Tên phòng khám'
-              .row.m-b-20
-                .col-md-3.hidden-xs
-                  %span Quốc gia
-                .col-md-9
-                  = f.collection_select :country, Nation.where(lang: "vi"), :id, :name, {prompt: "Địa chỉ"}, {class: "form-control"}
-              .row.m-b-20
-                .col-md-3.hidden-xs
-                  %span Tỉnh/ TP
-                .col-md-9
-                  = f.collection_select :city, City.where(lang: "vi", nation_id: 1), :id, :name, {prompt: "Tỉnh/ TP"}, {class: "form-control"}
-              .row.m-b-20
-                .col-md-3.hidden-xs
-                  %span Quận/ Huyện
-                .col-md-9
-                  = f.collection_select :province, Province.where(lang: "vi", city_id: 1), :id, :name, {prompt: "Quận/ Huyện"}, {class: "form-control"}
-              .row.m-b-20
-                .col-md-3.hidden-xs
-                  %span Địa chỉ
-                .col-md-9
-                  = f.text_field :address, class: 'form-control', placeholder: 'Địa chỉ'
-              .row.m-b-20
-                .col-md-3.hidden-xs
-                  %span Số điện thoại
-                .col-md-9
-                  = f.text_field :pnumber, class: 'form-control', placeholder: 'Số điện thoại'
-              .row.m-b-20
-                .col-md-3.hidden-xs
-                  %span Trang chủ
-                .col-md-9
-                  = f.text_field :hpage, class: 'form-control', placeholder: 'Trang chủ'
-              .row.m-b-20
-                .col-md-3.hidden-xs
-                  %span Logo
-                .col-md-9
-                  = f.file_field :logo
-            %div
-              = button_tag(type: 'submit', class: "btn btn-default btn-float btn-login") do
-                %i.zmdi.zmdi-check
+%body
+  .blurred-dashboard.clear-page
+    .text-center.dark
+      %a{:href => "/"}
+        %img{:alt => "Algolia504x160 dark", :height => "82.5", :src => "https://www.algolia.com/assets/flat2/algolia/algolia504x160_dark-d92e7dab9af1342a881f1d8cd252ae56.png", :width => "260"}/
+      %h1.h3 Quản lý theo cách của bạn bằng công cụ của chúng tôi
+      .spacer20
+    .container
+      %section#new-user.m900.m-l-r-auto
+        .row.fill-white
+          .col-md-6.col-md-offset-1
+            .panel-heading.text-center
+              %h2
+                Bắt đầu cài đặt
+            .panel-body
+              = form_for(:station , url: station_path, html: {multipart: true}) do |f|
+                .form-group.email.optional.user_email
+                  .input-group
+                    %span.input-group-addon
+                      %i.fa.fa-user.icon-fw
+                    = f.text_field :sname, class: 'form-control', placeholder: 'Tên phòng khám'
+                .form-group.password.optional.user_password
+                  .input-group
+                    %span.input-group-addon
+                      %i.fa.fa-envelope.icon-fw
+                    = f.text_field :address, class: 'form-control', placeholder: 'Địa chỉ'
+                .form-group.password.optional.user_password
+                  .input-group
+                    %span.input-group-addon
+                      %i.fa.fa-lock.icon-fw
+                    = f.text_field :pnumber, class: 'form-control', placeholder: 'Số điện thoại'
+                .form-group.password.optional.user_password
+                  .input-group
+                    %span.input-group-addon
+                      %i.fa.fa-lock.icon-fw
+                    = f.text_field :hpage, class: 'form-control', placeholder: 'Trang chủ'
+                .form-group.password.optional.user_password
+                  .input-group
+                    %span.input-group-addon
+                      %i.fa.fa-lock.icon-fw
+                    = f.file_field :logo
+                .spacer20
+                %button.btn.btn-lg.btn-block.btn-static-primary{:type => "submit"}
+                  Khởi tạo
+                .spacer10
+                %small.text-center.text-muted
+                  Bằng việc nhấn nút "Khởi tạo" Tôi đồng ý với các 
+                  %a{:href => "/policies/terms", :target => "_blank"} Điều khoản dịch vụ
+                  và
+                  %a{:href => "/policies/privacy", :target => "_blank"} Điều khoản bảo mật
+                  của Yarosa
+              .spacer20
+              %p.lead.text-center
+                Bạn đã có tài khoản khác ?
+                %a{:href => "/logout"} Đăng nhập lại
+          .col-md-4.col-md-offset-1.hidden-xs.b-l.sign-up-infos
+            .spacer40
+            %h4.text-center 14 ngày trải nghiệm phiên bản không giới hạn
+            %ul.text-center.list-unstyled.small
+              %li Không yêu cầu thông tin thanh toán
+              %li
+                Nhận được
+                %strong đầy đủ
+                sự hỗ trợ từ
+                %strong nhà phát triển
+                dịch vụ
+            .spacer20
+            %p.text-center
+              %img{:alt => "Plus sign", :src => "https://www.algolia.com/assets/flat2/get-started/plus-sign-ffa8e29c4eb16553d24b0901c6e85d09.png"}/
+            .spacer10
+            %h4.text-center Bản miễn phí cho sinh viên
+            %ul.text-center.list-unstyled.small
+              %li 500 bản ghi
+              %li Không hỗ trợ thống kê, báo cáo
+              %li
+                %a{:href => "/pricing", :target => "_blank"} bạn có thể nâng cấp tài khoản nếu muốn
+            .spacer40
+          .col-md-4.col-md-offset-1.hidden-xs.b-l.fill-white
+            .spacer20

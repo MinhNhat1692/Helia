@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161018093954) do
+ActiveRecord::Schema.define(version: 20161031065818) do
+
+  create_table "apikeys", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.string   "appid"
+    t.string   "soapi"
+    t.string   "mapi"
+    t.string   "adminapi"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["adminapi"], name: "index_apikeys_on_adminapi", unique: true, using: :btree
+    t.index ["appid"], name: "index_apikeys_on_appid", unique: true, using: :btree
+    t.index ["mapi"], name: "index_apikeys_on_mapi", unique: true, using: :btree
+    t.index ["soapi"], name: "index_apikeys_on_soapi", unique: true, using: :btree
+    t.index ["user_id"], name: "index_apikeys_on_user_id", using: :btree
+  end
 
   create_table "bill_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "remark",       limit: 65535
@@ -91,6 +106,17 @@ ActiveRecord::Schema.define(version: 20161018093954) do
     t.text     "family_history",      limit: 65535
     t.text     "drug_history",        limit: 65535
     t.index ["station_id"], name: "index_customer_records_on_station_id", using: :btree
+  end
+
+  create_table "demo_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "fname"
+    t.string   "lname"
+    t.string   "email"
+    t.string   "sname"
+    t.string   "pnumber"
+    t.datetime "demotime"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "doctor_check_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -665,6 +691,7 @@ ActiveRecord::Schema.define(version: 20161018093954) do
     t.index ["station_id"], name: "index_visit_bills_on_station_id", using: :btree
   end
 
+  add_foreign_key "apikeys", "users"
   add_foreign_key "bill_infos", "order_maps"
   add_foreign_key "bill_infos", "stations"
   add_foreign_key "check_infos", "order_maps"

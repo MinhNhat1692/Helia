@@ -1426,7 +1426,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin nhân viên'
-              React.DOM.small null, 'Description'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-7',
@@ -1472,7 +1471,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin phòng'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1498,7 +1496,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin chức vụ'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1536,7 +1533,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin dịch vụ'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1574,7 +1570,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu định chức vụ'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1604,7 +1599,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu định phòng cho dịch vụ'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1634,7 +1628,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin bệnh nhân'
-              React.DOM.small null, 'Mời bạn điền vào các thông tin yêu cầu'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-7',
@@ -1708,7 +1701,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Bản ghi dịch vụ'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1760,7 +1752,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin nguồn cấp thuốc'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1822,7 +1813,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin Doanh nghiệp sản xuất thuốc'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1863,7 +1853,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin Mẫu thuốc'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -1914,7 +1903,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu hóa đơn nhập thuốc'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2001,7 +1989,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin thuốc nhập kho'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2063,7 +2050,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin thuốc nhập kho'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2117,7 +2103,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin giá thuốc'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2149,7 +2134,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin đơn thuốc ngoài'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2216,7 +2200,7 @@
                       React.DOM.div className: 'col-sm-3',
                         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Thêm', modalid: 'modalexternalrecordmini', type: 5
                         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
-                        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Tải danh sách các thuốc trong đơn', type: 3, code: 'medicine_external_record', Clicked: @refreshChildRecord
+                        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Tải danh sách thuốc', type: 3, code: 'medicine_external_record', Clicked: @refreshChildRecord
                     React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
             React.DOM.div className: 'modal-footer',
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
@@ -2226,7 +2210,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin thuốc kê ngoài'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2286,7 +2269,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin thuốc kê ngoài'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2330,7 +2312,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin đơn thuốc trong'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2427,7 +2408,7 @@
                         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-plus', text: ' Thêm', modalid: 'modalinternalrecordmini', type: 5
                         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Xóa', type: 1, Clicked: @handleDelete
                         React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Lấy tổng giá', type: 3, code: 'internal_record', Clicked: @triggerSumChild
-                        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Tải danh sách các thuốc trong đơn', type: 3, code: 'medicine_internal_record', Clicked: @refreshChildRecord
+                        React.createElement ButtonGeneral, className: 'btn btn-default', icon: 'fa fa-trash-o', text: ' Tải danh sách thuốc', type: 3, code: 'medicine_internal_record', Clicked: @refreshChildRecord
                     React.DOM.button type: 'submit', className: 'btn btn-default pull-right', 'Lưu'
             React.DOM.div className: 'modal-footer',
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
@@ -2437,7 +2418,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin thuốc kê trong'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2507,7 +2487,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin thuốc kê trong'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2561,7 +2540,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Mẫu thông tin kho thuốc'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2628,7 +2606,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Thông tin điều trị'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -2685,7 +2662,6 @@
           React.DOM.div className: 'modal-content',
             React.DOM.div className: 'modal-header text-center',
               React.DOM.h4 className: 'modal-title', 'Thông tin khám'
-              React.DOM.small null, 'mời bạn điền vào các thông tin yêu cầu dưới đây'
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-12',
@@ -3104,9 +3080,9 @@
                       React.DOM.p null, record.work_place
             React.DOM.div className: 'row',
               React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
+                React.DOM.button className: 'btn btn-default bg-indigo pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-green pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-black pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
         else
           React.DOM.div className: 'tab-content active', id: @props.id,
             React.DOM.div className: 'row',
@@ -3186,9 +3162,9 @@
                         React.createElement InputField, id: 'form_work_place', className: 'form-control', type: 'text', code: 'work_place', placeholder: 'Nơi làm việc', style: '', defaultValue: record.work_place, trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
             React.DOM.div className: 'row',
               React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
+                React.DOM.button className: 'btn btn-default bg-indigo pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-green pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-black pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
       else
         React.DOM.div className: 'tab-content'
     checkInfoRender: ->
@@ -3273,9 +3249,9 @@
                         ''
             React.DOM.div className: 'row',
               React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
+                React.DOM.button className: 'btn btn-default bg-indigo pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-green pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-black pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
         else
           React.DOM.div className: 'tab-content active', id: @props.id,
             React.DOM.div className: 'row',
@@ -3351,9 +3327,9 @@
                         ''
             React.DOM.div className: 'row',
               React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
+                React.DOM.button className: 'btn btn-default bg-indigo pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-green pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-black pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
       else
         React.DOM.div className: 'tab-content'
     doctorCheckInfoRender: ->
@@ -3457,9 +3433,9 @@
                 React.DOM.p style: {'paddingLeft': '20px', 'paddingTop': '20px'}, record.kluan
             React.DOM.div className: 'row',
               React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
+                React.DOM.button className: 'btn btn-default bg-indigo pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-green pull-right', icon: 'fa fa-trash-o', text: ' Sửa', type: 1, Clicked: @changeEditState
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-black pull-right disabled', icon: 'fa fa-plus', text: ' Thêm', type: 1, Clicked: @trigger
         else
           React.DOM.div className: 'tab-content active', id: @props.id,
             React.DOM.div className: 'row',
@@ -3557,9 +3533,9 @@
                       React.DOM.textarea id: 'form_kluan', className: 'form-control', placeholder: 'Kết luận', defaultValue: record.kluan
             React.DOM.div className: 'row',
               React.DOM.div className: 'col-md-12', style: {'padding': '40px 40px 15px 40px'},
-                React.DOM.button className: 'btn btn-default pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
-                React.createElement ButtonGeneral, className: 'btn btn-default pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
+                React.DOM.button className: 'btn btn-default bg-indigo pull-right', 'data-dismiss': 'modal', type: 'button', 'Đóng'
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-green pull-right', icon: 'fa fa-trash-o', text: ' Bỏ', type: 1, Clicked: @triggerCancelEdit
+                React.createElement ButtonGeneral, className: 'btn btn-default bg-black pull-right', icon: 'fa fa-plus', text: ' Lưu', type: 1, Clicked: @triggerSubmit
       else
         React.DOM.div className: 'tab-content'
     render: ->

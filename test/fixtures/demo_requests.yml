@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fname: MyString
+  lname: MyString
+  email: MyString
+  sname: MyString
+  pnumber: MyString
+  demotime: 2016-10-27 00:26:46
+
+two:
+  fname: MyString
+  lname: MyString
+  email: MyString
+  sname: MyString
+  pnumber: MyString
+  demotime: 2016-10-27 00:26:46

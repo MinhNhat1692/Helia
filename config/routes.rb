@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   
+  post '/apikey/getkey', to: 'apikey#getkey'
+  post '/apikey/changekey', to: 'apikey#changekey'
+  post '/apikey/addkey', to: 'apikey#addkey'
+  
   post '/room_manager/list', to: 'room_manager#list'
 
   delete '/bill_info', to: 'bill_info#destroy'
@@ -190,7 +194,12 @@ Rails.application.routes.draw do
   post '/changelogs', to: 'home#changelogfind'
   get '/news', to: 'home#news'
   post '/news', to: 'home#newsfind'
-  
+  get '/features', to: 'home#features'
+  get '/pricing', to: 'home#pricing'
+  get '/enterprise', to: 'home#enterprise'
+  get '/enterprise/demo', to: 'home#demo'
+  post '/enterprise/demo', to: 'home#demoadd'
+  get '/documentation', to: 'home#documentation'
   
   get  '/signup',  to: 'users#usershow'
   post '/signup',  to: 'users#create'

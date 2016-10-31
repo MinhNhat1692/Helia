@@ -1,19 +1,23 @@
-%body.blank
-.login-content
-  / Main content
-  .lc-block
-    .container-center.animated.slideInDown
-      .panel.panel-filled
+%body
+  .blurred-dashboard.clear-page
+    .text-center.dark
+      %a{:href => "/"}
+        %img{:alt => "Algolia504x160 dark", :height => "82.5", :src => "https://www.algolia.com/assets/flat2/algolia/algolia504x160_dark-d92e7dab9af1342a881f1d8cd252ae56.png", :width => "260"}/
+      %h1.h3 Quản lý theo cách của bạn bằng công cụ của chúng tôi
+      .spacer20
+    .container
+      %section.m400.m-l-r-auto.fill-white
+        .panel-heading
+          %h2.text-center Quên mật khẩu?
         .panel-body
           = form_for(:password_reset, url: password_resets_path) do |f|
-            .input-group.m-b-20
-              %span.input-group-addon
-                %i.fa.fa-envelope
-              .fg-line
-                = f.email_field :email, class: 'form-control', placeholder: 'Nhập Email'
-            %div
-              = button_tag(type: 'submit', class: "btn btn-default btn-float btn-login") do
-                %i.zmdi.zmdi-arrow-forward
-    .lcb-navigation
-      %a.btn.btn-default{:href => '/login', style: "margin: 5px"} Đăng nhập
-      %a.btn.btn-default{:href => '/signup', style: "margin: 5px"} Đăng ký
+            %p Đừng lo! Chỉ cần bạn nhập email vào, chúng tôi sẽ gửi cho bạn hướng dẫn lấy lại mật khẩu.
+            %br/
+            .form-group.email.optional.user_email
+              .input-group
+                %span.input-group-addon
+                  %i.fa.fa-envelope-o.icon-fw
+                = f.email_field :email, class: 'string email required form-control', placeholder: 'Nhập Email'
+            .spacer20
+            %a.btn.btn-default.btn-small{:href => "/login"} Quay lại đăng nhập
+            %input.btn.btn-default.pull-right{:name => "commit", :type => "submit", :value => "Lấy lại mật khẩu"}/
