@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161031065818) do
+ActiveRecord::Schema.define(version: 20161103042709) do
 
   create_table "apikeys", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -117,6 +117,31 @@ ActiveRecord::Schema.define(version: 20161031065818) do
     t.datetime "demotime"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "doc_cats", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.string   "icon_link"
+    t.string   "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "doc_cons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "doc_subs_id"
+    t.string   "header"
+    t.text     "content",     limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["doc_subs_id"], name: "index_doc_cons_on_doc_subs_id", using: :btree
+  end
+
+  create_table "doc_subs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "doc_cats_id"
+    t.string   "name"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["doc_cats_id"], name: "index_doc_subs_on_doc_cats_id", using: :btree
   end
 
   create_table "doctor_check_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -698,6 +723,8 @@ ActiveRecord::Schema.define(version: 20161031065818) do
   add_foreign_key "check_infos", "stations"
   add_foreign_key "cities", "nations"
   add_foreign_key "customer_records", "stations"
+  add_foreign_key "doc_cons", "doc_subs", column: "doc_subs_id"
+  add_foreign_key "doc_subs", "doc_cats", column: "doc_cats_id"
   add_foreign_key "doctor_check_infos", "order_maps"
   add_foreign_key "doctor_check_infos", "stations"
   add_foreign_key "doctor_profiles", "users"

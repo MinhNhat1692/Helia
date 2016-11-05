@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="83px" height="75px" viewBox="0 0 83 75" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.2 (29753) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="11.3222773 3.81560799 12.6153846 5.83331227 2.32516473 12.0978612 12.6153846 18.3926153 11.2069297 20.3499093 0 13.3846008 0 10.7809165"></polygon>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="12.6153846" height="16.5343013" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <polygon id="path-3" points="47.9384615 12.0527858 47.9384615 14.6625111 36.7315318 21.6217786 35.3230769 19.6644846 45.6132968 13.3697305 35.3230769 7.11122263 36.6161842 5.08747731"></polygon>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="12.6153846" height="16.5343013" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+        <polygon id="path-5" points="18.4520192 26.7092559 16.4 25.7439338 28.2535634 0 30.2769231 1.01962147"></polygon>
+        <mask id="mask-6" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="13.8769231" height="26.7092559" fill="white">
+            <use xlink:href="#path-5"></use>
+        </mask>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="pricing-page" transform="translate(-551.000000, -3781.000000)" fill="#FFFFFF">
+            <g id="block-feature" transform="translate(0.000000, 3733.000000)">
+                <g id="illustrations" transform="translate(271.000000, 17.000000)">
+                    <g id="Group-5" transform="translate(257.000000, 0.000000)">
+                        <g id="Group-45">
+                            <g id="Group-3" transform="translate(24.000000, 32.000000)">
+                                <path d="M80.9155815,55.6156661 C80.9155815,57.6595601 79.2730585,59.3155339 77.2457662,59.3155339 L3.84693538,59.3155339 C1.81964308,59.3155339 0.17712,57.6595601 0.17712,55.6156661 L0.17712,3.81624392 C0.17712,1.77234991 1.81964308,0.115104174 3.84693538,0.115104174 L77.2457662,0.115104174 C79.2730585,0.115104174 80.9155815,1.77234991 80.9155815,3.81624392 L80.9155815,55.6156661 Z" id="Fill-4606" stroke="#2897C5" stroke-width="2"></path>
+                                <polygon id="Fill-4607" stroke="#2897C5" stroke-width="2" points="51.5565538 68.7966838 29.5364 68.7966838 29.5364 59.3161699 51.5565538 59.3161699"></polygon>
+                                <path d="M58.8959323,70.6471265 C58.8959323,71.6684376 58.0746708,72.4964245 57.0603938,72.4964245 L24.0320554,72.4964245 C23.01904,72.4964245 22.1965169,71.6684376 22.1965169,70.6471265 C22.1965169,69.6245436 23.01904,68.7965567 24.0320554,68.7965567 L57.0603938,68.7965567 C58.0746708,68.7965567 58.8959323,69.6245436 58.8959323,70.6471265" id="Fill-4608" stroke="#2897C5" stroke-width="2"></path>
+                                <path d="M80.9155815,55.6156661 L80.9155815,44.5160624 L0.17712,44.5160624 L0.17712,55.6156661 C0.17712,57.6595601 1.82090462,59.3155339 3.84693538,59.3155339 L77.2457662,59.3155339 C79.2730585,59.3155339 80.9155815,57.6595601 80.9155815,55.6156661" id="Fill-4609" stroke="#2897C5" stroke-width="2"></path>
+                                <path d="M40.5463508,56.4507755 C38.1926516,56.4507755 36.2769262,54.5193619 36.2769262,52.1463881 C36.2769262,49.7734142 38.1926516,47.8420007 40.5463508,47.8420007 C42.9011421,47.8420007 44.8157754,49.7734142 44.8157754,52.1463881 C44.8157754,54.5193619 42.9011421,56.4507755 40.5463508,56.4507755" id="Fill-4610" stroke="#2897C5" stroke-width="1.5"></path>
+                                <g id="Fill-4614-+-Fill-4619-+-Fill-4641" transform="translate(17.661538, 10.174955)" stroke="#FB366E" stroke-width="5.05263158">
+                                    <use id="Fill-4614" mask="url(#mask-2)" xlink:href="#path-1"></use>
+                                    <use id="Fill-4619" mask="url(#mask-4)" xlink:href="#path-3"></use>
+                                    <use id="Fill-4641" mask="url(#mask-6)" xlink:href="#path-5"></use>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

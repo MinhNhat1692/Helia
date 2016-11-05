@@ -2,7 +2,7 @@
   .container
     .navbar-header
       %a.logo{:href => "/"}
-        %img{:height => "48", :src => "https://www.algolia.com/static_assets/images/flat2/algolia/algolia256x80_dark-b5d00e91.png", :width => "140"}/
+        %img{:height => "48", :src => "/assets/aligosa256x80_dark-b5d00e91.png", :width => "140"}/
       %button.mobile-menu.navbar-toggle.collapsed{"data-target" => "#main-navigation-collapsed", "data-toggle" => "collapse", :type => "button"}
         %i.fa.fa-align-justify
         MENU
@@ -30,7 +30,7 @@
               %a{"data-no-turbolink" => "true", :href => "/changelogs"} Cập nhật
             %li
               %a{"data-no-turbolink" => "true", :href => "/documentation"}
-                %img{:src => "https://www.algolia.com/static_assets/images/svg/logo-community-sm-86de0024.svg", :width => "32"}/
+                %img{:src => "/assets/logo-community-sm-86de0024.svg", :width => "32"}/
                 Trung tâm hướng dẫn
         %li.visible-xs
           %a{"data-no-turbolink" => "true", :href => "/features"} Sản phẩm
@@ -44,12 +44,12 @@
           %a{"data-no-turbolink" => "true", :href => "changelogs"} Cập nhật
         %li.visible-xs
           %a{"data-no-turbolink" => "true", :href => "documentation"}
-            %img{:src => "https://www.algolia.com/static_assets/images/svg/logo-community-sm-86de0024.svg", :width => "32"}/
+            %img{:src => "/assets/logo-community-sm-86de0024.svg", :width => "32"}/
             Trung tâm hướng dẫn
       %ul.nav.nav-pills.pull-right.al-wait-current-user{:style => "display: block;"}
         - if logged_in?
           %li.al-visible-current-user
-            %a{"data-no-turbolink" => "true", :href => "/station"} Bảng điều khiển
+            %a{"data-no-turbolink" => "true", :href => "/station", "target" => "_blank"} Bảng điều khiển
           %li.header-sign-out.al-visible-current-user
             %a#signout-link{"data-no-turbolink" => "true", :href => "/logout"}
               %i.hidden-xs.fa.fa-power-off

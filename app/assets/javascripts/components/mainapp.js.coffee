@@ -1,5 +1,6 @@
 @MainApp = React.createClass
     getInitialState: ->
+      loading: false
       type: 1
       data: @props.data
       task: @props.task #11 - employee
@@ -195,18 +196,21 @@
             link: '/order_map/list'
           @handleGetdata(data)
     handleGetdata: (data) ->
+      @setState loading: true
       $.ajax
         url: data.link
         type: 'POST'
         dataType: 'JSON'
         success: ((result) ->
           @setState
+            loading: false
             data: result
             task: data.task
           $(APP).trigger('rebuild')
           return
         ).bind(this)
     handleGetdataAlt: (data) ->
+      @setState loading: true
       $.ajax
         url: data.link
         type: 'POST'
@@ -214,6 +218,7 @@
         dataType: 'JSON'
         success: ((result) ->
           @setState
+            loading: false
             data: result
             task: data.task
           return
@@ -221,107 +226,187 @@
     Support: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DataMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement Support, data: @state.data
+        if @state.loading
+          React.DOM.div className: 'content-wrapper animated fadeIn', style: {'height': '50vh'},
+            React.DOM.div className: 'preloader',
+              React.DOM.i className: 'fa fa-cog fa-spin fa-3x'
+        else
+          React.createElement Support, data: @state.data
     Employee: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DataMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'employee' 
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'employee' 
     Position: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DataMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'position'
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'position'
     Room: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DataMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'room'
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'room'
     Service: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DataMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'service'
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'service'
     PosMap: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DataMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'posmap'
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'posmap'
     SerMap: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DataMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'sermap'
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'sermap'
     CustomerRecord: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PatientMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'customer_record' #31
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'customer_record' #31
     OrderMap: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PatientMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'order_map' #32
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'order_map' #32
     CheckInfo: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PatientMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'check_info'
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'check_info'
     DoctorCheckInfo: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PatientMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'doctor_check_info'
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'doctor_check_info'
     MedicineSupplier: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_supplier' #task = code = 41
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_supplier' #task = code = 41
     MedicineCompany: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_company' #task = code = 42
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_company' #task = code = 42
     MedicineSample: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_sample' #task = code = 43
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_sample' #task = code = 43
     MedicineBillIn: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_bill_in' #task = code = 44
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_bill_in' #task = code = 44
     MedicineBillRecord: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_bill_record' #task = code = 45
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_bill_record' #task = code = 45
     MedicinePrice: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_price' #task = code = 46
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_price' #task = code = 46
     MedicinePrescriptExternal: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_prescript_external' #task = code = 47
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_prescript_external' #task = code = 47
     MedicineExternalRecord: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_external_record' #task = code = 48
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_external_record' #task = code = 48
     MedicinePrescriptInternal: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_prescript_internal' #task = code = 49
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_prescript_internal' #task = code = 49
     MedicineInternalRecord: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_internal_record' #task = code = 50
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_internal_record' #task = code = 50
     MedicineStockRecord: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'medicine_stock_record' #task = code = 51
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_stock_record' #task = code = 51
     RoomManager: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DoctorMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement RoomManager, data: @state.data, timelong: @state.timelong #task = code = 60
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement RoomManager, data: @state.data, timelong: @state.timelong #task = code = 60
     DoctorRoom: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.DoctorMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'doctor_room' #task = code = 63
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'doctor_room' #task = code = 63
     ApiKey: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.ApiMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'apikey' #task = code = 101
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'apikey' #task = code = 101
     TeamControl: ->
       React.DOM.section id: 'content',
         React.createElement MainHeader, data: @state.TeamMenu, task: @state.task, Trigger: @TriggerCode
-        React.createElement MainPart, data: @state.data, datatype: 'team_control' #task = code = 101
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'team_control' #task = code = 101
     render: ->
       switch @state.task
         when 5

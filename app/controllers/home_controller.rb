@@ -142,4 +142,41 @@ class HomeController < ApplicationController
 		  @has_dprofile = false
     end
   end
+  
+  def documentation_guide
+    if logged_in?
+			@user = current_user
+		  @has_profile = has_profile?
+		  @has_station = has_station?
+		  @has_dprofile = has_doctor_profile?
+		  @cat = DocCat.all()
+		  @sub = DocSub.all()
+		  if params.has_key?(:sub_id)
+				@con = DocCon.where("doc_subs_id = ?" , params[:sub_id])
+			else
+				@con = DocCon.where("doc_subs_id = 1")
+			end
+		else
+      @has_profile = false
+		  @has_station = false
+		  @has_dprofile = false
+		  @cat = DocCat.all()
+		  @sub = DocSub.all()
+		  if params.has_key?(:sub_id)
+				@con = DocCon.where("doc_subs_id = ?" , params[:sub_id])
+			else
+				@con = DocCon.where("doc_subs_id = 1")
+			end
+    end
+  end
+  
+  def documentation_guide_request
+		if params.has_key?(:sub_id)
+			@con = DocCon.where("doc_subs_id = ?" , params[:sub_id])
+			render json: @con
+		else
+		  @con = DocCon.where("doc_subs_id = 1")
+		  render json: @con
+		end
+	end
 end

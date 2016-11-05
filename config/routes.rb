@@ -200,6 +200,16 @@ Rails.application.routes.draw do
   get '/enterprise/demo', to: 'home#demo'
   post '/enterprise/demo', to: 'home#demoadd'
   get '/documentation', to: 'home#documentation'
+  get '/documentation/guides', to: 'home#documentation_guide'
+  post '/documentation/guides', to: 'home#documentation_guide_request'
+  get '/documentation/guides/gettingstarted', to: 'home#documentation_guide', :sub_id => 1
+  get '/documentation/guides/indexing', to: 'home#documentation_guide', :sub_id => 3
+  get '/documentation/guides/search', to: 'home#documentation_guide', :sub_id => 1
+  get '/documentation/guides/relevance', to: 'home#documentation_guide', :sub_id => 1
+  get '/documentation/guides/geosearch', to: 'home#documentation_guide', :sub_id => 1
+  get '/documentation/guides/security', to: 'home#documentation_guide', :sub_id => 1
+  get '/documentation/guides/analytics', to: 'home#documentation_guide', :sub_id => 1
+  get '/documentation/guides/account', to: 'home#documentation_guide', :sub_id => 1
   
   get  '/signup',  to: 'users#usershow'
   post '/signup',  to: 'users#create'

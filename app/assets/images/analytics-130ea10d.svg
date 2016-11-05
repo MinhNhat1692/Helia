@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="62px" height="62px" viewBox="0 0 62 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>analytics</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="28" cy="28" r="28"></circle>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="0" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <mask id="mask-3" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-2.50746269" y="-2.50746269" width="61.0149254" height="61.0149254">
+            <rect x="-2.50746269" y="-2.50746269" width="61.0149254" height="61.0149254" fill="white"></rect>
+            <use xlink:href="#path-1" fill="black"></use>
+        </mask>
+    </defs>
+    <g id="Pricing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="pricing-page-final?" transform="translate(-140.000000, -2681.000000)">
+            <g id="block-record-op-copy" transform="translate(0.000000, 1124.000000)">
+                <g id="Group-137" transform="translate(135.000000, 801.000000)">
+                    <g id="block-feature-included">
+                        <g id="Group-117" transform="translate(0.000000, 178.000000)">
+                            <g id="analytics" transform="translate(8.000000, 581.000000)">
+                                <g id="Oval-15" filter="url(#filter-2)" stroke-opacity="0.476137908" stroke="#99B2CB" stroke-width="5.01492537">
+                                    <use mask="url(#mask-3)" xlink:href="#path-1"></use>
+                                </g>
+                                <path d="M28,52 C41.254834,52 52,41.254834 52,28 C52,14.745166 41.254834,4 28,4 C14.745166,4 4,14.745166 4,28 C4,41.254834 14.745166,52 28,52 Z M12.3802083,30.9335417 L12.3802083,41.2197917 L20.380625,41.2197917 L20.380625,30.9335417 L12.3802083,30.9335417 Z M22.6664583,20.6472917 L22.6664583,41.2197917 L30.666875,41.2197917 L30.666875,20.6472917 L22.6664583,20.6472917 Z M32.9527083,12.646875 L32.9527083,41.2197917 L40.953125,41.2197917 L40.953125,12.646875 L32.9527083,12.646875 Z" id="Path-7-Copy" fill="#99B2CB"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

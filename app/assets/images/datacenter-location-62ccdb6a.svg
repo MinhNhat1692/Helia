@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="61px" height="61px" viewBox="0 0 61 61" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>datacenter-location</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="27.5111263" cy="27.5111263" r="27.5111263"></circle>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="0" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <mask id="mask-3" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-2.43478261" y="-2.43478261" width="59.8918179" height="59.8918179">
+            <rect x="-2.43478261" y="-2.43478261" width="59.8918179" height="59.8918179" fill="white"></rect>
+            <use xlink:href="#path-1" fill="black"></use>
+        </mask>
+    </defs>
+    <g id="Pricing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="pricing-page-final?" transform="translate(-140.000000, -2105.000000)">
+            <g id="block-record-op-copy" transform="translate(0.000000, 1124.000000)">
+                <g id="Group-137" transform="translate(135.000000, 801.000000)">
+                    <g id="block-feature-included">
+                        <g id="Group-117" transform="translate(0.000000, 178.000000)">
+                            <g id="datacenter-location" transform="translate(8.000000, 5.000000)">
+                                <g id="Operations-24" transform="translate(0.093311, 0.083077)" stroke-opacity="0.476137908" stroke="#99B2CB" stroke-width="4.86956522">
+                                    <g id="Oval-15" filter="url(#filter-2)">
+                                        <use mask="url(#mask-3)" xlink:href="#path-1"></use>
+                                    </g>
+                                </g>
+                                <path d="M44.3901586,44.1467684 C53.5990984,34.9378285 53.5990984,20.0071871 44.3901586,10.7982472 C35.1812187,1.58930742 20.2505773,1.58930742 11.0416374,10.7982472 C1.83269762,20.0071871 1.83269762,34.9378285 11.0416374,44.1467684 C20.2505773,53.3557082 35.1812187,53.3557082 44.3901586,44.1467684 Z M27.5942029,43.3148465 C27.5942029,43.3148465 38.074632,28.1421695 38.074632,22.3539884 C38.074632,16.5658072 33.382384,11.8735593 27.5942029,11.8735593 C21.8060217,11.8735593 17.1137738,16.5658072 17.1137738,22.3539884 C17.1137738,28.1421695 27.5942029,43.3148465 27.5942029,43.3148465 Z M27.5942029,26.6070075 C29.6536715,26.6070075 31.3232006,24.9374784 31.3232006,22.8780098 C31.3232006,20.8185412 29.6536715,19.1490121 27.5942029,19.1490121 C25.5347343,19.1490121 23.8652052,20.8185412 23.8652052,22.8780098 C23.8652052,24.9374784 25.5347343,26.6070075 27.5942029,26.6070075 Z" id="Path-21-Copy" fill="#99B2CB"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

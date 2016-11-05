@@ -194,7 +194,11 @@
 
 @MainPart = React.createClass
     getInitialState: ->
-      records: @props.data[0]
+      records:
+        if @props.data[0] != undefined
+          @props.data[0]
+        else
+          []
       selected: null
       record: null
       classSideBar: 'sidebar'
@@ -210,7 +214,7 @@
       currentpage: 1
       firstcount: 0
       lastcount:
-        if @props.data[0] != null
+        if @props.data[0] != null and @props.data[0] != undefined
           if @props.data[0].length < 10
             @props.data[0].length
           else
@@ -235,7 +239,7 @@
           currentpage: 1
           firstcount: 0
           lastcount:
-            if @props.data[0] != null
+            if @props.data[0] != null and @props.data[0] != undefined
               if @props.data[0].length < 10
                 @props.data[0].length
               else
@@ -258,6 +262,72 @@
       else if toasttype == 3
         toastr.error(message)
       return
+    getTotalRecordNumberCreated: (time,type) ->
+      now = new Date
+      total = 0
+      if @state.records != undefined
+        switch type
+          when 1#day
+            for record in @state.records
+              if Date.parse(record.created_at) >= now.setDate((new Date).getDate()-time)
+                total += 1
+            return total
+          when 2#month
+            for record in @state.records
+              if Date.parse(record.created_at) >= now.setMonth((new Date).getMonth()-time)
+                total += 1
+            return total
+          when 3#hours
+            for record in @state.records
+              if Date.parse(record.created_at) >= now.setHours((new Date).getHours()-time)
+                total += 1
+            return total
+      else
+        return total
+    getTotalRecordNumberUpdated: (time,type) ->
+      now = new Date
+      total = 0
+      if @state.records != undefined
+        switch type
+          when 1#day
+            for record in @state.records
+              if Date.parse(record.updated_at) >= now.setDate((new Date).getDate()-time) and record.updated_at != record.created_at
+                total += 1
+            return total
+          when 2#month
+            for record in @state.records
+              if Date.parse(record.updated_at) >= now.setMonth((new Date).getMonth()-time) and record.updated_at != record.created_at
+                total += 1
+            return total
+          when 3#hours
+            for record in @state.records
+              if Date.parse(record.updated_at) >= now.setHours((new Date).getHours()-time) and record.updated_at != record.created_at
+                total += 1
+            return total
+      else
+        return total
+    getLastRecord: ->
+      result = null
+      if @state.records != undefined
+        for record in @state.records
+          if result == null and record.updated_at != record.created_at
+            result = record
+          else
+            if result != null
+              if Date.parse(record.updated_at) >= Date.parse(result.updated_at) and record.updated_at != record.created_at
+                result = record
+      return result
+    getLastRecordCreated: ->
+      result = null
+      if @state.records != undefined
+        for record in @state.records
+          if result == null
+            result = record
+          else
+            if result != null
+              if Date.parse(record.created_at) >= Date.parse(result.created_at)
+                result = record
+      return result
     dynamicSort: (property) ->
       sortOrder = 1
       if property[0] == '-'
@@ -1773,54 +1843,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().ename != undefined
+                          @getLastRecord().ename
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -1913,54 +1981,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -2045,54 +2111,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().pname != undefined
+                          @getLastRecord().pname
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -2173,54 +2237,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().sname != undefined
+                          @getLastRecord().sname
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -2302,54 +2364,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().ename != undefined
+                          @getLastRecord().ename
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -2430,54 +2490,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().sname != undefined
+                          @getLastRecord().sname
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -2558,54 +2616,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().cname != undefined
+                          @getLastRecord().cname
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -2703,54 +2759,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -2828,54 +2882,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -2953,54 +3005,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -3086,54 +3136,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().billcode != undefined
+                          @getLastRecord().billcode
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -3224,54 +3272,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -3346,54 +3392,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -3468,54 +3512,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().code != undefined
+                          @getLastRecord().code
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -3599,54 +3641,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -3719,54 +3759,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().code != undefined
+                          @getLastRecord().code
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -3855,54 +3893,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -3979,54 +4015,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().name != undefined
+                          @getLastRecord().name
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -4101,54 +4135,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().cname != undefined
+                          @getLastRecord().cname
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -4220,54 +4252,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().ename != undefined
+                          @getLastRecord().ename
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -4337,54 +4367,52 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @state.records.length
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 1 tháng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số bản ghi tạo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Số cập nhật"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Cập nhật gần nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecord() != null
+                        if @getLastRecord().cname != undefined
+                          @getLastRecord().cname
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -4455,54 +4483,56 @@
           React.DOM.div className: 'col-sm-12 hidden-xs',
             React.DOM.div className: 'panel',
               React.DOM.div className: 'panel-heading',
-                React.DOM.h3 null, 'Search Performance'
+                React.DOM.h3 null, 'Thống kê'
               React.DOM.div className: 'panel-body',
                 React.DOM.div className: 'row',
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bệnh nhân chờ"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'},
+                      if @state.records != undefined
+                        @state.records.length
+                      else
+                        0
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Số bệnh nhân khám"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, "2"
+                      "Người tiếp theo"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(1,2)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Trong 24h'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Người đang khám"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberCreated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Tổng'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Thời gian khám"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, @getTotalRecordNumberUpdated(24,3)
                   React.DOM.div className: 'col-md-2 text-center',
                     React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Last 24h'
+                      React.DOM.span className: 'gfx-range', 'Total'
                       React.DOM.br null
-                      "Queries"
-                    React.DOM.div className: 'row text-center',
-                      React.DOM.span className: 'text-muted', "Under"
-                      React.DOM.span className: 'text-response-time number-xxl', style: {'margin':'0px 5px'}, "1"
-                      "ms"
+                      "Yêu cầu mới nhất"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'1.2em', 'textOverflow': 'ellipsis'},
+                      if @getLastRecordCreated() != null
+                        if @getLastRecordCreated().cname != undefined
+                          @getLastRecordCreated().cname
+                        else
+                          ''
+                      else
+                        ''
         React.DOM.div className: 'spacer10'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-md-9',
@@ -4518,7 +4548,11 @@
                 if @state.filteredRecord != null
                   React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
                 else
-                  React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                  React.createElement Paginate, className: 'col-sm-8 pull-right', cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage, tp:
+                    if @state.records != undefined
+                      Math.ceil(@state.records.length/@state.viewperpage)
+                    else
+                      Math.ceil(0/@state.viewperpage)
                 React.DOM.div className: 'spacer10'
                 React.DOM.table className: 'table table-hover table-condensed',
                   React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort,  header: [
@@ -4551,7 +4585,11 @@
                 if @state.filteredRecord != null
                   React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
                 else
-                  React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                  React.createElement Paginate, className: 'col-sm-12', cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage, tp:
+                    if @state.records != undefined
+                      Math.ceil(@state.records.length/@state.viewperpage)
+                    else
+                      Math.ceil(0/@state.viewperpage)
           React.DOM.div className: 'col-md-3 explorer-sidebar',
             React.DOM.div className: 'panel panel-default master-action',
               React.DOM.div className: 'panel-heading',
@@ -4570,7 +4608,7 @@
         React.DOM.div className: 'spacer30'
         React.DOM.div className: 'row',
           React.DOM.div className: 'col-sm-12',
-            if @state.records[0] == null
+            if @state.records[0] == null or @state.records[0] == undefined
               React.DOM.div className: 'panel',
                 React.DOM.div className: 'panel-body',
                   React.DOM.div className: 'text-center application-rights-table-empty text-muted',
@@ -4588,28 +4626,28 @@
                       React.DOM.h3 null, 'Application ID'
                       React.DOM.small className: 'text-muted', 'Đây là mã sản phẩm của bạn. Nó được sử dụng để xác định tài khoản của bạn đang sử dụng hệ thống của chúng tôi'
                     React.DOM.div className: 'col-sm-6',
-                      React.DOM.h4 null, @state.records.appid
+                      React.DOM.h4 null, @state.records[0].appid
                   React.DOM.div className: 'spacer20'
                   React.DOM.div className: 'row',
                     React.DOM.div className: 'col-sm-6',
                       React.DOM.h3 null, 'Search-Only API Key'
                       React.DOM.small className: 'text-muted', 'Đây là mã cho phép website của bạn tìm kiếm dữ liệu theo api được cung cấp'
                     React.DOM.div className: 'col-sm-6',
-                      React.DOM.h4 null, @state.records.soapi
+                      React.DOM.h4 null, @state.records[0].soapi
                   React.DOM.div className: 'spacer20'
                   React.DOM.div className: 'row',
                     React.DOM.div className: 'col-sm-6',
                       React.DOM.h3 null, 'Monitoring API Key'
                       React.DOM.small className: 'text-muted', 'Đây là mã cho phép bạn truy cập vào các số liệu dành riêng cho tài khoản cá nhân'
                     React.DOM.div className: 'col-sm-6',
-                      React.DOM.h4 null, @state.records.mapi
+                      React.DOM.h4 null, @state.records[0].mapi
                   React.DOM.div className: 'spacer20'
                   React.DOM.div className: 'row',
                     React.DOM.div className: 'col-sm-6',
                       React.DOM.h3 null, 'Admin API Key'
                       React.DOM.small className: 'text-muted', 'Đây là mã cho phép website bên ngoài được quyền chỉnh sửa dữ liệu trong cơ sở dữ liệu của bạn'
                     React.DOM.div className: 'col-sm-6',
-                      React.DOM.h4 null, @state.records.adminapi
+                      React.DOM.h4 null, @state.records[0].adminapi
                   React.DOM.button className: 'btn btn-default bg-green pull-right', onClick: @changeApikey, 'Thay đổi APIkey'
     teamControlRender: ->
       React.DOM.div className: 'content-wrapper',
@@ -4622,6 +4660,10 @@
                   "Bạn chưa cấp quyền cho tài khoản khác"
                   React.DOM.div style: {'margin':'0px 5px'}
                   React.DOM.a null, 'Chỉ dành cho tài khoản Pro trở lên'
+    loadingRender: ->
+      React.DOM.div className: 'content-wrapper animated fadeIn', style: {'height': '50vh'},
+        React.DOM.div className: 'preloader',
+          React.DOM.i className: 'fa fa-cog fa-spin fa-3x'
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()
@@ -4671,3 +4713,5 @@
         @apiKeyRender()
       else if @props.datatype == 'team_control'
         @teamControlRender()
+      else if @props.datatype == 'loading'
+        @loadingRender()

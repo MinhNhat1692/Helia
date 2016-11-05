@@ -16,7 +16,7 @@ class ApikeyController < ApplicationController
         @keyapi.generateKey
       end
       if @keyapi.save
-        render json: @keyapi
+        render json: [@keyapi]
   		else
 	  	  render json: @keyapi.errors, status: :unprocessable_entity
 		  end
@@ -31,7 +31,7 @@ class ApikeyController < ApplicationController
         @keyapi.generateKey
       end
       if @keyapi.save
-        render json: @keyapi
+        render json: [@keyapi]
   		else
 	  	  render json: @keyapi.errors, status: :unprocessable_entity
 		  end

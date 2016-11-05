@@ -3,7 +3,7 @@
       station: @props.station
       headerClassName: 'clearfix'
       docClassName : "dropdown hidden-xs"
-      accountClassName : "dropdown"
+      accountClassName : "dropdown hidden-xs"
     toggleSearchBar: ->
       if @state.headerClassName == 'clearfix'
         @setState headerClassName: 'clearfix search-toggled'
@@ -39,7 +39,7 @@
               React.DOM.div className: "line bottom"
           React.DOM.li className: "hi-logo hidden-xs",          
             React.DOM.a href: '/station', className: 'logo',
-              React.DOM.img width: '140', height: '48', src: 'https://www.algolia.com/assets/flat2/algolia/algolia256x80_dark-7e8acaca6006682fe4a9015aff28a07a.png', alt: 'logo-dark'
+              React.DOM.img width: '140', height: '48', src: '/assets/aligosa256x80_dark-b5d00e91.png', alt: 'logo-dark'
           React.DOM.li className: "pull-right right-menu",
             React.DOM.ul className: "hi-menu",
               React.DOM.li null,

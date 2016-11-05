@@ -1503,7 +1503,7 @@ h3, .h3 {
     z-index: 9999;
 }
 
-.page-loader .preloader {
+.preloader {
     width: 60px;
     position: absolute;
     left: 50%;
@@ -1518,7 +1518,7 @@ h3, .h3 {
     animation-fill-mode: both;
 }
 
-.page-loader .preloader p {
+.preloader p {
     white-space: nowrap;
     position: relative;
     left: -10px;

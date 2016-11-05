@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="62px" height="62px" viewBox="0 0 62 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>unlimited-team</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <ellipse id="path-1" cx="28" cy="27.8726539" rx="28" ry="27.8726539"></ellipse>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="0" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <mask id="mask-3" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-2.50746269" y="-2.50746269" width="61.0149254" height="60.7602332">
+            <rect x="-2.50746269" y="-2.50746269" width="61.0149254" height="60.7602332" fill="white"></rect>
+            <use xlink:href="#path-1" fill="black"></use>
+        </mask>
+    </defs>
+    <g id="Pricing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="pricing-page-final?" transform="translate(-140.000000, -2392.000000)">
+            <g id="block-record-op-copy" transform="translate(0.000000, 1124.000000)">
+                <g id="Group-137" transform="translate(135.000000, 801.000000)">
+                    <g id="block-feature-included">
+                        <g id="Group-117" transform="translate(0.000000, 178.000000)">
+                            <g id="unlimited-team" transform="translate(8.000000, 292.000000)">
+                                <g id="Oval-15" filter="url(#filter-2)" stroke-opacity="0.476137908" stroke="#99B2CB" stroke-width="5.01492537">
+                                    <use mask="url(#mask-3)" xlink:href="#path-1"></use>
+                                </g>
+                                <path d="M47.9675844,34.1977556 C48.9288939,34.6485798 49.8153591,35.23151 50.6033577,35.9230314 C51.5075163,33.4077022 52,30.6974294 52,27.8726539 C52,14.6781039 41.254834,3.9818077 28,3.9818077 C14.745166,3.9818077 4,14.6781039 4,27.8726539 C4,31.6129549 4.86344977,35.1525037 6.40275235,38.3045564 C7.94091958,35.6816152 10.2230674,33.5439068 12.9611652,32.1781519 C14.7895847,33.715224 17.1527665,34.641727 19.7333333,34.641727 C22.4050917,34.641727 24.8438297,33.6485859 26.697321,32.0129283 C29.6311438,33.3887999 32.0687201,35.6405846 33.6697769,38.4295569 C34.7606732,36.675131 36.3268115,35.2443781 38.189304,34.3153724 C39.4908908,35.4095593 41.1731558,36.0691038 43.0101695,36.0691038 C44.9120992,36.0691038 46.64815,35.362122 47.9675844,34.1977556 Z M27.8778816,23.93607 C27.8778816,28.4346457 24.2314431,32.0814618 19.7333333,32.0814618 C15.2352235,32.0814618 11.588785,28.4346457 11.588785,23.93607 L11.588785,19.958088 C11.588785,15.4595123 15.2352235,11.8126962 19.7333333,11.8126962 C24.2314431,11.8126962 27.8778816,15.4595123 27.8778816,19.958088 L27.8778816,23.93607 Z M48.8079835,28.4481277 C48.8079835,31.6505036 46.2122138,34.2465422 43.0101695,34.2465422 C39.8081252,34.2465422 37.2123555,31.6505036 37.2123555,28.4481277 L37.2123555,25.6163439 C37.2123555,22.4139679 39.8081252,19.8179293 43.0101695,19.8179293 C46.2122138,19.8179293 48.8079835,22.4139679 48.8079835,25.6163439 L48.8079835,28.4481277 Z" id="Path-7-Copy-2" fill="#99B2CB"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

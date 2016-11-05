@@ -1,0 +1,2 @@
+class DocCat < ApplicationRecord
+end

@@ -1,0 +1,7 @@
+%body
+  = render 'shared/enterprise_overview/navbar_home'
+  %div
+    %section#doc
+      = render 'shared/docguide/header_doc'
+      = react_component 'DocsList', { cat: @cat, sub: @sub, con: @con }
+  

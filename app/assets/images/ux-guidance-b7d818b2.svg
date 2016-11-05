@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>ux-guidance</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="15" cy="15" r="15"></circle>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-2">
+            <feGaussianBlur stdDeviation="0" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+        <mask id="mask-3" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-1.34328358" y="-1.34328358" width="32.6865672" height="32.6865672">
+            <rect x="-1.34328358" y="-1.34328358" width="32.6865672" height="32.6865672" fill="white"></rect>
+            <use xlink:href="#path-1" fill="black"></use>
+        </mask>
+    </defs>
+    <g id="Pricing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="pricing-page-final?" transform="translate(-670.000000, -762.000000)">
+            <g id="Group-166" transform="translate(672.000000, 764.000000)">
+                <g id="ux-guidance">
+                    <g id="Oval-15" filter="url(#filter-2)" stroke-width="2.68656716" stroke="#8F9DAF">
+                        <use mask="url(#mask-3)" xlink:href="#path-1"></use>
+                    </g>
+                    <circle id="Combined-Shape" fill="#8F9DAF" cx="15" cy="15" r="12.8571429"></circle>
+                    <path d="M14.6481299,10 L12.6899606,10 L12.6899606,15.9986595 C12.6899606,16.5437918 12.5808738,16.9649226 12.3626969,17.2620643 C12.1445199,17.5592061 11.8435059,17.7077748 11.4596457,17.7077748 C11.0725046,17.7077748 10.7698502,17.556972 10.5516732,17.2553619 C10.3334963,16.9537518 10.2244095,16.5348552 10.2244095,15.9986595 L10.2244095,10 L8,10 L8,15.8579088 C8,16.340485 8.06889695,16.8945456 8.20669291,17.5201072 C8.29199518,17.9088491 8.45029412,18.2864146 8.68159449,18.652815 C8.91289486,19.0192154 9.16797761,19.301831 9.4468504,19.5006702 C9.72572318,19.6995095 10.0726685,19.8324393 10.4876969,19.8994638 C10.9027252,19.9664883 11.2857594,20 11.636811,20 C12.2437694,20 12.7637774,19.8905284 13.1968504,19.6715818 C13.5085318,19.5151914 13.806265,19.2437463 14.0900591,18.8572386 C14.3738531,18.4707309 14.5821844,18.0194396 14.7150591,17.5033512 C14.8479337,16.9872628 14.9143701,16.4387875 14.9143701,15.8579088 L14.9143701,11.10672 L16.6456693,14.7050938 L14.1555118,19.8257373 L16.6456693,19.8257373 L18.0728346,16.6689008 L19.4950787,19.8257373 L22,19.8257373 L19.5442913,14.7587131 L21.7883858,10 L19.3572835,10 L18.117126,13.0227882 L16.8375984,10 L14.6481299,10 Z" id="icons/icon-ux" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
