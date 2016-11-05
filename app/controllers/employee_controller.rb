@@ -103,7 +103,7 @@ class EmployeeController < ApplicationController
 		  if has_station?
   			@station = Station.find_by(user_id: current_user.id)
 	  		@data = []
-		  	@data[0] = Employee.where(station_id: @station.id)
+		  	@data[0] = Employee.where(station_id: @station.id).order(updated_at: :desc)
 			  @data[1] = Gender.where(lang: 'vi')
   			render json: @data
 	  	else

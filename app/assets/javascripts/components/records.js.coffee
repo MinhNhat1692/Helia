@@ -374,10 +374,11 @@
       @setState
         addRecordChild: records
     addRecord: (record) ->
-      records = React.addons.update(@state.records, { $push: [record] })
+      records = React.addons.update(@state.records, { $unshift: [record] })
       @setState
         records: records
         addRecordChild: []
+        lastcount: @state.lastcount + 1
     addRecordChild: (record) ->
       records = React.addons.update(@state.addRecordChild, { $push: [record] })
       @setState addRecordChild: records
