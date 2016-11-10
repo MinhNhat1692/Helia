@@ -59,7 +59,7 @@ class EmployeeController < ApplicationController
 	  		if @employee.station_id == @station.id
 		  		if params.has_key?(:avatar)
 			  		if @employee.update(ename: params[:ename],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender],avatar: params[:avatar])
-				  		render json: @employee
+              render json: @employee
 					  else
 						  render json: @employee.errors, status: :unprocessable_entity
   					end

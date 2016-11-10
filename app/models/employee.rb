@@ -3,6 +3,7 @@ class Employee < ApplicationRecord
   attr_accessor :activation_token
   belongs_to :station
   before_create :create_activation_digest
+  after_update :update_postion_mapping
   has_attached_file :avatar, :default_url => "assets/noavatar.jpg"
   validates_attachment :avatar, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
   
@@ -35,4 +36,13 @@ class Employee < ApplicationRecord
 			self.activation_token  = Employee.new_token
 			self.activation_digest = self.activation_token
 		end
+
+    def update_postion_mapping
+      pos_maps = self.position_mapping
+      if pos_maps
+        pos_maps.each do |pm|
+          pm.update(ename: self.ename)
+        end
+      end
+    end
 end
