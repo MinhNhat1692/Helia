@@ -14,17 +14,7 @@
     trigger3: (e) ->
       @props.trigger3 @props.code
     render: ->
-      React.DOM.input
-        id: @props.id
-        type: @props.type
-        className: @props.className
-        placeholder: @props.placeholder
-        onChange: @trigger
-        onBlur: @trigger2
-        onFocus: @trigger3
-        defaultValue: @props.defaultValue
-        step: @props.step
-        min: @props.min
+      React.DOM.input id: @props.id, type: @props.type, className: @props.className, placeholder: @props.placeholder, onChange: @trigger, onBlur: @trigger2, onFocus: @trigger3, defaultValue: @props.defaultValue, step: @props.step, min: @props.min
     
 #IconClick
 #input code, className
