@@ -1,6 +1,6 @@
 class MedicineBillInController < ApplicationController
   before_action :logged_in_user, only: [:list, :create, :update, :destroy, :search, :find]
-  
+
   def list
     if params.has_key?(:id_station)
       redirect_to root_path
@@ -28,7 +28,10 @@ class MedicineBillInController < ApplicationController
 		    if !@supplier_id.nil?
 				  @supplier_id = @supplier_id.id
 		    end
-		    @supplier = MedicineBillIn.new(station_id: @station.id, supplier_id: @supplier_id, billcode: params[:billcode], dayin: params[:dayin], supplier: params[:supplier], daybook: params[:daybook], pmethod: params[:pmethod], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], remark: params[:remark], status: params[:status])
+		    @supplier = MedicineBillIn.new(station_id: @station.id, supplier_id: @supplier_id, billcode: params[:billcode], 
+                                       dayin: params[:dayin], supplier: params[:supplier], daybook: params[:daybook], 
+                                       pmethod: params[:pmethod], tpayment: params[:tpayment], discount: params[:discount], 
+                                       tpayout: params[:tpayout], remark: params[:remark], status: params[:status])
 				if @supplier.save
 					for bill_record in JSON.parse(params[:list_bill_record]) do
             @sample_id = MedicineSample.find_by(id: bill_record["sample_id"], name: bill_record["name"], station_id: @station.id)
@@ -39,8 +42,21 @@ class MedicineBillInController < ApplicationController
 		        if !@company_id.nil?
 				      @company_id = @company_id.id
 		        end
-            @billrecord = MedicineBillRecord.new(station_id: @station.id, bill_id: @supplier.id, billcode: @supplier.billcode, name: bill_record["name"], company: bill_record["company"], company_id: @company_id, sample_id: @sample_id, noid: bill_record["noid"], signid: bill_record["signid"], expire: bill_record["expire"], pmethod: bill_record["pmethod"], qty: bill_record["qty"], taxrate: bill_record["taxrate"], price: bill_record["price"], remark: bill_record["remark"])
+            @billrecord = MedicineBillRecord.new(station_id: @station.id, bill_id: @supplier.id, billcode: @supplier.billcode,
+                                                 name: bill_record["name"], company: bill_record["company"], company_id: @company_id,
+                                                 sample_id: @sample_id, noid: bill_record["noid"], signid: bill_record["signid"],
+                                                 expire: bill_record["expire"], pmethod: bill_record["pmethod"],
+                                                 qty: bill_record["qty"], taxrate: bill_record["taxrate"],
+                                                 price: bill_record["price"], remark: bill_record["remark"])
             @billrecord.save
+            if @supplier.status
+              type = @supplier.status
+            else
+              type = 1
+            end
+            MedicineStockRecord.create(station_id: @station.id, name: bill_record["name"], noid: bill_record["noid"],
+                                       signid: bill_record["signid"], amount: bill_record["qty"], expire: bill_record["expire"],
+                                       bill_in_id: @supplier.id, bill_in_code: @supplier.billcode, typerecord: type)
           end
 				  render json: @supplier
 				else
@@ -65,7 +81,15 @@ class MedicineBillInController < ApplicationController
 		        if !@supplier_id.nil?
 				      @supplier_id = @supplier_id.id
 		        end
-            if @supplier.update(billcode: params[:billcode], dayin: params[:dayin], supplier: params[:supplier], daybook: params[:daybook], pmethod: params[:pmethod], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], remark: params[:remark], status: params[:status])
+            if @supplier.update(billcode: params[:billcode], dayin: params[:dayin], supplier: params[:supplier], 
+                                daybook: params[:daybook], pmethod: params[:pmethod], tpayment: params[:tpayment], 
+                                discount: params[:discount], tpayout: params[:tpayout], remark: params[:remark], 
+                                status: params[:status])
+              status = @supplier.status
+              @stockrecord = MedicineStockRecord.find_by(bill_in_id: @supplier.id)
+              if @stockrecord
+                @stockrecord.update(typerecord: status)
+              end
 				      render json: @supplier
 				    else
 				      render json: @supplier.errors, status: :unprocessable_entity
@@ -161,7 +185,7 @@ class MedicineBillInController < ApplicationController
       end
     end
   end
-  
+
   private
   	# Confirms a logged-in user.
 		def logged_in_user
