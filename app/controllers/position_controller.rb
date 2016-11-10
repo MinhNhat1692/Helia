@@ -46,7 +46,7 @@ class PositionController < ApplicationController
 				  end
 	  	    if params.has_key?(:file)
 			  	  if @position.update(station_id: @station.id, room_id: @r_id, rname: params[:rname], pname: params[:pname], lang: params[:lang], description: params[:description], file: params[:file])
-						  render json: @position
+              render json: @position
   				  else
 	  				  render json: @position.errors, status: :unprocessable_entity
 		  		  end
