@@ -1379,6 +1379,8 @@
           remark: $('#' + @props.id + ' #form_remark').val()
           tpayment: $('#' + @props.id + ' #form_tpayment').val()
           status: $('#' + @props.id + ' #form_status').val()
+          noid: $('#' + @props.id + ' #form_noid').val()
+          signid: $('#' + @props.id + ' #form_signid').val()
           discount: 0
           price: $('#' + @props.id + ' #form_price').val()
         }
