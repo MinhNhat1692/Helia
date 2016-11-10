@@ -1,6 +1,6 @@
 class MedicinePrescriptInternalController < ApplicationController
   before_action :logged_in_user, only: [:list, :create, :update, :destroy, :search, :find]
-  
+
   def list
     if params.has_key?(:id_station)
       redirect_to root_path
@@ -36,7 +36,12 @@ class MedicinePrescriptInternalController < ApplicationController
 		    if !@preparer_id.nil?
 					@preparer_id = @preparer_id.id
 				end
-		    @supplier = MedicinePrescriptInternal.new(station_id: @station.id, code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], remark: params[:remark], preparer: params[:preparer], preparer_id: @preparer_id, payer: params[:payer], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], pmethod: params[:pmethod])
+		    @supplier = MedicinePrescriptInternal.new(station_id: @station.id, code: params[:code], customer_id: @customer_id,
+                                                  cname: params[:cname], employee_id: @employee_id, ename: params[:ename],
+                                                  result_id: params[:result_id], number_id: params[:number_id], date: params[:date],
+                                                  remark: params[:remark], preparer: params[:preparer], preparer_id: @preparer_id,
+                                                  payer: params[:payer], tpayment: params[:tpayment], discount: params[:discount],
+                                                  tpayout: params[:tpayout], pmethod: params[:pmethod])
 				if @supplier.save
 					for internal_record in JSON.parse(params[:list_internal_record]) do
             @sample_id = MedicineSample.find_by(id: internal_record["sample_id"], name: internal_record["name"], station_id: @station.id)
@@ -47,8 +52,18 @@ class MedicinePrescriptInternalController < ApplicationController
 		        if !@company_id.nil?
 				      @company_id = @company_id.id
 		        end
-            @internalrecord = MedicineInternalRecord.new(station_id: @station.id, cname: @supplier.cname, customer_id: @supplier.customer_id, script_id: @supplier.id, script_code: @supplier.code, name: internal_record["name"], sample_id: @sample_id, company: internal_record["company"], company_id: @company_id, amount: internal_record["amount"], remark: internal_record["remark"], price: internal_record["price"], tpayment: internal_record["tpayment"], status: internal_record["status"])
+            @internalrecord = MedicineInternalRecord.new(station_id: @station.id, cname: @supplier.cname,
+                                                         customer_id: @supplier.customer_id, script_id: @supplier.id,
+                                                         script_code: @supplier.code, name: internal_record["name"],
+                                                         sample_id: @sample_id, company: internal_record["company"],
+                                                         company_id: @company_id, amount: internal_record["amount"],
+                                                         remark: internal_record["remark"], price: internal_record["price"],
+                                                         tpayment: internal_record["tpayment"], status: internal_record["status"],
+                                                         noid: internal_record["noid"], signid: internal_record["signid"])
             @internalrecord.save
+            MedicineStockRecord.create(station_id: @station.id, typerecord: 2, name: internal_record["name"], amount: internal_record["amount"],
+                                       internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
+                                       sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"])
           end
 				  render json: @supplier
 				else
@@ -198,7 +213,7 @@ class MedicinePrescriptInternalController < ApplicationController
       end
     end
   end
-  
+
   private
   	# Confirms a logged-in user.
 		def logged_in_user
