@@ -1112,13 +1112,17 @@ a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, 
     padding: 5px 10px;
 }
 
-.auto-complete>div:hover{
+.auto-complete>.auto-complete-hover:hover{
     background-color: white;
     box-shadow: inset 2px 0 0 #46AEDA;
     color: #46AEDA;
     cursor: pointer;
 }
 
+.auto-complete>.table-responsive>.table>thead>tr>th{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
 
 .form-control:not(.fc-alt) {
     border-left: 0;
