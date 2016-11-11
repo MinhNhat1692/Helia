@@ -3,7 +3,8 @@ class Employee < ApplicationRecord
   attr_accessor :activation_token
   belongs_to :station
   before_create :create_activation_digest
-  after_update :update_postion_mapping
+  after_update :update_postion_mapping, :update_prescript_int, :update_prescript_ext,
+    :update_check_info, :update_doctor_check_info
   has_attached_file :avatar, :default_url => "assets/noavatar.jpg"
   validates_attachment :avatar, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
   
@@ -39,9 +40,51 @@ class Employee < ApplicationRecord
 
     def update_postion_mapping
       pos_maps = self.position_mapping
-      if pos_maps
+      if pos_maps && self.ename != self.ename_was
         pos_maps.each do |pm|
           pm.update(ename: self.ename)
+        end
+      end
+    end
+
+    def update_prescript_ext
+      scripts = MedicinePrescriptExternal.where(employee_id: self.id)
+      if scripts && self.ename != self.ename_was
+        scripts.each do |script|
+          script.update(ename: self.ename)
+        end
+      end
+    end
+
+    def update_prescript_int
+      scripts = MedicinePrescriptInternal.where(employee_id: self.id)
+      if scripts && self.ename != self.ename_was
+        scripts.each do |script|
+          script.update(ename: self.ename)
+        end
+      end
+      prepare_scrips = MedicinePrescriptInternal.where(preparer_id: self.id)
+      if prepare_scrips && self.ename != self.ename_was
+        prepare_scrips.each do |script|
+          script.update(preparer: self.ename)
+        end
+      end
+    end
+
+    def update_check_info
+      infos = CheckInfo.where(e_id: self.id)
+      if infos && self.ename != self.ename_was
+        infos.each do |info|
+          info.update(ename: self.ename)
+        end
+      end
+    end
+
+    def update_doctor_check_info
+      infos = DoctorCheckInfo.where(e_id: self.id)
+      if infos && self.ename != self.ename_was
+        infos.each do |info|
+          info.update(ename: self.ename)
         end
       end
     end
