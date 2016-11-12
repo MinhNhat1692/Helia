@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  
+
   post '/apikey/getkey', to: 'apikey#getkey'
   post '/apikey/changekey', to: 'apikey#changekey'
   post '/apikey/addkey', to: 'apikey#addkey'
-  
+
   post '/room_manager/list', to: 'room_manager#list'
 
   delete '/bill_info', to: 'bill_info#destroy'
@@ -11,21 +11,21 @@ Rails.application.routes.draw do
   post '/bill_info/list', to: 'bill_info#list'
   post '/bill_info/search', to: 'bill_info#search'
   post '/bill_info/find', to: 'bill_info#find'
-  
+
   delete '/doctor_check_info', to: 'doctor_check_info#destroy'
   put '/doctor_check_info', to: 'doctor_check_info#update'
   put '/doctor_check_info/order_map', to: 'doctor_check_info#updatesmall'
   post '/doctor_check_info/list', to: 'doctor_check_info#list'
   post '/doctor_check_info/search', to: 'doctor_check_info#search'
   post '/doctor_check_info/find', to: 'doctor_check_info#find'
-  
+
   delete '/check_info', to: 'check_info#destroy'
   put '/check_info', to: 'check_info#update'
   put '/check_info/order_map', to: 'check_info#updatesmall'
   post '/check_info/list', to: 'check_info#list'
   post '/check_info/search', to: 'check_info#search'
   post '/check_info/find', to: 'check_info#find'
-  
+
   post '/doctor_room/extra', to: 'order_map#extra'
   delete '/order_map', to: 'order_map#destroy'
   put '/order_map', to: 'order_map#update'
@@ -41,21 +41,21 @@ Rails.application.routes.draw do
   post '/support/ticket', to: 'support#addticket'
   delete '/support/ticket', to: 'support#deleteticket'
   put '/support/ticket', to: 'support#closeticket'
-  
+
   delete '/medicine_stock_record', to: 'medicine_stock_record#destroy'
   put '/medicine_stock_record', to: 'medicine_stock_record#update'
   post '/medicine_stock_record', to: 'medicine_stock_record#create'
   post '/medicine_stock_record/list', to: 'medicine_stock_record#list'
   post '/medicine_stock_record/search', to: 'medicine_stock_record#search'
   post '/medicine_stock_record/find', to: 'medicine_stock_record#find'
-  
+
   delete '/medicine_internal_record', to: 'medicine_internal_record#destroy'
   put '/medicine_internal_record', to: 'medicine_internal_record#update'
   post '/medicine_internal_record', to: 'medicine_internal_record#create'
   post '/medicine_internal_record/list', to: 'medicine_internal_record#list'
   post '/medicine_internal_record/search', to: 'medicine_internal_record#search'
   post '/medicine_internal_record/find', to: 'medicine_internal_record#find'
- 
+
   delete '/medicine_prescript_internal', to: 'medicine_prescript_internal#destroy'
   put '/medicine_prescript_internal', to: 'medicine_prescript_internal#update'
   post '/medicine_prescript_internal', to: 'medicine_prescript_internal#create'
@@ -131,7 +131,7 @@ Rails.application.routes.draw do
   delete '/employee', to: 'employee#destroy'
   put '/employee', to: 'employee#update'
   get '/employee_activation', to: 'employee#activate'
-  
+
   delete '/customer_record', to: 'customer_record#destroy'
   put '/customer_record', to: 'customer_record#update'
   put '/customer_record/order_map', to: 'customer_record#update'
@@ -144,14 +144,14 @@ Rails.application.routes.draw do
   post '/customer_record/clear_link_record', to: 'customer_record#clear_link_record'
   post '/customer_record/search', to: 'customer_record#search'
   post '/customer_record/find', to: 'customer_record#find'
-  
+
   put '/sermap', to: 'service_mapping#update'
   post '/sermap', to: 'service_mapping#create'
   delete '/sermap', to: 'service_mapping#destroy'
   post '/sermap/list', to: 'service_mapping#list'
   post '/sermap/search', to: 'service_mapping#search'
   post '/sermap/find', to: 'service_mapping#find'
-  
+
   put '/service', to: 'service#update'
   post '/service', to: 'service#create'
   delete '/service', to: 'service#destroy'
@@ -165,30 +165,30 @@ Rails.application.routes.draw do
   post '/posmap/list', to: 'position_mapping#list'
   post '/posmap/search', to: 'position_mapping#search'
   post '/posmap/find', to: 'position_mapping#find'
-  
+
   put '/room', to: 'room#update'
   post '/room', to: 'room#create'
   delete '/room', to: 'room#destroy'
   post '/room/list', to: 'room#list'
   post '/room/search', to: 'room#search'
   post '/room/find', to: 'room#find'
-  
+
   put '/position', to: 'position#update'
   delete '/position', to: 'position#destroy'
   post '/position', to: 'position#create'
   post '/position/list', to: 'position#list'
   post '/position/search', to: 'position#search'
   post '/position/find', to: 'position#find'
-  
-  
+
+
   post '/country/list', to: 'nation#list'
-  
+
   get '/station', to: 'station#new'
   post '/station',   to: 'station#create'
-  
+
   get '/dprofile', to: 'doctor_profile#new'
   post '/dprofile',   to: 'doctor_profile#create'
-  
+
   root "home#index"
   get '/changelogs', to: 'home#changelog'
   post '/changelogs', to: 'home#changelogfind'
@@ -210,21 +210,26 @@ Rails.application.routes.draw do
   get '/documentation/guides/security', to: 'home#documentation_guide', :sub_id => 1
   get '/documentation/guides/analytics', to: 'home#documentation_guide', :sub_id => 1
   get '/documentation/guides/account', to: 'home#documentation_guide', :sub_id => 1
-  
+
   get  '/signup',  to: 'users#usershow'
   post '/signup',  to: 'users#create'
   get '/user', to: 'users#show'
-  
+
   get 'users/check_email', to: "users#check_email"
-  
+
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   get '/logout',  to: 'sessions#destroy'
-  
+
   get '/profile', to: 'profiles#new'
   post '/profile', to: 'profiles#create'
-  
+
+  post '/medicine_summary/external_record', to: 'medicine_external_record#summary'
+  post '/medicine_summary/internal_record', to: 'medicine_internal_record#summary'
+  post '/medicine_summary/all', to: 'medicine_all_records#summary'
+  post '/medicine_summary/stock_request', to: 'medicine_stock_record#summary'
+
   resources :users
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
