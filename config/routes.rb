@@ -230,6 +230,8 @@ Rails.application.routes.draw do
   post '/medicine_summary/all', to: 'medicine_all_records#summary'
   post '/medicine_summary/stock_request', to: 'medicine_stock_record#summary'
 
+  post '/station/pool', to: 'polls#list'
+
   resources :users
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
