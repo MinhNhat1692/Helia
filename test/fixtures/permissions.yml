@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  station_id: 1
+  c_permit: false
+  r_permit: false
+  u_permit: false
+  d_permit: false
+  table_id: 1
+
+two:
+  user_id: 1
+  station_id: 1
+  c_permit: false
+  r_permit: false
+  u_permit: false
+  d_permit: false
+  table_id: 1
