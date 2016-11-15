@@ -30,6 +30,30 @@ class Employee < ApplicationRecord
 	def send_activation_email(user,station,employee)
 		EmployeeMailer.record_activation(user,station,employee).deliver_now
 	end
+
+  def can_read_table? table_id
+    permit = Permission.find_by(station_id: self.station_id,
+                                employee_id: self.id, table_id: table_id)
+    permit.present? && permit.can_read
+  end
+  
+  def can_create_table? table_id
+    permit = Permission.find_by(station_id: self.station_id,
+                                employee_id: self.id, table_id: table_id)
+    permit.present? && permit.can_create
+  end
+  
+  def can_update_table? table_id
+    permit = Permission.find_by(station_id: self.station_id,
+                                employee_id: self.id, table_id: table_id)
+    permit.present? && permit.can_update
+  end
+  
+  def can_delete_table? table_id
+    permit = Permission.find_by(station_id: self.station_id,
+                                employee_id: self.id, table_id: table_id)
+    permit.present? && permit.can_delete
+  end
 	
   private
 		# Creates and assigns the activation token and digest.
