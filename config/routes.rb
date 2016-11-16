@@ -231,6 +231,12 @@ Rails.application.routes.draw do
   post '/medicine_summary/stock_request', to: 'medicine_stock_record#summary'
 
   post '/station/pool', to: 'polls#list'
+  get '/station/permission', to: 'permissions#owner_list'
+  get '/doctor/permission', to: 'permissions#doctor_list'
+  
+  post '/permissions', to: 'permissions#create'
+  put '/permissions', to: 'permissions#update'
+  delete '/permissions', to: 'permissions#destroy'
 
   resources :users
   resources :account_activations, only: [:edit]

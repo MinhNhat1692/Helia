@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161103042709) do
+ActiveRecord::Schema.define(version: 20161115151737) do
 
   create_table "apikeys", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -513,6 +513,18 @@ ActiveRecord::Schema.define(version: 20161103042709) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.index ["station_id"], name: "index_outside_currencies_on_station_id", using: :btree
+  end
+
+  create_table "permissions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.integer  "station_id"
+    t.boolean  "c_permit",   default: false
+    t.boolean  "r_permit",   default: false
+    t.boolean  "u_permit",   default: false
+    t.boolean  "d_permit",   default: false
+    t.integer  "table_id"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "position_mappings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
