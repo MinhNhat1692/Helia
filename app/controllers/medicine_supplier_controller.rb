@@ -3,7 +3,14 @@ class MedicineSupplierController < ApplicationController
   
   def list
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+			  @station = Station.find_by(user_id: current_user.id)
+			  @data = []
+			  @data[0] = MedicineSupplier.where(station_id: @station.id)
+			  render json: @data
+		  else
+        redirect_to root_path
+      end
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
@@ -18,7 +25,17 @@ class MedicineSupplierController < ApplicationController
 
   def create
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 1
+			  @station = Station.find_by(user_id: current_user.id)
+		    @supplier = MedicineSupplier.new(station_id: @station.id, name: params[:name], contactname: params[:contactname], address1: params[:address1], address2: params[:address2], address3: params[:address3], spnumber: params[:spnumber], pnumber: params[:pnumber], noid: params[:noid], email: params[:email], facebook: params[:facebook], twitter: params[:twitter], fax: params[:fax], taxcode: params[:taxcode])
+				if @supplier.save
+				  render json: @supplier
+				else
+					render json: @supplier.errors, status: :unprocessable_entity
+				end
+		  else
+        head :no_content
+      end
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
@@ -36,7 +53,21 @@ class MedicineSupplierController < ApplicationController
 
   def update
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 2
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:id)
+          @supplier = MedicineSupplier.find(params[:id])
+			    if @supplier.station_id == @station.id
+            if @supplier.update(name: params[:name], contactname: params[:contactname], address1: params[:address1], address2: params[:address2], address3: params[:address3], spnumber: params[:spnumber], pnumber: params[:pnumber], noid: params[:noid], email: params[:email], facebook: params[:facebook], twitter: params[:twitter], fax: params[:fax], taxcode: params[:taxcode])
+				      render json: @supplier
+				    else
+				      render json: @supplier.errors, status: :unprocessable_entity
+				    end
+          end
+        end
+      else
+        head :no_content
+      end
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
@@ -58,7 +89,51 @@ class MedicineSupplierController < ApplicationController
 
   def search
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:noid)
+          @supplier = MedicineSupplier.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id).group(:noid).limit(3)
+			    render json:@supplier
+        elsif params.has_key?(:name)
+				  @supplier = MedicineSupplier.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id).group(:name).limit(3)
+			    render json:@supplier
+			  elsif params.has_key?(:contactname)
+				  @supplier = MedicineSupplier.where("contactname LIKE ? and station_id = ?" , "%#{params[:contactname]}%", @station.id).group(:contactname).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:spnumber)
+				  @supplier = MedicineSupplier.where("spnumber LIKE ? and station_id = ?" , "%#{params[:spnumber]}%", @station.id).group(:spnumber).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:pnumber)
+				  @supplier = MedicineSupplier.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id).group(:pnumber).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:address1)
+				  @supplier = MedicineSupplier.where("address1 LIKE ? and station_id = ?" , "%#{params[:address1]}%", @station.id).group(:address1).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:address2)
+				  @supplier = MedicineSupplier.where("address2 LIKE ? and station_id = ?" , "%#{params[:address2]}%", @station.id).group(:address2).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:address3)
+				  @supplier = MedicineSupplier.where("address3 LIKE ? and station_id = ?" , "%#{params[:address3]}%", @station.id).group(:address3).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:email)
+				  @supplier = MedicineSupplier.where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id).group(:email).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:facebook)
+				  @supplier = MedicineSupplier.where("facebook LIKE ? and station_id = ?" , "%#{params[:facebook]}%", @station.id).group(:facebook).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:twitter)
+				  @supplier = MedicineSupplier.where("twitter LIKE ? and station_id = ?" , "%#{params[:twitter]}%", @station.id).group(:twitter).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:fax)
+				  @supplier = MedicineSupplier.where("fax LIKE ? and station_id = ?" , "%#{params[:fax]}%", @station.id).group(:fax).limit(3)
+			    render json:@supplier
+				elsif params.has_key?(:taxcode)
+				  @supplier = MedicineSupplier.where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id).group(:taxcode).limit(3)
+			    render json:@supplier
+				end
+      else
+        head :no_content
+      end
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
@@ -110,7 +185,51 @@ class MedicineSupplierController < ApplicationController
 
   def find
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:noid)
+          @supplier = MedicineSupplier.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
+			    render json:@supplier
+        elsif params.has_key?(:name)
+				  @supplier = MedicineSupplier.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+			    render json:@supplier
+			  elsif params.has_key?(:contactname)
+				  @supplier = MedicineSupplier.where("contactname LIKE ? and station_id = ?" , "%#{params[:contactname]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:spnumber)
+				  @supplier = MedicineSupplier.where("spnumber LIKE ? and station_id = ?" , "%#{params[:spnumber]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:pnumber)
+				  @supplier = MedicineSupplier.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:address1)
+				  @supplier = MedicineSupplier.where("address1 LIKE ? and station_id = ?" , "%#{params[:address1]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:address2)
+				  @supplier = MedicineSupplier.where("address2 LIKE ? and station_id = ?" , "%#{params[:address2]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:address3)
+				  @supplier = MedicineSupplier.where("address3 LIKE ? and station_id = ?" , "%#{params[:address3]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:email)
+				  @supplier = MedicineSupplier.where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:facebook)
+				  @supplier = MedicineSupplier.where("facebook LIKE ? and station_id = ?" , "%#{params[:facebook]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:twitter)
+				  @supplier = MedicineSupplier.where("twitter LIKE ? and station_id = ?" , "%#{params[:twitter]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:fax)
+				  @supplier = MedicineSupplier.where("fax LIKE ? and station_id = ?" , "%#{params[:fax]}%", @station.id)
+			    render json:@supplier
+				elsif params.has_key?(:taxcode)
+				  @supplier = MedicineSupplier.where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
+			    render json:@supplier
+				end
+      else
+        head :no_content
+      end
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
@@ -162,7 +281,16 @@ class MedicineSupplierController < ApplicationController
 
   def destroy
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 3
+			  @station = Station.find_by(user_id: current_user.id)
+			  if params.has_key?(:id)
+			    @supplier = MedicineSupplier.find(params[:id])
+			    if @supplier.station_id == @station.id
+				    @supplier.destroy
+				    head :no_content
+			    end
+			  end
+      end
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)

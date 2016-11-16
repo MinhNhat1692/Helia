@@ -67,6 +67,22 @@ class User < ApplicationRecord
 	def password_reset_expired?
 		reset_sent_at < 2.hours.ago
 	end
+
+  def check_permission station_id, table_id, permission_type
+    permit = Permission.find_by(user_id: self.id, station_id: station_id, table_id: table_id)
+    case permission_type
+    when 1
+      permit.present? && permit.c_permit
+    when 2
+      permit.present? && permit.u_permit
+    when 3
+      permit.present? && permit.d_permit
+    when 4
+      permit.present? && permit.r_permit
+    else
+      return false
+    end
+  end
 	
 	private
 
