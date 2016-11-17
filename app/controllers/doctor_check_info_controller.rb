@@ -3,7 +3,29 @@ class DoctorCheckInfoController < ApplicationController
   
   def update
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 2
+		    @station = Station.find_by(user_id: current_user.id)
+		    if params.has_key?(:id)
+          @supplier = DoctorCheckInfo.find(params[:id])
+          if @supplier.station_id == @station.id
+						@customer_id = CustomerRecord.find_by(id: params[:c_id], cname: params[:c_name], station_id: @station.id)
+		        if !@customer_id.nil?
+				      @customer_id = @customer_id.id
+  		      end
+            @employee_id = Employee.find_by(id: params[:e_id], ename: params[:ename], station_id: @station.id)
+		        if !@employee_id.nil?
+			        @employee_id = @employee_id.id
+  		      end
+		        if @supplier.update(daycheck: params[:daycheck], c_id: @customer_id, c_name: params[:c_name], ename: params[:ename], e_id: @employee_id, qtbenhly: params[:qtbenhly], klamsang: params[:klamsang], nhiptim: params[:nhiptim], nhietdo: params[:nhietdo], hamin: params[:hamin], hamax: params[:hamax], ntho: params[:ntho], cnang: params[:cnang], cao: params[:cao], cdbandau: params[:cdbandau], bktheo: params[:bktheo], cdicd: params[:cdicd], kluan: params[:kluan])
+  		  	    render json: @supplier
+	  		    else
+		  	      render json: @supplier.errors, status: :unprocessable_entity
+  		  	  end
+		      end
+	      end
+      else
+        head :no_content
+      end
     else
       if has_station?
 		    @station = Station.find_by(user_id: current_user.id)
@@ -33,7 +55,21 @@ class DoctorCheckInfoController < ApplicationController
 
   def updatesmall
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 2
+		    @station = Station.find_by(user_id: current_user.id)
+		    if params.has_key?(:id)
+          @supplier = DoctorCheckInfo.find(params[:id])
+          if @supplier.station_id == @station.id
+						if @supplier.update(qtbenhly: params[:qtbenhly], klamsang: params[:klamsang], nhiptim: params[:nhiptim], nhietdo: params[:nhietdo], hamin: params[:hamin], hamax: params[:hamax], ntho: params[:ntho], cnang: params[:cnang], cao: params[:cao], cdbandau: params[:cdbandau], bktheo: params[:bktheo], cdicd: params[:cdicd], kluan: params[:kluan])
+  		  	    render json: @supplier
+	  		    else
+		  	      render json: @supplier.errors, status: :unprocessable_entity
+  		  	  end
+		      end
+	      end
+      else
+        head :no_content
+      end
     else
       if has_station?
 		    @station = Station.find_by(user_id: current_user.id)
@@ -55,7 +91,16 @@ class DoctorCheckInfoController < ApplicationController
 
   def destroy
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 3
+	      @station = Station.find_by(user_id: current_user.id)
+		    if params.has_key?(:id)
+		      @supplier = DoctorCheckInfo.find(params[:id])
+		      if @supplier.station_id == @station.id
+			      @supplier.destroy
+			      head :no_content
+		      end
+		    end
+      end
     else
       if has_station?
 	      @station = Station.find_by(user_id: current_user.id)
@@ -74,7 +119,14 @@ class DoctorCheckInfoController < ApplicationController
 
   def list
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+	      @station = Station.find_by(user_id: current_user.id)
+		    @data = []
+		    @data[0] = DoctorCheckInfo.where(station_id: @station.id).order(updated_at: :desc).limit(200)
+		    render json: @data
+      else
+        head :no_content
+      end
     else
       if has_station?
 	      @station = Station.find_by(user_id: current_user.id)
@@ -89,7 +141,36 @@ class DoctorCheckInfoController < ApplicationController
 
   def search
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:ename)
+          @supplier = DoctorCheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id).group(:ename).limit(5)
+		      render json:@supplier
+        elsif params.has_key?(:c_name)
+		      @supplier = DoctorCheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id).group(:c_name).limit(5)
+		      render json:@supplier
+        elsif params.has_key?(:qtbenhly)
+		      @supplier = DoctorCheckInfo.where("qtbenhly LIKE ? and station_id = ?" , "%#{params[:qtbenhly]}%", @station.id).group(:qtbenhly).limit(5)
+		      render json:@supplier
+		    elsif params.has_key?(:klamsang)
+		      @supplier = DoctorCheckInfo.where("klamsang LIKE ? and station_id = ?" , "%#{params[:klamsang]}%", @station.id).group(:klamsang).limit(5)
+		      render json:@supplier
+		    elsif params.has_key?(:cdbandau)
+		      @supplier = DoctorCheckInfo.where("cdbandau LIKE ? and station_id = ?" , "%#{params[:cdbandau]}%", @station.id).group(:cdbandau).limit(5)
+		      render json:@supplier
+		    elsif params.has_key?(:bktheo)
+		      @supplier = DoctorCheckInfo.where("bktheo LIKE ? and station_id = ?" , "%#{params[:bktheo]}%", @station.id).group(:bktheo).limit(5)
+		      render json:@supplier
+		    elsif params.has_key?(:cdicd)
+		      @supplier = DoctorCheckInfo.where("cdicd LIKE ? and station_id = ?" , "%#{params[:cdicd]}%", @station.id).group(:cdicd).limit(5)
+		      render json:@supplier
+		    elsif params.has_key?(:kluan)
+		      @supplier = DoctorCheckInfo.where("kluan LIKE ? and station_id = ?" , "%#{params[:kluan]}%", @station.id).group(:kluan).limit(5)
+		      render json:@supplier
+		    end
+      else
+        head :no_content
+      end
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
@@ -126,7 +207,36 @@ class DoctorCheckInfoController < ApplicationController
   
   def find
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+        @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:ename)
+          @supplier = DoctorCheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+		      render json:@supplier
+        elsif params.has_key?(:c_name)
+		      @supplier = DoctorCheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
+		      render json:@supplier
+        elsif params.has_key?(:qtbenhly)
+		      @supplier = DoctorCheckInfo.where("qtbenhly LIKE ? and station_id = ?" , "%#{params[:qtbenhly]}%", @station.id)
+		      render json:@supplier
+		    elsif params.has_key?(:klamsang)
+		      @supplier = DoctorCheckInfo.where("klamsang LIKE ? and station_id = ?" , "%#{params[:klamsang]}%", @station.id)
+		      render json:@supplier
+		    elsif params.has_key?(:cdbandau)
+		      @supplier = DoctorCheckInfo.where("cdbandau LIKE ? and station_id = ?" , "%#{params[:cdbandau]}%", @station.id)
+		      render json:@supplier
+		    elsif params.has_key?(:bktheo)
+		      @supplier = DoctorCheckInfo.where("bktheo LIKE ? and station_id = ?" , "%#{params[:bktheo]}%", @station.id)
+		      render json:@supplier
+		    elsif params.has_key?(:cdicd)
+		      @supplier = DoctorCheckInfo.where("cdicd LIKE ? and station_id = ?" , "%#{params[:cdicd]}%", @station.id)
+		      render json:@supplier
+		    elsif params.has_key?(:kluan)
+		      @supplier = DoctorCheckInfo.where("kluan LIKE ? and station_id = ?" , "%#{params[:kluan]}%", @station.id)
+		      render json:@supplier
+		    end
+      else
+        head :no_content
+      end
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
