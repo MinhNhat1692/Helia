@@ -39,6 +39,14 @@
           {code: 50, icon: '', name: 'Thông tin thuốc kê trong'}
           {code: 51, icon: '', name: 'Thống kê kho thuốc'}
         ]
+      SummaryMenu:
+        name: "Thống kê"
+        records: [
+          {code: 80, icon: 'fa fa-medkit', name: 'Thuốc'}
+          {code: 81, icon: 'fa fa-building', name: 'Khám bệnh'}
+          {code: 82, icon: 'fa fa-newspaper-o', name: 'Trung tâm'}
+          {code: 83, icon: 'fa fa-diamond', name: 'Tổng quan'}
+        ]
       DoctorMenu:  
         name: "Bác sỹ",
         records: [
@@ -195,6 +203,11 @@
             task: 63
             link: '/order_map/list'
           @handleGetdata(data)
+        when 80 #medicine_summary
+          data =
+            task: 80
+            link: '/medicine_summary/all'
+          @handleGetdata(data)
     handleGetdata: (data) ->
       @setState loading: true
       $.ajax
@@ -221,6 +234,7 @@
             loading: false
             data: result
             task: data.task
+          $(APP).trigger('rebuild')
           return
         ).bind(this)
     Support: ->
@@ -407,6 +421,13 @@
           React.createElement MainPart, data: @state.data, datatype: 'loading' 
         else
           React.createElement MainPart, data: @state.data, datatype: 'team_control' #task = code = 101
+    SummaryMedicine: ->
+      React.DOM.section id: 'content',
+        React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'medicine_summary' #task = code = 80
     render: ->
       switch @state.task
         when 5
@@ -465,6 +486,8 @@
           @RoomManager()
         when 63
           @DoctorRoom()
+        when 80
+          @SummaryMedicine()
         when 101
           @ApiKey()
         when 102

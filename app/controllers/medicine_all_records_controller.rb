@@ -39,12 +39,13 @@ class MedicineAllRecordsController < ApplicationController
           @data[1] = MedicineInternalRecord.in_range(begin_date, end_date).group(:sample_id).sum(:amount)
           render json: @data
         else
-          redirect_to root_path
+					@data[0] = MedicineExternalRecord.group(:sample_id).sum(:amount)
+          @data[1] = MedicineInternalRecord.group(:sample_id).sum(:amount)
+          render json: @data
         end
       else
         redirect_to root_path
       end
     end
-
   end
 end

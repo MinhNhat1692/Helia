@@ -39,7 +39,7 @@
               React.DOM.div className: "line bottom"
           React.DOM.li className: "hi-logo hidden-xs",          
             React.DOM.a href: '/station', className: 'logo',
-              React.DOM.img width: '140', height: '48', src: '/assets/aligosa256x80_dark-b5d00e91.png', alt: 'logo-dark'
+              React.DOM.img width: '140', height: '48', src: '/assets/aligosa256x80_dark.png', alt: 'logo-dark'
           React.DOM.li className: "pull-right right-menu",
             React.DOM.ul className: "hi-menu",
               React.DOM.li null,

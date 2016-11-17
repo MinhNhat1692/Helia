@@ -19,6 +19,8 @@
         type: 1, className: 'fa fa-user-md', active: false, name: "Bác sỹ", code: 60
       PharmacyMenu:
         type: 1, className: 'fa fa-medkit', active: false, name: "Thuốc", code: 41
+      SummaryMenu:
+        type: 1, className: 'fa fa-area-chart', active: false, name: "Thống kê", code: 80
       ApiMenu:
         type: 1, className: 'fa fa-key', active: false, name: "ApiKey", code: 101
       TeamMenu:
@@ -55,6 +57,16 @@
       else
         @setState DoctorMenu:
           type: 1, className: 'fa fa-user-md', active: false, name: "Bác sỹ", code: 60
+      if code == 80
+        data =
+          task: 80
+          link: '/medicine_summary/all'
+        @handleGetdata(data)
+        @setState SummaryMenu:
+          type: 1, className: 'fa fa-area-chart', active: true, name: "Thống kê", code: 80
+      else
+        @setState SummaryMenu:
+          type: 1, className: 'fa fa-area-chart', active: false, name: "Thống kê", code: 80
       if code == 41
         data =
           task: 41
@@ -162,19 +174,13 @@
             else
               'sidebar toggled'
           React.DOM.ul className: 'main-menu',
-            #React.createElement MenuAside, submenu: @state.profile, Trigger: @Trigger      
             React.createElement MenuAside, submenu: @state.DataMenu, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.PatientMenu, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.DoctorMenu, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.PharmacyMenu, Trigger: @Trigger
+            React.createElement MenuAside, submenu: @state.SummaryMenu, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.ApiMenu, Trigger: @Trigger
             React.createElement MenuAside, submenu: @state.TeamMenu, Trigger: @Trigger
-            #React.createElement MenuAside, submenu: @state.Header, Trigger: @Trigger
-            #React.createElement MenuAside, submenu: @state.Doctor, Trigger: @Trigger 
-            #React.createElement MenuAside, submenu: @state.DataInput, Trigger: @Trigger
-            #React.createElement MenuAside, submenu: @state.Patient, Trigger: @Trigger
-            #React.createElement MenuAside, submenu: @state.Pharmacy, Trigger: @Trigger
-        #React.DOM.section id: 'content',
         React.createElement MainApp, data: @state.data, task: @state.task
     render: ->
       @normalRender()

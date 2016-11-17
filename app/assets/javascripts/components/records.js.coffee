@@ -4665,6 +4665,20 @@
       React.DOM.div className: 'content-wrapper animated fadeIn', style: {'height': '50vh'},
         React.DOM.div className: 'preloader',
           React.DOM.i className: 'fa fa-cog fa-spin fa-3x'
+    medicineSummary: ->
+      React.DOM.div className: 'content-wrapper',
+        React.DOM.div className: 'spacer30'
+        React.DOM.div className: 'row',
+          React.DOM.div className: 'col-sm-6 hidden-xs',
+            React.DOM.div className: 'metro',
+              React.DOM.div className: 'metro-heading',
+                React.DOM.div className: 'row',
+                  React.DOM.div className: 'col-md-2 text-center',
+                    React.DOM.h4 null,
+                      React.DOM.span className: 'gfx-range', 'Tổng'
+                      React.DOM.br null
+                      "Số bản ghi tải"
+                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, '12345'
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()
@@ -4716,3 +4730,5 @@
         @teamControlRender()
       else if @props.datatype == 'loading'
         @loadingRender()
+      else if @props.datatype == "medicine_summary"
+        @medicineSummary()
