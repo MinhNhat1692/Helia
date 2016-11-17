@@ -38,7 +38,7 @@ class MedicineExternalRecordController < ApplicationController
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           begin_date = params[:begin_date].to_date
           end_date = params[:end_date].to_date
-          @data = MedicineExternalRecord.in_range(begin_date, end_date).group(:sample_id).sum(:amount)
+          @data = MedicineExternalRecord.where(station_id: @station.id).in_range(begin_date, end_date).group(:sample_id).sum(:amount)
           render json: @data
         else
           redirect_to root_path
@@ -56,7 +56,7 @@ class MedicineExternalRecordController < ApplicationController
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           begin_date = params[:begin_date].to_date
           end_date = params[:end_date].to_date
-          @data = MedicineExternalRecord.in_range(begin_date, end_date).group(:sample_id).sum(:amount)
+          @data = MedicineExternalRecord.where(station_id: @station.id).in_range(begin_date, end_date).group(:sample_id).sum(:amount)
           render json: @data
         else
           redirect_to root_path
