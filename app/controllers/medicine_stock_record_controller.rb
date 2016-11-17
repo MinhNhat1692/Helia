@@ -33,11 +33,11 @@ class MedicineStockRecordController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
         if params.has_key?(:date_check)
           date = params[:date_check].to_date
-          @data = MedicineStockRecord.to_date_check(date).sum_amount_by_sample
+          @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
           render json: @data
         else
           date = Time.now.to_date
-          @data = MedicineStockRecord.to_date_check(date).sum_amount_by_sample
+          @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
           render json: @data
         end
       else
@@ -48,11 +48,11 @@ class MedicineStockRecordController < ApplicationController
 			  @station = Station.find_by(user_id: current_user.id)
         if params.has_key?(:date_check)
           date = params[:date_check].to_date
-          @data = MedicineStockRecord.to_date_check(date).sum_amount_by_sample
+          @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
           render json: @data
         else
           date = Time.now.to_date
-          @data = MedicineStockRecord.to_date_check(date).sum_amount_by_sample
+          @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
           render json: @data
         end
       else
