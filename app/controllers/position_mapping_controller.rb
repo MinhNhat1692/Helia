@@ -4,7 +4,7 @@ class PositionMappingController < ApplicationController
   def create
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-  			@station = Station.find_by(user_id: current_user.id)
+  			@station = Station.find params[:id_station]
 	  	  @e_id = Employee.find_by(id: params[:e_id], ename: params[:ename], station_id: @station.id)
 		    if !@e_id.nil?
 					@e_id = @e_id.id
@@ -74,7 +74,7 @@ class PositionMappingController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-	  		@station = Station.find_by(user_id: current_user.id)
+	  		@station = Station.find params[:id_station]
 		  	@position = PositionMapping.find(params[:id])
 			  if @position.station_id == @station.id
 				  @position.destroy
@@ -109,7 +109,7 @@ class PositionMappingController < ApplicationController
   def search
 	  if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:ename)
           @supplier = PositionMapping.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id).group(:ename).limit(5)
 			    render json:@supplier
@@ -139,7 +139,7 @@ class PositionMappingController < ApplicationController
   def find
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:ename)
           @supplier = PositionMapping.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier

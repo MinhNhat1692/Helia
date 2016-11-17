@@ -4,7 +4,7 @@ class CheckInfoController < ApplicationController
   def update
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
           @supplier = CheckInfo.find(params[:id])
           if @supplier.station_id == @station.id
@@ -56,7 +56,7 @@ class CheckInfoController < ApplicationController
   def updatesmall
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
           @supplier = CheckInfo.find(params[:id])
           if @supplier.station_id == @station.id
@@ -92,7 +92,7 @@ class CheckInfoController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = CheckInfo.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -120,7 +120,7 @@ class CheckInfoController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  @data = []
 			  @data[0] = CheckInfo.where(station_id: @station.id).order(updated_at: :desc).limit(200)
 			  render json: @data
@@ -142,7 +142,7 @@ class CheckInfoController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:ename)
           @supplier = CheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id).group(:ename).limit(5)
 			    render json:@supplier
@@ -190,7 +190,7 @@ class CheckInfoController < ApplicationController
   def find
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:ename)
           @supplier = CheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier

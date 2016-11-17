@@ -4,7 +4,7 @@ class OrderMapController < ApplicationController
   def update
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
           @supplier = OrderMap.find(params[:id])
           if @supplier.station_id == @station.id
@@ -56,7 +56,7 @@ class OrderMapController < ApplicationController
   def create
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 		    @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
 		    if !@customer_id.nil?
 					@customer_id = @customer_id.id
@@ -118,7 +118,7 @@ class OrderMapController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  @data = []
 			  @data[0] = OrderMap.where(station_id: @station.id).order(updated_at: :desc).limit(200)
 			  @data[1] = MedicineGroup.all
@@ -144,7 +144,7 @@ class OrderMapController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = OrderMap.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -172,7 +172,7 @@ class OrderMapController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:cname)
           @supplier = OrderMap.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).group(:cname).limit(5)
 			    render json:@supplier
@@ -208,7 +208,7 @@ class OrderMapController < ApplicationController
   def find
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:cname)
           @supplier = OrderMap.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).order(updated_at: :desc).limit(1000)
 			    render json:@supplier
@@ -268,7 +268,7 @@ class OrderMapController < ApplicationController
   def extra
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:order_map_id)
 			    @ordermap = OrderMap.find_by(id: params[:order_map_id], station_id: @station.id)
 			    @data = []

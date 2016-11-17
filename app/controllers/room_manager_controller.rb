@@ -4,7 +4,7 @@ class RoomManagerController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params[:length] == "1"
           render :json => {
             :room => Room.includes(:service_maps).where(station_id: @station.id).order(updated_at: :desc).as_json( :include => [:service_maps] ),

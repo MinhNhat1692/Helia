@@ -4,7 +4,7 @@ class MedicineSupplierController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  @data = []
 			  @data[0] = MedicineSupplier.where(station_id: @station.id)
 			  render json: @data
@@ -26,7 +26,7 @@ class MedicineSupplierController < ApplicationController
   def create
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 		    @supplier = MedicineSupplier.new(station_id: @station.id, name: params[:name], contactname: params[:contactname], address1: params[:address1], address2: params[:address2], address3: params[:address3], spnumber: params[:spnumber], pnumber: params[:pnumber], noid: params[:noid], email: params[:email], facebook: params[:facebook], twitter: params[:twitter], fax: params[:fax], taxcode: params[:taxcode])
 				if @supplier.save
 				  render json: @supplier
@@ -54,7 +54,7 @@ class MedicineSupplierController < ApplicationController
   def update
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:id)
           @supplier = MedicineSupplier.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -90,7 +90,7 @@ class MedicineSupplierController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:noid)
           @supplier = MedicineSupplier.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id).group(:noid).limit(3)
 			    render json:@supplier
@@ -186,7 +186,7 @@ class MedicineSupplierController < ApplicationController
   def find
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:noid)
           @supplier = MedicineSupplier.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
 			    render json:@supplier
@@ -282,7 +282,7 @@ class MedicineSupplierController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = MedicineSupplier.find(params[:id])
 			    if @supplier.station_id == @station.id
