@@ -4669,16 +4669,9 @@
       React.DOM.div className: 'content-wrapper',
         React.DOM.div className: 'spacer30'
         React.DOM.div className: 'row',
-          React.DOM.div className: 'col-sm-6 hidden-xs',
-            React.DOM.div className: 'metro',
-              React.DOM.div className: 'metro-heading',
-                React.DOM.div className: 'row',
-                  React.DOM.div className: 'col-md-2 text-center',
-                    React.DOM.h4 null,
-                      React.DOM.span className: 'gfx-range', 'Tổng'
-                      React.DOM.br null
-                      "Số bản ghi tải"
-                    React.DOM.span className: 'number-xxl text-center', style: {'fontSize':'2.7em'}, '12345'
+          React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê ngoài phòng khám', description: 'Thuốc không được nhà thuốc phòng khám cung cấp', color: '#FDBD57', altitle: 'Thuốc ngoài phòng khám', img: '/assets/getting-started-small.png'
+          React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê trong phòng khám', description: 'Thuốc được nhà thuốc phòng khám cung cấp', color: '#F6624E', altitle: 'Thuốc trong phòng khám', img: '/assets/indexing-small.png'
+          React.createElement MinorMaterial, datatype: 'medicine_stock_summary_part', className: 'col-sm-12 col-xs-12 animated fadeInUp', text: 'The analysis of search interactions is an asynchronous process taking several minutes. Please make sure that search queries have been done and try again in a few minutes', color: '#1F3B5D', minheight: '150px', textcolor: '#8191B1'
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()

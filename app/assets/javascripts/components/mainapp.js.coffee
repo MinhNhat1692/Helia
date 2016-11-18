@@ -423,7 +423,7 @@
           React.createElement MainPart, data: @state.data, datatype: 'team_control' #task = code = 101
     SummaryMedicine: ->
       React.DOM.section id: 'content',
-        React.createElement MainHeader, data: @state.PharmacyMenu, task: @state.task, Trigger: @TriggerCode
+        React.createElement MainHeader, data: @state.SummaryMenu, task: @state.task, Trigger: @TriggerCode
         if @state.loading
           React.createElement MainPart, data: @state.data, datatype: 'loading' 
         else

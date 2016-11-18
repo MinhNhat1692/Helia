@@ -45,7 +45,7 @@
   render: ->
     @clogBodyChildRender()
     
-    
+#Doc 
 @DocsList = React.createClass
   getInitialState: ->
     cat: @props.cat
@@ -173,4 +173,127 @@
     if @getopenstat()
       React.DOM.li className: 'active caretable', onClick: @trigger, @props.sub.name
     else
+      React.DOM.li className: 'caretable', onClick: @trigger, @props.sub.name  
+
+#News
+@NewsList = React.createClass
+  getInitialState: ->
+    cat: @props.cat
+    sub: @props.sub
+    con: @props.con
+  NewRender: ->
+    React.DOM.div id: 'doc-content-wrapper',
+      React.DOM.div className: 'container',
+        React.createElement NewlistNav, cat: @state.cat, sub: @state.sub, con: @state.con, trigger: @trigger
+        React.createElement NewsContent, cat: @state.cat, sub: @state.sub, con: @state.con
+  render: ->
+    @NewRender()
+    
+@NewsContent = React.createClass
+  getInitialState: ->
+    type: 1
+  getrightcat: -> #need change to right value
+    result = {cat: null, sub: null}
+    for cat in @props.cat
+      for sub in @props.sub
+        if cat.id == sub.doc_cats_id
+          for con in @props.con
+            if con.doc_subs_id == sub.id
+              result = {cat: cat, sub: sub}
+              return result
+    return result
+  NewsContentRender: ->
+    React.DOM.div id: 'doc-content',
+      React.DOM.div className: 'doc-online', id: 'doc-tab-content',
+        React.DOM.div className: 'markdown-page',
+          React.DOM.section className: 'heading',
+            React.DOM.div className: 'title_wrapper', style: {'backgroundColor': '#' + @getrightcat().cat.color},
+              React.DOM.div className: 'title_sub_wrapper row',
+                React.DOM.div className: 'type-icon',
+                  React.DOM.i className: 'fa fa-book fa-3x'
+                React.DOM.div className: 'title_sub_sub_wrapper',
+                  React.DOM.div className: 'breadcrumb',
+                    "Tin tức > " + @getrightcat().cat.name
+                  React.DOM.h1 null, @getrightcat().sub.name
+            React.DOM.div className: 'toc_wrapper',
+              React.DOM.div className: 'summary_title',
+                'Tin liên quan'
+              React.DOM.ul null,
+                for relate in @props.related
+                  React.DOM.li key: con.id,
+                    React.DOM.li 
+                  con.header
+        React.DOM.div className: 'markdown-page',
+          for con in @props.con
+            React.createElement 'section', key: con.id, dangerouslySetInnerHTML: __html: con.content
+  render: ->
+    @NewsContentRender()
+
+@NewslistNav = React.createClass
+  getInitialState: ->
+    type: 1
+  trigger: (id) ->
+    @props.trigger id
+  NavRender: ->
+    React.DOM.div id: 'navbar-doc-wrapper',
+      React.DOM.nav className: 'scrollable navbar-guide-toc fixed', id: 'navbar-doc',
+        for cat in @props.cat
+          React.createElement NewslistNavChild, key: cat.id, sub: @props.sub, con: @props.con, cat: cat, trigger: @trigger
+  render: ->
+    @NavRender()
+    
+@NewslistNavChild = React.createClass
+  getInitialState: ->
+    open: @getopenstat()
+  getopenstat: ->
+    for sub in @props.sub
+      if sub.doc_cats_id == @props.cat.id
+        for con in @props.con
+          if sub.id == con.doc_subs_id
+            return true
+    return false
+  trigger: (id) ->
+    @props.trigger id
+  toggleOpen: (e) ->
+    @setState open: !@state.open
+  NavchildRender:->
+    if @state.open
+      React.DOM.div className: 'ul-group active', style: {'borderColor': '#' + @props.cat.color},
+        React.DOM.div className: 'ul-group-name', onClick: @toggleOpen,
+          @props.cat.name
+          React.DOM.i className: 'fa fa-angle-up'
+        React.DOM.ul className: 'nav',
+          for sub in @props.sub
+            if sub.doc_cats_id == @props.cat.id
+              React.createElement NewslistNavChildMini, key: sub.id, sub: sub, con: @props.con, trigger: @trigger 
+    else
+      React.DOM.div className: 'ul-group', style: {'borderColor': '#' + @props.cat.color},
+        React.DOM.div className: 'ul-group-name', onClick: @toggleOpen, 
+          @props.cat.name
+          React.DOM.i className: 'fa fa-angle-down'
+        React.DOM.ul className: 'nav',
+          for sub in @props.sub
+            if sub.doc_cats_id == @props.cat.id
+              React.createElement NewslistNavChildMini, key: sub.id, sub: sub, con: @props.con, trigger: @trigger 
+  render: ->
+    @NavchildRender()
+    
+@NewslistNavChildMini = React.createClass
+  getInitialState: ->
+    type: 1
+  trigger: (e) ->
+    @props.trigger @props.sub.id
+  getopenstat: ->
+    for con in @props.con
+      if @props.sub.id == con.doc_subs_id
+        return true
+      else
+        return false
+    return false
+  render: ->
+    if @getopenstat()
+      React.DOM.li className: 'active caretable', onClick: @trigger, @props.sub.name
+    else
       React.DOM.li className: 'caretable', onClick: @trigger, @props.sub.name
+
+

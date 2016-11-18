@@ -39,8 +39,8 @@ class MedicineAllRecordsController < ApplicationController
           @data[1] = MedicineInternalRecord.where(station_id: @station.id).in_range(begin_date, end_date).group(:sample_id).sum(:amount)
           render json: @data
         else
-					@data[0] = MedicineExternalRecord.group(:sample_id).sum(:amount)
-          @data[1] = MedicineInternalRecord.group(:sample_id).sum(:amount)
+					@data[0] = MedicineExternalRecord.where(station_id: @station.id).group(:sample_id).sum(:amount)
+          @data[1] = MedicineInternalRecord.where(station_id: @station.id).group(:sample_id).sum(:amount)
           render json: @data
         end
       else

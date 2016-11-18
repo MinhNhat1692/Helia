@@ -2558,3 +2558,61 @@ h4, .h4 {
     -o-transition: width 0.6s ease;
     transition: width 0.6s ease;
 }
+
+.metro{
+    display: inline-block;
+    width: 100%;
+    padding-top: 1px;
+    margin-bottom: 30px;
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    background: white;
+    text-align: center;
+    color: #1F3B5D;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+    min-height: 250px;
+}
+
+.metro:hover{
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    -webkit-transform: translateY(-4px);
+    -moz-transform: translateY(-4px);
+    -ms-transform: translateY(-4px);
+    -o-transform: translateY(-4px);
+    transform: translateY(-4px);
+}
+
+.metro h3{
+    font-weight: 300;
+    margin: 20px 0 5px;
+}
+
+.metro p{
+    font-size: 12px;
+    text-align: center;
+}
+
+.metro>.metro-object-img{
+    position: absolute;
+    bottom: 50px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    left: calc(50% - 55px);
+}
+
+.metro>.metro-footer{
+    height: 100px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
