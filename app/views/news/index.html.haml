@@ -1,0 +1,6 @@
+%body
+  = render 'shared/enterprise_overview/navbar_home'
+  %div
+    %section#doc
+      = render 'shared/news/header_news'
+      = react_component 'NewsList', { cat: @cat, sub: @sub, con: @con, datatype: "news_cat" }
