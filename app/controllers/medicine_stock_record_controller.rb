@@ -4,7 +4,7 @@ class MedicineStockRecordController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  @data = []
 			  @data[0] = MedicineStockRecord.where(station_id: @station.id)
 			  @data[1] = MedicineGroup.all
@@ -30,7 +30,7 @@ class MedicineStockRecordController < ApplicationController
   def summary
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
         if params.has_key?(:date_check)
           date = params[:date_check].to_date
           @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
@@ -64,7 +64,7 @@ class MedicineStockRecordController < ApplicationController
   def create
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  @supplier_id = MedicineSupplier.find_by(id: params[:supplier_id], name: params[:supplier], station_id: @station.id)
 		    if !@supplier_id.nil?
 					@supplier_id = @supplier_id.id
@@ -124,7 +124,7 @@ class MedicineStockRecordController < ApplicationController
   def update
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:id)
           @supplier = MedicineStockRecord.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -192,7 +192,7 @@ class MedicineStockRecordController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = MedicineStockRecord.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -200,8 +200,6 @@ class MedicineStockRecordController < ApplicationController
 				    head :no_content
 			    end
 			  end
-		  else
-        head :no_content
       end
     else
       if has_station?
@@ -222,7 +220,7 @@ class MedicineStockRecordController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:name)
           @supplier = MedicineStockRecord.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id).group(:name).limit(3)
 			    render json:@supplier
@@ -282,7 +280,7 @@ class MedicineStockRecordController < ApplicationController
   def find
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:name)
           @supplier = MedicineStockRecord.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
 			    render json:@supplier

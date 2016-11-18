@@ -4,7 +4,7 @@ class ServiceController < ApplicationController
   def create
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
   			if params.has_key?(:file)
           @service = Service.new(station_id: @station.id, sname: params[:sname], lang: params[:lang], price: params[:price], currency: params[:currency], description: params[:description],file: params[:file])
           if @service.save
@@ -50,7 +50,7 @@ class ServiceController < ApplicationController
   def update
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
 		  	@service = Service.find(params[:id])
 			  if @station.id == @service.station_id
 				  if params.has_key?(:file)
@@ -98,7 +98,7 @@ class ServiceController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-	  		@station = Station.find_by(user_id: current_user.id)
+	  		@station = Station.find params[:id_station]
 		  	@service = Service.find(params[:id])
 			  if @service.station_id == @station.id
 				  @service.destroy
@@ -118,9 +118,17 @@ class ServiceController < ApplicationController
   		end
 	  end
   end
+
   def list
     if params.has_key?(:id_station)
-      redirect_to root_path
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+	  		@station = Station.find params[:id_station]
+	  		@data = []
+			  @data[0] = Service.where(station_id: @station.id)
+		  	render json: @data
+  		else
+        head :no_content
+      end
     else
       if has_station?
 	  		@station = Station.find_by(user_id: current_user.id)
@@ -137,7 +145,7 @@ class ServiceController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:sname)
           @supplier = Service.where("sname LIKE ? and station_id = ?" , "%#{params[:sname]}%", @station.id).group(:sname).limit(5)
 			    render json:@supplier
@@ -167,7 +175,7 @@ class ServiceController < ApplicationController
   def find
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:sname)
           @supplier = Service.where("sname LIKE ? and station_id = ?" , "%#{params[:sname]}%", @station.id)
 			    render json:@supplier
@@ -199,6 +207,7 @@ class ServiceController < ApplicationController
       end
     end
   end
+
   private
   	# Confirms a logged-in user.
 		def logged_in_user

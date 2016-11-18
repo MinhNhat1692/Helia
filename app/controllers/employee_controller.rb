@@ -4,7 +4,7 @@ class EmployeeController < ApplicationController
   def create
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
   			if params.has_key?(:email)
 	  			@checkuser = User.find_by(email: params[:email])
 		  		if @checkuser != nil
@@ -92,7 +92,7 @@ class EmployeeController < ApplicationController
   def update
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
   			@employee = Employee.find(params[:id])
 	  		if @employee.station_id == @station.id
 		  		if params.has_key?(:avatar)
@@ -141,7 +141,7 @@ class EmployeeController < ApplicationController
   def destroy
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-  			@station = Station.find_by(user_id: current_user.id)
+  			@station = Station.find params[:id_station]
 	  		@employee = Employee.find(params[:id])
 		  	if @employee.station_id == @station.id
 			  	@employee.destroy
@@ -166,7 +166,7 @@ class EmployeeController < ApplicationController
   def list
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-  			@station = Station.find_by(user_id: current_user.id)
+  			@station = Station.find params[:id_station]
 	  		@data = []
 		  	@data[0] = Employee.where(station_id: @station.id).order(updated_at: :desc)
 			  @data[1] = Gender.where(lang: 'vi')
@@ -204,7 +204,7 @@ class EmployeeController < ApplicationController
   def find_record
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
   			if params.has_key?(:email)
 	  			@doctor = User.find_by(email: params[:email])
 		  		if @doctor != nil
@@ -264,7 +264,7 @@ class EmployeeController < ApplicationController
   def add_record
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
   			if params.has_key?(:id)
 	  			@customeruser = User.find(params[:id])
 		  		if @customeruser != nil
@@ -314,7 +314,7 @@ class EmployeeController < ApplicationController
 	def link_record
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-	  		@station = Station.find_by(user_id: current_user.id)
+	  		@station = Station.find params[:id_station]
 		  	if params.has_key?(:id) && params.has_key?(:idrecord)
 			  	@customeruser = User.find(params[:id])
 				  if @customeruser != nil
@@ -356,7 +356,7 @@ class EmployeeController < ApplicationController
 	def clear_link_record
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:idrecord)
   				@record = Employee.find_by(id: params[:idrecord], station_id: @station.id)
 	  			if @record != nil
@@ -392,7 +392,7 @@ class EmployeeController < ApplicationController
 	def update_record
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-	  		@station = Station.find_by(user_id: current_user.id)
+	  		@station = Station.find params[:id_station]
 		  	if params.has_key?(:id) && params.has_key?(:idrecord)
 			  	@customeruser = User.find(params[:id])
 				  if @customeruser != nil
@@ -440,7 +440,7 @@ class EmployeeController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:ename)
           @supplier = Employee.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id).group(:ename).limit(5)
 			    render json:@supplier
@@ -482,7 +482,7 @@ class EmployeeController < ApplicationController
   def find
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:ename)
           @supplier = Employee.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier

@@ -4,7 +4,7 @@ class MedicinePrescriptInternalController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  @data = []
 			  @data[0] = MedicinePrescriptInternal.where(station_id: @station.id)
 			  @data[1] = MedicineGroup.all
@@ -30,7 +30,7 @@ class MedicinePrescriptInternalController < ApplicationController
   def create
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 		    @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
 		    if !@customer_id.nil?
 					@customer_id = @customer_id.id
@@ -136,7 +136,7 @@ class MedicinePrescriptInternalController < ApplicationController
   def update
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:id)
           @supplier = MedicinePrescriptInternal.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -196,7 +196,7 @@ class MedicinePrescriptInternalController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = MedicinePrescriptInternal.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -204,8 +204,6 @@ class MedicinePrescriptInternalController < ApplicationController
 				    head :no_content
 			    end
 			  end
-		  else
-        head :no_content
       end
     else
       if has_station?
@@ -226,7 +224,7 @@ class MedicinePrescriptInternalController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:code)
           @supplier = MedicinePrescriptInternal.where("code LIKE ? and station_id = ?" , "%#{params[:code]}%", @station.id).group(:code).limit(3)
 			    render json:@supplier
@@ -286,7 +284,7 @@ class MedicinePrescriptInternalController < ApplicationController
   def find
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:code)
           @supplier = MedicinePrescriptInternal.where("code LIKE ? and station_id = ?" , "%#{params[:code]}%", @station.id)
 			    render json:@supplier
