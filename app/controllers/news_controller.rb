@@ -4,7 +4,7 @@ class NewsController < ApplicationController
     @cat = NewsCategory.all
     @sub = NewsSubCategory.all
     if params[:cat_id]
-      @con = News.where(sub_category_id: params[:cat_id])
+      @con = News.where(news_sub_category_id: params[:cat_id])
     else
       @con = News.all
     end
@@ -18,7 +18,7 @@ class NewsController < ApplicationController
     news = News.find id
     @con << news
     main_cat = news.news_sub_category.news_category
-    ids = main_cat.news_sub_category.pluck(:id)
-    @related = News.where(news_sub_category: ids).sample(5).pluck(:id, :title)
+    ids = main_cat.news_sub_categories.pluck(:id).drop(news.id)
+    @related = News.where(news_sub_category: ids).sample(5)
   end
 end
