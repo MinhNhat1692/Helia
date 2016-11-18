@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  news_sub_category_id: 1
+  title: MyString
+  content: MyString
+  views: 1
+
+two:
+  news_sub_category_id: 1
+  title: MyString
+  content: MyString
+  views: 1

@@ -186,12 +186,12 @@
     if @props.datatype == 'news_con'
       React.DOM.div id: 'doc-content-wrapper',
         React.DOM.div className: 'container',
-          React.createElement NewlistNav, cat: @state.cat, sub: @state.sub, con: @state.con
+          React.createElement NewslistNav, cat: @state.cat, sub: @state.sub, con: @state.con
           React.createElement NewsContent, cat: @state.cat, sub: @state.sub, con: @state.con, relate: @state.relate, datatype: @props.datatype
     else if @props.datatype == 'news_cat'
       React.DOM.div id: 'doc-content-wrapper',
         React.DOM.div className: 'container',
-          React.createElement NewlistNav, cat: @state.cat, sub: @state.sub, con: @state.con
+          React.createElement NewslistNav, cat: @state.cat, sub: @state.sub, con: @state.con
           React.createElement NewsContent, cat: @state.cat, sub: @state.sub, con: @state.con, datatype: @props.datatype
   render: ->
     @NewRender()
@@ -200,23 +200,24 @@
   getInitialState: ->
     type: 1
   getrightcat: -> #need change to right value
-    result = {cat: null, sub: null}
+    result = {cat: {color: '000000', name: 'Không có tin khả dụng'}, sub: {name: 'Không có tin khả dụng'}}
     for cat in @props.cat
       for sub in @props.sub
-        if cat.id == sub.doc_cats_id
+        if cat.id == sub.news_category_id
           for con in @props.con
-            if con.doc_subs_id == sub.id
+            if con.news_sub_category_id == sub.id
               result = {cat: cat, sub: sub}
               return result
     return result
   getrightlink: (con)->
-    link = "/"
-    link+= con.title.toLowerCase().replace(" ","-") + con.id
+    console.log(con)
+    link = "/blogs/"
+    link+= con.title.toLowerCase().replace(" ","-") + "-" + con.id
     return link
   NewsContentRender: ->
     React.DOM.div id: 'doc-content',
-      React.DOM.div className: 'doc-online', id: 'doc-tab-content',
-        if @props.datatype == 'news_doc'
+      if @props.datatype == 'news_con'
+        React.DOM.div className: 'doc-online', id: 'doc-tab-content',
           React.DOM.div className: 'markdown-page',
             React.DOM.section className: 'heading',
               React.DOM.div className: 'title_wrapper', style: {'backgroundColor': '#' + @getrightcat().cat.color},
@@ -231,13 +232,14 @@
                 React.DOM.div className: 'summary_title',
                   'Tin liên quan'
                 React.DOM.ul null,
-                  for relate in @props.related
+                  for relate in @props.relate
                     React.DOM.li key: relate.id,
                       React.DOM.a href: @getrightlink(relate), relate.title
           React.DOM.div className: 'markdown-page',
             for con in @props.con
               React.createElement 'section', key: con.id, dangerouslySetInnerHTML: __html: con.content
-        else @props.datatype == 'news_cat'
+      else if @props.datatype == 'news_cat'
+        React.DOM.div className: 'doc-online', id: 'doc-tab-content',
           React.DOM.div className: 'markdown-page',
             React.DOM.section className: 'heading',
               React.DOM.div className: 'title_wrapper', style: {'backgroundColor': '#' + @getrightcat().cat.color},
@@ -250,7 +252,7 @@
                     React.DOM.h1 null, @getrightcat().sub.name
               React.DOM.div className: 'toc_wrapper',
                 React.DOM.div className: 'summary_title',
-                  'Tin liên quan'
+                  'Danh sách tin'
                 React.DOM.ul null,
                   for relate in @props.con
                     React.DOM.li key: relate.id,
@@ -274,9 +276,9 @@
     open: @getopenstat()
   getopenstat: ->
     for sub in @props.sub
-      if sub.doc_cats_id == @props.cat.id
+      if sub.news_category_id == @props.cat.id
         for con in @props.con
-          if sub.id == con.doc_subs_id
+          if sub.id == con.news_sub_category_id
             return true
     return false
   toggleOpen: (e) ->
@@ -289,7 +291,7 @@
           React.DOM.i className: 'fa fa-angle-up'
         React.DOM.ul className: 'nav',
           for sub in @props.sub
-            if sub.doc_cats_id == @props.cat.id
+            if sub.news_category_id == @props.cat.id
               React.createElement NewslistNavChildMini, key: sub.id, sub: sub, con: @props.con 
     else
       React.DOM.div className: 'ul-group', style: {'borderColor': '#' + @props.cat.color},
@@ -298,7 +300,7 @@
           React.DOM.i className: 'fa fa-angle-down'
         React.DOM.ul className: 'nav',
           for sub in @props.sub
-            if sub.doc_cats_id == @props.cat.id
+            if sub.news_category_id == @props.cat.id
               React.createElement NewslistNavChildMini, key: sub.id, sub: sub, con: @props.con
   render: ->
     @NavchildRender()
@@ -307,12 +309,12 @@
   getInitialState: ->
     type: 1
   getrightlink: (sub) ->
-    link = '?cat_id='
+    link = '/blogs?cat_id='
     link+= sub.id
     return link
   getopenstat: ->
     for con in @props.con
-      if @props.sub.id == con.doc_subs_id
+      if @props.sub.id == con.news_sub_category_id
         return true
       else
         return false
@@ -320,9 +322,9 @@
   render: ->
     if @getopenstat()
       React.DOM.li className: 'active caretable',
-        React.DOM.a href: @getrightlink(), @props.sub.name
+        React.DOM.a href: @getrightlink(@props.sub), style: {'padding': '0px 5px 0px 0px'}, @props.sub.name
     else
       React.DOM.li className: 'caretable',
-        React.DOM.a href: @getrightlink(), @props.sub.name
+        React.DOM.a href: @getrightlink(@props.sub), style: {'padding': '0px 5px 0px 0px'}, @props.sub.name
 
 
