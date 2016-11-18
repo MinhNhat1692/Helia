@@ -3,9 +3,8 @@ class BillInfoController < ApplicationController
   
   def update
     if params.has_key?(:id_station)
-      @user = current_user
-      if @user.check_permission params[:id_station], params[:table_id], 2
-		    @station = Station.find_by(user_id: current_user.id)
+      if current_user.check_permission params[:id_station], params[:table_id], 2
+		    @station = Station.find params[:id_station]
 		    if params.has_key?(:id)
           @supplier = BillInfo.find(params[:id])
           if @supplier.station_id == @station.id
@@ -49,7 +48,7 @@ class BillInfoController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-	      @station = Station.find_by(user_id: current_user.id)
+	      @station = Station.find params[:id_station]
 		    if params.has_key?(:id)
 		      @supplier = BillInfo.find(params[:id])
 		      if @supplier.station_id == @station.id
@@ -77,7 +76,7 @@ class BillInfoController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-	      @station = Station.find_by(user_id: current_user.id)
+	      @station = Station.find params[:id_station]
 		    @data = []
 		    @data[0] = BillInfo.where(station_id: @station.id).order(updated_at: :desc).limit(200)
 		    @data[1] = OutsideCurrency.where(category: 1, station_id: nil)
@@ -101,7 +100,7 @@ class BillInfoController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:station]
         if params.has_key?(:remark)
           @supplier = BillInfo.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id).group(:remark).limit(5)
 		      render json:@supplier
@@ -131,7 +130,7 @@ class BillInfoController < ApplicationController
   def find
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:remark)
           @supplier = BillInfo.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 		      render json:@supplier

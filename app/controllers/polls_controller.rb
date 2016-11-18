@@ -5,7 +5,7 @@ class PollsController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         t = Time.now
         h = Hash.new
         flag = false

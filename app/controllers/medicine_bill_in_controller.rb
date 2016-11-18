@@ -4,7 +4,7 @@ class MedicineBillInController < ApplicationController
   def list
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  @data = []
 			  @data[0] = MedicineBillIn.where(station_id: @station.id)
 			  @data[1] = MedicineGroup.all
@@ -30,7 +30,7 @@ class MedicineBillInController < ApplicationController
   def create
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-				@station = Station.find_by(user_id: current_user.id)
+				@station = Station.find params[:id_station]
 			  @supplier_id = MedicineSupplier.find_by(id: params[:supplier_id], name: params[:supplier], station_id: @station.id)
 		    if !@supplier_id.nil?
 				  @supplier_id = @supplier_id.id
@@ -122,7 +122,7 @@ class MedicineBillInController < ApplicationController
   def update
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 2
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:id)
           @supplier = MedicineBillIn.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -182,7 +182,7 @@ class MedicineBillInController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = MedicineBillIn.find(params[:id])
 			    if @supplier.station_id == @station.id
@@ -212,7 +212,7 @@ class MedicineBillInController < ApplicationController
   def search
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:billcode)
           @supplier = MedicineBillIn.where("billcode LIKE ? and station_id = ?" , "%#{params[:billcode]}%", @station.id).group(:billcode).limit(3)
 			    render json:@supplier
@@ -248,7 +248,7 @@ class MedicineBillInController < ApplicationController
   def find
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:billcode)
           @supplier = MedicineBillIn.where("billcode LIKE ? and station_id = ?" , "%#{params[:billcode]}%", @station.id)
 			    render json:@supplier

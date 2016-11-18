@@ -4,7 +4,7 @@ class MedicineAllRecordsController < ApplicationController
   def summary
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find_by(user_id: current_user.id)
+			  @station = Station.find params[:id_station]
         @data = []
         if params.has_key?(:date)
           n = params[:date].to_i

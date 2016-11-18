@@ -4,7 +4,7 @@ class ServiceMappingController < ApplicationController
   def create
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
-  			@station = Station.find_by(user_id: current_user.id)
+  			@station = Station.find params[:id_station]
 	  	  @s_id = Service.find_by(id: params[:s_id], sname: params[:sname], station_id: @station.id)
 		    if !@s_id.nil?
 					@s_id = @s_id.id
@@ -74,7 +74,7 @@ class ServiceMappingController < ApplicationController
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3
-	  		@station = Station.find_by(user_id: current_user.id)
+	  		@station = Station.find params[:id_station]
 		  	@position = ServiceMap.find(params[:id])
 			  if @position.station_id == @station.id
 				  @position.destroy
@@ -109,7 +109,7 @@ class ServiceMappingController < ApplicationController
   def search
 	  if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:sname)
           @supplier = ServiceMap.where("sname LIKE ? and station_id = ?" , "%#{params[:sname]}%", @station.id).group(:sname).limit(5)
 			    render json:@supplier
@@ -139,7 +139,7 @@ class ServiceMappingController < ApplicationController
   def find
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
-        @station = Station.find_by(user_id: current_user.id)
+        @station = Station.find params[:id_station]
         if params.has_key?(:sname)
           @supplier = ServiceMap.where("sname LIKE ? and station_id = ?" , "%#{params[:sname]}%", @station.id)
 			    render json:@supplier
