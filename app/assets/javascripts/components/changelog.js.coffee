@@ -181,11 +181,18 @@
     cat: @props.cat
     sub: @props.sub
     con: @props.con
+    relate: @props.related
   NewRender: ->
-    React.DOM.div id: 'doc-content-wrapper',
-      React.DOM.div className: 'container',
-        React.createElement NewlistNav, cat: @state.cat, sub: @state.sub, con: @state.con, trigger: @trigger
-        React.createElement NewsContent, cat: @state.cat, sub: @state.sub, con: @state.con
+    if @props.datatype == 'news_con'
+      React.DOM.div id: 'doc-content-wrapper',
+        React.DOM.div className: 'container',
+          React.createElement NewlistNav, cat: @state.cat, sub: @state.sub, con: @state.con
+          React.createElement NewsContent, cat: @state.cat, sub: @state.sub, con: @state.con, relate: @state.relate, datatype: @props.datatype
+    else if @props.datatype == 'news_cat'
+      React.DOM.div id: 'doc-content-wrapper',
+        React.DOM.div className: 'container',
+          React.createElement NewlistNav, cat: @state.cat, sub: @state.sub, con: @state.con
+          React.createElement NewsContent, cat: @state.cat, sub: @state.sub, con: @state.con, datatype: @props.datatype
   render: ->
     @NewRender()
     
@@ -202,38 +209,58 @@
               result = {cat: cat, sub: sub}
               return result
     return result
+  getrightlink: (con)->
+    link = "/"
+    link+= con.title.toLowerCase().replace(" ","-") + con.id
+    return link
   NewsContentRender: ->
     React.DOM.div id: 'doc-content',
       React.DOM.div className: 'doc-online', id: 'doc-tab-content',
-        React.DOM.div className: 'markdown-page',
-          React.DOM.section className: 'heading',
-            React.DOM.div className: 'title_wrapper', style: {'backgroundColor': '#' + @getrightcat().cat.color},
-              React.DOM.div className: 'title_sub_wrapper row',
-                React.DOM.div className: 'type-icon',
-                  React.DOM.i className: 'fa fa-book fa-3x'
-                React.DOM.div className: 'title_sub_sub_wrapper',
-                  React.DOM.div className: 'breadcrumb',
-                    "Tin tức > " + @getrightcat().cat.name
-                  React.DOM.h1 null, @getrightcat().sub.name
-            React.DOM.div className: 'toc_wrapper',
-              React.DOM.div className: 'summary_title',
-                'Tin liên quan'
-              React.DOM.ul null,
-                for relate in @props.related
-                  React.DOM.li key: con.id,
-                    React.DOM.li 
-                  con.header
-        React.DOM.div className: 'markdown-page',
-          for con in @props.con
-            React.createElement 'section', key: con.id, dangerouslySetInnerHTML: __html: con.content
+        if @props.datatype == 'news_doc'
+          React.DOM.div className: 'markdown-page',
+            React.DOM.section className: 'heading',
+              React.DOM.div className: 'title_wrapper', style: {'backgroundColor': '#' + @getrightcat().cat.color},
+                React.DOM.div className: 'title_sub_wrapper row',
+                  React.DOM.div className: 'type-icon',
+                    React.DOM.i className: 'fa fa-book fa-3x'
+                  React.DOM.div className: 'title_sub_sub_wrapper',
+                    React.DOM.div className: 'breadcrumb',
+                      "Tin tức > " + @getrightcat().cat.name
+                    React.DOM.h1 null, @getrightcat().sub.name
+              React.DOM.div className: 'toc_wrapper',
+                React.DOM.div className: 'summary_title',
+                  'Tin liên quan'
+                React.DOM.ul null,
+                  for relate in @props.related
+                    React.DOM.li key: relate.id,
+                      React.DOM.a href: @getrightlink(relate), relate.title
+          React.DOM.div className: 'markdown-page',
+            for con in @props.con
+              React.createElement 'section', key: con.id, dangerouslySetInnerHTML: __html: con.content
+        else @props.datatype == 'news_cat'
+          React.DOM.div className: 'markdown-page',
+            React.DOM.section className: 'heading',
+              React.DOM.div className: 'title_wrapper', style: {'backgroundColor': '#' + @getrightcat().cat.color},
+                React.DOM.div className: 'title_sub_wrapper row',
+                  React.DOM.div className: 'type-icon',
+                    React.DOM.i className: 'fa fa-book fa-3x'
+                  React.DOM.div className: 'title_sub_sub_wrapper',
+                    React.DOM.div className: 'breadcrumb',
+                      "Tin tức > " + @getrightcat().cat.name
+                    React.DOM.h1 null, @getrightcat().sub.name
+              React.DOM.div className: 'toc_wrapper',
+                React.DOM.div className: 'summary_title',
+                  'Tin liên quan'
+                React.DOM.ul null,
+                  for relate in @props.con
+                    React.DOM.li key: relate.id,
+                      React.DOM.a href: @getrightlink(relate), relate.title
   render: ->
     @NewsContentRender()
 
 @NewslistNav = React.createClass
   getInitialState: ->
     type: 1
-  trigger: (id) ->
-    @props.trigger id
   NavRender: ->
     React.DOM.div id: 'navbar-doc-wrapper',
       React.DOM.nav className: 'scrollable navbar-guide-toc fixed', id: 'navbar-doc',
@@ -252,8 +279,6 @@
           if sub.id == con.doc_subs_id
             return true
     return false
-  trigger: (id) ->
-    @props.trigger id
   toggleOpen: (e) ->
     @setState open: !@state.open
   NavchildRender:->
@@ -265,7 +290,7 @@
         React.DOM.ul className: 'nav',
           for sub in @props.sub
             if sub.doc_cats_id == @props.cat.id
-              React.createElement NewslistNavChildMini, key: sub.id, sub: sub, con: @props.con, trigger: @trigger 
+              React.createElement NewslistNavChildMini, key: sub.id, sub: sub, con: @props.con 
     else
       React.DOM.div className: 'ul-group', style: {'borderColor': '#' + @props.cat.color},
         React.DOM.div className: 'ul-group-name', onClick: @toggleOpen, 
@@ -274,15 +299,17 @@
         React.DOM.ul className: 'nav',
           for sub in @props.sub
             if sub.doc_cats_id == @props.cat.id
-              React.createElement NewslistNavChildMini, key: sub.id, sub: sub, con: @props.con, trigger: @trigger 
+              React.createElement NewslistNavChildMini, key: sub.id, sub: sub, con: @props.con
   render: ->
     @NavchildRender()
     
 @NewslistNavChildMini = React.createClass
   getInitialState: ->
     type: 1
-  trigger: (e) ->
-    @props.trigger @props.sub.id
+  getrightlink: (sub) ->
+    link = '?cat_id='
+    link+= sub.id
+    return link
   getopenstat: ->
     for con in @props.con
       if @props.sub.id == con.doc_subs_id
@@ -292,8 +319,10 @@
     return false
   render: ->
     if @getopenstat()
-      React.DOM.li className: 'active caretable', onClick: @trigger, @props.sub.name
+      React.DOM.li className: 'active caretable',
+        React.DOM.a href: @getrightlink(), @props.sub.name
     else
-      React.DOM.li className: 'caretable', onClick: @trigger, @props.sub.name
+      React.DOM.li className: 'caretable',
+        React.DOM.a href: @getrightlink(), @props.sub.name
 
 
