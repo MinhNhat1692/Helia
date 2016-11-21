@@ -74,7 +74,7 @@
   getInitialState: ->
     type: 1
   getrightcat: ->
-    result = {cat: null, sub: null}
+    result = {cat: {color: '000000', name: 'Không có tin khả dụng'}, sub: {name: 'Không có tin khả dụng'}}
     for cat in @props.cat
       for sub in @props.sub
         if cat.id == sub.doc_cats_id

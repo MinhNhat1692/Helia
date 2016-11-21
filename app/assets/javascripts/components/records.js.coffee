@@ -194,6 +194,7 @@
 
 @MainPart = React.createClass
     getInitialState: ->
+      analysis: 0
       records:
         if @props.data[0] != undefined
           @props.data[0]
@@ -224,6 +225,7 @@
     componentWillMount: ->
       $(APP).on 'rebuild', ((e) ->
         @setState
+          analysis: 0
           records: @props.data[0]
           selected: null
           record: null
@@ -4668,12 +4670,13 @@
     medicineSummary: ->
       React.DOM.div className: 'content-wrapper',
         React.DOM.div className: 'spacer30'
-        React.DOM.div className: 'row',
-          React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê ngoài phòng khám', description: 'Thuốc không được nhà thuốc phòng khám cung cấp', color: '#FDBD57', altitle: 'Thuốc ngoài phòng khám', img: '/assets/getting-started-small.png'
-          React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê trong phòng khám', description: 'Thuốc được nhà thuốc phòng khám cung cấp', color: '#F6624E', altitle: 'Thuốc trong phòng khám', img: '/assets/indexing-small.png'
-          React.createElement MinorMaterial, datatype: 'medicine_stock_summary_part', className: 'col-sm-12 col-xs-12 animated fadeInUp', text: 'Thống kê kho thuốc', color: '#1F3B5D', minheight: '150px', textcolor: '#8191B1'
-          React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Tình hình nhập thuốc', description: 'Thống kê phân loại thuốc nhập theo nguồn', color: '#E7486B', altitle: 'Thuốc nhập', img: '/assets/search-small.png'
-          React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê kinh doanh thuốc', description: 'Tình hình kinh doanh của từng loại thuốc', color: '#9C4274', altitle: 'Kinh doanh thuốc', img: '/assets/relevance-small.png'
+        if @state.analysis == 0
+          React.DOM.div className: 'row',
+            React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê ngoài phòng khám', description: 'Thuốc không được nhà thuốc phòng khám cung cấp', color: '#FDBD57', altitle: 'Thuốc ngoài phòng khám', img: '/assets/getting-started-small.png'
+            React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê trong phòng khám', description: 'Thuốc được nhà thuốc phòng khám cung cấp', color: '#F6624E', altitle: 'Thuốc trong phòng khám', img: '/assets/indexing-small.png'
+            React.createElement MinorMaterial, datatype: 'medicine_stock_summary_part', className: 'col-sm-12 col-xs-12 animated fadeInUp', text: 'Thống kê kho thuốc', color: '#1F3B5D', minheight: '150px', textcolor: '#8191B1'
+            React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Tình hình nhập thuốc', description: 'Thống kê phân loại thuốc nhập theo nguồn', color: '#E7486B', altitle: 'Thuốc nhập', img: '/assets/search-small.png'
+            React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê kinh doanh thuốc', description: 'Tình hình kinh doanh của từng loại thuốc', color: '#9C4274', altitle: 'Kinh doanh thuốc', img: '/assets/relevance-small.png'
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()

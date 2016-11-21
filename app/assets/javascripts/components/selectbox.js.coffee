@@ -8,9 +8,7 @@
       records: []
       type: 1
     roomListSelectBox: ->
-      React.DOM.select
-        className: 'form-control'
-        id: @state.id
+      React.DOM.select className: 'form-control', id: @state.id,
         React.DOM.option
           defaultValue:
             if @props.defaultValue != null
@@ -21,31 +19,21 @@
         for record in @state.records
           React.createElement OptionSelect, key: record.id, value: record.id, text: record.name
     roomListSelectBox2: ->
-      React.DOM.select
-        className: 'form-control'
-        id: @state.id
-        onBlur: @props.blurOut
+      React.DOM.select className: 'form-control', id: @state.id, onBlur: @props.blurOut,
         React.DOM.option
           defaultValue: ""
           @state.text
         for record in @state.records
           React.createElement OptionSelect, key: record.id, value: record.id, text: record.name
     positionListSelectBox: ->
-      React.DOM.select
-        className: 'form-control'
-        id: @state.id
-        onBlur: @props.blurOut
+      React.DOM.select className: 'form-control', id: @state.id, onBlur: @props.blurOut,
         React.DOM.option
           defaultValue: ""
           @state.text
         for record in @state.records
           React.createElement OptionSelect, key: record.id, value: record.id, text: record.pname
     selectBoxGeneral: ->
-      React.DOM.select
-        className: @props.className
-        id: @props.id
-        onChange: @props.Change
-        onBlur: @props.blurOut
+      React.DOM.select className: @props.className, id: @props.id, onChange: @props.Change, onBlur: @props.blurOut,
         React.DOM.option
           defaultValue: ""
           @state.text
@@ -70,4 +58,4 @@
         value: @state.value
         @state.text
     render: ->
-        @renderOption()
+      @renderOption()

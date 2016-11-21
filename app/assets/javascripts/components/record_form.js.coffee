@@ -1,4 +1,4 @@
-  @FilterForm = React.createClass
+@FilterForm = React.createClass
     getInitialState: ->
       type: 0
       selectList: null
@@ -1686,7 +1686,7 @@
       else if @props.datatype == "bill_info"
         @BillInfo()
 
-  @SupportForm = React.createClass
+@SupportForm = React.createClass
     getInitialState: ->
       type: null
     handleSubmit: (e) ->
