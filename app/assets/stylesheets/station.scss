@@ -2576,7 +2576,7 @@ h4, .h4 {
     min-height: 250px;
 }
 
-.metro:hover{
+.metro:hover, .collecting-data-spinner:hover{
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
     text-decoration: none;
     -webkit-transform: translateY(-4px);
@@ -2617,3 +2617,18 @@ h4, .h4 {
     border-bottom-right-radius: 4px;
 }
 
+.collecting-data-spinner {
+    padding: 20px;
+    background: #1F3B5D;
+    border-radius: 5px;
+    color: #8191B1;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+    margin-bottom:30px;
+}
+
+.collecting-data-spinner i {
+    color: #325f96;
+    margin-bottom: 15px;
+}

@@ -11,7 +11,7 @@
           React.DOM.img alt: @props.altitle, className: 'metro-object-img', src: @props.img, width: '110'
     MedicineStockSummaryPart: ->
       React.DOM.div className: @props.className,
-        React.DOM.div className: 'metro', style: {'backgroundColor': @props.color, 'minHeight': @props.minheight, 'color': @props.textcolor},
+        React.DOM.div className: 'collecting-data-spinner', style: {'backgroundColor': @props.color, 'minHeight': @props.minheight, 'color': @props.textcolor},
           React.DOM.div className: 'text-center',
             React.DOM.i className: 'fa fa-clock-o fa-3x'
           React.DOM.p className: 'lead text-center', @props.text
