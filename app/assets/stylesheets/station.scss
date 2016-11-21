@@ -2175,7 +2175,7 @@ body {
 }
 
 .clear-page.blurred-dashboard {
-    background: url(https://www.algolia.com/assets/flat2/get-started/blurred-dashboard-02396ee4519fe7623fbf4dbc2ea924be.jpg) no-repeat center center fixed #1F3B5D;
+    background: asset-data-url("blurred-dashboard.jpg") no-repeat center center fixed #1F3B5D;
     background-size: cover;
 }
 

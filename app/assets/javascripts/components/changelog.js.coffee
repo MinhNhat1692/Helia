@@ -238,12 +238,8 @@
           React.DOM.div className: 'markdown-page',
             for con in @props.con
               React.createElement 'section', key: con.id, dangerouslySetInnerHTML: __html: con.content
-<<<<<<< HEAD
-        else if @props.datatype == 'news_cat'
-=======
       else if @props.datatype == 'news_cat'
         React.DOM.div className: 'doc-online', id: 'doc-tab-content',
->>>>>>> a62e9271a02de5bfb275a45421620796fb67a0df
           React.DOM.div className: 'markdown-page',
             React.DOM.section className: 'heading',
               React.DOM.div className: 'title_wrapper', style: {'backgroundColor': '#' + @getrightcat().cat.color},
