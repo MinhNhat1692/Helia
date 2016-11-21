@@ -238,6 +238,9 @@ Rails.application.routes.draw do
   put '/permissions', to: 'permissions#update'
   delete '/permissions', to: 'permissions#destroy'
 
+  get '/blogs', to: 'news#index'
+  get '/blogs/:link', to: 'news#show'
+
   resources :users
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
