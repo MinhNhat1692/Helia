@@ -6,8 +6,7 @@ class Apikey < ApplicationRecord
   validates :adminapi, presence: true, length: { minimum: 20 }, uniqueness: true
   
   def generateKey
-    self.appid = SecureRandom.random_number(36**20).to_s(36).rjust(20, "0")
-		self.soapi = SecureRandom.random_number(36**20).to_s(36).rjust(20, "0")
+    self.soapi = SecureRandom.random_number(36**20).to_s(36).rjust(20, "0")
 		self.mapi = SecureRandom.random_number(36**20).to_s(36).rjust(20, "0")
 		self.adminapi = SecureRandom.random_number(36**20).to_s(36).rjust(20, "0")
 	end
