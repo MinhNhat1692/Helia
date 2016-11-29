@@ -241,6 +241,10 @@ Rails.application.routes.draw do
   get '/blogs', to: 'news#index'
   get '/blogs/:link', to: 'news#show'
 
+  post 'api/add_customer/:key', to: 'demo_api#add_customer'
+  get 'api/services/:key', to: 'demo_api#list_service'
+  get 'api/getResult/:key', to: 'demo_api#get_result'
+
   resources :users
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
