@@ -7,7 +7,7 @@ class DemoApiController < ApplicationController
       user = api_key.user
       station = Station.find_by(user_id: user.id)
       customer = CustomerRecord.new(station_id: station.id, gender: params[:gender], cname: params[:cname], dob: params[:dob], 
-                                    address: params[:address], pnumber: params[:pnumber], noid: params[:noid],
+                                    address: params[:address], pnumber: params[:pnumber], noid: params[:noid], avatar: params[:avatar],
                                     issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place],
                                     self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
       if customer.valid?
