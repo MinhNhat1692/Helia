@@ -57,6 +57,7 @@ class DemoApiController < ApplicationController
       if params[:om_id] && params[:code]
         ordermap = OrderMap.find_by(station_id: station.id, id: params[:om_id], code: params[:code])
         if ordermap
+          customer = CustomerRecord.find_by(id: ordermap.customer_record_id, station_id: station.id)
           check_info = CheckInfo.find_by(order_map_id: ordermap.id, station_id: station.id)
           doc_check_info = DoctorCheckInfo.find_by(order_map_id: ordermap.id, station_id: station.id)
           ex_script = MedicinePrescriptExternal.find_by(number_id: ordermap.id, station_id: station.id)
@@ -69,7 +70,7 @@ class DemoApiController < ApplicationController
             in_script = in_script.attributes
             in_record["record"] = MedicineInternalRecord.where(script_id: in_script["id"], station_id: station.id)
           end
-          render json: { message: "Success", result: [check_info, doc_check_info, ex_script, in_script] }
+          render json: { message: "Success", result: [customer, check_info, doc_check_info, ex_script, in_script] }
         else
           render json: { message: "Khong thay thong tin phieu kham" }
         end
