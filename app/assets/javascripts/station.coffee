@@ -11,6 +11,8 @@
 //= require react
 //= require react_ujs
 //= require chart
+//= require jquery.flot.min
+//= require jquery.sparkline.min
 //= require toastr.min
 //= require webcam
 //= require_tree ./components

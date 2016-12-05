@@ -194,6 +194,7 @@
 
 @MainPart = React.createClass
     getInitialState: ->
+      data: null
       analysis: 0
       records:
         if @props.data[0] != undefined
@@ -483,6 +484,38 @@
           @triggerPage(Number($('#page_number').val()))
         else
           @showtoast("Số trang bạn muốn chuyển tới không phù hợp", 3)
+    triggerChangeAnalysis: (code) ->
+      switch code
+        when 1
+          link = "/medicine_summary/external_record"
+        when 2
+          link = "/medicine_summary/external_record"
+        when 3
+          link = "/medicine_summary/external_record"
+        when 4
+          link = "/medicine_summary/external_record"
+        when 5
+          link = "/medicine_summary/external_record"
+      @showtoast("Đang tải dữ liệu, vui lòng chờ",2)
+      $.ajax
+        url: link
+        type: 'POST'
+        dataType: 'JSON'
+        error: ((result) ->
+          @showtoast("Tải dữ liệu thất bại, xin vui lòng thử lại",3)
+          return
+        ).bind(this)
+        success: ((result) ->
+          @showtoast("Tải dữ liệu hoàn tất",1)
+          @setState
+            analysis: code
+            data: result
+          setTimeout (->
+            $(APP).trigger('drawsparkle')
+            $(APP).trigger('drawplot')
+          ), 500
+          return
+        ).bind(this)
     triggerInput: (text,type,check1) ->
       if type != '' && text.length > 1
         if !check1.option1
@@ -4668,15 +4701,43 @@
         React.DOM.div className: 'preloader',
           React.DOM.i className: 'fa fa-cog fa-spin fa-3x'
     medicineSummary: ->
-      React.DOM.div className: 'content-wrapper',
-        React.DOM.div className: 'spacer30'
-        if @state.analysis == 0
-          React.DOM.div className: 'row',
-            React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê ngoài phòng khám', description: 'Thuốc không được nhà thuốc phòng khám cung cấp', color: '#FDBD57', altitle: 'Thuốc ngoài phòng khám', img: '/assets/getting-started-small.png'
-            React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê trong phòng khám', description: 'Thuốc được nhà thuốc phòng khám cung cấp', color: '#F6624E', altitle: 'Thuốc trong phòng khám', img: '/assets/indexing-small.png'
-            React.createElement MinorMaterial, datatype: 'medicine_stock_summary_part', className: 'col-sm-12 col-xs-12 animated fadeInUp', text: 'Thống kê kho thuốc', color: '#1F3B5D', minheight: '150px', textcolor: '#8191B1'
-            React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Tình hình nhập thuốc', description: 'Thống kê phân loại thuốc nhập theo nguồn', color: '#E7486B', altitle: 'Thuốc nhập', img: '/assets/search-small.png'
-            React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê kinh doanh thuốc', description: 'Tình hình kinh doanh của từng loại thuốc', color: '#9C4274', altitle: 'Kinh doanh thuốc', img: '/assets/relevance-small.png'
+      switch @state.analysis
+        when 0
+          React.DOM.div className: 'content-wrapper',
+            React.DOM.div className: 'spacer30'
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê ngoài phòng khám', description: 'Thuốc không được nhà thuốc phòng khám cung cấp', color: '#FDBD57', altitle: 'Thuốc ngoài phòng khám', img: '/assets/getting-started-small.png', code: 1, trigger: @triggerChangeAnalysis
+              React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê trong phòng khám', description: 'Thuốc được nhà thuốc phòng khám cung cấp', color: '#F6624E', altitle: 'Thuốc trong phòng khám', img: '/assets/indexing-small.png', code: 2, trigger: @triggerChangeAnalysis
+              React.createElement MinorMaterial, datatype: 'medicine_stock_summary_part', className: 'col-sm-12 col-xs-12 animated fadeInUp', text: 'Thống kê kho thuốc', color: '#1F3B5D', minheight: '150px', textcolor: '#8191B1', code: 3, trigger: @triggerChangeAnalysis
+              React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Tình hình nhập thuốc', description: 'Thống kê phân loại thuốc nhập theo nguồn', color: '#E7486B', altitle: 'Thuốc nhập', img: '/assets/search-small.png', code: 4, trigger: @triggerChangeAnalysis
+              React.createElement MinorMaterial, datatype: 'medicine_summary_part', className: 'col-sm-6 col-xs-6 animated fadeInUp', header_text: 'Thống kê kinh doanh thuốc', description: 'Tình hình kinh doanh của từng loại thuốc', color: '#9C4274', altitle: 'Kinh doanh thuốc', img: '/assets/relevance-small.png', code: 5, trigger: @triggerChangeAnalysis
+        when 1
+          React.DOM.div className: 'content-wrapper',
+            React.DOM.div className: 'spacer30'
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              React.createElement MinorMaterial, datatype: 'unfloat_label_chart', className: 'col-md-4 col-xs-12 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120", idcanvas: "sparkline1", plotheight: "80", plotdata: [5,6,7,9,9,5,3,2,2,4,6,7], plotstyle: "line", plotwidth: "100%"
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'unfloat_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: "Tất cả", data: [
+                {id: 1, label: "Label 1", text: "Text 1 in the line"}
+                {id: 2, label: "Label 2", text: "Text 2 in the line"}
+                {id: 3, label: "Label 3", text: "Text 3 in the line"}
+                {id: 4, label: "Label 4", text: "Text 4 in the line"}
+                {id: 5, label: "Label 5", text: "Text 5 in the line"}
+                {id: 6, label: "Label 6", text: "Text 6 in the line"}
+              ]
+              React.createElement MinorMaterial, datatype: 'float_label_progress_plot', className: 'col-md-8 col-xs-12 animated fadeInUp', idflotchart: "flotchart1"
+        when 2
+          React.DOM.div className: 'row'
+        when 3
+          React.DOM.div className: 'row'
+        when 4
+          React.DOM.div className: 'row'
+        when 5
+          React.DOM.div className: 'row'
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()

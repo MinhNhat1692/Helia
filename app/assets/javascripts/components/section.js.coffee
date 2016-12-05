@@ -60,7 +60,7 @@
       if code == 80
         data =
           task: 80
-          link: '/medicine_summary/all'
+          link: '/apikey/getkey'
         @handleGetdata(data)
         @setState SummaryMenu:
           type: 1, className: 'fa fa-area-chart', active: true, name: "Thống kê", code: 80
