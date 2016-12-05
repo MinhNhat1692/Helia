@@ -2,10 +2,16 @@ class MedicineStockRecord < ApplicationRecord
   belongs_to :station
 
   class << self
-    def to_date_check date
-      day_begin = MedicineStockRecord.first.created_at.beginning_of_day
-      day_end = date.end_of_day
-      MedicineStockRecord.where(created_at: day_begin..day_end)
+    def from_date n
+      start_date = n.days.ago.beginning_of_day
+      end_date = Time.now.end_of_day
+      MedicinePrescriptExternal.where(created_at: start_date..end_date)
+    end
+
+    def in_range start,fin
+      start_date = start.beginning_of_day
+      end_date = fin.end_of_day
+      MedicinePrescriptExternal.where(created_at: start_date..end_date)
     end
 
     def sum_amount_by_sample
