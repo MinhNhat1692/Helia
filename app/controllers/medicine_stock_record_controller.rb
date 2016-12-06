@@ -27,40 +27,6 @@ class MedicineStockRecordController < ApplicationController
     end
   end
 
-  def summary
-    if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
-			  @station = Station.find params[:id_station]
-        if params.has_key?(:date_check)
-          date = params[:date_check].to_date
-          @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
-          render json: @data
-        else
-          date = Time.now.to_date
-          @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
-          render json: @data
-        end
-      else
-        head :no_content
-      end
-    else
-      if has_station?
-			  @station = Station.find_by(user_id: current_user.id)
-        if params.has_key?(:date_check)
-          date = params[:date_check].to_date
-          @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
-          render json: @data
-        else
-          date = Time.now.to_date
-          @data = MedicineStockRecord.where(station_id: @station.id).to_date_check(date).sum_amount_by_sample
-          render json: @data
-        end
-      else
-        redirect_to root_path
-      end
-    end
-  end
-
   def create
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 1
