@@ -41,18 +41,15 @@ class MedicineInternalRecord < ApplicationRecord
     end
     
     def count_by_day start_date, end_date, station_id
-      sql = "SELECT count(*) as qty, date(created_at) as date
-             FROM medicine_internal_records
-             WHERE station_id = #{station_id} AND created_at BETWEEN '#{start_date}' AND '#{end_date}'
-             GROUP BY date(created_at)"
-      result = MedicineInternalRecord.connection.select_all sql
+      result = MedicineExternalRecord.where(station_id: station_id, 
+        created_at: start_date..end_date).group("date(created_at)").count
       statistic = {
         date: Array.new,
         records_qty: Array.new
       }
-      result.rows.each do |row|
-        statistic[:date] << row[1].to_s
-        statistic[:records_qty] << row[0]
+      (0..(result.length - 1)).each do |i|
+        statistic[:date] << result.keys[i]
+        statistic[:records_qty] << result.values[i]
       end
       statistic
     end
