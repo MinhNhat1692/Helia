@@ -34,16 +34,28 @@ class MedicineInternalRecordController < ApplicationController
         @data = []
         if params.has_key?(:date)
           n = params[:date].to_i
-          @data[0] = MedicineInternalRecord.where(station_id: @station.id).from_date(n)
-          @data[1] = MedicinePrescriptExternal.where(station_id: @station.id).from_date(n)
-          @data[2] = MedicinePrescriptInternal.where(station_id: @station.id).from_date(n)
+          start_date = n.days.ago.to_date
+          end_date = Time.now.to_date
+          @data[0] = MedicineInternalRecord.where(station_id: @station.id).count_from_date(n)
+          @data[1] = MedicineExternalRecord.where(station_id: @station.id).count_from_date(n)
+          @data[2] = MedicineInternalRecord.where(station_id: @station.id).statistic_by_day(start_date, end_date)
+          @data[3] = {}
+          [start_date, end_date].each do |date|
+            @data[3][:date] = MedicineStockRecord.where(station_id: @station.id,
+               created_at: date.beginning_of_day..date.end_of_day).sum_amount_by_sample
+          end
           render json: @data
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           begin_date = params[:begin_date].to_date
           end_date = params[:end_date].to_date
-          @data[0] = MedicineInternalRecord.where(station_id: @station.id).in_range(begin_date, end_date)
-          @data[1] = MedicinePrescriptExternal.where(station_id: @station.id).in_range(begin_date, end_date)
-          @data[2] = MedicinePrescriptInternal.where(station_id: @station.id).in_range(begin_date, end_date)
+          @data[0] = MedicineInternalRecord.where(station_id: @station.id).count_in_range(begin_date, end_date)
+          @data[1] = MedicineExternalRecord.where(station_id: @station.id).count_in_range(begin_date, end_date)
+          @data[2] = MedicineInternalRecord.where(station_id: @station.id).statistic_by_day(begin_date, end_date)
+          @data[3] = {}
+          [begin_date, end_date].each do |date|
+            @data[3][date] = MedicineStockRecord.where(station_id: @station.id,
+               created_at: date.beginning_of_day..date.end_of_day).sum_amount_by_sample
+          end
           render json: @data
         else
           redirect_to root_path
@@ -57,22 +69,98 @@ class MedicineInternalRecordController < ApplicationController
         @data = []
         if params.has_key?(:date)
           n = params[:date].to_i
-          @data[0] = MedicineInternalRecord.where(station_id: @station.id).from_date(n)
-          @data[1] = MedicinePrescriptExternal.where(station_id: @station.id).from_date(n)
-          @data[2] = MedicinePrescriptInternal.where(station_id: @station.id).from_date(n)
+          start_date = n.days.ago.to_date
+          end_date = Time.now.to_date
+          @data[0] = MedicineInternalRecord.where(station_id: @station.id).count_from_date(n)
+          @data[1] = MedicineExternalRecord.where(station_id: @station.id).count_from_date(n)
+          @data[2] = MedicineInternalRecord.where(station_id: @station.id).statistic_by_day(start_date, end_date)
+          @data[3] = {}
+          [start_date, end_date].each do |date|
+            @data[3][date] = MedicineStockRecord.where(station_id: @station.id,
+               created_at: date.beginning_of_day..date.end_of_day).sum_amount_by_sample
+          end
           render json: @data
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           begin_date = params[:begin_date].to_date
           end_date = params[:end_date].to_date
-          @data[0] = MedicineInternalRecord.where(station_id: @station.id).in_range(begin_date, end_date)
-          @data[1] = MedicinePrescriptExternal.where(station_id: @station.id).in_range(begin_date, end_date)
-          @data[2] = MedicinePrescriptInternal.where(station_id: @station.id).in_range(begin_date, end_date)
+          @data[0] = MedicineInternalRecord.where(station_id: @station.id).count_in_range(begin_date, end_date)
+          @data[1] = MedicineExternalRecord.where(station_id: @station.id).count_in_range(begin_date, end_date)
+          @data[2] = MedicineInternalRecord.where(station_id: @station.id).statistic_by_day(begin_date, end_date)
+          @data[3] = {}
+          [begin_date, end_date].each do |date|
+            @data[3][date] = MedicineStockRecord.where(station_id: @station.id,
+               created_at: date.beginning_of_day..date.end_of_day).sum_amount_by_sample
+          end
           render json: @data
         else
           redirect_to root_path
         end
       else
         redirect_to root_path
+      end
+    end
+  end
+
+  def sub_summary
+    if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+        @station = Station.find params[:id_station]
+        @data = []
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start_date = n.days.ago.to_date
+          end_date = Time.now.to_date
+          if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price) && params.has_key?(:sample_id)
+            @data[0] = MedicineInternalRecord.where(station_id: @station.id).statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price]
+            @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start_date = params[:begin_date].to_date
+          end_date = params[:end_date].to_date
+          if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price) && params.has_key?(:sample_id)
+            @data[0] = MedicineInternalRecord.where(station_id: @station.id).statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price]
+            @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        else
+          redirect_to root_path
+        end
+      else
+        head :no_content
+      end
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        @data = []
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start_date = n.days.ago.to_date
+          end_date = Time.now.to_date
+          if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price) && params.has_key?(:sample_id)
+            @data[0] = MedicineInternalRecord.where(station_id: @station.id).statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price]
+            @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start_date = params[:begin_date].to_date
+          end_date = params[:end_date].to_date
+          if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price) && params.has_key?(:sample_id)
+            @data[0] = MedicineInternalRecord.where(station_id: @station.id).statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price]
+            @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        else
+          redirect_to root_path
+        end
       end
     end
   end

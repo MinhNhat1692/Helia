@@ -16,9 +16,29 @@ class MedicineStockRecord < ApplicationRecord
 
     def sum_amount_by_sample
       h = Hash.new
-      sample_ids = MedicineStockRecord.pluck(:sample_id).uniq
-      sample_ids.each do |sample|
-        records = MedicineStockRecord.where(sample_id: sample)
+      samples = MedicineStockRecord.pluck(:sample_id, :noid, :signid).uniq
+      samples.each do |sample|
+        records = MedicineStockRecord.where(sample_id: sample[0], noid: sample[1], signid: sample[2])
+        sum = 0
+        records.each do |record|
+          if record.typerecord == 1
+            sum += record.amount
+          elsif record.typerecord == 2
+            sum -= record.amount
+          else
+            sum += 0
+          end
+        end
+        h[sample] = sum
+      end
+      h
+    end
+
+    def sum_amount_by_noid_and_signid
+      h = Hash.new
+      samples = MedicineStockRecord.pluck(:noid, :signid).uniq
+      samples.each do |sample|
+        records = MedicineStockRecord.where(noid: sample[0], signid: sample[1])
         sum = 0
         records.each do |record|
           if record.typerecord == 1
