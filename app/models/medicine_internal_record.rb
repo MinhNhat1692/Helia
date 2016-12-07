@@ -58,18 +58,10 @@ class MedicineInternalRecord < ApplicationRecord
       MedicineInternalRecord.where(station_id: station_id, 
         created_at: start_date..end_date).group([:name, :company_id, :price]).sum(:amount)
     end
-
+    
     def statistic_records start_date, end_date, med_name, company_id, price
-      statistic = {
-        date: Array.new,
-        records_qty: Array.new
-      }
-      (start_date..end_date).each do |date|
-        statistic[:date] << date.to_s
-        statistic[:records_qty] << MedicineInternalRecord.where(created_at: date.beginning_of_day..date.end_of_day,
-          price: price, name: med_name, company_id: company_id).sum(:amount)
-      end
-      statistic
+      MedicineExternalRecord.where(created_at: start_date.beginning_of_day..end_date.end_of_day,
+        price: price, name: med_name, company_id: company_id).group("date(created_at)").sum(:amount)
     end
   end
 end
