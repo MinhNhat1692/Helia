@@ -34,18 +34,18 @@ class MedicineExternalRecordController < ApplicationController
         @data = []
         if params.has_key?(:date)
           n = params[:date].to_i
-          start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
-          @data[0] = MedicineExternalRecord.where(station_id: @station.id).count_from_date(n)
-          @data[1] = MedicineInternalRecord.where(station_id: @station.id).count_from_date(n)
-          @data[2] = MedicineExternalRecord.where(station_id: @station.id).statistic_by_day(start_date, end_date)
+          start_date = n.days.ago.beginning_of_day
+          end_date = Time.now.end_of_day
+          @data[0] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
+          @data[1] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
+          @data[2] = MedicineExternalRecord.statistic_by_day start_date, end_date, @station.id
           render json: @data
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
-          begin_date = params[:begin_date].to_date
-          end_date = params[:end_date].to_date
-          @data[0] = MedicineExternalRecord.where(station_id: @station.id).count_in_range(begin_date, end_date)
-          @data[1] = MedicineInternalRecord.where(station_id: @station.id).count_in_range(begin_date, end_date)
-          @data[2] = MedicineExternalRecord.where(station_id: @station.id).statistic_by_day(begin_date, end_date)
+          start_date = params[:begin_date].to_date.beginning_of_day
+          end_date = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
+          @data[1] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
+          @data[2] = MedicineExternalRecord.statistic_by_day start_date, end_date, @station.id
           render json: @data
         else
           redirect_to root_path
@@ -59,18 +59,18 @@ class MedicineExternalRecordController < ApplicationController
         @data = []
         if params.has_key?(:date)
           n = params[:date].to_i
-          start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
-          @data[0] = MedicineExternalRecord.where(station_id: @station.id).count_from_date(n)
-          @data[1] = MedicineInternalRecord.where(station_id: @station.id).count_from_date(n)
-          @data[2] = MedicineExternalRecord.where(station_id: @station.id).statistic_by_day(start_date, end_date)
+          start_date = n.days.ago.beginning_of_day
+          end_date = Time.now.end_of_day
+          @data[0] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
+          @data[1] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
+          @data[2] = MedicineExternalRecord.statistic_by_day start_date, end_date, @station.id
           render json: @data
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
-          begin_date = params[:begin_date].to_date
-          end_date = params[:end_date].to_date
-          @data[0] = MedicineExternalRecord.where(station_id: @station.id).count_in_range(begin_date, end_date)
-          @data[1] = MedicineInternalRecord.where(station_id: @station.id).count_in_range(begin_date, end_date)
-          @data[2] = MedicineExternalRecord.where(station_id: @station.id).statistic_by_day(begin_date, end_date)
+          start_date = params[:begin_date].to_date.beginning_of_day
+          end_date = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
+          @data[1] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
+          @data[2] = MedicineExternalRecord.statistic_by_day start_date, end_date, @station.id
           render json: @data
         else
           redirect_to root_path
