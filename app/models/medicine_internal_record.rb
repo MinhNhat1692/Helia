@@ -39,17 +39,27 @@ class MedicineInternalRecord < ApplicationRecord
       end
       statistic
     end
-
-    def statistic_by_day start_date, end_date
+    
+    def count_by_day start_date, end_date, station_id
+      sql = "SELECT count(*) as qty, date(created_at) as date
+             FROM medicine_internal_records
+             WHERE station_id = #{station_id} AND created_at BETWEEN '#{start_date}' AND '#{end_date}'
+             GROUP BY date(created_at)"
+      result = MedicineInternalRecord.connection.select_all sql
       statistic = {
         date: Array.new,
-        amount: Array.new
+        records_qty: Array.new
       }
-      (start_date..end_date).each do |date|
-        statistic[:date] << date.to_s
-        statistic[:amount] << MedicineInternalRecord.where(created_at: date.beginning_of_day..date.end_of_day).group([:name, :company_id, :price]).sum(:amount)
+      result.rows.each do |row|
+        statistic[:date] << row[1].to_s
+        statistic[:records_qty] << row[0]
       end
       statistic
+    end
+
+    def statistic_by_day start_date, end_date, station_id
+      MedicineInternalRecord.where(station_id: station_id, 
+        created_at: start_date..end_date).group([:name, :company_id, :price]).sum(:amount)
     end
 
     def statistic_records start_date, end_date, med_name, company_id, price

@@ -39,30 +39,32 @@ class MedicineExternalRecord < ApplicationRecord
       end
       statistic
     end
-    
-    def statistic_by_day start_date, end_date
-      statistic = {
-        date: Array.new,
-        amount: Array.new
-      }
-      (start_date..end_date).each do |date|
-        statistic[:date] << date.to_s
-        statistic[:amount] << MedicineExternalRecord.where(created_at: date.beginning_of_day..date.end_of_day).group([:name, :company_id, :price]).sum(:amount)
-      end
-      statistic
-    end
 
-    def statistic_records start_date, end_date, med_name, company_id, price
+    def count_by_day start_date, end_date, station_id
+      sql = "SELECT count(*) as qty, date(created_at) as date
+             FROM medicine_external_records
+             WHERE station_id = #{station_id} AND created_at BETWEEN '#{start_date}' AND '#{end_date}'
+             GROUP BY date(created_at)"
+      result = MedicineExternalRecord.connection.select_all sql
       statistic = {
         date: Array.new,
         records_qty: Array.new
       }
-      (start_date..end_date).each do |date|
-        statistic[:date] << date.to_s
-        statistic[:records_qty] << MedicineExternalRecord.where(created_at: date.beginning_of_day..date.end_of_day,
-          price: price, name: med_name, company_id: company_id).sum(:amount)
+      result.rows.each do |row|
+        statistic[:date] << row[1].to_s
+        statistic[:records_qty] << row[0]
       end
       statistic
+    end
+    
+    def statistic_by_day start_date, end_date, station_id
+      MedicineExternalRecord.where(station_id: station_id, 
+        created_at: start_date..end_date).group([:name, :company_id, :price]).sum(:amount)
+    end
+
+    def statistic_records start_date, end_date, med_name, company_id, price
+      MedicineExternalRecord.where(created_at: start_date.beginning_of_day..end_date.end_of_day,
+        price: price, name: med_name, company_id: company_id).group("date(created_at)").sum(:amount)
     end
   end
 end
