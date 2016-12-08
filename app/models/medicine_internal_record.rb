@@ -41,27 +41,41 @@ class MedicineInternalRecord < ApplicationRecord
     end
     
     def count_by_day start_date, end_date, station_id
-      result = MedicineExternalRecord.where(station_id: station_id, 
-        created_at: start_date..end_date).group("date(created_at)").count
+      sql = "CALL internal_record_count_by_day('#{start_date}', '#{end_date}', #{station_id})"
+      result = MedicineInternalRecord.connection.select_all sql
       statistic = {
         date: Array.new,
         records_qty: Array.new
       }
-      (0..(result.length - 1)).each do |i|
-        statistic[:date] << result.keys[i]
-        statistic[:records_qty] << result.values[i]
+      result.rows.each do |row|
+        statistic[:date] << row[1].to_s
+        statistic[:records_qty] << row[0]
       end
       statistic
     end
 
     def statistic_by_day start_date, end_date, station_id
-      MedicineInternalRecord.where(station_id: station_id, 
-        created_at: start_date..end_date).group([:name, :company_id, :price]).sum(:amount)
+      sql = "CALL internal_record_statistic('#{start_date}', '#{end_date}', #{station_id})"
+      result = MedicineInternalRecord.connection.select_all sql
+      statistic = []
+      result.rows.each do |row|
+        data = {}
+        data[[row[1], row[2], row[3]]] = row[0]
+        statistic << data
+      end
+      statistic
     end
     
-    def statistic_records start_date, end_date, med_name, company_id, price
-      MedicineExternalRecord.where(created_at: start_date.beginning_of_day..end_date.end_of_day,
-        price: price, name: med_name, company_id: company_id).group("date(created_at)").sum(:amount)
+    def statistic_records start_date, end_date, med_name, company_id, price, station_id
+      sql = "CALL internal_record_detail_statistic('#{start_date}', '#{end_date}', '#{med_name}', #{company_id}, #{price}, #{station_id} )"
+      result = MedicineInternalRecord.connection.select_all sql
+      statistic = []
+      result.rows.each do |row|
+        data = {}
+        data[row[1].to_s] = row[0]
+        statistic << data
+      end
+      statistic
     end
   end
 end
