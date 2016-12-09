@@ -1,0 +1,89 @@
+drop procedure if exists external_record_count_by_day;
+delimiter $$;
+create procedure external_record_count_by_day(
+in start_date date,
+    in end_date date,
+    in sta_id int
+)
+begin
+select count(*) as record_qty, date(countreated_at) as created_date
+    from medicine_external_records
+    where station_id = sta_id and created_at between start_date and end_date
+    group by date(created_at);
+end $$;
+
+drop procedure if exists internal_record_count_by_day;
+$$;
+create procedure internal_record_count_by_day(
+in start_datete date,
+    in end_date date,
+    in sta_id int
+)
+begin
+select count(count*) as record_qty, date(created_at) as created_date
+    from medicine_internal_records
+    where station_id = sta_id and created_at between start_date and end_date
+    group by date(created_at);
+end $$;
+
+drop procedure if exists external_record_statistic;
+$$;
+create procedure external_record_statistic(
+in start_date date,
+    in end_date date,
+      in sta_id int
+)
+begin
+select sum(amount) as sum_amount, name, company_id, price 
+    from medicine_external_records
+    where station_id = sta_id and created_at between start_date and end_date
+    group by name, company_id, price;
+end $$;
+
+drop procedure if exists internal_record_statistic;
+$$;
+create procedure internal_record_statistic(
+in start_date date,
+    in end_date datete,
+    in sta_id int
+)
+begin
+select sum(amount) as sum_amount, name,   company_id, price 
+    from medicine_internal_records
+    where station_id = sta_id and created_at between start_date and end_date
+    group by name, company_id, price;
+end $$;
+
+drop procedure if exists external_record_detail_statistic;
+$$;
+create procedure external_record_detail_statistic(
+in start_datet_date date,
+    in end_date date,
+    in med_name varchar(255),
+    in com_id int,
+    in p float,
+    in sta_id int
+)
+begin
+select sum(amount) as   sum_amount, date(created_at) as date_created
+    from medicine_external_records
+    where station_id = sta_id and name = med_name and company_id = com_id and price = p and created_at between start_date and end_date
+    group by date(created_at);
+end $$;
+
+drop procedure if exists internal_record_detail_statistic;
+$$;
+create procedure internal_record_detail_statistic(
+in start_date date,
+    in end_date date,
+    in med_named_name varchar(255),
+    in com_id int,
+    in p float,
+    in sta_id int
+)
+begin
+select sum(amount) as sum_amount, date(created_at) as date_created
+    from medicine_external_recordsine_internal_records
+    where station_id = sta_id and name = med_name and company_id = com_id and price = p and created_at between start_date and end_date
+    group by date(created_at);
+end $$;
