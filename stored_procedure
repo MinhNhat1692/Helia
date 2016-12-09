@@ -6,7 +6,7 @@ in start_date date,
     in sta_id int
 )
 begin
-select count(*) as record_qty, date(countreated_at) as created_date
+select count(*) as record_qty, count(distinct script_id) as script_qty, date(countreated_at) as created_date
     from medicine_external_records
     where station_id = sta_id and created_at between start_date and end_date
     group by date(created_at);
@@ -20,7 +20,7 @@ in start_datete date,
     in sta_id int
 )
 begin
-select count(count*) as record_qty, date(created_at) as created_date
+select count(*) as record_qty, count(distinct script_id) as script_qty, date(created_at) as created_date
     from medicine_internal_records
     where station_id = sta_id and created_at between start_date and end_date
     group by date(created_at);
