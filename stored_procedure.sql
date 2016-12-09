@@ -105,7 +105,7 @@ drop procedure if exists stock_record_sum_between;
 $$;
 create procedure stock_record_sum_between(
   in start_date datetime,
-  in end_date datetimeme,
+  in end_date datetime,
   in sta_id int
 )
 begin
