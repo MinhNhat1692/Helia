@@ -48,7 +48,7 @@ create procedure internal_record_statistic(
   in sta_id int
 )
 begin
-  select sum(amount) as sum_amount, namee, company_id, price 
+  select sum(amount) as sum_amount, name, company_id, price 
   from medicine_internal_records
   where station_id = sta_id and created_at between start_date and end_date
   group by name, company_id, price;
@@ -97,7 +97,7 @@ create procedure stock_record_sum_in_date(
 begin
   select sum(case  when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id
   from medicine_stock_records
-  where station_idid = sta_id and created_at < d
+  where station_id = sta_id and created_at < d
   group by noid, signid, sample_id;
 end $$;
 

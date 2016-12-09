@@ -194,6 +194,7 @@
 
 @MainPart = React.createClass
     getInitialState: ->
+      prefix: "Tất cả"
       data: null
       analysis: 0
       records:
@@ -226,6 +227,8 @@
     componentWillMount: ->
       $(APP).on 'rebuild', ((e) ->
         @setState
+          prefix: "Tất cả"
+          data: null
           analysis: 0
           records: @props.data[0]
           selected: null
@@ -250,6 +253,36 @@
             else
               0
       ).bind(this)
+    analizeData: (code, style, data)->
+      records = []
+      switch code
+        when 1
+          switch style
+            when 1
+              for rec in data
+                check = false
+                for dat in records
+                  if dat.name == rec.name and dat.company == rec.company and dat.price == rec.price
+                    check = true
+                    dataUpdate = records[records.indexOf dat]
+                    dataUpdate.amount += rec.amount
+                    records[records.indexOf dat] = dataUpdate
+                if check == false
+                  records.push(rec)
+        when 2
+          link = "/medicine_summary/internal_record"
+          formData = {date: 9999}
+        when 3
+          link = "/medicine_summary/internal_record"
+          formData = {date: 9999}
+        when 4
+          link = "/medicine_summary/external_record"
+          formData = {date: 9999}
+        when 5
+          link = "/medicine_summary/external_record"
+          formData = {date: 9999}
+      console.log(records)
+      return records
     showtoast: (message,toasttype) ->
 	    toastr.options =
         closeButton: true
@@ -488,18 +521,24 @@
       switch code
         when 1
           link = "/medicine_summary/external_record"
+          formData = {date: 9999}
         when 2
-          link = "/medicine_summary/external_record"
+          link = "/medicine_summary/internal_record"
+          formData = {date: 9999}
         when 3
           link = "/medicine_summary/external_record"
+          formData = {date: 9999}
         when 4
           link = "/medicine_summary/external_record"
+          formData = {date: 9999}
         when 5
           link = "/medicine_summary/external_record"
+          formData = {date: 9999}
       @showtoast("Đang tải dữ liệu, vui lòng chờ",2)
       $.ajax
         url: link
         type: 'POST'
+        data: formData
         dataType: 'JSON'
         error: ((result) ->
           @showtoast("Tải dữ liệu thất bại, xin vui lòng thử lại",3)
@@ -507,6 +546,7 @@
         ).bind(this)
         success: ((result) ->
           @showtoast("Tải dữ liệu hoàn tất",1)
+          console.log(result)
           @setState
             analysis: code
             data: result
@@ -4715,23 +4755,56 @@
           React.DOM.div className: 'content-wrapper',
             React.DOM.div className: 'spacer30'
             React.DOM.div className: 'row',
-              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
-              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
-              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
-              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
-              React.createElement MinorMaterial, datatype: 'unfloat_label_chart', className: 'col-md-4 col-xs-12 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120", idcanvas: "sparkline1", plotheight: "80", plotdata: [5,6,7,9,9,5,3,2,2,4,6,7], plotstyle: "line", plotwidth: "100%"
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số đơn kê', datacode: 3, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', datacode: 1, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              React.createElement MinorMaterial, datatype: 'unfloat_label_chart', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', pText: "120", idcanvas: "sparkline1", plotheight: "80", data: @state.data[0], plotstyle: "line", plotwidth: "100%", chartcode: 1, datacode: 1
             React.DOM.div className: 'row',
-              React.createElement MinorMaterial, datatype: 'unfloat_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: "Tất cả", data: [
-                {id: 1, label: "Label 1", text: "Text 1 in the line"}
-                {id: 2, label: "Label 2", text: "Text 2 in the line"}
-                {id: 3, label: "Label 3", text: "Text 3 in the line"}
-                {id: 4, label: "Label 4", text: "Text 4 in the line"}
-                {id: 5, label: "Label 5", text: "Text 5 in the line"}
-                {id: 6, label: "Label 6", text: "Text 6 in the line"}
-              ]
-              React.createElement MinorMaterial, datatype: 'float_label_progress_plot', className: 'col-md-8 col-xs-12 animated fadeInUp', idflotchart: "flotchart1"
+              React.createElement MinorMaterial, datatype: 'unfloat_label_progress', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, data: @state.data, datacode: 2
+              React.createElement MinorMaterial, datatype: 'float_label_progress_plot', className: 'col-md-8 col-xs-12 animated fadeInUp', idflotchart: "flotchart1", data: @state.data, chartcode: 2, datacode: 4
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @trigger, theader: [{id:1, name: "Tên thuốc"},{id:2, name: "Số lượng"},{id:3, name: "Công ty sản xuất"},{id:4, name: "Giá"}], records:
+                if @state.data[2] != undefined
+                  @state.data[2]
+                else
+                  null
+              #React.createElement MinorMaterial, datatype: 'color_float_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số đơn kê', pText: "120", idcanvas: "sparkline2", plotheight: "80", plotdata: [5,6,7,9,9,5,3,2,2,4,6,7], plotstyle: "line", plotwidth: "100%", color: "#46AEDA", textcolor: "#ffffff"
         when 2
-          React.DOM.div className: 'row'
+          React.DOM.div className: 'content-wrapper',
+            React.DOM.div className: 'spacer30'
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số đơn kê', datacode: 3, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', datacode: 1, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              React.createElement MinorMaterial, datatype: 'unfloat_label_chart', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', pText: "120", idcanvas: "sparkline1", plotheight: "80", data: @state.data[0], plotstyle: "line", plotwidth: "100%", chartcode: 1, datacode: 1
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'unfloat_label_progress', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, data: @state.data, datacode: 2
+              React.createElement MinorMaterial, datatype: 'float_label_progress_plot', className: 'col-md-8 col-xs-12 animated fadeInUp', idflotchart: "flotchart1", data: @state.data, chartcode: 2, datacode: 4
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @trigger, theader: [{id:1, name: "Tên thuốc"},{id:2, name: "Số lượng"},{id:3, name: "Công ty sản xuất"},{id:4, name: "Giá"}], records:
+                if @state.data[2] != undefined
+                  @state.data[2]
+                else
+                  null
+              React.createElement MinorMaterial, datatype: 'color_float_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số đơn kê', pText: "120", idcanvas: "sparkline2", plotheight: "80", plotdata: [5,6,7,9,9,5,3,2,2,4,6,7], plotstyle: "line", plotwidth: "100%", color: "#46AEDA", textcolor: "#ffffff"
         when 3
           React.DOM.div className: 'row'
         when 4

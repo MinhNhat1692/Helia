@@ -1256,6 +1256,19 @@
           React.DOM.td null, @props.record.tpayment
           React.DOM.td null, @props.record.discount
           React.DOM.td null, @props.record.tpayout
+    SummaryExternal: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.amount
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.amount
+          React.DOM.td null, @props.record.company
+          React.DOM.td null, @props.record.price
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1329,7 +1342,8 @@
         @EmployeeMini()
       else if @props.datatype == 'doctor_room'
         @DoctorRoom()
-        
+      else if @props.datatype == 'medicine_summary_external'
+        @SummaryExternal()
 
   @ListgroupSample = React.createClass
     getInitialState: ->
