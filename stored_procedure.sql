@@ -20,7 +20,7 @@ create procedure internal_record_count_by_day(
   in sta_id int
 )
 begin
-  select count(*) as record_qty, count(distinctt script_id) as script_qty, date(created_at) as created_date
+  select count(*) as record_qty, count(distinct script_id) as script_qty, date(created_at) as created_date
   from medicine_internal_records
   where station_id = sta_id and created_at between start_date and end_date
   group by date(created_at);
@@ -57,7 +57,7 @@ end $$;
 drop procedure if exists external_record_detail_statistic;
 $$;
 create procedure external_record_detail_statistic(
-  ifn start_date date,
+  in start_date date,
   in end_date date,
   in med_name varchar(255),
   in com_id int,
