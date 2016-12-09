@@ -58,10 +58,16 @@ class MedicineInternalRecord < ApplicationRecord
       sql = "CALL internal_record_statistic('#{start_date}', '#{end_date}', #{station_id})"
       result = MedicineInternalRecord.connection.select_all sql
       statistic = []
+      id = 1
       result.rows.each do |row|
         data = {}
-        data[[row[1], row[2], row[3]]] = row[0]
+        data[:id] = id
+        data[:name] = row[1]
+        data[:company] = MedicineCompany.find_by(id: row[2]).try(:name)
+        data[:price] = row[3]
+        data[:amount] = row[0]
         statistic << data
+        id += 1
       end
       statistic
     end
@@ -70,10 +76,14 @@ class MedicineInternalRecord < ApplicationRecord
       sql = "CALL internal_record_detail_statistic('#{start_date}', '#{end_date}', '#{med_name}', #{company_id}, #{price}, #{station_id} )"
       result = MedicineInternalRecord.connection.select_all sql
       statistic = []
+      id = 1
       result.rows.each do |row|
         data = {}
-        data[row[1].to_s] = row[0]
+        data[:id] = id
+        data[:date] = row[1].to_s
+        data[:amount] = row[0]
         statistic << data
+        id += 1
       end
       statistic
     end
