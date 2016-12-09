@@ -14,30 +14,42 @@ class MedicineStockRecord < ApplicationRecord
       MedicinePrescriptExternal.where(created_at: start_date..end_date)
     end
 
-    def sum_amount_by_sample
-      h = Hash.new
-      samples = MedicineStockRecord.pluck(:sample_id, :noid, :signid).uniq
-      samples.each do |sample|
-        records = MedicineStockRecord.where(sample_id: sample[0], noid: sample[1], signid: sample[2])
-        sum = 0
-        records.each do |record|
-          if record.typerecord == 1
-            sum += record.amount
-          elsif record.typerecord == 2
-            sum -= record.amount
-          else
-            sum += 0
-          end
-        end
-        h[sample] = sum
+    def sum_amount_at_date date, station_id
+      sql = "CALL stock_record_sum_in_date('#{date}', #{station_id})"
+      result = MedicineStockRecord.connection.select_all sql
+      statistic = []
+      result.rows.each do |row|
+        data = {}
+        data[:noid] = row[1]
+        data[:signid] = row[2]
+        data[:sample_id] = row[3]
+        data[:qty] = row[0]
+        statistic << data
       end
-      h
+      statistic
+    end
+
+    def sum_amount_between start_date, end_date, station_id
+      sql = "CALL stock_record_sum_between('#{start_date}', '#{end_date}', #{station_id})"
+      result = MedicineStockRecord.connection.select_all sql
+      statistic = []
+      result.rows.each do |row|
+        data = {}
+        data[:noid] = row[1]
+        data[:signid] = row[2]
+        data[:sample_id] = row[3]
+        data[:qty] = row[0]
+        statistic << data
+      end
+      statistic
+
     end
 
     def sum_amount_by_noid_and_signid
-      h = Hash.new
+      statistic = []
       samples = MedicineStockRecord.pluck(:noid, :signid).uniq
       samples.each do |sample|
+        h = {}
         records = MedicineStockRecord.where(noid: sample[0], signid: sample[1])
         sum = 0
         records.each do |record|
@@ -49,9 +61,12 @@ class MedicineStockRecord < ApplicationRecord
             sum += 0
           end
         end
-        h[sample] = sum
+        h[:noid] = sample[0]
+        h[:signid] = sample[1]
+        h[:amount] = sum
+        statistic << h
       end
-      h
+      statistic
     end
   end
 end

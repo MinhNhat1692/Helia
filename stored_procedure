@@ -87,3 +87,30 @@ select sum(amount) as sum_amount, date(created_at) as date_created
     where station_id = sta_id and name = med_name and company_id = com_id and price = p and created_at between start_date and end_date
     group by date(created_at);
 end $$;
+
+drop procedure if exists stock_record_sum_in_date;
+$$;
+create procedure stock_record_sum_in_date(
+in d date,
+      in sta_id int
+)
+begin
+select sum(case when typerecord = 1 then amount   when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id
+from medicine_stock_records
+    where station_id = sta_id and created_at < d
+    groupup by noid, signid, sample_id;
+end $$;
+
+drop procedure if exists stock_record_sum_between;
+$$;
+create procedure stock_record_sum_between(
+in start_date datetime,
+    in end_dateate datetime,
+    in sta_id int
+)
+begin
+select sum(case when typerecordd = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id
+from medicine_stock_records
+    where station_id = sta_id andd created_at between start_date and end_date
+    group by noid, signid, sample_id;
+end $$;

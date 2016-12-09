@@ -40,10 +40,17 @@ class MedicineInternalRecordController < ApplicationController
           @data[1] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
           @data[2] = MedicineInternalRecord.statistic_by_day start_date, end_date, @station.id
           @data[3] = {}
-          [start_date, end_date].each do |date|
-            @data[3][date.to_date.to_s] = MedicineStockRecord.where(station_id: @station.id,
-               created_at: date.beginning_of_day..date.end_of_day).sum_amount_by_sample
+          @data[3] = []
+          @data[3][0] = MedicineStockRecord.sum_amount_at_date start_date, @station.id
+          date_array = MedicineStockRecord.where(station_id: @station.id,
+            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)")
+          h = {}
+          date_array.each do |date|
+            start = date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            h[date.to_s] = MedicineStockRecord.sum_amount_between start, fin, @station.id
           end
+          @data[3][1] = h
           render json: @data
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           start_date = params[:begin_date].to_date
@@ -51,11 +58,17 @@ class MedicineInternalRecordController < ApplicationController
           @data[0] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
           @data[1] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
           @data[2] = MedicineInternalRecord.statistic_by_day start_date, end_date, @station.id
-          @data[3] = {}
-          [start_date, end_date].each do |date|
-            @data[3][date.to_date.to_s] = MedicineStockRecord.where(station_id: @station.id,
-               created_at: date.beginning_of_day..date.end_of_day).sum_amount_by_sample
+          @data[3] = []
+          @data[3][0] = MedicineStockRecord.sum_amount_at_date start_date, @station.id
+          date_array = MedicineStockRecord.where(station_id: @station.id,
+            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)")
+          h = {}
+          date_array.each do |date|
+            start = date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            h[date.to_s] = MedicineStockRecord.sum_amount_between start, fin, @station.id
           end
+          @data[3][1] = h
           render json: @data
         else
           redirect_to root_path
@@ -74,11 +87,17 @@ class MedicineInternalRecordController < ApplicationController
           @data[0] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
           @data[1] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
           @data[2] = MedicineInternalRecord.statistic_by_day start_date, end_date, @station.id
-          @data[3] = {}
-          [start_date, end_date].each do |date|
-            @data[3][date.to_date.to_s] = MedicineStockRecord.where(station_id: @station.id,
-               created_at: date.beginning_of_day..date.end_of_day).sum_amount_by_sample
+          @data[3] = []
+          @data[3][0] = MedicineStockRecord.sum_amount_at_date start_date, @station.id
+          date_array = MedicineStockRecord.where(station_id: @station.id,
+            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)")
+          h = {}
+          date_array.each do |date|
+            start = date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            h[date.to_s] = MedicineStockRecord.sum_amount_between start, fin, @station.id
           end
+          @data[3][1] = h
           render json: @data
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           start_date = params[:begin_date].to_date
@@ -86,11 +105,17 @@ class MedicineInternalRecordController < ApplicationController
           @data[0] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
           @data[1] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
           @data[2] = MedicineInternalRecord.statistic_by_day start_date, end_date, @station.id
-          @data[3] = {}
-          [start_date, end_date].each do |date|
-            @data[3][date.to_date.to_s] = MedicineStockRecord.where(station_id: @station.id,
-               created_at: date.beginning_of_day..date.end_of_day).sum_amount_by_sample
+          @data[3] = []
+          @data[3][0] = MedicineStockRecord.sum_amount_at_date start_date, @station.id
+          date_array = MedicineStockRecord.where(station_id: @station.id,
+            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)")
+          h = {}
+          date_array.each do |date|
+            start = date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            h[date.to_s] = MedicineStockRecord.sum_amount_between start, fin, @station.id
           end
+          @data[3][1] = h
           render json: @data
         else
           redirect_to root_path
