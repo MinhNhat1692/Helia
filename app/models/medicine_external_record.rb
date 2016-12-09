@@ -45,11 +45,13 @@ class MedicineExternalRecord < ApplicationRecord
       result = MedicineExternalRecord.connection.select_all sql
       statistic = {
         date: Array.new,
-        records_qty: Array.new
+        records_qty: Array.new,
+        script_qty: Array.new
       }
       result.rows.each do |row|
-        statistic[:date] << row[1].to_s
+        statistic[:date] << row[2].to_s
         statistic[:records_qty] << row[0]
+        statistic[:script_qty] << row[1]
       end
       statistic
     end
