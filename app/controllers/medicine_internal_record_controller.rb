@@ -35,7 +35,7 @@ class MedicineInternalRecordController < ApplicationController
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
+          end_date = Time.now.to_date + 1
           @data[0] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
           @data[1] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
           @data[2] = MedicineInternalRecord.statistic_by_day start_date, end_date, @station.id
@@ -83,7 +83,7 @@ class MedicineInternalRecordController < ApplicationController
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
+          end_date = Time.now.to_date + 1
           @data[0] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
           @data[1] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
           @data[2] = MedicineInternalRecord.statistic_by_day start_date, end_date, @station.id
@@ -134,7 +134,7 @@ class MedicineInternalRecordController < ApplicationController
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
+          end_date = Time.now.to_date + 1
           if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price) && params.has_key?(:sample_id)
             @data[0] = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price], @station.id
             @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
@@ -165,7 +165,7 @@ class MedicineInternalRecordController < ApplicationController
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
+          end_date = Time.now.to_date + 1
           if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price) && params.has_key?(:sample_id)
             @data[0] = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price], @station.id
             @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid

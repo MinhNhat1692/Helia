@@ -35,7 +35,7 @@ class MedicineExternalRecordController < ApplicationController
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
+          end_date = Time.now.to_date + 1
           @data[0] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
           @data[1] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
           @data[2] = MedicineExternalRecord.statistic_by_day start_date, end_date, @station.id
@@ -60,7 +60,7 @@ class MedicineExternalRecordController < ApplicationController
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
+          end_date = Time.now.to_date + 1
           @data[0] = MedicineExternalRecord.count_by_day start_date, end_date, @station.id
           @data[1] = MedicineInternalRecord.count_by_day start_date, end_date, @station.id
           @data[2] = MedicineExternalRecord.statistic_by_day start_date, end_date, @station.id
@@ -86,7 +86,7 @@ class MedicineExternalRecordController < ApplicationController
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
+          end_date = Time.now.to_date + 1
           if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price)
             data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price], @station.id
             render json: data
@@ -114,7 +114,7 @@ class MedicineExternalRecordController < ApplicationController
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
-          end_date = Time.now.to_date
+          end_date = Time.now.to_date + 1
           if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price)
             data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price], @station.id
             render json: data
