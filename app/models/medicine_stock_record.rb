@@ -38,6 +38,8 @@ class MedicineStockRecord < ApplicationRecord
         data[:noid] = row[1]
         data[:signid] = row[2]
         data[:sample_id] = row[3]
+        data[:med_name] = row[4]
+        data[:supplier_id] = row[5]
         data[:qty] = row[0]
         statistic << data
       end
