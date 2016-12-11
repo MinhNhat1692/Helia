@@ -27,6 +27,7 @@ class MedicineExternalRecordController < ApplicationController
     end
   end
 
+  # d: date, r: records quantity, s: script quantity
   def summary
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
@@ -87,8 +88,8 @@ class MedicineExternalRecordController < ApplicationController
           n = params[:date].to_i
           start_date = n.days.ago.to_date
           end_date = Time.now.to_date + 1
-          if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price)
-            data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price], @station.id
+          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price)
+            data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
             render json: data
           else
             redirect_to root_path
@@ -96,8 +97,8 @@ class MedicineExternalRecordController < ApplicationController
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           start_date = params[:begin_date].to_date
           end_date = params[:end_date].to_date
-          if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price)
-            data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price], @station.id
+          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price)
+            data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
             render json: data
           else
             redirect_to root_path
@@ -115,8 +116,8 @@ class MedicineExternalRecordController < ApplicationController
           n = params[:date].to_i
           start_date = n.days.ago.to_date
           end_date = Time.now.to_date + 1
-          if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price)
-            data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price], @station.id
+          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price)
+            data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
             render json: data
           else
             redirect_to root_path
@@ -124,8 +125,8 @@ class MedicineExternalRecordController < ApplicationController
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           start_date = params[:begin_date].to_date
           end_date = params[:end_date].to_date
-          if params.has_key?(:med_name) && params.has_key?(:company_id) && params.has_key?(:price)
-            data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company_id], params[:price], @station.id
+          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price)
+            data = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
             render json: data
           else
             redirect_to root_path
