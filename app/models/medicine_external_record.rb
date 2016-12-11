@@ -43,15 +43,16 @@ class MedicineExternalRecord < ApplicationRecord
     def count_by_day start_date, end_date, station_id
       sql = "CALL external_record_count_by_day('#{start_date}', '#{end_date}', #{station_id})"
       result = MedicineExternalRecord.connection.select_all sql
-      statistic = {
-        date: Array.new,
-        records_qty: Array.new,
-        script_qty: Array.new
-      }
+      statistic = []
+      id = 1
       result.rows.each do |row|
-        statistic[:date] << row[2].to_s
-        statistic[:records_qty] << row[0]
-        statistic[:script_qty] << row[1]
+        h = {}
+        h[:id] = id
+        h[:d] = row[2].to_s
+        h[:r] = row[0]
+        h[:s] = row[1]
+        statistic << h
+        id += 1
       end
       statistic
     end
@@ -65,7 +66,7 @@ class MedicineExternalRecord < ApplicationRecord
         data = {}
         data[:id] = id
         data[:name] = row[1]
-        data[:company] = MedicineCompany.find_by(id: row[2]).try(:name)
+        data[:company] = row[2]
         data[:price] = row[3]
         data[:amount] = row[0]
         statistic << data
@@ -75,7 +76,7 @@ class MedicineExternalRecord < ApplicationRecord
     end
 
     def statistic_records start_date, end_date, med_name, company_id, price, station_id
-      sql = "CALL external_record_detail_statistic('#{start_date}', '#{end_date}', '#{med_name}', #{company_id}, #{price}, #{station_id} )"
+      sql = "CALL external_record_detail_statistic('#{start_date}', '#{end_date}', '#{med_name}', '#{company_id}', #{price}, #{station_id} )"
       result = MedicineExternalRecord.connection.select_all sql
       statistic = []
       id = 1

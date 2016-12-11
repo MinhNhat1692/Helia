@@ -18,13 +18,16 @@ class MedicineStockRecord < ApplicationRecord
       sql = "CALL stock_record_sum_in_date('#{date}', #{station_id})"
       result = MedicineStockRecord.connection.select_all sql
       statistic = []
+      id = 1
       result.rows.each do |row|
         data = {}
-        data[:noid] = row[1]
-        data[:signid] = row[2]
-        data[:sample_id] = row[3]
+        data[:id] = id
+        data[:n_id] = row[1]
+        data[:s_id] = row[2]
+        data[:sam_id] = row[3]
         data[:qty] = row[0]
         statistic << data
+        id += 1
       end
       statistic
     end
@@ -33,15 +36,19 @@ class MedicineStockRecord < ApplicationRecord
       sql = "CALL stock_record_sum_between('#{start_date}', '#{end_date}', #{station_id})"
       result = MedicineStockRecord.connection.select_all sql
       statistic = []
+      id = 1
       result.rows.each do |row|
         data = {}
-        data[:noid] = row[1]
-        data[:signid] = row[2]
-        data[:sample_id] = row[3]
-        data[:med_name] = row[4]
-        data[:supplier_id] = row[5]
+        data[:id] = id
+        data[:d] = row[6].to_s
+        data[:n_id] = row[1]
+        data[:s_id] = row[2]
+        data[:sam_id] = row[3]
+        data[:name] = row[4]
+        data[:sup_id] = row[5]
         data[:qty] = row[0]
         statistic << data
+        id += 1
       end
       statistic
 
