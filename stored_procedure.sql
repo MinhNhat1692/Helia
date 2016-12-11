@@ -95,10 +95,10 @@ create procedure stock_record_sum_in_date(
   in sta_id int
 )
 begin
-  select sum(case  when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id
+  select sum(case  when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id, name, supplier_id
   from medicine_stock_records
   where station_id = sta_id and created_at < d
-  group by noid, signid, sample_id;
+  group by noid, signid, sample_id, name, supplier_id;
 end $$;
 
 drop procedure if exists stock_record_sum_between;

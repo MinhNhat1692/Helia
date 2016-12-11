@@ -43,12 +43,16 @@ class MedicineInternalRecordController < ApplicationController
           @data[3] = []
           @data[3][0] = MedicineStockRecord.sum_amount_at_date start_date, @station.id
           date_array = MedicineStockRecord.where(station_id: @station.id,
-            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)")
-          h = {}
+            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)").uniq
+          h = {
+            date: Array.new,
+            data: Array.new
+          }
           date_array.each do |date|
             start = date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
             fin = date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
-            h[date.to_s] = MedicineStockRecord.sum_amount_between start, fin, @station.id
+            h[:date] << date.to_s
+            h[:data] << MedicineStockRecord.sum_amount_between(start, fin, @station.id)
           end
           @data[3][1] = h
           render json: @data
@@ -61,12 +65,16 @@ class MedicineInternalRecordController < ApplicationController
           @data[3] = []
           @data[3][0] = MedicineStockRecord.sum_amount_at_date start_date, @station.id
           date_array = MedicineStockRecord.where(station_id: @station.id,
-            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)")
-          h = {}
+            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)").uniq
+          h = {
+            date: Array.new,
+            data: Array.new
+          }
           date_array.each do |date|
             start = date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
             fin = date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
-            h[date.to_s] = MedicineStockRecord.sum_amount_between start, fin, @station.id
+            h[:date] << date.to_s
+            h[:data] << MedicineStockRecord.sum_amount_between(start, fin, @station.id)
           end
           @data[3][1] = h
           render json: @data
@@ -90,12 +98,16 @@ class MedicineInternalRecordController < ApplicationController
           @data[3] = []
           @data[3][0] = MedicineStockRecord.sum_amount_at_date start_date, @station.id
           date_array = MedicineStockRecord.where(station_id: @station.id,
-            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)")
-          h = {}
+            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)").uniq
+          h = {
+            date: Array.new,
+            data: Array.new
+          }
           date_array.each do |date|
             start = date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
             fin = date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
-            h[date.to_s] = MedicineStockRecord.sum_amount_between start, fin, @station.id
+            h[:date] << date.to_s
+            h[:data] << MedicineStockRecord.sum_amount_between(start, fin, @station.id)
           end
           @data[3][1] = h
           render json: @data
@@ -108,12 +120,16 @@ class MedicineInternalRecordController < ApplicationController
           @data[3] = []
           @data[3][0] = MedicineStockRecord.sum_amount_at_date start_date, @station.id
           date_array = MedicineStockRecord.where(station_id: @station.id,
-            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)")
-          h = {}
+            created_at: start_date.beginning_of_day..end_date.end_of_day).pluck("date(created_at)").uniq
+          h = {
+            date: Array.new,
+            data: Array.new
+          }
           date_array.each do |date|
             start = date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
             fin = date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
-            h[date.to_s] = MedicineStockRecord.sum_amount_between start, fin, @station.id
+            h[:date] << date.to_s
+            h[:data] << MedicineStockRecord.sum_amount_between(start, fin, @station.id)
           end
           @data[3][1] = h
           render json: @data
