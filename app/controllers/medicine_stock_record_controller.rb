@@ -1,5 +1,5 @@
 class MedicineStockRecordController < ApplicationController
-  before_action :logged_in_user, only: [:list, :create, :update, :destroy, :search, :find, :summary]
+  before_action :logged_in_user
   
   def list
     if params.has_key?(:id_station)
@@ -23,6 +23,40 @@ class MedicineStockRecordController < ApplicationController
 			  render json: @data
 		  else
         redirect_to root_path
+      end
+    end
+  end
+
+  def summary
+    if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+        @station = Station.find params[:id_station]
+        @data = []
+        if params.has_key?(:date)
+          @data[0] = MedicineStockRecord.sample_statistic @station.id
+          render json: @data
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          @data[0] = MedicineStockRecord.sample_statistic @station.id
+          render json: @data
+        else
+          redirect_to root_path
+        end
+      else
+        head :no_content
+      end
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        @data = []
+        if params.has_key?(:date)
+          @data[0] = MedicineStockRecord.sample_statistic @station.id
+          render json: @data
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          @data[0] = MedicineStockRecord.sample_statistic @station.id
+          render json: @data
+        else
+          redirect_to root_path
+        end
       end
     end
   end

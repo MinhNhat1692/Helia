@@ -14,6 +14,25 @@ class MedicineStockRecord < ApplicationRecord
       MedicinePrescriptExternal.where(created_at: start_date..end_date)
     end
 
+    def sample_statistic station_id
+      sql = "CALL stock_records_statistic(#{station_id})"
+      result = MedicineStockRecord.connection.select_all sql
+      statistic = []
+      id = 1
+      result.rows.each do |row|
+        data = {}
+        if row[0] != 0
+          data[:id] = id
+          data[:name] = row[2]
+          data[:sam_id] = row[1]
+          data[:qty] = row[0]
+          statistic << data
+          id += 1
+        end
+      end
+      statistic
+    end
+
     def sum_amount_at_date date, station_id
       sql = "CALL stock_record_sum_in_date('#{date}', #{station_id})"
       result = MedicineStockRecord.connection.select_all sql
