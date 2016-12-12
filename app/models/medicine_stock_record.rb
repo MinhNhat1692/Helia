@@ -59,7 +59,7 @@ class MedicineStockRecord < ApplicationRecord
       statistic = []
       id = 1
       if result.rows.length == 1 && result.rows[0] == [nil, nil, nil, nil, nil]
-        statistic = []
+        statistic = [{ id: 1, date: date.to_s, qty: 0 }]
       else
         result.rows.each do |row|
           data = {}
