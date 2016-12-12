@@ -126,3 +126,18 @@ begin
   where station_id = sta_id
   group by sample_id, name;
 end $$;
+
+drop procedure if exists stock_records_detail_statistic;
+$$;
+create procedure stock_records_detail_statistic(
+  in n varchar(255),
+  in sam_id int,
+  in sta_id int
+
+)
+begin
+  select sum(case when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid
+  from medicine_stock_records
+  where station_id = sta_id and sample_id = sam_id and name = n
+  group by noid, signid;
+end $$;
