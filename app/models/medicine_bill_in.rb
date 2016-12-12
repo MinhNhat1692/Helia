@@ -22,9 +22,9 @@ class MedicineBillIn < ApplicationRecord
       result.rows.each do |row|
         h = {}
         h[:id] = id
-        h[:t_payout] = row[0]
+        h[:tpayout] = row[0]
         h[:supp_id] = row[1]
-        h[:supplier] = MedicineSupplier.find_by(id: row[1]).try(:name)
+        h[:supplier] = row[2]
         statistic << h
         id += 1
       end

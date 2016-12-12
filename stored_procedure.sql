@@ -157,8 +157,8 @@ create procedure bill_in_sum_up(
   in sta_id int
 )
 begin
-  select sum(tpayout) as qty, supplier_id
+  select sum(tpayout) as qty, supplier_id, supplier
   from medicine_bill_ins
   where station_id = sta_id and created_at between start_date and end_date
-  group by supplier_id;
+  group by supplier_id, supplier;
 end $$;
