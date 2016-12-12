@@ -114,3 +114,15 @@ begin
   where station_id = sta_id and created_at between start_date and end_date
   group by noid, signid, sample_id, date(created_at);
 end $$;
+
+drop procedure if exists stock_records_statistic;
+$$;
+create procedure stock_records_statistic(
+  in sta_id int
+)
+begin
+  select sum(case when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, sample_id, name
+  from medicine_stock_records
+  where station_id = sta_id
+  group by sample_id, name;
+end $$;
