@@ -112,21 +112,48 @@
 @MainHeader = React.createClass
     getInitialState: ->
       type: 1
+      altType: true
     Trigger: (e) ->
       @props.Trigger @props.submenu.code
     TriggerCode: (code) ->
       @props.Trigger code
     Toggled: (e) ->
       @setState toggled: !@state.toggled
+    SwitchType: ->
+      @setState altType: !@state.altType
     HasSubmenu: ->
       React.DOM.div className: 'dashboard-header',
         React.DOM.h1 null, @props.data.name
         React.DOM.div className: 'tabbable',
           React.DOM.ul className: "nav nav-tabs",
             for submenu in @props.data.records
+              React.createElement SubMenuHeader, key: submenu.code, task: @props.task, submenu: submenu, Trigger: @TriggerCode
+    HasSubmenuAndRequest: ->
+      React.DOM.div className: 'dashboard-header',
+        React.DOM.h1 null, @props.data.name
+        if @state.altType
+          React.DOM.span className: 'span-group',
+            React.DOM.span className: 'input-span-group',
+              React.DOM.input className: "input-form", type: 'text', defaultValue: 30, id: 'date_input'
+              React.DOM.span className: 'small-indicate', "NGÀY"
+            React.DOM.span onClick: @SwitchType, style: {'cursor':'pointer', 'marginLeft': '10px', 'color': '#46AEDA'}, "Nhập thời gian"
+        else
+          React.DOM.span className: 'span-group',
+            React.DOM.span className: 'input-span-group',
+              React.DOM.input className: "input-form", type: 'text', id: 'start_dateinput', defaultValue: moment().format('DD/MM/YYYY')
+              React.DOM.span className: 'small-indicate', "ĐẾN"
+              React.DOM.input className: "input-form", type: 'text', id: 'end_dateinput', defaultValue: moment().format('DD/MM/YYYY')
+            React.DOM.span onClick: @SwitchType, style: {'cursor':'pointer', 'marginLeft': '10px', 'color': '#46AEDA'}, "Nhập số ngày"
+        React.DOM.div className: 'tabbable',
+          React.DOM.ul className: "nav nav-tabs",
+            for submenu in @props.data.records
               React.createElement SubMenuHeader, key: submenu.code, task: @props.task, submenu: submenu, Trigger: @TriggerCode  
     render: ->
-      @HasSubmenu()
+      switch @props.datatype
+        when 1
+          @HasSubmenu()
+        when 2
+          @HasSubmenuAndRequest()
 
 @SubMenuHeader = React.createClass
     Trigger: (e) ->

@@ -196,6 +196,7 @@
     getInitialState: ->
       prefix: "Tất cả"
       data: null
+      minordata: null
       analysis: 0
       records:
         if @props.data[0] != undefined
@@ -229,6 +230,7 @@
         @setState
           prefix: "Tất cả"
           data: null
+          minordata: null
           analysis: 0
           records: @props.data[0]
           selected: null
@@ -446,6 +448,47 @@
             return
           ).bind(this)
     trigger: (e) ->
+    triggerSubApi: (record,datacode) ->
+      if $('#date_input').val() != undefined
+        formData = {date: $('#date_input').val(), med_name: null, company: null, price: null, sample_id: null}
+      else if $('#start_dateinput').val() != undefined or $('#end_dateinput').val() != undefined
+        formData = {begin_date: $('#start_dateinput').val(), end_date: $('#end_dateinput').val(), med_name: null, company: null, price: null, sample_id: null}
+      switch datacode
+        when 1
+          link = "/medicine_summary/external_record/detail"
+          formData.med_name = record.name
+          formData.company = record.company
+          formData.price = record.price
+        when 2
+          link = "/medicine_summary/internal_record/detail"
+          formData.med_name = record.name
+          formData.company = record.company
+          formData.price = record.price
+          formData.sample_id = 3#record.sample_id
+      @showtoast("Đang tải dữ liệu, vui lòng chờ",2)
+      if formData != undefined
+        $.ajax
+          url: link
+          type: 'POST'
+          data: formData
+          dataType: 'JSON'
+          error: ((result) ->
+            @showtoast("Tải dữ liệu thất bại, xin vui lòng thử lại",3)
+            return
+          ).bind(this)
+          success: ((result) ->
+            @showtoast("Tải dữ liệu hoàn tất",1)
+            console.log(result)
+            @setState
+              minordata: result
+            setTimeout (->
+              $(APP).trigger('drawsparkle')
+              $(APP).trigger('drawplot')
+            ), 500
+            return
+          ).bind(this)
+      else
+        @showtoast("Bạn cần nhập mốc thời gian thống kê",3)
     triggerSort: (code) ->
       if @state.filteredRecord != null
         @setState
@@ -518,44 +561,46 @@
         else
           @showtoast("Số trang bạn muốn chuyển tới không phù hợp", 3)
     triggerChangeAnalysis: (code) ->
+      if $('#date_input').val() != undefined
+        formData = {date: $('#date_input').val()}
+      else if $('#start_dateinput').val() != undefined or $('#end_dateinput').val() != undefined
+        formData = {begin_date: $('#start_dateinput').val(), end_date: $('#end_dateinput').val()}
       switch code
         when 1
           link = "/medicine_summary/external_record"
-          formData = {date: 9999}
         when 2
           link = "/medicine_summary/internal_record"
-          formData = {date: 9999}
         when 3
           link = "/medicine_summary/external_record"
-          formData = {date: 9999}
         when 4
           link = "/medicine_summary/external_record"
-          formData = {date: 9999}
         when 5
           link = "/medicine_summary/external_record"
-          formData = {date: 9999}
       @showtoast("Đang tải dữ liệu, vui lòng chờ",2)
-      $.ajax
-        url: link
-        type: 'POST'
-        data: formData
-        dataType: 'JSON'
-        error: ((result) ->
-          @showtoast("Tải dữ liệu thất bại, xin vui lòng thử lại",3)
-          return
-        ).bind(this)
-        success: ((result) ->
-          @showtoast("Tải dữ liệu hoàn tất",1)
-          console.log(result)
-          @setState
-            analysis: code
-            data: result
-          setTimeout (->
-            $(APP).trigger('drawsparkle')
-            $(APP).trigger('drawplot')
-          ), 500
-          return
-        ).bind(this)
+      if formData != undefined
+        $.ajax
+          url: link
+          type: 'POST'
+          data: formData
+          dataType: 'JSON'
+          error: ((result) ->
+            @showtoast("Tải dữ liệu thất bại, xin vui lòng thử lại",3)
+            return
+          ).bind(this)
+          success: ((result) ->
+            @showtoast("Tải dữ liệu hoàn tất",1)
+            #console.log(result)
+            @setState
+              analysis: code
+              data: result
+            setTimeout (->
+              $(APP).trigger('drawsparkle')
+              $(APP).trigger('drawplot')
+            ), 500
+            return
+          ).bind(this)
+      else
+        @showtoast("Bạn cần nhập mốc thời gian thống kê",3)
     triggerInput: (text,type,check1) ->
       if type != '' && text.length > 1
         if !check1.option1
@@ -3139,7 +3184,7 @@
                     React.createElement FilterForm, datatype: @props.datatype, grouplist: @props.data[1], typelist: @props.data[2], autoComplete: @state.autoComplete, triggerInput: @triggerInput, triggerSubmit: @triggerSubmit, triggerClear: @triggerClear, triggerChose: @triggerChose
                 React.DOM.div className: 'spacer10'
                 React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
-                React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+                  React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
                 React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
                   React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
                 if @state.filteredRecord != null
@@ -4765,19 +4810,27 @@
                   @state.data[0]
                 else
                   null
-              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
-              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', datacode: 1, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', datacode: 1, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
               React.createElement MinorMaterial, datatype: 'unfloat_label_chart', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', pText: "120", idcanvas: "sparkline1", plotheight: "80", data: @state.data[0], plotstyle: "line", plotwidth: "100%", chartcode: 1, datacode: 1
             React.DOM.div className: 'row',
               React.createElement MinorMaterial, datatype: 'unfloat_label_progress', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, data: @state.data, datacode: 2
               React.createElement MinorMaterial, datatype: 'float_label_progress_plot', className: 'col-md-8 col-xs-12 animated fadeInUp', idflotchart: "flotchart1", data: @state.data, chartcode: 2, datacode: 4
             React.DOM.div className: 'row',
-              React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @trigger, theader: [{id:1, name: "Tên thuốc"},{id:2, name: "Số lượng"},{id:3, name: "Công ty sản xuất"},{id:4, name: "Giá"}], records:
+              React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @triggerSubApi, theader: [{id:1, name: "Tên thuốc", code: "name"},{id:2, name: "Số lượng", code: "amount"},{id:3, name: "Công ty sản xuất", code: "company"},{id:4, name: "Giá", code: "price"}], datacode: 1, records:
                 if @state.data[2] != undefined
                   @state.data[2]
                 else
                   null
-              #React.createElement MinorMaterial, datatype: 'color_float_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số đơn kê', pText: "120", idcanvas: "sparkline2", plotheight: "80", plotdata: [5,6,7,9,9,5,3,2,2,4,6,7], plotstyle: "line", plotwidth: "100%", color: "#46AEDA", textcolor: "#ffffff"
+              React.createElement MinorMaterial, datatype: 'color_float_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Thống kê chi tiết', pText: "toàn bộ thời gian", idcanvas: "sparkline2", plotheight: "80", data: @state.minordata, plotstyle: "line", plotwidth: "100%",  color: "#46AEDA", textcolor: "#ffffff", chartcode: 3, datacode: 1
         when 2
           React.DOM.div className: 'content-wrapper',
             React.DOM.div className: 'spacer30'
@@ -4792,21 +4845,31 @@
                   @state.data[0]
                 else
                   null
-              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
-              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: 'Tất cả', spanText: 'Tổng số đơn kê', pText: "120"
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', datacode: 1, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', datacode: 1, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
               React.createElement MinorMaterial, datatype: 'unfloat_label_chart', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', pText: "120", idcanvas: "sparkline1", plotheight: "80", data: @state.data[0], plotstyle: "line", plotwidth: "100%", chartcode: 1, datacode: 1
             React.DOM.div className: 'row',
-              React.createElement MinorMaterial, datatype: 'unfloat_label_progress', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, data: @state.data, datacode: 2
+              React.createElement MinorMaterial, datatype: 'unfloat_label_progress_in', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, data: @state.data, datacode: 4
               React.createElement MinorMaterial, datatype: 'float_label_progress_plot', className: 'col-md-8 col-xs-12 animated fadeInUp', idflotchart: "flotchart1", data: @state.data, chartcode: 2, datacode: 4
             React.DOM.div className: 'row',
-              React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @trigger, theader: [{id:1, name: "Tên thuốc"},{id:2, name: "Số lượng"},{id:3, name: "Công ty sản xuất"},{id:4, name: "Giá"}], records:
+              React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @triggerSubApi, theader: [{id:1, name: "Tên thuốc"},{id:2, name: "Số lượng"},{id:3, name: "Công ty sản xuất"},{id:4, name: "Giá"}], datacode: 2, records:
                 if @state.data[2] != undefined
                   @state.data[2]
                 else
                   null
-              React.createElement MinorMaterial, datatype: 'color_float_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số đơn kê', pText: "120", idcanvas: "sparkline2", plotheight: "80", plotdata: [5,6,7,9,9,5,3,2,2,4,6,7], plotstyle: "line", plotwidth: "100%", color: "#46AEDA", textcolor: "#ffffff"
+              React.createElement MinorMaterial, datatype: 'color_float_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Thống kê chi tiết', pText: " - toàn bộ thời gian", idcanvas: "sparkline2", plotheight: "80", data: @state.minordata, plotstyle: "line", plotwidth: "100%",  color: "#46AEDA", textcolor: "#ffffff", chartcode: 4, datacode: 1
         when 3
-          React.DOM.div className: 'row'
+          React.DOM.div className: 'content-wrapper',
+            React.DOM.div className: 'spacer30'
+            React.DOM.div className: 'row', 
         when 4
           React.DOM.div className: 'row'
         when 5

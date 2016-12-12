@@ -2707,3 +2707,50 @@ h4, .h4 {
     height: 100%;
     color: #545454;
 }
+
+.span-group{
+    height: 36px;
+}
+
+.input-span-group{
+    position: relative;
+    top: -6px;
+    margin-left: 10px;
+    height: 36px;
+    border: solid 2px #d4d8e3;
+    border-radius: 20px;
+    padding: 0 1em 0 1em;
+    display: inline-block;
+}
+
+.input-span-group:hover{
+    border-color: #46AEDA;
+}
+
+.input-form{
+    height: 32px;
+    line-height: 30px;
+    font-size: 1.3em;
+    margin-right: 30px;
+    margin-left: 15px;
+    font-weight: 300;
+    display: inline-block;
+    border: none;
+}
+
+.input-form:focus{
+    outline: none;
+}
+
+.small-indicate{
+    padding-left: .5em;
+    font-size: 1em;
+    font-weight: 300;
+    color: #8191B1;
+}
+
+.jqstooltip {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}

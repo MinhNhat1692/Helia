@@ -65,7 +65,7 @@ create procedure external_record_detail_statistic(
   in sta_id int
 )
 begin
-  select sum(amountunt) as sum_amount, date(created_at) as date_created
+  select sum(amount) as sum_amount, date(created_at) as date_created
   from medicine_external_records
   where station_id = sta_id and name = med_name and company = com and price = p and created_at between start_date and end_date
   group by date(created_at);
