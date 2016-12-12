@@ -13,5 +13,23 @@ class MedicineBillRecord < ApplicationRecord
       end_date = fin.end_of_day
       MedicineBillRecord.where(created_at: start_date..end_date)
     end
+
+    def sum_payment start_date, end_date, s_name, supplier_id, station_id
+      sql = "CALL bill_record_sum_up('#{start_date}', '#{end_date}', '#{s_name}', #{supplier_id}, #{station_id})"
+      result = MedicineBillRecord.connection.select_all sql
+      statistic = []
+      id = 1
+      result.rows.each do |row|
+        h = {}
+        h[:id] = id
+        h[:sam_id] = row[2]
+        h[:sample] = MedicineSample.find_by(id: row[2]).try(:name)
+        h[:t_qty] = row[0]
+        h[:t_payment] = row[1]
+        statistic << h
+        id += 1
+      end
+      statistic
+    end
   end
 end

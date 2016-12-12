@@ -69,7 +69,6 @@ class MedicineBillInController < ApplicationController
         end
       end
     end
-
   end
 
   def create

@@ -162,3 +162,20 @@ begin
   where station_id = sta_id and created_at between start_date and end_date
   group by supplier_id, supplier;
 end $$;
+
+drop procedure if exists bill_record_sum_up;
+$$;
+create procedure bill_record_sum_up(
+  in start_date datetime,
+  in end_date datetime,
+  in sup varchar(255),
+  in sup_id int,
+  in sta_id int
+)
+begin
+  select sum(qty) as sum_qty, sum(qty * price) as sum_payment, sample_id
+  from medicine_bill_records
+  where station_id = sta_id and created_at between start_date and end_date
+  and bill_id in (select id from medicine_bill_ins where supplier_id = sup_id and supplier = sup)
+  group by sample_id;
+end $$;
