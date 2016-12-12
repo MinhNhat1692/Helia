@@ -106,25 +106,22 @@ class MedicineInternalRecordController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
-        @data = []
         if params.has_key?(:date)
           n = params[:date].to_i
           start_date = n.days.ago.to_date
           end_date = Time.now.to_date + 1
-          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price) && params.has_key?(:sample_id)
-            @data[0] = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
-            @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
-            render json: @data
+          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price)
+            data = MedicineInternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
+            render json: data
           else
             redirect_to root_path
           end
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           start_date = params[:begin_date].to_date
           end_date = params[:end_date].to_date
-          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price) && params.has_key?(:sample_id)
-            @data[0] = MedicineInternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price]
-            @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
-            render json: @data
+          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price)
+            data = MedicineInternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price]
+            render json: data
           else
             redirect_to root_path
           end
@@ -142,20 +139,18 @@ class MedicineInternalRecordController < ApplicationController
           n = params[:date].to_i
           start_date = n.days.ago.to_date
           end_date = Time.now.to_date + 1
-          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price) && params.has_key?(:sample_id)
-            @data[0] = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
-            @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
-            render json: @data
+          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price)
+            data = MedicineInternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
+            render json: data
           else
             redirect_to root_path
           end
         elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
           start_date = params[:begin_date].to_date
           end_date = params[:end_date].to_date
-          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price) && params.has_key?(:sample_id)
-            @data[0] = MedicineExternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
-            @data[1] = MedicineStockRecord.where(station_id: @station.id, sample_id: params[:sample_id]).sum_amount_by_noid_and_signid
-            render json: @data
+          if params.has_key?(:med_name) && params.has_key?(:company) && params.has_key?(:price)
+            data = MedicineInternalRecord.statistic_records start_date, end_date, params[:med_name], params[:company], params[:price], @station.id
+            render json: data
           else
             redirect_to root_path
           end
