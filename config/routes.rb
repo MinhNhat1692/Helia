@@ -233,7 +233,8 @@ Rails.application.routes.draw do
   post '/medicine_summary/bill_in_status', to: 'medicine_all_records#bill_status'
   post '/medicine_summary/sale_record', to: 'medicine_all_records#sale_record'
   post '/medicine_summary/stock_record', to: 'medicine_stock_record#summary'
-  post 'medicine_summary/stock_record/detail1', to: 'medicine_stock_record#detail'
+  post '/medicine_summary/stock_record/detail1', to: 'medicine_stock_record#detail'
+  post '/medicine_summary/stock_record/detail2', to: 'medicine_stock_record#detail_2'
 
   post '/station/pool', to: 'polls#list'
   get '/station/permission', to: 'permissions#owner_list'

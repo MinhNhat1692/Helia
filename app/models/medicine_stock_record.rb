@@ -53,44 +53,48 @@ class MedicineStockRecord < ApplicationRecord
 
     end
 
-    def sum_amount_at_date date, station_id
-      sql = "CALL stock_record_sum_in_date('#{date}', #{station_id})"
+    def sum_amount_at_date date, med_name, sample_id, no_id, sign_id, station_id
+      sql = "CALL stock_record_sum_in_date('#{date}', '#{med_name}', #{sample_id}, '#{no_id}', '#{sign_id}',#{station_id})"
       result = MedicineStockRecord.connection.select_all sql
       statistic = []
       id = 1
-      result.rows.each do |row|
-        data = {}
-        data[:id] = id
-        data[:n_id] = row[1]
-        data[:s_id] = row[2]
-        data[:sam_id] = row[3]
-        data[:qty] = row[0]
-        statistic << data
-        id += 1
+      if result.rows.length == 1 && result.rows[0] == [nil, nil, nil, nil, nil]
+        statistic = []
+      else
+        result.rows.each do |row|
+          data = {}
+          data[:id] = id
+          data[:date] = date.to_s
+          data[:name] = row[4]
+          data[:sam_id] = row[3]
+          data[:n_id] = row[1]
+          data[:s_id] = row[2]
+          data[:qty] = row[0]
+          statistic << data
+          id += 1
+        end
       end
       statistic
     end
 
-    def sum_amount_between start_date, end_date, station_id
-      sql = "CALL stock_record_sum_between('#{start_date}', '#{end_date}', #{station_id})"
+    def sum_amount_between start_date, end_date, med_name, sample_id, no_id, sign_id, station_id
+      sql = "CALL stock_record_sum_between('#{start_date}', '#{end_date}', '#{med_name}', #{sample_id}, '#{no_id}', '#{sign_id}', #{station_id})"
       result = MedicineStockRecord.connection.select_all sql
       statistic = []
       id = 1
       result.rows.each do |row|
         data = {}
         data[:id] = id
-        data[:d] = row[6].to_s
+        data[:date] = row[5].to_s
         data[:n_id] = row[1]
         data[:s_id] = row[2]
         data[:sam_id] = row[3]
         data[:name] = row[4]
-        data[:sup_id] = row[5]
         data[:qty] = row[0]
         statistic << data
         id += 1
       end
       statistic
-
     end
 
     def sum_amount_by_noid_and_signid

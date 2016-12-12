@@ -88,33 +88,6 @@ begin
   group by date(created_at);
 end $$;
 
-drop procedure if exists stock_record_sum_in_date;
-$$;
-create procedure stock_record_sum_in_date(
-  in d date,
-  in sta_id int
-)
-begin
-  select sum(case  when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id, name, supplier_id
-  from medicine_stock_records
-  where station_id = sta_id and created_at < d
-  group by noid, signid, sample_id, name, supplier_id;
-end $$;
-
-drop procedure if exists stock_record_sum_between;
-$$;
-create procedure stock_record_sum_between(
-  in start_date datetime,
-  in end_date datetime,
-  in sta_id int
-)
-begin
-  select sum(case when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id, date(created_at) as date
-  from medicine_stock_records
-  where station_id = sta_id and created_at between start_date and end_date
-  group by noid, signid, sample_id, date(created_at);
-end $$;
-
 drop procedure if exists stock_records_statistic;
 $$;
 create procedure stock_records_statistic(
@@ -140,4 +113,38 @@ begin
   from medicine_stock_records
   where station_id = sta_id and sample_id = sam_id and name = n
   group by noid, signid;
+end $$;
+
+drop procedure if exists stock_record_sum_in_date;
+$$;
+create procedure stock_record_sum_in_date(
+  in d date,
+  in med_name varchar(255),
+  in sam_id int,
+  in no_id varchar(255),
+  in sign_id varchar(255),
+  in sta_id int
+)
+begin
+  select sum(casese when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id, name
+  from medicine_stock_records
+  where station_id = sta_id and created_at < d and name = med_name and sample_id = sam_id and noid = no_id and signid = sign_id;
+end $$;
+
+drop procedure if exists stock_record_sum_between;
+$$;
+create procedure stock_record_sum_between(
+  in start_date datetime,
+  in end_date datetime,
+  in med_name varchar(255),
+  in sam_id int,
+  in no_id varchar(255),
+  in sign_id varchar(255),
+  in sta_id int
+)
+begin
+  select sum(case when typerecord = 1 then amount when typerecord = 2 then - amount else 0  end) as qty, noid, signid, sample_id, name, date(created_at)
+  from medicine_stock_records
+  where station_id = sta_id and name = med_name and sample_id = sam_id and noid = no_id and signid = sign_id and created_at between start_date and end_date
+  group by date(created_at) ;
 end $$;
