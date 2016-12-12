@@ -118,11 +118,11 @@ class MedicineStockRecordController < ApplicationController
         @data = []
         if params.has_key?(:date)
           if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:no_id) && params.has_key?(:sign_id)
-            start_date = params[:date].to_i.days.ago
+            start_date = params[:date].to_i.days.ago.to_date
             end_date = Time.now.to_date
             start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
             fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
-            @data[0] = MedicineStockRecord.sum_amount_at_date start, params[:name], 
+            @data[0] = MedicineStockRecord.sum_amount_at_date start_date, params[:name], 
               params[:sample_id], params[:no_id], params[:sign_id], @station.id
             statistic_by_day = MedicineStockRecord.sum_amount_between start, fin, params[:name], params[:sample_id], params[:no_id],
               params[:sign_id], @station.id
@@ -160,11 +160,11 @@ class MedicineStockRecordController < ApplicationController
         @data = []
         if params.has_key?(:date)
           if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:no_id) && params.has_key?(:sign_id)
-            start_date = params[:date].to_i.days.ago
+            start_date = params[:date].to_i.days.ago.to_date
             end_date = Time.now.to_date
             start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
             fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
-            @data[0] = MedicineStockRecord.sum_amount_at_date start, params[:name], 
+            @data[0] = MedicineStockRecord.sum_amount_at_date start_date, params[:name], 
               params[:sample_id], params[:no_id], params[:sign_id], @station.id
             statistic_by_day = MedicineStockRecord.sum_amount_between start, fin, params[:name], params[:sample_id], params[:no_id],
               params[:sign_id], @station.id
