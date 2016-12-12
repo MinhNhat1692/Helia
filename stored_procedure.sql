@@ -148,3 +148,17 @@ begin
   where station_id = sta_id and name = med_name and sample_id = sam_id and noid = no_id and signid = sign_id and created_at between start_date and end_date
   group by date(created_at) ;
 end $$;
+
+drop procedure if exists bill_in_sum_up;
+$$;
+create procedure bill_in_sum_up(
+  in start_date datetime,
+  in end_date   datetime,
+  in sta_id int
+)
+begin
+  select sum(tpayout) as qty, supplier_id
+  from medicine_bill_ins
+  where station_id = sta_id and created_at between start_date and end_date
+  group by supplier_id;
+end $$;

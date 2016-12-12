@@ -13,5 +13,22 @@ class MedicineBillIn < ApplicationRecord
       end_date = fin.end_of_day
       MedicineBillIn.where(created_at: start_date..end_date)
     end
+
+    def sum_payout start_date, end_date, station_id
+      sql = "CALL bill_in_sum_up('#{start_date}', '#{end_date}', #{station_id})"
+      result = MedicineBillIn.connection.select_all sql
+      statistic = []
+      id = 1
+      result.rows.each do |row|
+        h = {}
+        h[:id] = id
+        h[:t_payout] = row[0]
+        h[:supp_id] = row[1]
+        h[:supplier] = MedicineSupplier.find_by(id: row[1]).try(:name)
+        statistic << h
+        id += 1
+      end
+      statistic
+    end
   end
 end
