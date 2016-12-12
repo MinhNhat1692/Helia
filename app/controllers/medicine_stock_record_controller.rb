@@ -109,6 +109,94 @@ class MedicineStockRecordController < ApplicationController
         end
       end
     end
+  end
+
+  def detail_2
+    if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+        @station = Station.find params[:id_station]
+        @data = []
+        if params.has_key?(:date)
+          if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:no_id) && params.has_key?(:sign_id)
+            start_date = params[:date].to_i.days.ago
+            end_date = Time.now.to_date
+            start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            @data[0] = MedicineStockRecord.sum_amount_at_date start, params[:name], 
+              params[:sample_id], params[:no_id], params[:sign_id], @station.id
+            statistic_by_day = MedicineStockRecord.sum_amount_between start, fin, params[:name], params[:sample_id], params[:no_id],
+              params[:sign_id], @station.id
+            statistic_by_day.each do |stat|
+              @data[stat[:id]] = stat
+            end
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:no_id) && params.has_key?(:sign_id)
+            start_date = params[:begin_date].to_date
+            end_date = params[:end_date].to_date
+            start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            @data[0] = MedicineStockRecord.sum_amount_at_date start_date, params[:name], 
+              params[:sample_id], params[:no_id], params[:sign_id], @station.id
+            statistic_by_day = MedicineStockRecord.sum_amount_between start, fin, params[:name], params[:sample_id], params[:no_id],
+              params[:sign_id], @station.id
+            statistic_by_day.each do |stat|
+              @data[stat[:id]] = stat
+            end
+            render json: @data
+          end
+        else
+          redirect_to root_path
+        end
+      else
+        head :no_content
+      end
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        @data = []
+        if params.has_key?(:date)
+          if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:no_id) && params.has_key?(:sign_id)
+            start_date = params[:date].to_i.days.ago
+            end_date = Time.now.to_date
+            start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            @data[0] = MedicineStockRecord.sum_amount_at_date start, params[:name], 
+              params[:sample_id], params[:no_id], params[:sign_id], @station.id
+            statistic_by_day = MedicineStockRecord.sum_amount_between start, fin, params[:name], params[:sample_id], params[:no_id],
+              params[:sign_id], @station.id
+            statistic_by_day.each do |stat|
+              @data[stat[:id]] = stat
+            end
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:no_id) && params.has_key?(:sign_id)
+            start_date = params[:begin_date].to_date
+            end_date = params[:end_date].to_date
+            start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            @data[0] = MedicineStockRecord.sum_amount_at_date start_date, params[:name], 
+              params[:sample_id], params[:no_id], params[:sign_id], @station.id
+            statistic_by_day = MedicineStockRecord.sum_amount_between start, fin, params[:name], params[:sample_id], params[:no_id],
+              params[:sign_id], @station.id
+            statistic_by_day.each do |stat|
+              @data[stat[:id]] = stat
+            end
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        else
+          redirect_to root_path
+        end
+      end
+    end
 
   end
 
