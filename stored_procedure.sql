@@ -126,7 +126,7 @@ create procedure stock_record_sum_in_date(
   in sta_id int
 )
 begin
-  select sum(casese when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id, name
+  select sum(case when typerecord = 1 then amount when typerecord = 2 then - amount else 0 end) as qty, noid, signid, sample_id, name
   from medicine_stock_records
   where station_id = sta_id and created_at < d and name = med_name and sample_id = sam_id and noid = no_id and signid = sign_id;
 end $$;
