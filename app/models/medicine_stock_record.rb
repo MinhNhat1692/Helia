@@ -97,6 +97,24 @@ class MedicineStockRecord < ApplicationRecord
       statistic
     end
 
+    def statistic_by_sample_and_supplier start_date, end_date, sup_name, sup_id, sample, sample_id, station_id
+      sql = "CALL stock_records_statistic_by_sample_and_supllier('#{start_date}', '#{end_date}', '#{sup_name}', #{sup_id}, '#{sample}', #{sample_id}, #{station_id})"
+      result = MedicineStockRecord.connection.select_all sql
+      statistic = []
+      id = 1
+      result.rows.each do |row|
+        data = {}
+        data[:id] = id
+        data[:date] = row[1].to_s
+        data[:sup_id] = row[2]
+        data[:sample] = row[3]
+        data[:amount] = row[0]
+        statistic << data
+        id += 1
+      end
+      statistic
+    end
+
     def sum_amount_by_noid_and_signid
       statistic = []
       samples = MedicineStockRecord.pluck(:noid, :signid).uniq

@@ -105,8 +105,8 @@ class MedicineBillInController < ApplicationController
             else
               type = 1
             end
-            MedicineStockRecord.create(station_id: @station.id, name: bill_record["name"], noid: bill_record["noid"],
-                                       signid: bill_record["signid"], amount: bill_record["qty"], expire: bill_record["expire"],
+            MedicineStockRecord.create(station_id: @station.id, name: bill_record["name"], noid: bill_record["noid"], supplier: params[:supplier],
+                                       signid: bill_record["signid"], amount: bill_record["qty"], expire: bill_record["expire"], supplier_id: params[:supplier_id],
                                        bill_in_id: @supplier.id, bill_in_code: @supplier.billcode, typerecord: type, sample_id: @sample_id)
           end
 				  render json: @supplier
