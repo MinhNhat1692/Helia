@@ -179,3 +179,22 @@ begin
   and bill_id in (select id from medicine_bill_ins where supplier_id = sup_id and supplier = sup)
   group by sample_id;
 end $$;
+
+drop procedure if exists stock_records_statistic_by_sample_and_supllier;
+$$;
+create procedure stock_records_statistic_by_sample_and_supllier(
+  in start_date datetime,
+  in end_date datetime,
+  in sup varchar(255),
+  in sup_id int,
+  in sam varchar(255),
+  in sam_id int,
+  in sta_id int
+)
+begin
+  select sum(amount) as qty, date(created_at) as date_in, supplier_id, name
+  from medicine_stock_records
+  where station_id = sta_id and typerecord = 1 and created_at between start_date and end_date
+    and supplier = sup and supplier_id = sup_id and name = sam and sample_id = sam_id
+  group by date(created_at);
+end $$;

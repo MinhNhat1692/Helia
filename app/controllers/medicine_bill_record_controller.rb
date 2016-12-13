@@ -35,7 +35,7 @@ class MedicineBillRecordController < ApplicationController
         if params.has_key?(:date)
           if params.has_key?(:supplier) && params.has_key?(:supplier_id)
             n = params[:date].to_i
-            start_date = n.days.ago.to_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            start_date = n.days.ago.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
             end_date = Time.now.to_date + 1
             @data[0] = MedicineBillRecord.sum_payment start_date, end_date, params[:supplier], params[:supplier_id], @station.id
             render json: @data
@@ -64,7 +64,7 @@ class MedicineBillRecordController < ApplicationController
         if params.has_key?(:date)
           if params.has_key?(:supplier) && params.has_key?(:supplier_id)
             n = params[:date].to_i
-            start_date = n.days.ago.to_date.beginning_of_day("%Y-%m-%d %H:%M:%S")
+            start_date = n.days.ago.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
             end_date = Time.now.to_date + 1
             @data[0] = MedicineBillRecord.sum_payment start_date, end_date, params[:supplier], params[:supplier_id], @station.id
             render json: @data

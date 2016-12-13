@@ -197,7 +197,74 @@ class MedicineStockRecordController < ApplicationController
         end
       end
     end
+  end
 
+  def statistic
+    if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+        @station = Station.find params[:id_station]
+        @data = []
+        if params.has_key?(:date)
+          if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:supplier_id) && params.has_key?(:supplier)
+            start_date = params[:date].to_i.days.ago.to_date
+            end_date = Time.now.to_date
+            start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            @data[0] = MedicineStockRecord.statistic_by_sample_and_supplier start, fin, params[:supplier], 
+              params[:supplier_id], params[:name], params[:sample_id], @station.id
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:supplier) && params.has_key?(:supplier_id)
+            start_date = params[:begin_date].to_date
+            end_date = params[:end_date].to_date
+            start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            @data[0] = MedicineStockRecord.statistic_by_sample_and_supplier start, fin, params[:supplier], 
+              params[:supplier_id], params[:name], params[:sample_id], @station.id
+            render json: @data
+          end
+        else
+          redirect_to root_path
+        end
+      else
+        head :no_content
+      end
+    else
+      if has_station?
+        @station = Station.find_by(user_id: current_user.id)
+        @data = []
+        if params.has_key?(:date)
+          if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:supplier) && params.has_key?(:supplier_id)
+            start_date = params[:date].to_i.days.ago.to_date
+            end_date = Time.now.to_date
+            start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            @data[0] = MedicineStockRecord.statistic_by_sample_and_supplier start, fin, params[:supplier], 
+              params[:supplier_id], params[:name], params[:sample_id], @station.id
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          if params.has_key?(:name) && params.has_key?(:sample_id) && params.has_key?(:supplier) && params.has_key?(:supplier_id)
+            start_date = params[:begin_date].to_date
+            end_date = params[:end_date].to_date
+            start = start_date.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            fin = end_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+            @data[0] = MedicineStockRecord.statistic_by_sample_and_supplier start, fin, params[:supplier], 
+              params[:supplier_id], params[:name], params[:sample_id], @station.id
+            render json: @data
+          else
+            redirect_to root_path
+          end
+        else
+          redirect_to root_path
+        end
+      end
+    end
   end
 
   def create
