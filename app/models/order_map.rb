@@ -15,10 +15,11 @@ class OrderMap < ApplicationRecord
       result.rows.each do |row|
         data = {}
         data[:id] = id
-        data[:date] = row[1].to_s
-        data[:s_id] = row[2]
-        data[:s_name] = row[3]
+        data[:date] = row[2].to_s
+        data[:s_id] = row[3]
+        data[:s_name] = row[4]
         data[:income] = row[0]
+        data[:count] = row[1]
         stat << data
         id += 1
       end

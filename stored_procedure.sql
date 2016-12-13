@@ -235,7 +235,7 @@ create procedure order_map_stat(
   in sta_id int
 )
 begin
-  select sum(case when tpayout is null then tpayment else tpayout end) as t_income, date(created_at), service_id, sername
+  select sum(case when tpayout is null then tpayment else tpayout end) as t_income, count(*) as no,date(created_at), service_id, sername
   from order_maps
   where station_id = sta_id and created_at between start_date and end_date and status = 3
   group by date(created_at), service_id, sername;
