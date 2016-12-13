@@ -31,5 +31,23 @@ class MedicineBillRecord < ApplicationRecord
       end
       statistic
     end
+
+    def origin_price start_date, end_date, station_id
+      sql = "CALL bill_record_origin_price('#{start_date}', '#{end_date}', #{station_id})"
+      result = MedicineBillRecord.connection.select_all sql
+      statistic = []
+      id = 1
+      result.rows.each do |row|
+        h = {}
+        h[:id] = id
+        h[:date] = row[1].to_s
+        h[:sam_id] = row[2]
+        h[:name] = row[3]
+        h[:tprice] = row[0]
+        statistic << h
+        id += 1
+      end
+      statistic
+    end
   end
 end

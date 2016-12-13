@@ -1,5 +1,6 @@
 class MedicineInternalRecord < ApplicationRecord
   belongs_to :station
+  after_update :update_stock_record
 
   class << self
     def from_date n
@@ -90,5 +91,37 @@ class MedicineInternalRecord < ApplicationRecord
       end
       statistic
     end
+
+    def statistic_by_sample start_date, end_date, station_id
+      sql = "CALL internal_records_by_sample('#{start_date}', '#{end_date}', #{station_id})"
+      result = MedicineInternalRecord.connection.select_all sql
+      statistic = []
+      id = 1
+      result.rows.each do |row|
+        data = {}
+        data[:id] = id
+        data[:date] = row[1].to_s
+        data[:sample_id] = row[2]
+        data[:name] = row[3]
+        data[:t_sale] = row[0]
+        statistic << data
+        id += 1
+      end
+      statistic
+    end
   end
+
+  private
+    def update_stock_record
+      stock_record = MedicineStockRecord.find_by(internal_record_id: self.id)
+      if stock_record && self.status != self.status_was
+        case self.status
+        when 1
+          typerecord = 2
+        else
+          typerecord = 3
+        end
+        stock_record.update(typerecord: typerecord)
+      end
+    end
 end
