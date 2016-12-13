@@ -198,3 +198,32 @@ begin
     and supplier = sup and supplier_id = sup_id and name = sam and sample_id = sam_id
   group by date(created_at);
 end $$;
+
+drop procedure if exists internal_records_by_sample;
+$$;
+create procedure internal_records_by_sample(
+  in start_date datetime,
+  in end_date datetime,
+  in sta_id int
+)
+begin
+  select sum(tpayment) as sale, date(created_at) as date_sale, sample_id, name
+  from medicine_internal_records
+  where station_id = sta_id and created_at between start_date and end_date and status = 1
+  group by date(created_at), sample_id, name;
+end $$;
+
+drop procedure if exists bill_record_origin_price;
+$$;
+create procedure bill_record_origin_price(
+  in start_date datetetime,
+  in end_date datetime,
+  in sta_id int
+)
+begin
+  select sum(qty * price) as tprice, date(created_at), sample_id, name
+  from medicine_bill_records
+  where station_id = sta_id and created_at between start_date and end_date
+  group by date(created_at), sample_id, name;
+end $$;
+
