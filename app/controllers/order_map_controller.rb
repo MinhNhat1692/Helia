@@ -141,6 +141,66 @@ class OrderMapController < ApplicationController
     end
   end
 
+  def summary
+    if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+			  @station = Station.find params[:id_station]
+			  @data = []
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start_date = n.days.ago.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          end_date = Time.now.to_date + 1
+          start = (2*n).days.ago.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          fin = (n.days.ago.to_date - 1).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          @data[0] = OrderMap.statistic start_date, end_date, @station.id
+          @data[1] = OrderMap.statistic start, fin, @station.id
+          render json: @data
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start_date = params[:begin_date].to_date
+          end_date = params[:end_date].to_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          n = (end_date.to_date - start_date).to_i
+          start = (start_date - n).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          fin = (start_date - 1).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          @data[0] = OrderMap.statistic start_date, end_date, @station.id
+          @data[1] = OrderMap.statistic start, fin, @station.id
+          render json: @data
+        else
+          redirect_to root_path
+        end
+		  else
+        head :no_content
+      end
+    else
+      if has_station?
+			  @station = Station.find_by(user_id: current_user.id)
+			  @data = []
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start_date = n.days.ago.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          end_date = Time.now.to_date + 1
+          start = (2*n).days.ago.beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          fin = (n.days.ago.to_date - 1).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          @data[0] = OrderMap.statistic start_date, end_date, @station.id
+          @data[1] = OrderMap.statistic start, fin, @station.id
+          render json: @data
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start_date = params[:begin_date].to_date
+          end_date = params[:end_date].to_date.end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          n = (end_date.to_date - start_date).to_i
+          start = (start_date - n).beginning_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          fin = (start_date - 1).end_of_day.strftime("%Y-%m-%d %H:%M:%S")
+          @data[0] = OrderMap.statistic start_date, end_date, @station.id
+          @data[1] = OrderMap.statistic start, fin, @station.id
+          render json: @data
+        else
+          redirect_to root_path
+        end
+		  else
+        head :no_content
+      end
+    end
+  end
+
   def destroy
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 3

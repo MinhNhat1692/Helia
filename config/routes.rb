@@ -240,6 +240,8 @@ Rails.application.routes.draw do
   post '/medicine_summary/supplier/detail2', to: 'medicine_stock_record#statistic'
   post '/medicine_summary/sale_stats', to: 'medicine_internal_record#statistic'
 
+  post '/services/overview', to: 'order_map#summary'
+
   post '/station/pool', to: 'polls#list'
   get '/station/permission', to: 'permissions#owner_list'
   get '/doctor/permission', to: 'permissions#doctor_list'

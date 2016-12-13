@@ -6,6 +6,27 @@ class OrderMap < ApplicationRecord
   has_one :check_info, dependent: :destroy
   has_one :doctor_check_info, dependent: :destroy
 
+  class << self
+    def statistic start_date, end_date, station_id
+      sql = "CALL order_map_stat('#{start_date}', '#{end_date}', #{station_id})"
+      result = OrderMap.connection.select_all sql
+      stat = []
+      id = 1
+      result.rows.each do |row|
+        data = {}
+        data[:id] = id
+        data[:date] = row[2].to_s
+        data[:s_id] = row[3]
+        data[:s_name] = row[4]
+        data[:income] = row[0]
+        data[:count] = row[1]
+        stat << data
+        id += 1
+      end
+      stat
+    end
+  end
+
   private
     def create_check_info
       station = Station.find_by(id: self.station_id)
