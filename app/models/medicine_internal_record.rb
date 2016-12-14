@@ -1,7 +1,6 @@
 class MedicineInternalRecord < ApplicationRecord
   belongs_to :station
   after_update :update_stock_record
-  after_create :create_stock_record
 
   class << self
     def from_date n
@@ -124,17 +123,5 @@ class MedicineInternalRecord < ApplicationRecord
         end
         stock_record.update(typerecord: typerecord)
       end
-    end
-
-    def create_stock_record
-      case self.status
-      when 1
-        typerecord = 2
-      else
-        typerecord = 3
-      end
-      MedicineStockRecord.create(station_id: self.station_id, internal_record_id: self.id,
-        name: self.name, noid: self.noid, signid: self.signid, sample_id: self.sample_id, 
-        internal_record_code: self.script_code, typerecord: typerecord)
     end
 end
