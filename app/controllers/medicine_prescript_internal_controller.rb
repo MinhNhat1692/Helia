@@ -59,6 +59,8 @@ class MedicinePrescriptInternalController < ApplicationController
 		        if !@company_id.nil?
 				      @company_id = @company_id.id
 		        end
+            med_stock = MedicineStockRecord.find_by(station_id: @station.id, noid: internal_record["noid"], 
+              signid: internal_record["signid"], name: internal_record["name"])
             @internalrecord = MedicineInternalRecord.new(station_id: @station.id, cname: @supplier.cname,
                                                          customer_id: @supplier.customer_id, script_id: @supplier.id,
                                                          script_code: @supplier.code, name: internal_record["name"],
@@ -68,9 +70,21 @@ class MedicinePrescriptInternalController < ApplicationController
                                                          tpayment: internal_record["tpayment"], status: internal_record["status"],
                                                          noid: internal_record["noid"], signid: internal_record["signid"])
             @internalrecord.save
-            MedicineStockRecord.create(station_id: @station.id, typerecord: 2, name: internal_record["name"], amount: internal_record["amount"],
-                                       internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
-                                       sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"])
+            case @internalrecord.status
+            when 1
+              type = 2
+            else
+              type = 3
+            end
+            if med_stock
+              MedicineStockRecord.create(station_id: @station.id, typerecord: 2, name: internal_record["name"], amount: internal_record["amount"],
+                internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
+                sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"], supplier: med_stock.supplier, supplier_id: med_stock.supplier_id)
+            else
+              MedicineStockRecord.create(station_id: @station.id, typerecord: 2, name: internal_record["name"], amount: internal_record["amount"],
+                internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
+                sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"])
+            end
           end
 				  render json: @supplier
 				else
@@ -110,6 +124,8 @@ class MedicinePrescriptInternalController < ApplicationController
 		        if !@company_id.nil?
 				      @company_id = @company_id.id
 		        end
+            med_stock = MedicineStockRecord.find_by(station_id: @station.id, noid: internal_record["noid"], 
+              signid: internal_record["signid"], name: internal_record["name"])
             @internalrecord = MedicineInternalRecord.new(station_id: @station.id, cname: @supplier.cname,
                                                          customer_id: @supplier.customer_id, script_id: @supplier.id,
                                                          script_code: @supplier.code, name: internal_record["name"],
@@ -119,9 +135,21 @@ class MedicinePrescriptInternalController < ApplicationController
                                                          tpayment: internal_record["tpayment"], status: internal_record["status"],
                                                          noid: internal_record["noid"], signid: internal_record["signid"])
             @internalrecord.save
-            MedicineStockRecord.create(station_id: @station.id, typerecord: 2, name: internal_record["name"], amount: internal_record["amount"],
-                                       internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
-                                       sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"])
+            case @internalrecord.status
+            when 1
+              type = 2
+            else
+              type = 3
+            end
+            if med_stock
+              MedicineStockRecord.create(station_id: @station.id, typerecord: type, name: internal_record["name"], amount: internal_record["amount"],
+                internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
+                sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"], supplier: med_stock.supplier, supplier_id: med_stock.supplier_id)
+            else
+              MedicineStockRecord.create(station_id: @station.id, typerecord: type, name: internal_record["name"], amount: internal_record["amount"],
+                internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
+                sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"])
+            end
           end
 				  render json: @supplier
 				else
