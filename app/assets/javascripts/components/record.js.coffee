@@ -798,8 +798,8 @@
           className: "toggled"
           React.DOM.td null, @state.typeName
           React.DOM.td null, @props.record.name
-          React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.signid
+          React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.amount
           React.DOM.td null,
             if @props.record.expire != null and @props.record.expire != undefined
@@ -815,8 +815,8 @@
           onClick: @selectRecord
           React.DOM.td null, @state.typeName
           React.DOM.td null, @props.record.name
-          React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.signid
+          React.DOM.td null, @props.record.noid
           React.DOM.td null, @props.record.amount
           React.DOM.td null,
             if @props.record.expire != null and @props.record.expire != undefined
@@ -1269,6 +1269,53 @@
           React.DOM.td null, @props.record.amount
           React.DOM.td null, @props.record.company
           React.DOM.td null, @props.record.price
+    MedicineSummaryStockRecord: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.qty
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.name
+          React.DOM.td null, @props.record.qty
+    MedicineSummaryStockRecordDetail1: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.signid
+          React.DOM.td null, @props.record.amount
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.noid
+          React.DOM.td null, @props.record.signid
+          React.DOM.td null, @props.record.amount
+    MedicineSummaryStockRecordDetail2: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.date
+          React.DOM.td null, @props.record.qty
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.date
+          React.DOM.td null, @props.record.qty
+    MedicineSummarySupplierRecord: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.supplier
+          React.DOM.td null, @props.record.tpayout
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.supplier
+          React.DOM.td null, @props.record.tpayout
+    MedicineSupplierDetail1: ->
+      if @props.selected
+        React.DOM.tr className: "toggled",
+          React.DOM.td null, @props.record.sample
+          #React.DOM.td null, @props.record.tpayout
+      else    
+        React.DOM.tr onClick: @selectRecord,
+          React.DOM.td null, @props.record.sample
+          #React.DOM.td null, @props.record.tpayout
     render: ->
       if @props.datatype == "medicine_supplier"
         @MedicineSupplier()
@@ -1344,6 +1391,16 @@
         @DoctorRoom()
       else if @props.datatype == 'medicine_summary_external'
         @SummaryExternal()
+      else if @props.datatype == 'medicine_summary_stock_record'
+        @MedicineSummaryStockRecord()
+      else if @props.datatype == 'medicine_summary_stock_record_detail1'
+        @MedicineSummaryStockRecordDetail1()
+      else if @props.datatype == 'medicine_summary_stock_record_detail2'
+        @MedicineSummaryStockRecordDetail2()
+      else if @props.datatype == 'medicine_summary_supplier_record'
+        @MedicineSummarySupplierRecord()
+      else if @props.datatype == 'medicine_supplier_detail1'
+        @MedicineSupplierDetail1()
 
   @ListgroupSample = React.createClass
     getInitialState: ->

@@ -87,10 +87,16 @@
       return
     componentWillMount: ->
       $(APP).on 'fillmodal', ((e,code) ->
-        @triggerUpdateFormValue(code)
+        try
+          @triggerUpdateFormValue(code)
+        catch err
+          console.log err
       ).bind(this)
       $(APP).on 'clearmodal', ((e,code) ->
-        @triggerClearFormValue(code)
+        try
+          @triggerClearFormValue(code)
+        catch err
+          console.log err
       ).bind(this)
     triggersafe: ->
     trigger: ->
@@ -99,7 +105,7 @@
     triggerUpdateFormValue: (code) ->
       if code == "customer_record" and @props.record != null and @props.record != undefined
         $('#' + @props.id + ' #form_name').val(@props.record.cname)
-        if @props.record.dob != null
+        if @props.record.dob != null and @props.record.dob != undefined
           $('#' + @props.id + ' #form_dob').val(@props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4))
         $('#' + @props.id + ' #form_address').val(@props.record.address)
         $('#' + @props.id + ' #form_pnumber').val(@props.record.pnumber)
@@ -246,7 +252,8 @@
           $('#' + @props.id + ' #form_noid').val(@props.record.noid)
           $('#' + @props.id + ' #form_signid').val(@props.record.signid)
           $('#' + @props.id + ' #form_remark').val(@props.record.remark)
-          $('#' + @props.id + ' #form_expire').val(@props.record.expire)
+          if @props.record.expire != null
+            $('#' + @props.id + ' #form_expire').val(@props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4))
           $('#' + @props.id + ' #form_qty').val(@props.record.qty)
           $('#' + @props.id + ' #form_taxrate').val(@props.record.taxrate)
           $('#' + @props.id + ' #form_price').val(@props.record.price)
@@ -2020,12 +2027,12 @@
                           if @state.autoComplete != null and @state.code == 'company'
                             React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_company_mini', grouplist: @props.grouplist, typelist: @props.typelist, header: [{id: 1,name: "Mã công ty"},{id: 2, name: "Tên công ty"}], trigger: @triggerAutoComplete
                     React.DOM.div className: 'form-group',
-                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
-                      React.DOM.div className: 'col-sm-2',
-                        React.DOM.input id: 'form_noid', type: 'text', className: 'form-control', placeholder: 'Số hiệu'
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
                       React.DOM.div className: 'col-sm-2',
                         React.DOM.input id: 'form_signid', type: 'text', className: 'form-control', placeholder: 'Ký hiệu'
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.DOM.input id: 'form_noid', type: 'text', className: 'form-control', placeholder: 'Số hiệu'
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hạn sử dụng'
                       React.DOM.div className: 'col-sm-2',
                         React.DOM.input id: 'form_expire', type: 'text', className: 'form-control', placeholder: '30/01/1990'
@@ -2073,12 +2080,12 @@
                           if @state.autoComplete != null and @state.code == 'company'
                             React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_company_mini', grouplist: @props.grouplist, typelist: @props.typelist, header: [{id: 1,name: "Mã công ty"},{id: 2, name: "Tên công ty"}], trigger: @triggerAutoComplete
                     React.DOM.div className: 'form-group',
-                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
-                      React.DOM.div className: 'col-sm-2',
-                        React.DOM.input id: 'form_noid', type: 'text', className: 'form-control', placeholder: 'Số hiệu'
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
                       React.DOM.div className: 'col-sm-2',
                         React.DOM.input id: 'form_signid', type: 'text', className: 'form-control', placeholder: 'Ký hiệu'
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.DOM.input id: 'form_noid', type: 'text', className: 'form-control', placeholder: 'Số hiệu'
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hạn sử dụng'
                       React.DOM.div className: 'col-sm-2',
                         React.DOM.input id: 'form_expire', type: 'text', className: 'form-control', placeholder: '30/01/1990'
@@ -2457,12 +2464,12 @@
                           if @state.autoComplete != null and @state.code == 'company'
                             React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_company_mini', grouplist: @props.grouplist, typelist: @props.typelist, header: [{id: 1,name: "Mã công ty"},{id: 2, name: "Tên công ty"}], trigger: @triggerAutoComplete    
                     React.DOM.div className: 'form-group',
-                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
-                      React.DOM.div className: 'col-sm-2',
-                        React.createElement InputField, id: 'form_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
                       React.DOM.div className: 'col-sm-2',
                         React.createElement InputField, id: 'form_signid', className: 'form-control', type: 'text', code: '', placeholder: 'Ký hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'form_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng thuốc'
                       React.DOM.div className: 'col-sm-2',
                         React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Đã chuyển hàng'},{id: 2, name: 'Chưa chuyển hàng'},{id: 3, name: 'Khác'}], text: 'Tình trạng'
@@ -2510,12 +2517,12 @@
                           if @state.autoComplete != null and @state.code == 'company'
                             React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_company_mini', grouplist: @props.grouplist, typelist: @props.typelist, header: [{id: 1,name: "Mã công ty"},{id: 2, name: "Tên công ty"}], trigger: @triggerAutoComplete    
                     React.DOM.div className: 'form-group',
-                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
-                      React.DOM.div className: 'col-sm-2',
-                        React.createElement InputField, id: 'form_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
                       React.DOM.div className: 'col-sm-2',
                         React.createElement InputField, id: 'form_signid', className: 'form-control', type: 'text', code: '', placeholder: 'Ký hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'form_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng thuốc'
                       React.DOM.div className: 'col-sm-2',
                         React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Đã chuyển hàng'},{id: 2, name: 'Chưa chuyển hàng'},{id: 3, name: 'Khác'}], text: 'Tình trạng'
@@ -2575,12 +2582,12 @@
                           if @state.autoComplete != null and @state.code == 'sample'
                             React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_sample_mini', grouplist: @props.grouplist, typelist: @props.typelist, header: [{id: 1,name: "Tên thuốc"},{id: 2, name: "Loại thuốc"},{id: 3, name: "Nhóm thuốc"},{id: 4, name: "Công ty sản xuất"},{id: 5, name: "Giá"}], trigger: @triggerAutoComplete
                     React.DOM.div className: 'form-group',
-                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
-                      React.DOM.div className: 'col-sm-2',
-                        React.createElement InputField, id: 'form_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
                       React.DOM.div className: 'col-sm-2',
                         React.createElement InputField, id: 'form_signid', className: 'form-control', type: 'text', code: '', placeholder: 'Ký hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                      React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                      React.DOM.div className: 'col-sm-2',
+                        React.createElement InputField, id: 'form_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hết hạn'
                       React.DOM.div className: 'col-sm-2',
                         React.createElement InputField, id: 'form_expire', className: 'form-control', type: 'text', code: '', placeholder: 'Hết hạn', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe

@@ -129,6 +129,27 @@
                 output.sumin = sumin
                 output.sumprice = sumprice
                 return output
+            when 5
+                sum = 0
+                for record in @props.data
+                    sum+= record.price
+                return sum
+            when 6
+                sum = 0
+                for record in @props.data
+                    sum+= record.price
+                return sum
+            when 7
+                try
+                    sumin = 0
+                    for record in @props.data[0]
+                        sumin+= record.price
+                    sumout = 0
+                    for record in @props.data[1]
+                        sumout+= record.price
+                    return sumin - sumout
+                catch err
+                    console.log err
     analyzeDataChart: (chartcode, daystart, dayend, data) ->
         output = []
         switch Number(chartcode)
@@ -216,33 +237,33 @@
       else
         @triggerPage(Math.ceil(@props.records.length/@state.viewperpage))
     triggerChangeRPP: ->
-      if Number($('#record_per_page').val()) > 0
+      if Number($('#record_per_page' + @props.datatype).val()) > 0
         @setState
-          viewperpage: Number($('#record_per_page').val())
+          viewperpage: Number($('#record_per_page' + @props.datatype).val())
           currentpage: 1
           firstcount: 0
           lastcount:
             if @state.filteredRecord != null
-              if @state.filteredRecord.length < Number($('#record_per_page').val())
+              if @state.filteredRecord.length < Number($('#record_per_page' + @props.datatype).val())
                 @state.filteredRecord.length
               else
-                Number($('#record_per_page').val())
+                Number($('#record_per_page' + @props.datatype).val())
             else
-              if @props.records.length < Number($('#record_per_page').val())
+              if @props.records.length < Number($('#record_per_page' + @props.datatype).val())
                 @props.records.length
               else
-                Number($('#record_per_page').val())
+                Number($('#record_per_page' + @props.datatype).val())
       else
         @showtoast('Số bạn nhập không phù hợp',3)
     triggerChangePage: ->
       if @state.filteredRecord != null
-        if Number($('#page_number').val()) <= Math.ceil(@state.filteredRecord.length/@state.viewperpage) and Number($('#page_number').val()) > 0
-          @triggerPage(Number($('#page_number').val()))
+        if Number($('#page_number' + @props.datatype).val()) <= Math.ceil(@state.filteredRecord.length/@state.viewperpage) and Number($('#page_number' + @props.datatype).val()) > 0
+          @triggerPage(Number($('#page_number' + @props.datatype).val()))
         else
           @showtoast("Số trang bạn muốn chuyển tới không phù hợp", 3)
       else
-        if Number($('#page_number').val()) <= Math.ceil(@props.records.length/@state.viewperpage) and Number($('#page_number').val()) > 0
-          @triggerPage(Number($('#page_number').val()))
+        if Number($('#page_number' + @props.datatype).val()) <= Math.ceil(@props.records.length/@state.viewperpage) and Number($('#page_number' + @props.datatype).val()) > 0
+          @triggerPage(Number($('#page_number' + @props.datatype).val()))
         else
           @showtoast("Số trang bạn muốn chuyển tới không phù hợp", 3)
     componentWillMount: ->
@@ -251,6 +272,16 @@
         ).bind(this)
         $(APP).on 'drawplot', ((e) ->
             @drawPlot() 
+        ).bind(this)
+        $(APP).on 'reloadminormaterial', ((e) ->
+            @setState lastcount:
+                if @props.records != null and @props.records != undefined
+                    if @props.records.length < 10
+                        @props.records.length
+                    else
+                        10
+                else
+                    0
         ).bind(this)
     drawPlot: ->
         chartUsersOptions = {
@@ -266,8 +297,10 @@
             }
             colors: [ "#2196F3 ","#00BCD4"]
         }
-        if @props.idflotchart != undefined
+        try
             $.plot $('#' + @props.idflotchart), @outputSparkleData(@props.chartcode).data, chartUsersOptions
+        catch err
+            console.log err
     outputSparkleData: (chartcode) ->
         switch chartcode
             when 1
@@ -299,39 +332,43 @@
                 output = {data:[]}
                 data1 = []
                 data2 = []
-                if @props.data[0] != undefined and @props.data[1] != undefined
-                    check1 = true
-                    check2 = true
-                    if @props.data[0].length > 0
-                        d_start1 = new Date(@props.data[0][0].d)
-                        d_end1 = new Date(@props.data[0][@props.data[0].length - 1].d)
-                    else
-                        check1 = false
-                    if @props.data[1].length > 0
-                        d_start2 = new Date(@props.data[1][0].d)
-                        d_end2 = new Date(@props.data[1][@props.data[1].length - 1].d)
-                    else
-                        check2 = false
-                    if !check1 and check2
-                        data1.push([0, 0])
-                        data2 = @analyzeDataChart(2,d_start2,d_end2,@props.data[1])
-                    else if check1 and !check2
-                        data2.push([0, 0])
-                        data1 = @analyzeDataChart(2,d_start1,d_end1,@props.data[0])
-                    else if check1 and check2
-                        if d_start1 < d_start2
-                            d_start = d_start1
+                if @props.data != undefined
+                    if @props.data[0] != undefined and @props.data[1] != undefined
+                        check1 = true
+                        check2 = true
+                        if @props.data[0].length > 0
+                            d_start1 = new Date(@props.data[0][0].d)
+                            d_end1 = new Date(@props.data[0][@props.data[0].length - 1].d)
                         else
-                            d_start = d_start2
-                        if d_end1 < d_end2
-                            d_end = d_end2
+                            check1 = false
+                        if @props.data[1].length > 0
+                            d_start2 = new Date(@props.data[1][0].d)
+                            d_end2 = new Date(@props.data[1][@props.data[1].length - 1].d)
                         else
-                            d_end = d_end1
-                        data1 = @analyzeDataChart(2,d_start,d_end,@props.data[0])
-                        data2 = @analyzeDataChart(3,d_start,d_end,@props.data)
+                            check2 = false
+                        if !check1 and check2
+                            data1.push([0, 0])
+                            data2 = @analyzeDataChart(2,d_start2,d_end2,@props.data[1])
+                        else if check1 and !check2
+                            data2.push([0, 0])
+                            data1 = @analyzeDataChart(2,d_start1,d_end1,@props.data[0])
+                        else if check1 and check2
+                            if d_start1 < d_start2
+                                d_start = d_start1
+                            else
+                                d_start = d_start2
+                            if d_end1 < d_end2
+                                d_end = d_end2
+                            else
+                                d_end = d_end1
+                            data1 = @analyzeDataChart(2,d_start,d_end,@props.data[0])
+                            data2 = @analyzeDataChart(3,d_start,d_end,@props.data)
+                        else
+                            data1.push([0, 0])
+                            data2.push([0, 0])
                     else
-                        data1.push([0, 0])
-                        data2.push([0, 0])
+                        data1.push([0,0])
+                        data2.push([0,0])
                 output = {data:[]}
                 output.data.push(data1)
                 output.data.push(data2)
@@ -386,6 +423,13 @@
                         return [0,0]
                 else
                     return [0,0]
+    outputChartJsData: (chartcode) ->
+        switch chartcode
+            when 1
+                if @props.data != undefined and @props.data != null
+                    return null
+                else
+                    return null
     drawSparkle: ->
         $('#' + @props.idcanvas).sparkline @outputSparkleData(@props.chartcode), type: @props.plotstyle, width: @props.plotwidth, height: @props.plotheight,
     MedicineSummaryPart: ->
@@ -476,9 +520,9 @@
         React.DOM.div className: @props.className,
             React.DOM.div className: 'unfloat-label',
                 React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
-                    React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+                    React.createElement InputField, id: 'record_per_page' + @props.datatype, className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
                 React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
-                    React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+                    React.createElement InputField, id: 'page_number' + + @props.datatype, className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
                 if @state.filteredRecord != null
                     React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
                 else
@@ -510,19 +554,93 @@
                     React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
                 else
                     React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@props.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
-            
-            
-            
-                #React.DOM.div className: 'table-responsive',
-                #    React.DOM.table className: 'table table-hover table-condensed',
-                #        React.DOM.thead null,
-                #            React.DOM.tr null,
-                #                for thead in @props.theader
-                #                    React.DOM.th key: thead.id, thead.name
-                #        React.DOM.tbody null,
-                #            if @props.records != null
-                #                for record in @props.records
-                #                    React.createElement RecordGeneral, key: record.id, record: record, selectRecord: @triggerRecord, datatype: @props.code
+    FloatTableChart: ->
+        React.DOM.div className: @props.className,
+            React.DOM.div className: 'float-label',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: @props.className1,
+                        React.DOM.h5 null, @props.title
+                        React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                            React.createElement InputField, id: 'record_per_page' + @props.datatype, className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+                        React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                            React.createElement InputField, id: 'page_number' + @props.datatype, className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+                        if @state.filteredRecord != null
+                            React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                        else
+                            React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@props.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                        React.DOM.div className: 'spacer10'
+                        React.DOM.table className: 'table table-hover table-condensed',
+                            React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort,  header: @props.theader
+                            React.DOM.tbody null,
+                                if @state.filteredRecord != null
+                                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                                        if @state.selected != null
+                                            if record.id == @state.selected
+                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: true, selectRecord: @triggerRecord
+                                            else
+                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: false, selectRecord: @triggerRecord
+                                        else
+                                            React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: false, selectRecord: @triggerRecord
+                                else
+                                    for record in @props.records[@state.firstcount...@state.lastcount]
+                                        if @state.selected != null
+                                            if record.id == @state.selected
+                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: true, selectRecord: @triggerRecord
+                                            else
+                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: false, selectRecord: @triggerRecord
+                                        else
+                                            React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: false, selectRecord: @triggerRecord
+                        React.DOM.div className: 'spacer10'
+                        if @state.filteredRecord != null
+                            React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                        else
+                            React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@props.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                    React.DOM.div className: @props.className2,
+                        React.DOM.canvas id: @props.idcanvaschartjs
+    UnfloatTableChart: ->
+        React.DOM.div className: @props.className,
+            React.DOM.div className: 'unfloat-label',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: @props.className1,
+                        React.DOM.canvas id: @props.idcanvaschartjs
+                    React.DOM.div className: @props.className2,
+                        React.DOM.h4 null, @props.title
+                        React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                            React.createElement InputField, id: 'record_per_page' + @props.datatype, className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+                        React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                            React.createElement InputField, id: 'page_number' + @props.datatype, className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+                        if @state.filteredRecord != null
+                            React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                        else
+                            React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@props.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                        React.DOM.div className: 'spacer10'
+                        React.DOM.table className: 'table table-hover table-condensed',
+                            React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort,  header: @props.theader
+                            React.DOM.tbody null,
+                                if @state.filteredRecord != null
+                                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                                        if @state.selected != null
+                                            if record.id == @state.selected
+                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: true, selectRecord: @triggerRecord
+                                            else
+                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: false, selectRecord: @triggerRecord
+                                        else
+                                            React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: false, selectRecord: @triggerRecord
+                                else
+                                    for record in @props.records[@state.firstcount...@state.lastcount]
+                                        if @state.selected != null
+                                            if record.id == @state.selected
+                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: true, selectRecord: @triggerRecord
+                                            else
+                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: false, selectRecord: @triggerRecord
+                                        else
+                                            React.createElement RecordGeneral, key: record.id, record: record, datatype: @props.code, selected: false, selectRecord: @triggerRecord
+                        React.DOM.div className: 'spacer10'
+                        if @state.filteredRecord != null
+                            React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                        else
+                            React.createElement Paginate, className: 'col-sm-12', tp: Math.ceil(@props.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                    
     ColorFloatLabel: ->
         React.DOM.div className: @props.className,
             React.DOM.div className: 'float-label', style: {'height': '200px','backgroundColor': @props.color, 'color': @props.textcolor},
@@ -550,4 +668,7 @@
             @UnfloatLabelProgress()
         else if @props.datatype == "color_float_label"
             @ColorFloatLabel()
-        
+        else if @props.datatype == "float_table_chart"
+            @FloatTableChart()
+        else if @props.datatype == "unfloat_table_chart"
+            @UnfloatTableChart()

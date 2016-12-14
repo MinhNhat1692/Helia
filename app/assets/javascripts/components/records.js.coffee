@@ -194,9 +194,14 @@
 
 @MainPart = React.createClass
     getInitialState: ->
+      med_name: null
+      sample_id: null
+      noid: null
+      signid: null
       prefix: "Tất cả"
       data: null
       minordata: null
+      minordata2: null
       analysis: 0
       records:
         if @props.data[0] != undefined
@@ -228,9 +233,14 @@
     componentWillMount: ->
       $(APP).on 'rebuild', ((e) ->
         @setState
+          med_name: null
+          sample_id: null
+          noid: null
+          signid: null
           prefix: "Tất cả"
           data: null
           minordata: null
+          minordata2: null
           analysis: 0
           records: @props.data[0]
           selected: null
@@ -450,9 +460,9 @@
     trigger: (e) ->
     triggerSubApi: (record,datacode) ->
       if $('#date_input').val() != undefined
-        formData = {date: $('#date_input').val(), med_name: null, company: null, price: null, sample_id: null}
+        formData = {date: $('#date_input').val(), med_name: null, company: null, price: null, sample_id: null, supplier: null, supplier_id: null}
       else if $('#start_dateinput').val() != undefined or $('#end_dateinput').val() != undefined
-        formData = {begin_date: $('#start_dateinput').val(), end_date: $('#end_dateinput').val(), med_name: null, company: null, price: null, sample_id: null}
+        formData = {begin_date: $('#start_dateinput').val(), end_date: $('#end_dateinput').val(), med_name: null, company: null, price: null, sample_id: null,  supplier: null, supplier_id: null}
       switch datacode
         when 1
           link = "/medicine_summary/external_record/detail"
@@ -464,7 +474,20 @@
           formData.med_name = record.name
           formData.company = record.company
           formData.price = record.price
-          formData.sample_id = 3#record.sample_id
+        when 3
+          link = "/medicine_summary/stock_record/detail1"
+          formData.name = record.name
+          formData.sample_id = record.sam_id
+          @setState
+            med_name: record.name
+            sample_id: record.sam_id
+        when 4
+          link = "/medicine_summary/supplier/detail1"
+          formData.supplier = record.supplier
+          formData.supplier_id = record.supp_id
+          @setState
+            med_name: record.supplier
+            sample_id: record.supp_id
       @showtoast("Đang tải dữ liệu, vui lòng chờ",2)
       if formData != undefined
         $.ajax
@@ -478,12 +501,61 @@
           ).bind(this)
           success: ((result) ->
             @showtoast("Tải dữ liệu hoàn tất",1)
-            console.log(result)
             @setState
               minordata: result
+              minordata2: null
             setTimeout (->
               $(APP).trigger('drawsparkle')
               $(APP).trigger('drawplot')
+              $(APP).trigger('reloadminormaterial')
+            ), 500
+            return
+          ).bind(this)
+      else
+        @showtoast("Bạn cần nhập mốc thời gian thống kê",3)
+    triggerSubApi2: (record,datacode) ->
+      if $('#date_input').val() != undefined
+        formData = {date: $('#date_input').val(), med_name: null, company: null, price: null, sample_id: null, noid: null, signid: null, supplier: null, supplier_id: null}
+      else if $('#start_dateinput').val() != undefined or $('#end_dateinput').val() != undefined
+        formData = {begin_date: $('#start_dateinput').val(), end_date: $('#end_dateinput').val(), med_name: null, company: null, price: null, sample_id: null, noid: null, signid: null, supplier: null, supplier_id: null}
+      switch datacode
+        when 4
+          link = "/medicine_summary/stock_record/detail2"
+          formData.name = @state.med_name
+          formData.sample_id = @state.sample_id
+          formData.no_id = record.noid
+          formData.sign_id = record.signid
+          @setState
+            noid: record.noid
+            signid: record.signid
+        when 5
+          link = "/medicine_summary/supplier/detail2"
+          formData.supplier = @state.med_name
+          formData.supplier_id = @state.sample_id
+          formData.name = record.sample
+          formData.sample_id = record.sam_id
+          @setState
+            noid: record.sample
+            signid: record.sam_id
+      @showtoast("Đang tải dữ liệu, vui lòng chờ",2)
+      if formData != undefined
+        $.ajax
+          url: link
+          type: 'POST'
+          data: formData
+          dataType: 'JSON'
+          error: ((result) ->
+            @showtoast("Tải dữ liệu thất bại, xin vui lòng thử lại",3)
+            return
+          ).bind(this)
+          success: ((result) ->
+            @showtoast("Tải dữ liệu hoàn tất",1)
+            @setState
+              minordata2: result
+            setTimeout (->
+              $(APP).trigger('drawsparkle')
+              $(APP).trigger('drawplot')
+              $(APP).trigger('reloadminormaterial')
             ), 500
             return
           ).bind(this)
@@ -571,11 +643,11 @@
         when 2
           link = "/medicine_summary/internal_record"
         when 3
-          link = "/medicine_summary/external_record"
+          link = "/medicine_summary/stock_record"
         when 4
-          link = "/medicine_summary/external_record"
+          link = "/medicine_summary/supplier"
         when 5
-          link = "/medicine_summary/external_record"
+          link = "/medicine_summary/sale_stat"
       @showtoast("Đang tải dữ liệu, vui lòng chờ",2)
       if formData != undefined
         $.ajax
@@ -589,13 +661,15 @@
           ).bind(this)
           success: ((result) ->
             @showtoast("Tải dữ liệu hoàn tất",1)
-            #console.log(result)
             @setState
               analysis: code
               data: result
+              minordata: null
+              minordata2: null
             setTimeout (->
               $(APP).trigger('drawsparkle')
               $(APP).trigger('drawplot')
+              $(APP).trigger('reloadminormaterial')
             ), 500
             return
           ).bind(this)
@@ -3249,7 +3323,7 @@
               React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, typemedicine: @props.data[2], groupmedicine: @props.data[1], company: null, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
               React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
               React.createElement ModalOutside, id: 'modal2', datatype: 'medicine_company', record: null, trigger: @trigger, trigger2: @trigger
-              React.createElement ModalOutside, id: 'modal3', datatype: 'medicine_price', sample: @state.record, record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modal3', datatype: 'medicine_price', sample: @state.record, record: null, grouplist: @props.data[1], typelist: @props.data[2], trigger: @trigger, trigger2: @trigger
     medicineBillInRender: ->
       React.DOM.div className: 'content-wrapper',
         React.DOM.div className: 'spacer30'
@@ -4860,7 +4934,7 @@
               React.createElement MinorMaterial, datatype: 'unfloat_label_progress_in', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, data: @state.data, datacode: 4
               React.createElement MinorMaterial, datatype: 'float_label_progress_plot', className: 'col-md-8 col-xs-12 animated fadeInUp', idflotchart: "flotchart1", data: @state.data, chartcode: 2, datacode: 4
             React.DOM.div className: 'row',
-              React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @triggerSubApi, theader: [{id:1, name: "Tên thuốc"},{id:2, name: "Số lượng"},{id:3, name: "Công ty sản xuất"},{id:4, name: "Giá"}], datacode: 2, records:
+              React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @triggerSubApi, theader: [{id:1, name: "Tên thuốc", code: 'name'},{id:2, name: "Số lượng", code: 'amount'},{id:3, name: "Công ty sản xuất", code: 'company'},{id:4, name: "Giá", code: 'price'}], datacode: 2, records:
                 if @state.data[2] != undefined
                   @state.data[2]
                 else
@@ -4869,11 +4943,80 @@
         when 3
           React.DOM.div className: 'content-wrapper',
             React.DOM.div className: 'spacer30'
-            React.DOM.div className: 'row', 
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'float_table_chart', className: 'col-md-12 col-xs-12 animated fadeInUp', className1: 'col-sm-4', className2: 'col-sm-8', code: 'medicine_summary_stock_record', trigger: @triggerSubApi, theader: [{id:1, name: "Tên thuốc", code: 'name'},{id:2, name: "Số lượng", code: 'qty'}], title: "Thống kê kho thuốc", datacode: 3, idcanvaschartjs: 'chartjs1', chartcode: 1, records:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              if @state.minordata != null
+                React.createElement MinorMaterial, datatype: 'unfloat_table_chart', className: 'col-md-12 col-xs-12 animated fadeInUp', className1: 'col-sm-8', className2: 'col-sm-4', code: 'medicine_summary_stock_record_detail1', trigger: @triggerSubApi2, theader: [{id:1, name: "Số hiệu", code: 'noid'},{id:2, name: "Ký hiệu", code: 'signid'},{id:3, name: "Số lượng", code: 'qty'}], datacode: 4, idcanvaschartjs: 'chartjs2', chartcode: 2, title: "Thống kê thuốc " + @state.med_name, med_name: @state.med_name, sample_id: @state.sample_id, records:
+                  if @state.minordata[0] != undefined
+                    @state.minordata[0]
+                  else
+                    null
+              if @state.minordata2 != null
+                React.createElement MinorMaterial, datatype: 'float_table_chart', className: 'col-md-12 col-xs-12 animated fadeInUp', className1: 'col-sm-4', className2: 'col-sm-8', code: 'medicine_summary_stock_record_detail2', trigger: @trigger, theader: [{id:1, name: "Ngày", code: 'date'},{id:2, name: "Số lượng", code: 'qty'}], datacode: 4, idcanvas: 'chartjs2', chartcode: 2, title: "Thống kê thuốc " + @state.med_name + " số hiệu " + @state.noid + " ký hiệu " + @state.signid, records:
+                  if @state.minordata2[0] != undefined
+                    @state.minordata2[0]
+                  else
+                    null
         when 4
-          React.DOM.div className: 'row'
+          React.DOM.div className: 'content-wrapper',
+            React.DOM.div className: 'spacer30'
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'float_table_chart', className: 'col-md-12 col-xs-12 animated fadeInUp', className1: 'col-sm-4', className2: 'col-sm-8', code: 'medicine_summary_supplier_record', trigger: @triggerSubApi, theader: [{id:1, name: "Tên nguồn", code: 'supplier'},{id:2, name: "Tổng thanh toán", code: 'tpayout'}], title: "Thống kê các nguồn cấp thuốc", datacode: 4, idcanvaschartjs: 'chartjs1', chartcode: 1, records:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              if @state.minordata != null
+                React.createElement MinorMaterial, datatype: 'unfloat_table_chart', className: 'col-md-12 col-xs-12 animated fadeInUp', className1: 'col-sm-8', className2: 'col-sm-4', code: 'medicine_supplier_detail1', trigger: @triggerSubApi2, theader: [{id:1, name: "Số hiệu", code: 'noid'},{id:2, name: "Ký hiệu", code: 'signid'},{id:3, name: "Số lượng", code: 'qty'}], datacode: 5, idcanvaschartjs: 'chartjs3', chartcode: 2, title: "Thống kê nguồn cung cấp " + @state.med_name, med_name: @state.med_name, sample_id: @state.sample_id, records:
+                  if @state.minordata[0] != undefined
+                    @state.minordata[0]
+                  else
+                    null
+              if @state.minordata2 != null
+                React.createElement MinorMaterial, datatype: 'float_table_chart', className: 'col-md-12 col-xs-12 animated fadeInUp', className1: 'col-sm-4', className2: 'col-sm-8', code: 'medicine_summary_stock_record_detail2', trigger: @trigger, theader: [{id:1, name: "Ngày", code: 'date'},{id:2, name: "Số lượng", code: 'qty'}], datacode: 4, idcanvas: 'chartjs2', chartcode: 2, title: "Thống kê thuốc " + @state.noid + " do " + @state.med_name + " cung cấp", records:
+                  if @state.minordata2[0] != undefined
+                    @state.minordata2[0]
+                  else
+                    null
         when 5
-          React.DOM.div className: 'row'
+          React.DOM.div className: 'content-wrapper',
+            React.DOM.div className: 'spacer30'
+            React.DOM.div className: 'row',
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng doanh thu', datacode: 5, data:
+                if @state.data[0] != undefined
+                  @state.data[0]
+                else
+                  null
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng giá gôc', datacode: 6, data:
+                if @state.data[1] != undefined
+                  @state.data[1]
+                else
+                  null
+              React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Lợi nhuận', datacode: 7, data:
+                if @state.data != undefined
+                  @state.data
+                else
+                  null
+              #React.createElement MinorMaterial, datatype: 'float_label', className: 'col-md-2 col-xs-6 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', datacode: 1, data:
+              #  if @state.data[0] != undefined
+              #    @state.data[0]
+              #  else
+              #    null
+              #React.createElement MinorMaterial, datatype: 'unfloat_label_chart', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Tổng số bản ghi kê', pText: "120", idcanvas: "sparkline1", plotheight: "80", data: @state.data[0], plotstyle: "line", plotwidth: "100%", chartcode: 1, datacode: 1
+            #React.DOM.div className: 'row',
+            #  React.createElement MinorMaterial, datatype: 'unfloat_label_progress', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, data: @state.data, datacode: 2
+            #  React.createElement MinorMaterial, datatype: 'float_label_progress_plot', className: 'col-md-8 col-xs-12 animated fadeInUp', idflotchart: "flotchart1", data: @state.data, chartcode: 2, datacode: 4
+            #React.DOM.div className: 'row',
+            #  React.createElement MinorMaterial, datatype: 'unfloat_label_table', className: 'col-md-8 col-xs-12 animated fadeInUp', code: 'medicine_summary_external', trigger: @triggerSubApi, theader: [{id:1, name: "Tên thuốc", code: "name"},{id:2, name: "Số lượng", code: "amount"},{id:3, name: "Công ty sản xuất", code: "company"},{id:4, name: "Giá", code: "price"}], datacode: 1, records:
+            #    if @state.data[2] != undefined
+            #      @state.data[2]
+            #    else
+            #      null
+            #  React.createElement MinorMaterial, datatype: 'color_float_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Thống kê chi tiết', pText: "toàn bộ thời gian", idcanvas: "sparkline2", plotheight: "80", data: @state.minordata, plotstyle: "line", plotwidth: "100%",  color: "#46AEDA", textcolor: "#ffffff", chartcode: 3, datacode: 1
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()

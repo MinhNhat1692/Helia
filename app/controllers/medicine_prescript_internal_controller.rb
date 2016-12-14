@@ -79,7 +79,7 @@ class MedicinePrescriptInternalController < ApplicationController
             if med_stock
               MedicineStockRecord.create(station_id: @station.id, typerecord: 2, name: internal_record["name"], amount: internal_record["amount"],
                 internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
-                sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"], supplier: med_stock.supplier, supplier_id: med_stock.supplier_id)
+                sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"], supplier: med_stock.supplier, supplier_id: med_stock.supplier_id, expire: med_stock.expire)
             else
               MedicineStockRecord.create(station_id: @station.id, typerecord: 2, name: internal_record["name"], amount: internal_record["amount"],
                 internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
@@ -144,7 +144,7 @@ class MedicinePrescriptInternalController < ApplicationController
             if med_stock
               MedicineStockRecord.create(station_id: @station.id, typerecord: type, name: internal_record["name"], amount: internal_record["amount"],
                 internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
-                sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"], supplier: med_stock.supplier, supplier_id: med_stock.supplier_id)
+                sample_id: @sample_id, noid: internal_record["noid"], signid: internal_record["signid"], supplier: med_stock.supplier, supplier_id: med_stock.supplier_id, expire: med_stock.expire)
             else
               MedicineStockRecord.create(station_id: @station.id, typerecord: type, name: internal_record["name"], amount: internal_record["amount"],
                 internal_record_id: @internalrecord.id, internal_record_code: @internalrecord.script_code, remark: internal_record["remark"],
