@@ -69,7 +69,10 @@
             React.DOM.div
               className: 'pmo-stat'
               React.DOM.h2 null, @props.record.cname
-              @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + "Tháng"
+              try
+                @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + "Tháng"
+              catch error
+                console.log error
         React.DOM.div
           className: 'pmo-block pmo-contact'
           React.DOM.h2 null, "Thông tin cơ bản"
@@ -1040,7 +1043,10 @@
               ""
           React.DOM.td null,
             if @props.record.dob != null and @props.record.dob != undefined
-              @calAge(@props.record.dob,2).years
+              try
+                @calAge(@props.record.dob,2).years
+              catch error
+                console.log error
             else
               ""
           React.DOM.td null, @state.typeName
@@ -1058,8 +1064,11 @@
             else
               ""
           React.DOM.td null,
-            if @props.record.dob != null && @props.record.dob != undefined 
-              @calAge(@props.record.dob,2).years
+            if @props.record.dob != null && @props.record.dob != undefined
+              try
+                @calAge(@props.record.dob,2).years
+              catch error
+                console.log error
             else
               ""
           React.DOM.td null, @state.typeName
@@ -1082,8 +1091,11 @@
             else
               ""
           React.DOM.td null,
-            if @props.record.dob != null && @props.record.dob != undefined  
-              @calAge(@props.record.dob,2).years
+            if @props.record.dob != null && @props.record.dob != undefined
+              try
+                @calAge(@props.record.dob,2).years
+              catch error
+                console.log error
             else
               ""
           React.DOM.td null, @state.typeName
@@ -1099,8 +1111,11 @@
             else
               ""
           React.DOM.td null,
-            if @props.record.dob != null && @props.record.dob != undefined 
-              @calAge(@props.record.dob,2).years
+            if @props.record.dob != null && @props.record.dob != undefined
+              try
+                @calAge(@props.record.dob,2).years
+              catch error
+                console.log error
             else
               ""
           React.DOM.td null, @state.typeName
