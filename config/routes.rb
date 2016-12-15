@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   post '/check_info/list', to: 'check_info#list'
   post '/check_info/search', to: 'check_info#search'
   post '/check_info/find', to: 'check_info#find'
+  post '/check_info/end', to: 'check_info#finish'
 
   post '/doctor_room/extra', to: 'order_map#extra'
   delete '/order_map', to: 'order_map#destroy'
@@ -33,6 +34,7 @@ Rails.application.routes.draw do
   post '/order_map/list', to: 'order_map#list'
   post '/order_map/search', to: 'order_map#search'
   post '/order_map/find', to: 'order_map#find'
+  post '/order_map/end', to: 'order_map#finish'
 
   delete '/support/comment', to: 'support#deletecomment'
   post '/support/comment', to: 'support#addcomment'

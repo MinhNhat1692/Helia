@@ -1,5 +1,5 @@
 class CheckInfoController < ApplicationController
-  before_action :logged_in_user, only: [:update, :list, :destroy, :search, :find]
+  before_action :logged_in_user 
   
   def update
     if params.has_key?(:id_station)
@@ -258,4 +258,63 @@ class CheckInfoController < ApplicationController
       end
     end
   end
+
+  def finish
+		if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+			  @station = Station.find params[:id_station]
+			  if params.has_key?(:check_info_id)
+			    check_info = CheckInfo.find_by(id: params[:check_info_id], station_id: @station.id)
+          if check_info
+            check_info.update(status: 3)
+            ordermap = OrderMap.find_by(id: check_info.order_map_id, station_id: @station.id)
+            if ordermap
+              case ordermap.status
+              when 1
+                type = 4
+              when 2
+                type = 3
+              else
+                type = ordermap.status
+              end
+              ordermap.update(status: type)
+            end
+            render json: check_info
+          else
+            head :no_content
+          end
+			  end
+		  else
+        head :no_content
+      end
+    else
+      if has_station?
+			  @station = Station.find_by(user_id: current_user.id)
+			  if params.has_key?(:check_info_id)
+			    check_info = CheckInfo.find_by(id: params[:check_info_id], station_id: @station.id)
+          if check_info
+            check_info.update(status: 3)
+            ordermap = OrderMap.find_by(id: check_info.order_map_id, station_id: @station.id)
+            if ordermap
+              case ordermap.status
+              when 1
+                type = 4
+              when 2
+                type = 3
+              else
+                type = ordermap.status
+              end
+              ordermap.update(status: type)
+            end
+            render json: check_info
+          else
+            head :no_content
+          end
+			  end
+		  else
+        redirect_to root_path
+      end
+    end
+	end
+
 end
