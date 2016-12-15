@@ -356,6 +356,40 @@ class OrderMapController < ApplicationController
       end
     end
 	end
+
+  def call
+		if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+			  @station = Station.find params[:id_station]
+			  if params.has_key?(:id)
+          check_info = CheckInfo.find_by(order_map_id: params[:id], station_id: @station.id)
+          if check_info && check_info.status != 3
+            check_info.update(status: 2)
+            render json: check_info
+          else
+            head :no_content
+          end
+			  end
+		  else
+        head :no_content
+      end
+    else
+      if has_station?
+			  @station = Station.find_by(user_id: current_user.id)
+			  if params.has_key?(:id)
+          check_info = CheckInfo.find_by(order_map_id: params[:id], station_id: @station.id)
+          if check_info && check_info.status != 3
+            check_info.update(status: 2)
+            render json: check_info
+          else
+            head :no_content
+          end
+			  end
+		  else
+        redirect_to root_path
+      end
+    end
+  end
   
   def finish
 		if params.has_key?(:id_station)
