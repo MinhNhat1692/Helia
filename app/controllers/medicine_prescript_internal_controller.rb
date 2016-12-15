@@ -70,6 +70,10 @@ class MedicinePrescriptInternalController < ApplicationController
                                                          tpayment: internal_record["tpayment"], status: internal_record["status"],
                                                          noid: internal_record["noid"], signid: internal_record["signid"])
             @internalrecord.save
+            if @supplier.discount.present?
+              discount = @supplier.discount * (@internalrecord.tpayment.to_f / @supplier.tpayment)
+              @internalrecord.update(discount: discount.to_i)
+            end
             case @internalrecord.status
             when 1
               type = 2
@@ -135,6 +139,10 @@ class MedicinePrescriptInternalController < ApplicationController
                                                          tpayment: internal_record["tpayment"], status: internal_record["status"],
                                                          noid: internal_record["noid"], signid: internal_record["signid"])
             @internalrecord.save
+            if @supplier.discount.present?
+              discount = @supplier.discount * (@internalrecord.tpayment.to_f / @supplier.tpayment)
+              @internalrecord.update(discount: discount.to_i)
+            end
             case @internalrecord.status
             when 1
               type = 2

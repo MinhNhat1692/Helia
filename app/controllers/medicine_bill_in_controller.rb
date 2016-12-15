@@ -100,6 +100,10 @@ class MedicineBillInController < ApplicationController
                                                  qty: bill_record["qty"], taxrate: bill_record["taxrate"],
                                                  price: bill_record["price"], remark: bill_record["remark"])
             @billrecord.save
+            if @supplier.discount.present?
+              discount = @supplier.discount * ((@billrecord.price * @billrecord.qty).to_f / @supplier.tpayment)
+              @billrecord.update(discount: discount.to_i)
+            end
             if @supplier.status
               type = @supplier.status
             else
@@ -145,6 +149,10 @@ class MedicineBillInController < ApplicationController
                                                  qty: bill_record["qty"], taxrate: bill_record["taxrate"],
                                                  price: bill_record["price"], remark: bill_record["remark"])
             @billrecord.save
+            if @supplier.discount.present?
+              discount = @supplier.discount * ((@billrecord.price * @billrecord.qty).to_f / @supplier.tpayment)
+              @billrecord.update(discount: discount.to_i)
+            end
             if @supplier.status
               type = @supplier.status
             else

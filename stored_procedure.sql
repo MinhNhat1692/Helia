@@ -240,3 +240,33 @@ begin
   where station_id = sta_id and created_at between start_date and end_date and status = 3
   group by date(created_at), service_id, sername;
 end $$;
+
+drop procedure if exists medicine_sale;
+$$;
+create procedure medicine_sale(
+  in start_date datetime,
+  in end_date datetime,
+  in sta_id int
+)
+begin
+  select date(ir.created_at), sum(case when ir.discount irs not null then ir.amount * ir.price - ir.discount else ir.amount * ir.price end) as t_sale, sum(ir.amount * (br.price * br.qty - br.discount) / br.qty) as t_in
+  from medicine_internal_records as ir
+    join medicine_bill_records as br
+    on ir.noid = br.noid and ir.signid = br.signid and ir.name = br.name
+  where ir.created_at between start_date and end_date and ir.station_id = sta_id
+  group by date(ir.created_at);
+end $$;
+
+drop procedure if exists services_sale;
+$$;
+create procedure services_sale(
+  in start_date datetime,
+  in end_date datetime,
+  in sta_id int
+)
+begin
+  select date(created_at), sum(tpayout) as t_sale
+  from order_maps
+  where created_at between start_date and end_date and station_id = sta_id
+  group by date(created_at);
+end $$;
