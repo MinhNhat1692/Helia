@@ -1,5 +1,5 @@
 class OrderMapController < ApplicationController
-  before_action :logged_in_user, only: [:update, :create, :list, :destroy, :search, :find, :extra]
+  before_action :logged_in_user
   
   def update
     if params.has_key?(:id_station)
@@ -350,6 +350,60 @@ class OrderMapController < ApplicationController
 			    @data[1] = CheckInfo.find_by(order_map_id: @ordermap.id, station_id: @station.id)
 			    @data[2] = DoctorCheckInfo.find_by(order_map_id: @ordermap.id, station_id: @station.id)
 			    render json: @data
+			  end
+		  else
+        redirect_to root_path
+      end
+    end
+	end
+  
+  def finish
+		if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], params[:table_id], 4
+			  @station = Station.find params[:id_station]
+			  if params.has_key?(:order_map_id)
+			    @ordermap = OrderMap.find_by(id: params[:order_map_id], station_id: @station.id)
+          if @ordermap
+            case @ordermap.status
+            when 1
+              type = 4
+            when 2
+              type = 3
+            else
+              type = @ordermap.status
+            end
+            @ordermap.update(status: type)
+            check_info = CheckInfo.find_by(order_map_id: @ordermap.id, station_id: @station.id)
+            check_info.update(status: 3) if check_info
+            render json: @ordermap
+          else
+            head :no_content
+          end
+			  end
+		  else
+        head :no_content
+      end
+    else
+      if has_station?
+			  @station = Station.find_by(user_id: current_user.id)
+			  if params.has_key?(:order_map_id)
+			    @ordermap = OrderMap.find_by(id: params[:order_map_id], station_id: @station.id)
+          if @ordermap
+            case @ordermap.status
+            when 1
+              type = 4
+            when 2
+              type = 3
+            else
+              type = @ordermap.status
+            end
+            @ordermap.update(status: type)
+            check_info = CheckInfo.find_by(order_map_id: @ordermap.id, station_id: @station.id)
+            check_info.update(status: 3) if check_info
+            render json: @ordermap
+          else
+            head :no_content
+          end
 			  end
 		  else
         redirect_to root_path
