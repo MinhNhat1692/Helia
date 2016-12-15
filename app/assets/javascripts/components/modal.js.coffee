@@ -907,11 +907,11 @@
       if @props.datatype == 'order_map' or @props.datatype == 'medicine_bill_in' or @props.datatype == 'medicine_prescript_internal'
         if $('#' + @props.id + ' #form_tpayment').val() > 0
           if $('#' + @props.id + ' #form_discount').val() > 0
-            $('#' + @props.id + ' #form_discount_percent').val(Number($('#' + @props.id + ' #form_discount').val())/Number($('#' + @props.id + ' #form_tpayment').val())*100)
+            $('#' + @props.id + ' #form_discount_percent').val(Math.round(Number($('#' + @props.id + ' #form_discount').val())/Number($('#' + @props.id + ' #form_tpayment').val())*100))
             $('#' + @props.id + ' #form_tpayout').val(Number($('#' + @props.id + ' #form_tpayment').val()) - Number($('#' + @props.id + ' #form_discount').val()))
           else
             if $('#' + @props.id + ' #form_discount_percent').val() > 0
-              $('#' + @props.id + ' #form_discount').val(Number($('#' + @props.id + ' #form_discount_percent').val()) * Number($('#' + @props.id + ' #form_tpayment').val()) / 100)
+              $('#' + @props.id + ' #form_discount').val(Math.round(Number($('#' + @props.id + ' #form_discount_percent').val()) * Number($('#' + @props.id + ' #form_tpayment').val()) / 100))
               $('#' + @props.id + ' #form_tpayout').val(Number($('#' + @props.id + ' #form_tpayment').val()) - Number($('#' + @props.id + ' #form_discount').val()))
             else
               $('#' + @props.id + ' #form_tpayout').val(Number($('#' + @props.id + ' #form_tpayment').val()) - Number($('#' + @props.id + ' #form_discount').val()))
@@ -2381,7 +2381,7 @@
                           React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
                         React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
                         React.DOM.div className: 'col-sm-6',
-                          React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                          React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', step: 'any', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
                         React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
                         React.DOM.div className: 'col-sm-6',
                           React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
@@ -2763,11 +2763,35 @@
                 React.DOM.br null
                 React.DOM.button className: 'btn btn-default btn-fixed', 'data-dismiss': 'modal', type: 'button', 'Không'
                 React.createElement ButtonGeneral, className: 'btn btn-default btn-fixed bg-teal', icon: 'fa fa-check', text: ' Đồng ý', type: 1, Clicked: @trigger
+    closeForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-sm',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row', style: {'textAlign': 'center'},
+                React.DOM.h4 null, "Bạn có chắc chắn muốn kết thúc " + @props.text + " này"
+                React.DOM.br null
+                React.DOM.button className: 'btn btn-default btn-fixed', 'data-dismiss': 'modal', type: 'button', 'Không'
+                React.createElement ButtonGeneral, className: 'btn btn-default btn-fixed bg-teal', icon: 'fa fa-check', text: ' Đồng ý', type: 1, Clicked: @trigger
+    callForm: ->
+      React.DOM.div className: 'modal fade', id: @props.id,
+        React.DOM.div className: 'modal-dialog modal-sm',
+          React.DOM.div className: 'modal-content',
+            React.DOM.div className: 'modal-body',
+              React.DOM.div className: 'row', style: {'textAlign': 'center'},
+                React.DOM.h4 null, "Bạn có chắc chắn muốn gọi " + @props.text + " vào"
+                React.DOM.br null
+                React.DOM.button className: 'btn btn-default btn-fixed', 'data-dismiss': 'modal', type: 'button', 'Không'
+                React.createElement ButtonGeneral, className: 'btn btn-default btn-fixed bg-teal', icon: 'fa fa-check', text: ' Đồng ý', type: 1, Clicked: @trigger
     render: ->
       if @props.datatype == 'doctor_room'
         @doctorRoomRender()
       else if @props.datatype == 'delete_form'
         @deleteForm()
+      else if @props.datatype == 'close_form'
+        @closeForm()
+      else if @props.datatype == 'call_form'
+        @callForm()
       else if @props.datatype == 'employee'
         @employeeForm()
       else if @props.datatype == 'room'

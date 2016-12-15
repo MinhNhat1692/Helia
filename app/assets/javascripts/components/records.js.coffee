@@ -2012,6 +2012,42 @@
           success: () =>
             @deleteRecord @state.record
             @showtoast("Xóa " + message + " thành công",1)
+    handleClose: ->
+      if @props.datatype == 'order_map'
+        message = "yêu cầu khám bệnh"
+      else if @props.datatype == 'check_info'
+        message = "khám bệnh"
+      if @state.record != null
+        $.ajax
+          method: 'POST'
+          url: "/" + @props.datatype + "/end"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          error: ((result) ->
+            @showtoast("Kết thúc " + message + " thất bại",3)
+            return
+          ).bind(this)
+          success: (result) =>
+            @updateRecord @state.record,result
+            @showtoast("Kết thúc " + message + " thành công",1)
+    handleCall: ->
+      if @props.datatype == 'order_map'
+        message = "gọi khách hàng"
+      else if @props.datatype == 'check_info'
+        message = "gọi khách hàng"
+      if @state.record != null
+        $.ajax
+          method: 'POST'
+          url: "/" + @props.datatype + "/call"
+          dataType: 'JSON'
+          data: {id: @state.record.id}
+          error: ((result) ->
+            @showtoast("Gửi yêu cầu " + message + " thất bại",3)
+            return
+          ).bind(this)
+          success: (result) =>
+            @updateRecord @state.record,result
+            @showtoast("Gửi yêu cầu " + message + " thành công",1)
     OpenModalAdd1: (code) ->
       @setState
         record: null
@@ -4438,8 +4474,12 @@
                 React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'zmdi zmdi-plus', text: ' Thêm', code: @props.datatype, type: 3, Clicked: @OpenModalAdd1
                 React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
                 React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'fa fa-trash-o', text: ' Xóa', modalid: 'modaldelete', type: 5
+                React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'fa fa-microphone', text: ' Gọi bệnh nhân', modalid: 'modalcall', type: 5
+                React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'fa fa-times', text: ' Kết thúc khám', modalid: 'modalclose', type: 5
               React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, service:null, customer: null, trigger: @addRecord, trigger2: @updateRecord
               React.createElement ModalOutside, id: 'modaldelete', datatype: 'delete_form', trigger: @handleDelete
+              React.createElement ModalOutside, id: 'modalclose', datatype: 'close_form', trigger: @handleClose, text: "yêu cầu khám bệnh"
+              React.createElement ModalOutside, id: 'modalcall', datatype: 'call_form', trigger: @trigger, text: "bệnh nhân"
     checkInfoRender: ->
       React.DOM.div className: 'content-wrapper',
         React.DOM.div className: 'spacer30'
@@ -4554,7 +4594,11 @@
                 React.DOM.h3 null, 'Thông tin điều trị'
               React.DOM.div className: 'panel-body manage-index-actions-container',
                 React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'zmdi zmdi-edit', text: ' Sửa', modalid: 'modal1', code: @props.datatype, type: 4, Clicked: @triggerFillModal
+                React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'fa fa-microphone', text: ' Gọi bệnh nhân', modalid: 'modalcall', type: 5
+                React.createElement ButtonGeneral, className: 'btn btn-default col-sm-12', icon: 'fa fa-times', text: ' Kết thúc khám', modalid: 'modalclose', type: 5
               React.createElement ModalOutside, id: 'modal1', datatype: @props.datatype, record: @state.record, trigger: @addRecord, trigger2: @updateRecord
+              React.createElement ModalOutside, id: 'modalclose', datatype: 'close_form', trigger: @handleClose, text: "yêu cầu khám bệnh"
+              React.createElement ModalOutside, id: 'modalcall', datatype: 'call_form', trigger: @handleCall, text: "bệnh nhân"
     doctorCheckInfoRender: ->
       React.DOM.div className: 'content-wrapper',
         React.DOM.div className: 'spacer30'
@@ -5017,6 +5061,12 @@
             #    else
             #      null
             #  React.createElement MinorMaterial, datatype: 'color_float_label', className: 'col-md-4 col-xs-12 animated fadeInUp', header: @state.prefix, spanText: 'Thống kê chi tiết', pText: "toàn bộ thời gian", idcanvas: "sparkline2", plotheight: "80", data: @state.minordata, plotstyle: "line", plotwidth: "100%",  color: "#46AEDA", textcolor: "#ffffff", chartcode: 3, datacode: 1
+    serviceSummary: ->
+      React.DOM.div className: 'content-wrapper',
+        React.DOM.div className: 'spacer30'
+    generalSummary: ->
+      React.DOM.div className: 'content-wrapper',
+        React.DOM.div className: 'spacer30'
     render: ->
       if @props.datatype == 'employee'
         @employeeRender()
@@ -5070,3 +5120,7 @@
         @loadingRender()
       else if @props.datatype == "medicine_summary"
         @medicineSummary()
+      else if @props.datatype == "service_summary"
+        @serviceSummary()
+      else if @props.datatype == "general_summary"
+        @generalSummary()

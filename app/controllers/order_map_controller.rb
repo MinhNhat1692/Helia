@@ -386,8 +386,8 @@ class OrderMapController < ApplicationController
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
-			  if params.has_key?(:order_map_id)
-			    @ordermap = OrderMap.find_by(id: params[:order_map_id], station_id: @station.id)
+			  if params.has_key?(:id)
+			    @ordermap = OrderMap.find_by(id: params[:id], station_id: @station.id)
           if @ordermap
             case @ordermap.status
             when 1

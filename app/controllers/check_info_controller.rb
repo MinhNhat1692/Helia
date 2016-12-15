@@ -290,8 +290,8 @@ class CheckInfoController < ApplicationController
     else
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
-			  if params.has_key?(:check_info_id)
-			    check_info = CheckInfo.find_by(id: params[:check_info_id], station_id: @station.id)
+			  if params.has_key?(:id)
+			    check_info = CheckInfo.find_by(id: params[:id], station_id: @station.id)
           if check_info
             check_info.update(status: 3)
             ordermap = OrderMap.find_by(id: check_info.order_map_id, station_id: @station.id)

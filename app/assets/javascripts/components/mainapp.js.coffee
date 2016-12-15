@@ -44,8 +44,7 @@
         records: [
           {code: 80, icon: 'fa fa-medkit', name: 'Thuốc'}
           {code: 81, icon: 'fa fa-building', name: 'Khám bệnh'}
-          {code: 82, icon: 'fa fa-newspaper-o', name: 'Trung tâm'}
-          {code: 83, icon: 'fa fa-diamond', name: 'Tổng quan'}
+          {code: 82, icon: 'fa fa-diamond', name: 'Tổng quan'}
         ]
       DoctorMenu:  
         name: "Bác sỹ",
@@ -206,8 +205,32 @@
         when 80 #medicine_summary
           data =
             task: 80
-            link: '/medicine_summary/all'
+            link: '/apikey/getkey'
           @handleGetdata(data)
+        when 81 #ordermap record
+          data =
+            task: 81
+            link: '/services/overview'
+            formData: null
+          if $('#date_input').val() != undefined
+            data.formData = {date: $('#date_input').val()}
+          else if $('#start_dateinput').val() != undefined or $('#end_dateinput').val() != undefined
+            data.formData = {begin_date: $('#start_dateinput').val(), end_date: $('#end_dateinput').val()}
+          else
+            data.formData = {date: 30}
+          @handleGetdataAlt(data)
+        when 82 #All infomation
+          data =
+            task: 82
+            link: '/summary/general_stats'
+            formData: null
+          if $('#date_input').val() != undefined
+            data.formData = {date: $('#date_input').val()}
+          else if $('#start_dateinput').val() != undefined or $('#end_dateinput').val() != undefined
+            data.formData = {begin_date: $('#start_dateinput').val(), end_date: $('#end_dateinput').val()}
+          else
+            data.formData = {date: 30}
+          @handleGetdataAlt(data)
     handleGetdata: (data) ->
       @setState loading: true
       $.ajax
@@ -428,6 +451,20 @@
           React.createElement MainPart, data: @state.data, datatype: 'loading' 
         else
           React.createElement MainPart, data: @state.data, datatype: 'medicine_summary' #task = code = 80
+    SummaryService: ->
+      React.DOM.section id: 'content',
+        React.createElement MainHeader, data: @state.SummaryMenu, task: @state.task, Trigger: @TriggerCode, datatype: 2
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'service_summary' #task = code = 80
+    SummaryGeneral: ->
+      React.DOM.section id: 'content',
+        React.createElement MainHeader, data: @state.SummaryMenu, task: @state.task, Trigger: @TriggerCode, datatype: 2
+        if @state.loading
+          React.createElement MainPart, data: @state.data, datatype: 'loading' 
+        else
+          React.createElement MainPart, data: @state.data, datatype: 'general_summary' #task = code = 80
     render: ->
       switch @state.task
         when 5
@@ -488,6 +525,10 @@
           @DoctorRoom()
         when 80
           @SummaryMedicine()
+        when 81
+          @SummaryService()
+        when 82
+          @SummaryGeneral()
         when 101
           @ApiKey()
         when 102
