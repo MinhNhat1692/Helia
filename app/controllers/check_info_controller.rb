@@ -1,5 +1,5 @@
 class CheckInfoController < ApplicationController
-  before_action :logged_in_user, only: [:update, :list, :destroy, :search, :find]
+  before_action :logged_in_user 
   
   def update
     if params.has_key?(:id_station)
