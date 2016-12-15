@@ -80,8 +80,21 @@ class CustomerRecordController < ApplicationController
 		if has_station?
 			@station = Station.find_by(user_id: current_user.id)
 			@data = []
-			@data[0] = CustomerRecord.where(station_id: @station.id).order(updated_at: :desc).limit(1000)
-			@data[1] = Gender.where(lang: 'vi')
+      if params.has_key?(:date)
+        n = params[:date].to_i
+        start = n.days.ago.beginning_of_day
+        fin = Time.now
+        @data[0] = CustomerRecord.where(station_id: @station.id, created_at: start..fin).order(updated_at: :desc).limit(1000)
+        @data[1] = Gender.where(lang: 'vi')
+      elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+        start = params[:begin_date].to_date.beginning_of_day
+        fin = params[:end_date].to_date.end_of_day
+        @data[0] = CustomerRecord.where(station_id: @station.id, created_at: start..fin).order(updated_at: :desc).limit(1000)
+        @data[1] = Gender.where(lang: 'vi')
+      else
+        @data[0] = CustomerRecord.where(station_id: @station.id).order(updated_at: :desc).limit(1000)
+        @data[1] = Gender.where(lang: 'vi')
+      end
 			render json: @data
 		else
       redirect_to root_path
