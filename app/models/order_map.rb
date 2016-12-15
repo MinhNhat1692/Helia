@@ -25,6 +25,22 @@ class OrderMap < ApplicationRecord
       end
       stat
     end
+
+    def total_sale start_date, end_date, station_id
+      sql = "CALL services_sale('#{start_date}', '#{end_date}', #{station_id})"
+      result = OrderMap.connection.select_all sql
+      stat = []
+      id = 1
+      result.rows.each do |row|
+        data = {}
+        data[:id] = id
+        data[:date] = row[0].to_s
+        data[:t_sale] = row[1]
+        stat << data
+        id += 1
+      end
+      stat
+    end
   end
 
   private

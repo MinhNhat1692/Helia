@@ -109,6 +109,22 @@ class MedicineInternalRecord < ApplicationRecord
       end
       statistic
     end
+
+    def medicine_sale start_date, end_date, station_id
+      sql = "CALL medicine_sale('#{start_date}', '#{end_date}', #{station_id})"
+      result = MedicineInternalRecord.connection.select_all sql
+      statistic = []
+      id = 1
+      result.rows.each do |row|
+        data = {}
+        data[:id] = id
+        data[:date] = row[0].to_s
+        data[:t_sale] = row[1] - row[2]
+        statistic << data
+        id += 1
+      end
+      statistic
+    end
   end
 
   private

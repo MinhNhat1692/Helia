@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   post '/check_info/search', to: 'check_info#search'
   post '/check_info/find', to: 'check_info#find'
   post '/check_info/end', to: 'check_info#finish'
+  post '/check_info/call', to: 'check_info#call'
 
   post '/doctor_room/extra', to: 'order_map#extra'
   delete '/order_map', to: 'order_map#destroy'
@@ -35,6 +36,7 @@ Rails.application.routes.draw do
   post '/order_map/search', to: 'order_map#search'
   post '/order_map/find', to: 'order_map#find'
   post '/order_map/end', to: 'order_map#finish'
+  post '/order_map/call', to: 'order_map#call'
 
   delete '/support/comment', to: 'support#deletecomment'
   post '/support/comment', to: 'support#addcomment'
@@ -241,6 +243,7 @@ Rails.application.routes.draw do
   post '/medicine_summary/supplier/detail1', to: 'medicine_bill_record#summary'
   post '/medicine_summary/supplier/detail2', to: 'medicine_stock_record#statistic'
   post '/medicine_summary/sale_stats', to: 'medicine_internal_record#statistic'
+  post '/medicine_summary/general_stats', to: 'medicine_internal_record#sale'
 
   post '/services/overview', to: 'order_map#summary'
 
