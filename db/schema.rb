@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161118094443) do
+ActiveRecord::Schema.define(version: 20161215072822) do
 
   create_table "apikeys", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -268,6 +268,7 @@ ActiveRecord::Schema.define(version: 20161118094443) do
     t.string   "billcode"
     t.integer  "sample_id"
     t.integer  "company_id"
+    t.float    "discount",   limit: 24
     t.index ["station_id"], name: "index_medicine_bill_records_on_station_id", using: :btree
   end
 
