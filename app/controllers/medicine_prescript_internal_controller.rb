@@ -6,9 +6,24 @@ class MedicinePrescriptInternalController < ApplicationController
       if current_user.check_permission params[:id_station], params[:table_id], 4
 			  @station = Station.find params[:id_station]
 			  @data = []
-			  @data[0] = MedicinePrescriptInternal.where(station_id: @station.id)
-			  @data[1] = MedicineGroup.all
-			  @data[2] = MedicineType.all
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicinePrescriptInternal.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicinePrescriptInternal.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        else
+          @data[0] = MedicinePrescriptInternal.where(station_id: @station.id)
+          @data[1] = MedicineGroup.all
+          @data[2] = MedicineType.all
+        end
 			  render json: @data
 		  else
         head :no_content
@@ -17,9 +32,24 @@ class MedicinePrescriptInternalController < ApplicationController
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
-			  @data[0] = MedicinePrescriptInternal.where(station_id: @station.id)
-			  @data[1] = MedicineGroup.all
-			  @data[2] = MedicineType.all
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicinePrescriptInternal.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicinePrescriptInternal.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        else
+          @data[0] = MedicinePrescriptInternal.where(station_id: @station.id)
+          @data[1] = MedicineGroup.all
+          @data[2] = MedicineType.all
+        end
 			  render json: @data
 		  else
         redirect_to root_path
@@ -321,44 +351,55 @@ class MedicinePrescriptInternalController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicinePrescriptInternal.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:code)
-          @supplier = MedicinePrescriptInternal.where("code LIKE ? and station_id = ?" , "%#{params[:code]}%", @station.id)
+          @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("code LIKE ? and station_id = ?" , "%#{params[:code]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:cname)
-				  @supplier = MedicinePrescriptInternal.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:ename)
-				  @supplier = MedicinePrescriptInternal.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:number_id)
-				  @supplier = MedicinePrescriptInternal.where("number_id LIKE ? and station_id = ?" , "%#{params[:number_id]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("number_id LIKE ? and station_id = ?" , "%#{params[:number_id]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:remark)
-				  @supplier = MedicinePrescriptInternal.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:preparer)
-				  @supplier = MedicinePrescriptInternal.where("preparer LIKE ? and station_id = ?" , "%#{params[:preparer]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("preparer LIKE ? and station_id = ?" , "%#{params[:preparer]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:payer)
-				  @supplier = MedicinePrescriptInternal.where("payer LIKE ? and station_id = ?" , "%#{params[:payer]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("payer LIKE ? and station_id = ?" , "%#{params[:payer]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:result_id)
-				  @supplier = MedicinePrescriptInternal.where("result_id = ? and station_id = ?" , params[:result_id], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("result_id = ? and station_id = ?" , params[:result_id], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:date)
-				  @supplier = MedicinePrescriptInternal.where("date = ? and station_id = ?" , params[:date], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("date = ? and station_id = ?" , params[:date], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:tpayment)
-				  @supplier = MedicinePrescriptInternal.where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
 			    render json:@supplier
 			   elsif params.has_key?(:discount)
-				  @supplier = MedicinePrescriptInternal.where("discount = ? and station_id = ?" , params[:discount], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("discount = ? and station_id = ?" , params[:discount], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:tpayout)
-				  @supplier = MedicinePrescriptInternal.where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:pmethod)
-				  @supplier = MedicinePrescriptInternal.where("pmethod = ? and station_id = ?" , params[:pmethod], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("pmethod = ? and station_id = ?" , params[:pmethod], @station.id)
 			    render json:@supplier
 			  end
       else
@@ -367,44 +408,55 @@ class MedicinePrescriptInternalController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicinePrescriptInternal.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:code)
-          @supplier = MedicinePrescriptInternal.where("code LIKE ? and station_id = ?" , "%#{params[:code]}%", @station.id)
+          @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("code LIKE ? and station_id = ?" , "%#{params[:code]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:cname)
-				  @supplier = MedicinePrescriptInternal.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:ename)
-				  @supplier = MedicinePrescriptInternal.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:number_id)
-				  @supplier = MedicinePrescriptInternal.where("number_id LIKE ? and station_id = ?" , "%#{params[:number_id]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("number_id LIKE ? and station_id = ?" , "%#{params[:number_id]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:remark)
-				  @supplier = MedicinePrescriptInternal.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:preparer)
-				  @supplier = MedicinePrescriptInternal.where("preparer LIKE ? and station_id = ?" , "%#{params[:preparer]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("preparer LIKE ? and station_id = ?" , "%#{params[:preparer]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:payer)
-				  @supplier = MedicinePrescriptInternal.where("payer LIKE ? and station_id = ?" , "%#{params[:payer]}%", @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("payer LIKE ? and station_id = ?" , "%#{params[:payer]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:result_id)
-				  @supplier = MedicinePrescriptInternal.where("result_id = ? and station_id = ?" , params[:result_id], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("result_id = ? and station_id = ?" , params[:result_id], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:date)
-				  @supplier = MedicinePrescriptInternal.where("date = ? and station_id = ?" , params[:date], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("date = ? and station_id = ?" , params[:date], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:tpayment)
-				  @supplier = MedicinePrescriptInternal.where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
 			    render json:@supplier
 			   elsif params.has_key?(:discount)
-				  @supplier = MedicinePrescriptInternal.where("discount = ? and station_id = ?" , params[:discount], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("discount = ? and station_id = ?" , params[:discount], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:tpayout)
-				  @supplier = MedicinePrescriptInternal.where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:pmethod)
-				  @supplier = MedicinePrescriptInternal.where("pmethod = ? and station_id = ?" , params[:pmethod], @station.id)
+				  @supplier = MedicinePrescriptInternal.where(created_at: start..fin).where("pmethod = ? and station_id = ?" , params[:pmethod], @station.id)
 			    render json:@supplier
 			  end
       else

@@ -131,26 +131,37 @@ class BillInfoController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineBillInfo.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:remark)
-          @supplier = BillInfo.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+          @supplier = BillInfo.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 		      render json:@supplier
         elsif params.has_key?(:c_name)
-          @supplier = BillInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
+          @supplier = BillInfo.where(created_at: start..fin).where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:dvi)
-		      @supplier = BillInfo.where("dvi = ? and station_id = ?" , params[:dvi], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("dvi = ? and station_id = ?" , params[:dvi], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:sluong)
-		      @supplier = BillInfo.where("sluong = ? and station_id = ?" , params[:sluong], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("sluong = ? and station_id = ?" , params[:sluong], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:tpayment)
-		      @supplier = BillInfo.where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:discount)
-		      @supplier = BillInfo.where("discount = ? and station_id = ?" , params[:discount], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("discount = ? and station_id = ?" , params[:discount], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:tpayout)
-		      @supplier = BillInfo.where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
 		      render json:@supplier
 		    end
       else
@@ -159,26 +170,37 @@ class BillInfoController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineBillInfo.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:remark)
-          @supplier = BillInfo.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+          @supplier = BillInfo.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 		      render json:@supplier
         elsif params.has_key?(:c_name)
-          @supplier = BillInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
+          @supplier = BillInfo.where(created_at: start..fin).where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:dvi)
-		      @supplier = BillInfo.where("dvi = ? and station_id = ?" , params[:dvi], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("dvi = ? and station_id = ?" , params[:dvi], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:sluong)
-		      @supplier = BillInfo.where("sluong = ? and station_id = ?" , params[:sluong], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("sluong = ? and station_id = ?" , params[:sluong], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:tpayment)
-		      @supplier = BillInfo.where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:discount)
-		      @supplier = BillInfo.where("discount = ? and station_id = ?" , params[:discount], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("discount = ? and station_id = ?" , params[:discount], @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:tpayout)
-		      @supplier = BillInfo.where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
+		      @supplier = BillInfo.where(created_at: start..fin).where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
 		      render json:@supplier
 		    end
       else

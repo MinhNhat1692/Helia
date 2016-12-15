@@ -253,38 +253,49 @@ class CustomerRecordController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineBillRecord.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:cname)
-					@customer_record = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).order(updated_at: :desc)
+					@customer_record = CustomerRecord.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
         elsif params.has_key?(:namestring)
-				  @customer_record = CustomerRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:namestring]}%", @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:namestring]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
         elsif params.has_key?(:address)
-				  @customer_record = CustomerRecord.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  elsif params.has_key?(:pnumber)
-				  @customer_record = CustomerRecord.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  elsif params.has_key?(:noid)
-				  @customer_record = CustomerRecord.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  elsif params.has_key?(:work_place)
-				  @customer_record = CustomerRecord.where("work_place LIKE ? and station_id = ?" , "%#{params[:work_place]}%", @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("work_place LIKE ? and station_id = ?" , "%#{params[:work_place]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  elsif params.has_key?(:self_history)
-				  @customer_record = CustomerRecord.where("self_history LIKE ? and station_id = ?" , "%#{params[:self_history]}%", @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("self_history LIKE ? and station_id = ?" , "%#{params[:self_history]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  elsif params.has_key?(:family_history)
-				  @customer_record = CustomerRecord.where("family_history LIKE ? and station_id = ?" , "%#{params[:family_history]}%", @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("family_history LIKE ? and station_id = ?" , "%#{params[:family_history]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  elsif params.has_key?(:drug_history)
-				  @customer_record = CustomerRecord.where("drug_history LIKE ? and station_id = ?" , "%#{params[:drug_history]}%", @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("drug_history LIKE ? and station_id = ?" , "%#{params[:drug_history]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  elsif params.has_key?(:dob)
-				  @customer_record = CustomerRecord.where("dob = ? and station_id = ?" , params[:dob], @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("dob = ? and station_id = ?" , params[:dob], @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  elsif params.has_key?(:gender)
-				  @customer_record = CustomerRecord.where("gender = ? and station_id = ?" , params[:gender], @station.id).order(updated_at: :desc)
+				  @customer_record = CustomerRecord.where(created_at: start..fin).where("gender = ? and station_id = ?" , params[:gender], @station.id).order(updated_at: :desc)
 			    render json:@customer_record
 			  end
       else

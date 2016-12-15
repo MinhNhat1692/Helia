@@ -6,9 +6,24 @@ class MedicineCompanyController < ApplicationController
       if current_user.check_permission params[:id_station], params[:table_id], 4
 			  @station = Station.find params[:id_station]
 			  @data = []
-			  @data[0] = MedicineCompany.where(station_id: @station.id)
-			  @data[1] = MedicineGroup.all
-			  @data[2] = MedicineType.all
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicineCompany.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineCompany.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        else
+          @data[0] = MedicineCompany.where(station_id: @station.id)
+          @data[1] = MedicineGroup.all
+          @data[2] = MedicineType.all
+        end
 			  render json: @data
 		  else
         head :no_content
@@ -17,9 +32,24 @@ class MedicineCompanyController < ApplicationController
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
-			  @data[0] = MedicineCompany.where(station_id: @station.id)
-			  @data[1] = MedicineGroup.all
-			  @data[2] = MedicineType.all
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicineCompany.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineCompany.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        else
+          @data[0] = MedicineCompany.where(station_id: @station.id)
+          @data[1] = MedicineGroup.all
+          @data[2] = MedicineType.all
+        end
 			  render json: @data
 		  else
         redirect_to root_path
@@ -155,26 +185,37 @@ class MedicineCompanyController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.beginning_of_day
+        else
+          start = MedicineCompany.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:noid)
-          @supplier = MedicineCompany.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
+          @supplier = MedicineCompany.where(created_at: start..fin).where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:name)
-				  @supplier = MedicineCompany.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:pnumber)
-				  @supplier = MedicineCompany.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:address)
-				  @supplier = MedicineCompany.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:email)
-				  @supplier = MedicineCompany.where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:website)
-				  @supplier = MedicineCompany.where("website LIKE ? and station_id = ?" , "%#{params[:website]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("website LIKE ? and station_id = ?" , "%#{params[:website]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:taxcode)
-				  @supplier = MedicineCompany.where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
 			    render json:@supplier
 				end
       else
@@ -183,26 +224,37 @@ class MedicineCompanyController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.beginning_of_day
+        else
+          start = MedicineCompany.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:noid)
-          @supplier = MedicineCompany.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
+          @supplier = MedicineCompany.where(created_at: start..fin).where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:name)
-				  @supplier = MedicineCompany.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:pnumber)
-				  @supplier = MedicineCompany.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:address)
-				  @supplier = MedicineCompany.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:email)
-				  @supplier = MedicineCompany.where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:website)
-				  @supplier = MedicineCompany.where("website LIKE ? and station_id = ?" , "%#{params[:website]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("website LIKE ? and station_id = ?" , "%#{params[:website]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:taxcode)
-				  @supplier = MedicineCompany.where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
+				  @supplier = MedicineCompany.where(created_at: start..fin).where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
 			    render json:@supplier
 				end
       else

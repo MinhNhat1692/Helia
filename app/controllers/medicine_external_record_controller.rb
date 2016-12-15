@@ -6,9 +6,24 @@ class MedicineExternalRecordController < ApplicationController
       if current_user.check_permission params[:id_station], params[:table_id], 4
 			  @station = Station.find params[:id_station]
 			  @data = []
-			  @data[0] = MedicineExternalRecord.where(station_id: @station.id)
-			  @data[1] = MedicineGroup.all
-			  @data[2] = MedicineType.all
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicineExternalRecord.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineExternalRecord.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        else
+          @data[0] = MedicineExternalRecord.where(station_id: @station.id)
+          @data[1] = MedicineGroup.all
+          @data[2] = MedicineType.all
+        end
 			  render json: @data
 		  else
         head :no_content
@@ -17,9 +32,24 @@ class MedicineExternalRecordController < ApplicationController
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
-			  @data[0] = MedicineExternalRecord.where(station_id: @station.id)
-			  @data[1] = MedicineGroup.all
-			  @data[2] = MedicineType.all
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicineExternalRecord.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineExternalRecord.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        else
+          @data[0] = MedicineExternalRecord.where(station_id: @station.id)
+          @data[1] = MedicineGroup.all
+          @data[2] = MedicineType.all
+        end
 			  render json: @data
 		  else
         redirect_to root_path
@@ -347,32 +377,43 @@ class MedicineExternalRecordController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineExternalRecord.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:name)
-          @supplier = MedicineExternalRecord.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+          @supplier = MedicineExternalRecord.where(created_at: start..fin).where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:cname)
-				  @supplier = MedicineExternalRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:script_code)
-				  @supplier = MedicineExternalRecord.where("script_code LIKE ? and station_id = ?" , "%#{params[:script_code]}%", @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("script_code LIKE ? and station_id = ?" , "%#{params[:script_code]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:remark)
-				  @supplier = MedicineExternalRecord.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:company)
-				  @supplier = MedicineExternalRecord.where("company LIKE ? and station_id = ?" , "%#{params[:company]}%", @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("company LIKE ? and station_id = ?" , "%#{params[:company]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:amount)
-				  @supplier = MedicineExternalRecord.where("amount = ? and station_id = ?" , params[:amount], @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("amount = ? and station_id = ?" , params[:amount], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:price)
-				  @supplier = MedicineExternalRecord.where("price = ? and station_id = ?" , params[:price], @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("price = ? and station_id = ?" , params[:price], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:total)
-				  @supplier = MedicineExternalRecord.where("total = ? and station_id = ?" , params[:total], @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("total = ? and station_id = ?" , params[:total], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:script_id)
-				  @supplier = MedicineExternalRecord.where("script_id = ? and station_id = ?" , params[:script_id], @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("script_id = ? and station_id = ?" , params[:script_id], @station.id)
 			    render json:@supplier
 			  end
       else
@@ -381,32 +422,43 @@ class MedicineExternalRecordController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineExternalRecord.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:name)
-          @supplier = MedicineExternalRecord.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+          @supplier = MedicineExternalRecord.where(created_at: start..fin).where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:cname)
-				  @supplier = MedicineExternalRecord.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:script_code)
-				  @supplier = MedicineExternalRecord.where("script_code LIKE ? and station_id = ?" , "%#{params[:script_code]}%", @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("script_code LIKE ? and station_id = ?" , "%#{params[:script_code]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:remark)
-				  @supplier = MedicineExternalRecord.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:company)
-				  @supplier = MedicineExternalRecord.where("company LIKE ? and station_id = ?" , "%#{params[:company]}%", @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("company LIKE ? and station_id = ?" , "%#{params[:company]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:amount)
-				  @supplier = MedicineExternalRecord.where("amount = ? and station_id = ?" , params[:amount], @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("amount = ? and station_id = ?" , params[:amount], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:price)
-				  @supplier = MedicineExternalRecord.where("price = ? and station_id = ?" , params[:price], @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("price = ? and station_id = ?" , params[:price], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:total)
-				  @supplier = MedicineExternalRecord.where("total = ? and station_id = ?" , params[:total], @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("total = ? and station_id = ?" , params[:total], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:script_id)
-				  @supplier = MedicineExternalRecord.where("script_id = ? and station_id = ?" , params[:script_id], @station.id)
+				  @supplier = MedicineExternalRecord.where(created_at: start..fin).where("script_id = ? and station_id = ?" , params[:script_id], @station.id)
 			    render json:@supplier
 			  end
       else

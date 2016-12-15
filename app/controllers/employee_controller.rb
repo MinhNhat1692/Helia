@@ -483,20 +483,31 @@ class EmployeeController < ApplicationController
 		if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = Employee.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:ename)
-          @supplier = Employee.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+          @supplier = Employee.where(created_at: start..fin).where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:address)
-					@supplier = Employee.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id)
+					@supplier = Employee.where(created_at: start..fin).where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:noid)
-					@supplier = Employee.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
+					@supplier = Employee.where(created_at: start..fin).where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:pnumber)
-					@supplier = Employee.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
+					@supplier = Employee.where(created_at: start..fin).where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:gender)
-					@supplier = Employee.where("gender = ? and station_id = ?" , params[:gender], @station.id)
+					@supplier = Employee.where(created_at: start..fin).where("gender = ? and station_id = ?" , params[:gender], @station.id)
 			    render json:@supplier
 			  end
       else
@@ -505,20 +516,31 @@ class EmployeeController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = Employee.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:ename)
-          @supplier = Employee.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+          @supplier = Employee.where(created_at: start..fin).where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:address)
-					@supplier = Employee.where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id)
+					@supplier = Employee.where(created_at: start..fin).where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:noid)
-					@supplier = Employee.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
+					@supplier = Employee.where(created_at: start..fin).where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:pnumber)
-					@supplier = Employee.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
+					@supplier = Employee.where(created_at: start..fin).where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:gender)
-					@supplier = Employee.where("gender = ? and station_id = ?" , params[:gender], @station.id)
+					@supplier = Employee.where(created_at: start..fin).where("gender = ? and station_id = ?" , params[:gender], @station.id)
 			    render json:@supplier
 			  end
       else
