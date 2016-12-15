@@ -209,29 +209,40 @@ class DoctorCheckInfoController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineBillRecord.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:ename)
-          @supplier = DoctorCheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+          @supplier = DoctorCheckInfo.where(created_at: start..fin).where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 		      render json:@supplier
         elsif params.has_key?(:c_name)
-		      @supplier = DoctorCheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
 		      render json:@supplier
         elsif params.has_key?(:qtbenhly)
-		      @supplier = DoctorCheckInfo.where("qtbenhly LIKE ? and station_id = ?" , "%#{params[:qtbenhly]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("qtbenhly LIKE ? and station_id = ?" , "%#{params[:qtbenhly]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:klamsang)
-		      @supplier = DoctorCheckInfo.where("klamsang LIKE ? and station_id = ?" , "%#{params[:klamsang]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("klamsang LIKE ? and station_id = ?" , "%#{params[:klamsang]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:cdbandau)
-		      @supplier = DoctorCheckInfo.where("cdbandau LIKE ? and station_id = ?" , "%#{params[:cdbandau]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("cdbandau LIKE ? and station_id = ?" , "%#{params[:cdbandau]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:bktheo)
-		      @supplier = DoctorCheckInfo.where("bktheo LIKE ? and station_id = ?" , "%#{params[:bktheo]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("bktheo LIKE ? and station_id = ?" , "%#{params[:bktheo]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:cdicd)
-		      @supplier = DoctorCheckInfo.where("cdicd LIKE ? and station_id = ?" , "%#{params[:cdicd]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("cdicd LIKE ? and station_id = ?" , "%#{params[:cdicd]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:kluan)
-		      @supplier = DoctorCheckInfo.where("kluan LIKE ? and station_id = ?" , "%#{params[:kluan]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("kluan LIKE ? and station_id = ?" , "%#{params[:kluan]}%", @station.id)
 		      render json:@supplier
 		    end
       else
@@ -240,29 +251,40 @@ class DoctorCheckInfoController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineBillRecord.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:ename)
-          @supplier = DoctorCheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+          @supplier = DoctorCheckInfo.where(created_at: start..fin).where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 		      render json:@supplier
         elsif params.has_key?(:c_name)
-		      @supplier = DoctorCheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
 		      render json:@supplier
         elsif params.has_key?(:qtbenhly)
-		      @supplier = DoctorCheckInfo.where("qtbenhly LIKE ? and station_id = ?" , "%#{params[:qtbenhly]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("qtbenhly LIKE ? and station_id = ?" , "%#{params[:qtbenhly]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:klamsang)
-		      @supplier = DoctorCheckInfo.where("klamsang LIKE ? and station_id = ?" , "%#{params[:klamsang]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("klamsang LIKE ? and station_id = ?" , "%#{params[:klamsang]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:cdbandau)
-		      @supplier = DoctorCheckInfo.where("cdbandau LIKE ? and station_id = ?" , "%#{params[:cdbandau]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("cdbandau LIKE ? and station_id = ?" , "%#{params[:cdbandau]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:bktheo)
-		      @supplier = DoctorCheckInfo.where("bktheo LIKE ? and station_id = ?" , "%#{params[:bktheo]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("bktheo LIKE ? and station_id = ?" , "%#{params[:bktheo]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:cdicd)
-		      @supplier = DoctorCheckInfo.where("cdicd LIKE ? and station_id = ?" , "%#{params[:cdicd]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("cdicd LIKE ? and station_id = ?" , "%#{params[:cdicd]}%", @station.id)
 		      render json:@supplier
 		    elsif params.has_key?(:kluan)
-		      @supplier = DoctorCheckInfo.where("kluan LIKE ? and station_id = ?" , "%#{params[:kluan]}%", @station.id)
+		      @supplier = DoctorCheckInfo.where(created_at: start..fin).where("kluan LIKE ? and station_id = ?" , "%#{params[:kluan]}%", @station.id)
 		      render json:@supplier
 		    end
       else

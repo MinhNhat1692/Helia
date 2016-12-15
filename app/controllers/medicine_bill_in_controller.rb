@@ -6,9 +6,24 @@ class MedicineBillInController < ApplicationController
       if current_user.check_permission params[:id_station], params[:table_id], 4
 			  @station = Station.find params[:id_station]
 			  @data = []
-			  @data[0] = MedicineBillIn.where(station_id: @station.id)
-			  @data[1] = MedicineGroup.all
-			  @data[2] = MedicineType.all
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicineBillIn.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineBillIn.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        else
+          @data[0] = MedicineBillIn.where(station_id: @station.id)
+          @data[1] = MedicineGroup.all
+          @data[2] = MedicineType.all
+        end
 			  render json: @data
 		  else
         head :no_content
@@ -17,9 +32,24 @@ class MedicineBillInController < ApplicationController
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
-			  @data[0] = MedicineBillIn.where(station_id: @station.id)
-			  @data[1] = MedicineGroup.all
-			  @data[2] = MedicineType.all
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicineBillIn.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineBillIn.where(station_id: @station.id, created_at: start..fin)
+          @data[1] = MedicineGroup.where(created_at: start..fin)
+          @data[2] = MedicineType.where(created_at: start..fin)
+        else
+          @data[0] = MedicineBillIn.where(station_id: @station.id)
+          @data[1] = MedicineGroup.all
+          @data[2] = MedicineType.all
+        end
 			  render json: @data
 		  else
         redirect_to root_path
@@ -303,35 +333,46 @@ class MedicineBillInController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineBillRecord.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:billcode)
-          @supplier = MedicineBillIn.where("billcode LIKE ? and station_id = ?" , "%#{params[:billcode]}%", @station.id)
+          @supplier = MedicineBillIn.where(created_at: start..fin).where("billcode LIKE ? and station_id = ?" , "%#{params[:billcode]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:dayin)
-				  @supplier = MedicineBillIn.where("dayin = ? and station_id = ?" , params[:dayin], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("dayin = ? and station_id = ?" , params[:dayin], @station.id)
 			    render json:@supplier
         elsif params.has_key?(:supplier)
-				  @supplier = MedicineBillIn.where("supplier LIKE ? and station_id = ?" , "%#{params[:supplier]}%", @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("supplier LIKE ? and station_id = ?" , "%#{params[:supplier]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:daybook)
-				  @supplier = MedicineBillIn.where("daybook = ? and station_id = ?" , params[:daybook], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("daybook = ? and station_id = ?" , params[:daybook], @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:pmethod)
-				  @supplier = MedicineBillIn.where("pmethod = ? and station_id = ?" , params[:pmethod], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("pmethod = ? and station_id = ?" , params[:pmethod], @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:tpayment)
-				  @supplier = MedicineBillIn.where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:discount)
-				  @supplier = MedicineBillIn.where("discount = ? and station_id = ?" , params[:discount], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("discount = ? and station_id = ?" , params[:discount], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:tpayout)
-				  @supplier = MedicineBillIn.where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:status)
-				  @supplier = MedicineBillIn.where("status = ? and station_id = ?" , params[:status], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("status = ? and station_id = ?" , params[:status], @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:remark)
-				  @supplier = MedicineBillIn.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 			    render json:@supplier
 			  end
       else
@@ -340,35 +381,46 @@ class MedicineBillInController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineBillIn.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:billcode)
-          @supplier = MedicineBillIn.where("billcode LIKE ? and station_id = ?" , "%#{params[:billcode]}%", @station.id)
+          @supplier = MedicineBillIn.where(created_at: start..fin).where("billcode LIKE ? and station_id = ?" , "%#{params[:billcode]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:dayin)
-				  @supplier = MedicineBillIn.where("dayin = ? and station_id = ?" , params[:dayin], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("dayin = ? and station_id = ?" , params[:dayin], @station.id)
 			    render json:@supplier
         elsif params.has_key?(:supplier)
-				  @supplier = MedicineBillIn.where("supplier LIKE ? and station_id = ?" , "%#{params[:supplier]}%", @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("supplier LIKE ? and station_id = ?" , "%#{params[:supplier]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:daybook)
-				  @supplier = MedicineBillIn.where("daybook = ? and station_id = ?" , params[:daybook], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("daybook = ? and station_id = ?" , params[:daybook], @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:pmethod)
-				  @supplier = MedicineBillIn.where("pmethod = ? and station_id = ?" , params[:pmethod], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("pmethod = ? and station_id = ?" , params[:pmethod], @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:tpayment)
-				  @supplier = MedicineBillIn.where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("tpayment = ? and station_id = ?" , params[:tpayment], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:discount)
-				  @supplier = MedicineBillIn.where("discount = ? and station_id = ?" , params[:discount], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("discount = ? and station_id = ?" , params[:discount], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:tpayout)
-				  @supplier = MedicineBillIn.where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:status)
-				  @supplier = MedicineBillIn.where("status = ? and station_id = ?" , params[:status], @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("status = ? and station_id = ?" , params[:status], @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:remark)
-				  @supplier = MedicineBillIn.where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
+				  @supplier = MedicineBillIn.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 			    render json:@supplier
 			  end
       else

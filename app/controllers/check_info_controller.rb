@@ -191,32 +191,43 @@ class CheckInfoController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = CheckInfo.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:ename)
-          @supplier = CheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+          @supplier = CheckInfo.where(created_at: start..fin).where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:c_name)
-          @supplier = CheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
+          @supplier = CheckInfo.where(created_at: start..fin).where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:conclude)
-				  @supplier = CheckInfo.where("conclude LIKE ? and station_id = ?" , "%#{params[:conclude]}%", @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where("conclude LIKE ? and station_id = ?" , "%#{params[:conclude]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:cdoan)
-				  @supplier = CheckInfo.where("cdoan LIKE ? and station_id = ?" , "%#{params[:cdoan]}%", @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where("cdoan LIKE ? and station_id = ?" , "%#{params[:cdoan]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:hdieutri)
-				  @supplier = CheckInfo.where("hdieutri LIKE ? and station_id = ?" , "%#{params[:hdieutri]}%", @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where("hdieutri LIKE ? and station_id = ?" , "%#{params[:hdieutri]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:status)
-				  @supplier = CheckInfo.where("status = ? and station_id = ?" , params[:status], @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where("status = ? and station_id = ?" , params[:status], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:daystart) and params.has_key?(:dayend)
-				  @supplier = CheckInfo.where(" daystart <= ? and dayend => ? and station_id = ?" , "%#{params[:daystart]}%", "%#{params[:dayend]}%" , @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where(" daystart <= ? and dayend => ? and station_id = ?" , "%#{params[:daystart]}%", "%#{params[:dayend]}%" , @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:daystart)
-				  @supplier = CheckInfo.where(" daystart <= ? and station_id = ?" , "%#{params[:daystart]}%" , @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where(" daystart <= ? and station_id = ?" , "%#{params[:daystart]}%" , @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:dayend)
-				  @supplier = CheckInfo.where(" dayend => ? and station_id = ?" , "%#{params[:dayend]}%" , @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where(" dayend => ? and station_id = ?" , "%#{params[:dayend]}%" , @station.id)
 			    render json:@supplier
 			  end
       else
@@ -225,32 +236,43 @@ class CheckInfoController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = CheckInfo.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:ename)
-          @supplier = CheckInfo.where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
+          @supplier = CheckInfo.where(created_at: start..fin).where("ename LIKE ? and station_id = ?" , "%#{params[:ename]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:c_name)
-          @supplier = CheckInfo.where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
+          @supplier = CheckInfo.where(created_at: start..fin).where("c_name LIKE ? and station_id = ?" , "%#{params[:c_name]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:conclude)
-				  @supplier = CheckInfo.where("conclude LIKE ? and station_id = ?" , "%#{params[:conclude]}%", @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where("conclude LIKE ? and station_id = ?" , "%#{params[:conclude]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:cdoan)
-				  @supplier = CheckInfo.where("cdoan LIKE ? and station_id = ?" , "%#{params[:cdoan]}%", @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where("cdoan LIKE ? and station_id = ?" , "%#{params[:cdoan]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:hdieutri)
-				  @supplier = CheckInfo.where("hdieutri LIKE ? and station_id = ?" , "%#{params[:hdieutri]}%", @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where("hdieutri LIKE ? and station_id = ?" , "%#{params[:hdieutri]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:status)
-				  @supplier = CheckInfo.where("status = ? and station_id = ?" , params[:status], @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where("status = ? and station_id = ?" , params[:status], @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:daystart) and params.has_key?(:dayend)
-				  @supplier = CheckInfo.where(" daystart <= ? and dayend => ? and station_id = ?" , "%#{params[:daystart]}%", "%#{params[:dayend]}%" , @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where(" daystart <= ? and dayend => ? and station_id = ?" , "%#{params[:daystart]}%", "%#{params[:dayend]}%" , @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:daystart)
-				  @supplier = CheckInfo.where(" daystart <= ? and station_id = ?" , "%#{params[:daystart]}%" , @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where(" daystart <= ? and station_id = ?" , "%#{params[:daystart]}%" , @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:dayend)
-				  @supplier = CheckInfo.where(" dayend => ? and station_id = ?" , "%#{params[:dayend]}%" , @station.id)
+				  @supplier = CheckInfo.where(created_at: start..fin).where(" dayend => ? and station_id = ?" , "%#{params[:dayend]}%" , @station.id)
 			    render json:@supplier
 			  end
       else

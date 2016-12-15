@@ -6,7 +6,18 @@ class MedicineSupplierController < ApplicationController
       if current_user.check_permission params[:id_station], params[:table_id], 4
 			  @station = Station.find params[:id_station]
 			  @data = []
-			  @data[0] = MedicineSupplier.where(station_id: @station.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicineSupplier.where(station_id: @station.id, created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineSupplier.where(station_id: @station.id, created_at: start..fin)
+        else
+          @data[0] = MedicineSupplier.where(station_id: @station.id, created_at: start..fin)
+        end
 			  render json: @data
 		  else
         redirect_to root_path
@@ -15,7 +26,18 @@ class MedicineSupplierController < ApplicationController
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
-			  @data[0] = MedicineSupplier.where(station_id: @station.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = MedicineSupplier.where(station_id: @station.id, created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = MedicineSupplier.where(station_id: @station.id, created_at: start..fin)
+        else
+          @data[0] = MedicineSupplier.where(station_id: @station.id, created_at: start..fin)
+        end
 			  render json: @data
 		  else
         redirect_to root_path
@@ -187,44 +209,55 @@ class MedicineSupplierController < ApplicationController
     if params.has_key?(:id_station)
       if current_user.check_permission params[:id_station], params[:table_id], 4
         @station = Station.find params[:id_station]
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineSupplier.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:noid)
-          @supplier = MedicineSupplier.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
+          @supplier = MedicineSupplier.where(created_at: start..fin).where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:name)
-				  @supplier = MedicineSupplier.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:contactname)
-				  @supplier = MedicineSupplier.where("contactname LIKE ? and station_id = ?" , "%#{params[:contactname]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("contactname LIKE ? and station_id = ?" , "%#{params[:contactname]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:spnumber)
-				  @supplier = MedicineSupplier.where("spnumber LIKE ? and station_id = ?" , "%#{params[:spnumber]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("spnumber LIKE ? and station_id = ?" , "%#{params[:spnumber]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:pnumber)
-				  @supplier = MedicineSupplier.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:address1)
-				  @supplier = MedicineSupplier.where("address1 LIKE ? and station_id = ?" , "%#{params[:address1]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("address1 LIKE ? and station_id = ?" , "%#{params[:address1]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:address2)
-				  @supplier = MedicineSupplier.where("address2 LIKE ? and station_id = ?" , "%#{params[:address2]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("address2 LIKE ? and station_id = ?" , "%#{params[:address2]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:address3)
-				  @supplier = MedicineSupplier.where("address3 LIKE ? and station_id = ?" , "%#{params[:address3]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("address3 LIKE ? and station_id = ?" , "%#{params[:address3]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:email)
-				  @supplier = MedicineSupplier.where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:facebook)
-				  @supplier = MedicineSupplier.where("facebook LIKE ? and station_id = ?" , "%#{params[:facebook]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("facebook LIKE ? and station_id = ?" , "%#{params[:facebook]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:twitter)
-				  @supplier = MedicineSupplier.where("twitter LIKE ? and station_id = ?" , "%#{params[:twitter]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("twitter LIKE ? and station_id = ?" , "%#{params[:twitter]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:fax)
-				  @supplier = MedicineSupplier.where("fax LIKE ? and station_id = ?" , "%#{params[:fax]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("fax LIKE ? and station_id = ?" , "%#{params[:fax]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:taxcode)
-				  @supplier = MedicineSupplier.where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
 			    render json:@supplier
 				end
       else
@@ -233,44 +266,55 @@ class MedicineSupplierController < ApplicationController
     else
       if has_station?
         @station = Station.find_by(user_id: current_user.id)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+        else
+          start = MedicineSupplier.order(created_at: :asc).first.created_at
+          fin = Time.now
+        end
         if params.has_key?(:noid)
-          @supplier = MedicineSupplier.where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
+          @supplier = MedicineSupplier.where(created_at: start..fin).where("noid LIKE ? and station_id = ?" , "%#{params[:noid]}%", @station.id)
 			    render json:@supplier
         elsif params.has_key?(:name)
-				  @supplier = MedicineSupplier.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:contactname)
-				  @supplier = MedicineSupplier.where("contactname LIKE ? and station_id = ?" , "%#{params[:contactname]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("contactname LIKE ? and station_id = ?" , "%#{params[:contactname]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:spnumber)
-				  @supplier = MedicineSupplier.where("spnumber LIKE ? and station_id = ?" , "%#{params[:spnumber]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("spnumber LIKE ? and station_id = ?" , "%#{params[:spnumber]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:pnumber)
-				  @supplier = MedicineSupplier.where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("pnumber LIKE ? and station_id = ?" , "%#{params[:pnumber]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:address1)
-				  @supplier = MedicineSupplier.where("address1 LIKE ? and station_id = ?" , "%#{params[:address1]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("address1 LIKE ? and station_id = ?" , "%#{params[:address1]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:address2)
-				  @supplier = MedicineSupplier.where("address2 LIKE ? and station_id = ?" , "%#{params[:address2]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("address2 LIKE ? and station_id = ?" , "%#{params[:address2]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:address3)
-				  @supplier = MedicineSupplier.where("address3 LIKE ? and station_id = ?" , "%#{params[:address3]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("address3 LIKE ? and station_id = ?" , "%#{params[:address3]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:email)
-				  @supplier = MedicineSupplier.where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("email LIKE ? and station_id = ?" , "%#{params[:email]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:facebook)
-				  @supplier = MedicineSupplier.where("facebook LIKE ? and station_id = ?" , "%#{params[:facebook]}%", @station.id)
-			    render json:@supplier
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where(created_at: start..fin).where("facebook LIKE ? and station_id = ?" , "%#{params[:facebook]}%", @station.id)
+			    render json:@supplie
 				elsif params.has_key?(:twitter)
-				  @supplier = MedicineSupplier.where("twitter LIKE ? and station_id = ?" , "%#{params[:twitter]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("twitter LIKE ? and station_id = ?" , "%#{params[:twitter]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:fax)
-				  @supplier = MedicineSupplier.where("fax LIKE ? and station_id = ?" , "%#{params[:fax]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("fax LIKE ? and station_id = ?" , "%#{params[:fax]}%", @station.id)
 			    render json:@supplier
 				elsif params.has_key?(:taxcode)
-				  @supplier = MedicineSupplier.where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
+				  @supplier = MedicineSupplier.where(created_at: start..fin).where("taxcode LIKE ? and station_id = ?" , "%#{params[:taxcode]}%", @station.id)
 			    render json:@supplier
 				end
       else
