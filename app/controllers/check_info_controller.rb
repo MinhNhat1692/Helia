@@ -122,7 +122,18 @@ class CheckInfoController < ApplicationController
       if current_user.check_permission params[:id_station], params[:table_id], 4
 			  @station = Station.find params[:id_station]
 			  @data = []
-			  @data[0] = CheckInfo.where(station_id: @station.id).order(updated_at: :desc).limit(200)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = CheckInfo.where(station_id: @station.id, created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = CheckInfo.where(station_id: @station.id, created_at: start..fin)
+        else
+          @data[0] = CheckInfo.where(station_id: @station.id)
+        end
 			  render json: @data
       else
         head :no_content
@@ -131,7 +142,18 @@ class CheckInfoController < ApplicationController
       if has_station?
 			  @station = Station.find_by(user_id: current_user.id)
 			  @data = []
-			  @data[0] = CheckInfo.where(station_id: @station.id).order(updated_at: :desc).limit(200)
+        if params.has_key?(:date)
+          n = params[:date].to_i
+          start = n.days.ago.beginning_of_day
+          fin = Time.now
+          @data[0] = CheckInfo.where(station_id: @station.id, created_at: start..fin)
+        elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+          start = params[:begin_date].to_date.beginning_of_day
+          fin = params[:end_date].to_date.end_of_day
+          @data[0] = CheckInfo.where(station_id: @station.id, created_at: start..fin)
+        else
+          @data[0] = CheckInfo.where(station_id: @station.id)
+        end
 			  render json: @data
 		  else
         redirect_to root_path
