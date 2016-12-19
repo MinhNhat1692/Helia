@@ -49,13 +49,15 @@
       %ul.nav.nav-pills.pull-right.al-wait-current-user{:style => "display: block;"}
         - if logged_in?
           %li.al-visible-current-user
-            %a{"data-no-turbolink" => "true", :href => "/station", "target" => "_blank"} Bảng điều khiển
+            %a{"data-no-turbolink" => "true", :href => "/station", "target" => "_blank"} Phòng khám
           %li.header-sign-out.al-visible-current-user
             %a#signout-link{"data-no-turbolink" => "true", :href => "/logout"}
               %i.hidden-xs.fa.fa-power-off
               %span.visible-xs
                 Đăng xuất
                 %i.fa.fa-power-off
+          %li.al-visible-current-user
+            %a{"data-no-turbolink" => "true", :href => "/dprofile", "target" => "_blank"} Bác sỹ
         - else
           %li.al-hidden-current-user{:style => "display: list-item;"}
             %a{"data-no-turbolink" => "true", :href => "/login"} Đăng nhập

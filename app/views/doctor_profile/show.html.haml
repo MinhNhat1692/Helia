@@ -1,1 +1,4 @@
-= image_tag @dpro.avatar.url
+%body
+    = react_component 'DoctorMainApp', { doctor: @doctor_profile}
+    :javascript
+        var APP = {}        
