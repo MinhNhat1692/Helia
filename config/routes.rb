@@ -192,6 +192,7 @@ Rails.application.routes.draw do
 
   get '/dprofile', to: 'doctor_profile#new'
   post '/dprofile',   to: 'doctor_profile#create'
+  post '/dprofile/update', to: 'doctor_profile#update'
 
   root "home#index"
   get '/changelogs', to: 'home#changelog'
@@ -249,7 +250,7 @@ Rails.application.routes.draw do
 
   post '/station/pool', to: 'polls#list'
   get '/station/permission', to: 'permissions#owner_list'
-  get '/doctor/permission', to: 'permissions#doctor_list'
+  post '/doctor/permission', to: 'permissions#doctor_list'
   
   post '/permissions', to: 'permissions#create'
   put '/permissions', to: 'permissions#update'

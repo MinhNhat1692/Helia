@@ -33,8 +33,7 @@ class PermissionsController < ApplicationController
     arr = []
     station_ids.each do |id|
       h = Hash.new
-      h[:station_id] = id
-      h[:station_name] = Station.find(id).sname
+      h[:station] = Station.find(id)
       arr << h
     end
     @data[1] = arr

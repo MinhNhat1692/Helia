@@ -3000,3 +3000,13 @@ h4, .h4 {
     box-shadow: 0 0px 8px 0 rgba(129, 145, 177, 1);
     color: #fff;
 }
+
+.visible-table-xs {
+    display: none !important;
+}
+
+@media (max-width: 767px){
+    .visible-table-xs {
+        display: table !important;
+    }
+}

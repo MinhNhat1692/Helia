@@ -1,7 +1,7 @@
 class User < ApplicationRecord
 	has_one :profiles, dependent: :destroy
-  has_one :doctor_profile, dependent: :destroy
-  has_many :permissions, dependent: :destroy
+	has_one :doctor_profile, dependent: :destroy
+	has_many :permissions, dependent: :destroy
 	attr_accessor :remember_token, :activation_token, :reset_token
 	before_save :downcase_email
 	before_create :create_activation_digest
