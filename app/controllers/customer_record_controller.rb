@@ -2,14 +2,68 @@ class CustomerRecordController < ApplicationController
   before_action :logged_in_user, only: [ :create, :update, :destroy, :list, :find_record, :add_record, :link_record, :clear_link_record, :update_record, :search, :find]
   
   def create
-		if has_station?
-			@station = Station.find_by(user_id: current_user.id)
-			if params.has_key?(:email)
-				@profile = User.find_by(email: params[:email])
-				if @profile != nil
-					@checkprofile = Profile.find_by(user_id: @profile.id)
-					if @checkprofile != nil
-						@customer = CustomerRecord.new(user_id: @profile.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, address: @profile.address, pnumber: @profile.pnumber, avatar: @profile.avatar, gender: @profile.gender, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, dob: @profile.dob, work_place: @profile.work_place, self_history: @profile.self_history, family_history: @profile.family_history, drug_history: @profile.drug_history)
+		if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], 1, 1
+  			@station = Station.find params[:id_station]
+	  		if params.has_key?(:email)
+					@profile = User.find_by(email: params[:email])
+					if @profile != nil
+						@checkprofile = Profile.find_by(user_id: @profile.id)
+						if @checkprofile != nil
+							@customer = CustomerRecord.new(user_id: @profile.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, address: @profile.address, pnumber: @profile.pnumber, avatar: @profile.avatar, gender: @profile.gender, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, dob: @profile.dob, work_place: @profile.work_place, self_history: @profile.self_history, family_history: @profile.family_history, drug_history: @profile.drug_history)
+							if @customer.save
+								render json: @customer
+							else
+								render json: @customer.errors, status: :unprocessable_entity
+							end
+						end
+					end
+				else
+					if params.has_key?(:avatar)
+						@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], avatar: params[:avatar], gender: params[:gender], noid: params[:noid], issue_date: params[:issue_date], issue_place: params[:issue_place], dob: params[:dob], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
+						if @customer.save
+							render json: @customer
+						else
+							render json: @customer.errors, status: :unprocessable_entity
+						end
+					else
+						@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], gender: params[:gender], noid: params[:noid], dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
+						if @customer.save
+							render json: @customer
+						else
+							render json: @customer.errors, status: :unprocessable_entity
+						end
+					end
+				end
+      else
+				head :no_content, :status => :bad_request
+      end
+    else
+			if has_station?
+				@station = Station.find_by(user_id: current_user.id)
+				if params.has_key?(:email)
+					@profile = User.find_by(email: params[:email])
+					if @profile != nil
+						@checkprofile = Profile.find_by(user_id: @profile.id)
+						if @checkprofile != nil
+							@customer = CustomerRecord.new(user_id: @profile.id, station_id: @station.id, cname: @profile.lname + " " + @profile.fname, address: @profile.address, pnumber: @profile.pnumber, avatar: @profile.avatar, gender: @profile.gender, noid: @profile.noid, issue_date: @profile.issue_date, issue_place: @profile.issue_place, dob: @profile.dob, work_place: @profile.work_place, self_history: @profile.self_history, family_history: @profile.family_history, drug_history: @profile.drug_history)
+							if @customer.save
+								render json: @customer
+							else
+								render json: @customer.errors, status: :unprocessable_entity
+							end
+						end
+					end
+				else
+					if params.has_key?(:avatar)
+						@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], avatar: params[:avatar], gender: params[:gender], noid: params[:noid], issue_date: params[:issue_date], issue_place: params[:issue_place], dob: params[:dob], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
+						if @customer.save
+							render json: @customer
+						else
+							render json: @customer.errors, status: :unprocessable_entity
+						end
+					else
+						@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], gender: params[:gender], noid: params[:noid], dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
 						if @customer.save
 							render json: @customer
 						else
@@ -18,49 +72,57 @@ class CustomerRecordController < ApplicationController
 					end
 				end
 			else
-				if params.has_key?(:avatar)
-					@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], avatar: params[:avatar], gender: params[:gender], noid: params[:noid], issue_date: params[:issue_date], issue_place: params[:issue_place], dob: params[:dob], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
-					if @customer.save
-						render json: @customer
-					else
-						render json: @customer.errors, status: :unprocessable_entity
-					end
-				else
-					@customer = CustomerRecord.new(station_id: @station.id, cname: params[:cname], address: params[:address], pnumber: params[:pnumber], gender: params[:gender], noid: params[:noid], dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
-					if @customer.save
-						render json: @customer
-					else
-						render json: @customer.errors, status: :unprocessable_entity
-					end
-				end
+			  redirect_to root_path
 			end
-		else
-      redirect_to root_path
-    end
+		end
   end
 
   def update
-		if has_station?
-      @station = Station.find_by(user_id: current_user.id)
-			@customer = CustomerRecord.find(params[:id])
-			if @customer.station_id == @station.id
-				if params.has_key?(:avatar)
-					if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender],avatar: params[:avatar],dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
-						render json: @customer
+		if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], 1, 2
+  			@station = Station.find params[:id_station]
+	  		@customer = CustomerRecord.find(params[:id])
+				if @customer.station_id == @station.id
+					if params.has_key?(:avatar)
+						if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender],avatar: params[:avatar],dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
+							render json: @customer
+						else
+							render json: @customer.errors, status: :unprocessable_entity
+						end
 					else
-						render json: @customer.errors, status: :unprocessable_entity
-					end
-				else
-					if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender], dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
-						render json: @customer
-					else
-						render json: @customer.errors, status: :unprocessable_entity
+						if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender], dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
+							render json: @customer
+						else
+							render json: @customer.errors, status: :unprocessable_entity
+						end
 					end
 				end
-			end
+      else
+				head :no_content, :status => :bad_request
+      end
     else
-      redirect_to root_path
-    end
+			if has_station?
+			  @station = Station.find_by(user_id: current_user.id)
+				@customer = CustomerRecord.find(params[:id])
+				if @customer.station_id == @station.id
+					if params.has_key?(:avatar)
+						if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender],avatar: params[:avatar],dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
+							render json: @customer
+						else
+							render json: @customer.errors, status: :unprocessable_entity
+						end
+					else
+						if @customer.update(cname: params[:cname],address: params[:address], pnumber: params[:pnumber], noid: params[:noid], gender: params[:gender], dob: params[:dob], issue_date: params[:issue_date], issue_place: params[:issue_place], work_place: params[:work_place], self_history: params[:self_history], family_history: params[:family_history], drug_history: params[:drug_history])
+							render json: @customer
+						else
+							render json: @customer.errors, status: :unprocessable_entity
+						end
+					end
+				end
+			else
+			  redirect_to root_path
+			end
+		end
   end
 
   def destroy

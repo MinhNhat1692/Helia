@@ -44,37 +44,21 @@
     clearLinkListener: (e) ->
       @props.clearLinkListener e
     normalStyle: ->
-      React.DOM.div
-        className: "background1 animated flipInY"
-        React.DOM.div
-          className: "pmo-pic"
-          React.DOM.div
-            className: 'p-relative'
+      React.DOM.div className: "background1 animated flipInY",
+        React.DOM.div className: "pmo-pic",
+          React.DOM.div className: 'p-relative',
             React.DOM.a null,
-              React.DOM.img
-                className: 'img-responsive'
-                alt: ''
-                src:
-                  if @props.record.avatar != "/avatars/original/missing.png"
-                    @props.record.avatar
-                  else
-                    'https://www.twomargins.com/images/noavatar.jpg'
-            React.DOM.a
-              className: 'pmop-edit'
-              React.DOM.i
-                className: 'fa fa-camera'
-              React.DOM.span
-                className: 'hidden-xs'
-                'Update Picture'
-            React.DOM.div
-              className: 'pmo-stat'
+              React.DOM.img className: 'img-responsive', alt: '', src: @props.record.avatar
+            React.DOM.a className: 'pmop-edit',
+              React.DOM.i className: 'fa fa-camera',
+              React.DOM.span className: 'hidden-xs', 'Update Picture'
+            React.DOM.div className: 'pmo-stat',
               React.DOM.h2 null, @props.record.cname
               try
                 @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + "Tháng"
               catch error
                 console.log error
-        React.DOM.div
-          className: 'pmo-block pmo-contact'
+        React.DOM.div className: 'pmo-block pmo-contact',
           React.DOM.h2 null, "Thông tin cơ bản"
           React.DOM.ul null,
             React.DOM.li null,

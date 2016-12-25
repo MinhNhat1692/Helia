@@ -1640,7 +1640,7 @@
             React.DOM.div className: 'modal-body',
               React.DOM.div className: 'row',
                 React.DOM.div className: 'col-md-7',
-                  React.DOM.form className: 'form-horizontal', autoComplete: 'off', onSubmit: @handleSubmit,
+                  React.DOM.form className: 'form-horizontal', autoComplete: 'off',
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'Họ và Tên'
                       React.DOM.div className: 'col-sm-9',
@@ -1695,13 +1695,13 @@
                       React.DOM.label className: 'col-sm-2 hidden-xs control-label', 'Ảnh đại diện'
                       React.DOM.div className: 'col-sm-4',
                         React.DOM.input id: 'form_avatar', type: 'file', className: 'form-control'
-                    React.DOM.button onClick: @handleSubmitCustomerRecord, className: 'btn btn-default pull-right', 'Lưu'
+                    React.DOM.button onClick: @handleSubmit, className: 'btn btn-default pull-right', 'Lưu'
                 React.DOM.div className: 'col-md-5', style: {'alignContent': 'center'},
                   React.DOM.div id: 'results',
                     React.DOM.img id: 'sample_avatar', style: {'maxWidth': '100%', 'maxHeight': '240px'}, src: 'https://www.twomargins.com/images/noavatar.jpg'
                   React.DOM.div id: 'my_camera'
-                  React.DOM.button type: 'button', className: 'btn btn-default', onClick: @setup_webcam, 'Setup'
-                  React.DOM.button type: 'button', className: 'btn btn-default', value: 'take Large Snapshot', onClick: @take_snapshot, 'Capture'
+                  React.DOM.button type: 'button', className: 'btn btn-default hidden-xs', onClick: @setup_webcam, 'Khởi tạo'
+                  React.DOM.button type: 'button', className: 'btn btn-default hidden-xs', value: 'take Large Snapshot', onClick: @take_snapshot, 'Chụp'
             React.DOM.div className: 'modal-footer',
               React.DOM.button className: 'btn btn-default', 'data-dismiss': 'modal', type: 'button', 'Close'
     orderMapForm: ->
