@@ -196,7 +196,7 @@ class ServiceController < ApplicationController
 
   def find
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 1, 4
         @station = Station.find params[:id_station]
         if params.has_key?(:date)
           n = params[:date].to_i

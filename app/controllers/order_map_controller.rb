@@ -55,7 +55,7 @@ class OrderMapController < ApplicationController
 
   def create
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 1
+      if current_user.check_permission params[:id_station], 1, 1
 			  @station = Station.find params[:id_station]
 		    @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
 		    if !@customer_id.nil?
@@ -65,17 +65,13 @@ class OrderMapController < ApplicationController
 		    if !@service_id.nil?
 					@service_id = @service_id.id
 		    end
-		    if params[:status] != 'Tình trạng'
-					@status = params[:status]
-				else
-					@status = 2
-		    end
-		    @supplier = OrderMap.new(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: @status, tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
+		    #if params[:status] != 'Tình trạng'
+				#	@status = params[:status]
+				#else
+				#	@status = 2
+		    #end
+		    @supplier = OrderMap.new(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
 				if @supplier.save
-				#	@checkinfo = CheckInfo.new(status: 1, order_map_id: @supplier.id, c_id: @customer_id, c_name: params[:cname], station_id: @station.id)
-				#	@checkinfo.save
-				#	@doctorcheckinfo = DoctorCheckInfo.new(order_map_id: @supplier.id,c_id: @customer_id, c_name: params[:cname], station_id: @station.id)
-				#	@doctorcheckinfo.save
 				  render json: @supplier
 				else
 					render json: @supplier.errors, status: :unprocessable_entity
@@ -94,17 +90,13 @@ class OrderMapController < ApplicationController
 		    if !@service_id.nil?
 					@service_id = @service_id.id
 		    end
-		    if params[:status] != 'Tình trạng'
-					@status = params[:status]
-				else
-					@status = 2
-		    end
-		    @supplier = OrderMap.new(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: @status, tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
+		    #if params[:status] != 'Tình trạng'
+				#	@status = params[:status]
+				#else
+				#	@status = 2
+		    #end
+		    @supplier = OrderMap.new(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
 				if @supplier.save
-				#	@checkinfo = CheckInfo.new(status: 1, order_map_id: @supplier.id, c_id: @customer_id, c_name: params[:cname], station_id: @station.id)
-				#	@checkinfo.save
-				#	@doctorcheckinfo = DoctorCheckInfo.new(order_map_id: @supplier.id,c_id: @customer_id, c_name: params[:cname], station_id: @station.id)
-				#	@doctorcheckinfo.save
 				  render json: @supplier
 				else
 					render json: @supplier.errors, status: :unprocessable_entity
@@ -297,7 +289,7 @@ class OrderMapController < ApplicationController
 
   def find
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 1, 4
         @station = Station.find params[:id_station]
         if params.has_key?(:date)
           n = params[:date].to_i
@@ -330,6 +322,9 @@ class OrderMapController < ApplicationController
 			    render json:@supplier
 			  elsif params.has_key?(:tpayout)
 				  @supplier = OrderMap.where(created_at: start..fin).where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
+			    render json:@supplier
+			  elsif params.has_key?(:customer_id)
+				  @supplier = OrderMap.where(created_at: start..fin).where("customer_record_id = ? and station_id = ?" , params[:customer_id], @station.id)
 			    render json:@supplier
 			  end
       else
@@ -367,8 +362,8 @@ class OrderMapController < ApplicationController
 			  elsif params.has_key?(:discount)
 				  @supplier = OrderMap.where(created_at: start..fin).where("discount = ? and station_id = ?" , params[:discount], @station.id).order(updated_at: :desc).limit(1000)
 			    render json:@supplier
-			  elsif params.has_key?(:tpayout)
-				  @supplier = OrderMap.where(created_at: start..fin).where("tpayout = ? and station_id = ?" , params[:tpayout], @station.id)
+			  elsif params.has_key?(:customer_id)
+				  @supplier = OrderMap.where(created_at: start..fin).where("customer_record_id = ? and station_id = ?" , params[:customer_id], @station.id)
 			    render json:@supplier
 			  end
       else
