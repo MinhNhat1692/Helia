@@ -126,15 +126,28 @@ class CustomerRecordController < ApplicationController
   end
 
   def destroy
-		if has_station?
-			@station = Station.find_by(user_id: current_user.id)
-			@customer = CustomerRecord.find(params[:id])
-			if @customer.station_id == @station.id
-				@customer.destroy
-				head :no_content
+		if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], 1, 2
+  			@station = Station.find params[:id_station]
+	  		@customer = CustomerRecord.find(params[:id])
+				if @customer.station_id == @station.id
+					@customer.destroy
+					head :no_content
+				end
+      else
+				head :no_content, :status => :bad_request
+      end
+    else
+			if has_station?
+				@station = Station.find_by(user_id: current_user.id)
+				@customer = CustomerRecord.find(params[:id])
+				if @customer.station_id == @station.id
+					@customer.destroy
+					head :no_content
+				end
+			else
+				redirect_to root_path
 			end
-		else
-			redirect_to root_path
 		end
 	end
 

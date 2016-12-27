@@ -3,7 +3,7 @@ class OrderMapController < ApplicationController
   
   def update
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 2
+      if current_user.check_permission params[:id_station], 1, 2
 			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
           @supplier = OrderMap.find(params[:id])
@@ -16,11 +16,19 @@ class OrderMapController < ApplicationController
 		        if !@service_id.nil?
 				      @service_id = @service_id.id
   		      end
-	  	      if @supplier.update(remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
-  		  		  render json: @supplier
-	  		  	else
-		  		  	render json: @supplier.errors, status: :unprocessable_entity
-  		  		end
+		        if @supplier.code == nil
+							if @supplier.update(code: params[:code], remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
+								render json: @supplier
+							else
+								render json: @supplier.errors, status: :unprocessable_entity
+							end
+						else
+							if @supplier.update(remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
+								render json: @supplier
+							else
+								render json: @supplier.errors, status: :unprocessable_entity
+							end
+						end
 	  	    end
 	      end
 	    else
@@ -70,7 +78,7 @@ class OrderMapController < ApplicationController
 				#else
 				#	@status = 2
 		    #end
-		    @supplier = OrderMap.new(station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
+		    @supplier = OrderMap.new(code: params[:code], station_id: @station.id, remark: params[:remark], customer_record_id: @customer_id, cname: params[:cname], service_id: @service_id, sername: params[:sername], status: params[:status], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout])
 				if @supplier.save
 				  render json: @supplier
 				else
@@ -225,7 +233,7 @@ class OrderMapController < ApplicationController
 
   def destroy
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 3
+      if current_user.check_permission params[:id_station], 1, 3
 			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = OrderMap.find(params[:id])

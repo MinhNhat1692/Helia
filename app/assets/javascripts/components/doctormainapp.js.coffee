@@ -31,146 +31,6 @@
         code: null
         customerRecordTask: [{id:1, name: 'Bệnh nhân', icon: '/assets/patient.png', text: 'Sử dụng để quản lý và thêm bớt danh sách bệnh nhân trong hệ thông', code: 1},{id: 2, name: 'Phiếu khám', icon: '/assets/choice.png', text: 'Sử dụng để quản lý và thêm bớt danh sách phiếu khám trong hệ thông', code: 2}, {id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         customerRecordMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm bệnh nhân vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách bệnh nhân trong ngày', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
-    handleSubmit: (e) ->
-        e.preventDefault()
-        switch @state.currentpermission.table_id
-            when 1
-                switch @state.ptask
-                    when 1
-                        switch @state.pmtask
-                            when 1
-                                if @state.customer != null
-                                    switch @state.pmphase
-                                        when 1
-                                            formData = new FormData
-                                            formData.append 'id', @state.customer.id
-                                            formData.append 'gender', $('#form_gender').val()
-                                            formData.append 'id_station', @state.currentstation.station.id
-                                            formData.append 'gender', $('#form_gender').val()
-                                            formData.append 'cname', $('#form_name').val()
-                                            formData.append 'dob', $('#form_dob').val()
-                                            formData.append 'address', $('#form_address').val()
-                                            formData.append 'pnumber', $('#form_pnumber').val()
-                                            formData.append 'noid', $('#form_noid').val()
-                                            formData.append 'issue_date', $('#form_issue_date').val()
-                                            formData.append 'issue_place', $('#form_issue_place').val()
-                                            formData.append 'work_place', $('#form_work_place').val()
-                                            formData.append 'self_history', $('#form_self_history').val()
-                                            formData.append 'family_history', $('#form_family_history').val()
-                                            formData.append 'drug_history', $('#form_drug_history').val()
-                                            if $('#form_avatar')[0].files[0] != undefined
-                                                formData.append 'avatar', $('#form_avatar')[0].files[0]
-                                            else if $('#webcamout').attr('src') != undefined
-                                                formData.append 'avatar', $('#webcamout').attr('src')
-                                            message = "thông tin bệnh nhân"
-                                            link = "/customer_record"
-                                            $.ajax
-                                                url: link
-                                                type: 'PUT'
-                                                data: formData
-                                                async: false
-                                                cache: false
-                                                contentType: false
-                                                processData: false
-                                                error: ((result) ->
-                                                    @showtoast("Cập nhật " + message + " thất bại",3)
-                                                    return
-                                                ).bind(this)
-                                                success: ((result) ->
-                                                    @showtoast("Cập nhật " + message + " thành công",1)
-                                                    @setState
-                                                        customer: result
-                                                        pmphase: null
-                                                    return
-                                                ).bind(this)
-                                        when 2
-                                            formData = new FormData
-                                            formData.append 'id_station', @state.currentstation.station.id
-                                            formData.append 'status', $('#form_status').val()
-                                            formData.append 'remark', $('#form_remark').val()
-                                            formData.append 'customer_id', @state.customer.id
-                                            formData.append 'cname', @state.customer.cname
-                                            formData.append 'service_id', $('#form_s_id').val()
-                                            formData.append 'sername', $('#form_sname').val()
-                                            formData.append 'tpayment', $('#form_tpayment').val()
-                                            formData.append 'discount', $('#form_discount').val()
-                                            formData.append 'tpayout', $('#form_tpayout').val()
-                                            message = "thông tin phiếu khám"
-                                            link = "/order_map"
-                                            $.ajax
-                                                url: link
-                                                type: 'POST'
-                                                data: formData
-                                                async: false
-                                                cache: false
-                                                contentType: false
-                                                processData: false
-                                                error: ((result) ->
-                                                    @showtoast("Thêm " + message + " thất bại",3)
-                                                    return
-                                                ).bind(this)
-                                                success: ((result) ->
-                                                    @showtoast("Thêm " + message + " thành công",1)
-                                                    if @state.ordermaplist == null
-                                                        arraynew = []
-                                                        arraynew.push result
-                                                        @setState
-                                                            ordermap: result
-                                                            ordermaplist: arraynew
-                                                            pmphase: null
-                                                        setTimeout (->
-                                                            $(APP).trigger('reloadData')
-                                                        ), 1000
-                                                    else
-                                                        records = React.addons.update(@state.ordermaplist, { $unshift: [result] })
-                                                        console.log records
-                                                        @setState
-                                                            ordermap: result
-                                                            ordermaplist: records
-                                                            pmphase: null
-                                                        setTimeout (->
-                                                            $(APP).trigger('reloadData')
-                                                        ), 1000
-                                                    return
-                                                ).bind(this)
-                                else
-                                    formData = new FormData
-                                    formData.append 'id_station', @state.currentstation.station.id
-                                    formData.append 'gender', $('#form_gender').val()
-                                    formData.append 'cname', $('#form_name').val()
-                                    formData.append 'dob', $('#form_dob').val()
-                                    formData.append 'address', $('#form_address').val()
-                                    formData.append 'pnumber', $('#form_pnumber').val()
-                                    formData.append 'noid', $('#form_noid').val()
-                                    formData.append 'issue_date', $('#form_issue_date').val()
-                                    formData.append 'issue_place', $('#form_issue_place').val()
-                                    formData.append 'work_place', $('#form_work_place').val()
-                                    formData.append 'self_history', $('#form_self_history').val()
-                                    formData.append 'family_history', $('#form_family_history').val()
-                                    formData.append 'drug_history', $('#form_drug_history').val()
-                                    if $('#form_avatar')[0].files[0] != undefined
-                                        formData.append 'avatar', $('#form_avatar')[0].files[0]
-                                    else if $('#webcamout').attr('src') != undefined
-                                        formData.append 'avatar', $('#webcamout').attr('src')
-                                    message = "thông tin bệnh nhân"
-                                    link = "/customer_record"
-                                    $.ajax
-                                        url: link
-                                        type: 'POST'
-                                        data: formData
-                                        async: false
-                                        cache: false
-                                        contentType: false
-                                        processData: false
-                                        error: ((result) ->
-                                            @showtoast("Thêm " + message + " thất bại",3)
-                                            return
-                                        ).bind(this)
-                                        success: ((result) ->
-                                            @showtoast("Thêm " + message + " thành công",1)
-                                            @setState customer: result
-                                            return
-                                        ).bind(this)
     moveuppmtaskView: ->
         switch @state.currentpermission.table_id
             when 1
@@ -302,6 +162,14 @@
                     pmphase: null
     trigger: ->
     triggersafe: ->
+    generateRandom: (length) ->
+        text = ''
+        possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+        i = 0
+        while i < length
+            text += possible.charAt(Math.floor(Math.random() * possible.length))
+            i++
+        return text
     triggerbycode: (code) ->
         switch code
             when 1
@@ -462,6 +330,368 @@
                                                     console.log 5
                                                 when 6
                                                     @setState pmphase: 3 #edit ordermap
+    triggerButtonAtpmtask: (record) ->
+        switch @state.currentpermission.table_id
+            when 1
+                switch @state.ptask
+                    when 1
+                        switch @state.pmtask
+                            when 1    
+                                if @state.customer != null
+                                else
+                                    switch record.code
+                                        when 1#submit
+                                            formData = new FormData
+                                            formData.append 'id_station', @state.currentstation.station.id
+                                            formData.append 'gender', $('#form_gender').val()
+                                            formData.append 'cname', $('#form_name').val()
+                                            formData.append 'dob', $('#form_dob').val()
+                                            formData.append 'address', $('#form_address').val()
+                                            formData.append 'pnumber', $('#form_pnumber').val()
+                                            formData.append 'noid', $('#form_noid').val()
+                                            formData.append 'issue_date', $('#form_issue_date').val()
+                                            formData.append 'issue_place', $('#form_issue_place').val()
+                                            formData.append 'work_place', $('#form_work_place').val()
+                                            formData.append 'self_history', $('#form_self_history').val()
+                                            formData.append 'family_history', $('#form_family_history').val()
+                                            formData.append 'drug_history', $('#form_drug_history').val()
+                                            if $('#form_avatar')[0].files[0] != undefined
+                                                formData.append 'avatar', $('#form_avatar')[0].files[0]
+                                            else if $('#webcamout').attr('src') != undefined
+                                                formData.append 'avatar', $('#webcamout').attr('src')
+                                            message = "thông tin bệnh nhân"
+                                            link = "/customer_record"
+                                            $.ajax
+                                                url: link
+                                                type: 'POST'
+                                                data: formData
+                                                async: false
+                                                cache: false
+                                                contentType: false
+                                                processData: false
+                                                error: ((result) ->
+                                                    @showtoast("Thêm " + message + " thất bại",3)
+                                                    return
+                                                ).bind(this)
+                                                success: ((result) ->
+                                                    @showtoast("Thêm " + message + " thành công",1)
+                                                    @setState customer: result
+                                                    return
+                                                ).bind(this)
+                                        when 2#back
+                                            @setState
+                                                pmtask: null
+                                                tabheader: 'Bệnh nhân'
+                                                currentptaskview: 0
+                                                currentpmtaskview: 0
+                                                currentpmphase: 0
+                                                customer: null
+                                                ordermap: null                    
+    triggerButtonAtpmphase: (record) ->
+        switch @state.currentpermission.table_id
+            when 1
+                switch @state.ptask
+                    when 1
+                        switch @state.pmtask
+                            when 1    
+                                if @state.customer != null
+                                    switch @state.pmphase
+                                        when 1
+                                            switch record.code
+                                                when 1
+                                                    formData = new FormData
+                                                    formData.append 'id', @state.customer.id
+                                                    formData.append 'gender', $('#form_gender').val()
+                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    formData.append 'gender', $('#form_gender').val()
+                                                    formData.append 'cname', $('#form_name').val()
+                                                    formData.append 'dob', $('#form_dob').val()
+                                                    formData.append 'address', $('#form_address').val()
+                                                    formData.append 'pnumber', $('#form_pnumber').val()
+                                                    formData.append 'noid', $('#form_noid').val()
+                                                    formData.append 'issue_date', $('#form_issue_date').val()
+                                                    formData.append 'issue_place', $('#form_issue_place').val()
+                                                    formData.append 'work_place', $('#form_work_place').val()
+                                                    formData.append 'self_history', $('#form_self_history').val()
+                                                    formData.append 'family_history', $('#form_family_history').val()
+                                                    formData.append 'drug_history', $('#form_drug_history').val()
+                                                    if $('#form_avatar')[0].files[0] != undefined
+                                                        formData.append 'avatar', $('#form_avatar')[0].files[0]
+                                                    else if $('#webcamout').attr('src') != undefined
+                                                        formData.append 'avatar', $('#webcamout').attr('src')
+                                                    message = "thông tin bệnh nhân"
+                                                    link = "/customer_record"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'PUT'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Cập nhật " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Cập nhật " + message + " thành công",1)
+                                                            @setState
+                                                                customer: result
+                                                                pmphase: null
+                                                            return
+                                                        ).bind(this)
+                                                when 2
+                                                    @setState pmphase: null
+                                        when 2
+                                            switch record.code
+                                                when 1#submit
+                                                    formData = new FormData
+                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    formData.append 'status', $('#form_status').val()
+                                                    formData.append 'remark', $('#form_remark').val()
+                                                    formData.append 'customer_id', @state.customer.id
+                                                    formData.append 'cname', @state.customer.cname
+                                                    formData.append 'service_id', $('#form_s_id').val()
+                                                    formData.append 'sername', $('#form_sname').val()
+                                                    formData.append 'tpayment', $('#form_tpayment').val()
+                                                    formData.append 'discount', $('#form_discount').val()
+                                                    formData.append 'tpayout', $('#form_tpayout').val()
+                                                    formData.append 'code', @generateRandom(5)
+                                                    message = "thông tin phiếu khám"
+                                                    link = "/order_map"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'POST'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Thêm " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Thêm " + message + " thành công",1)
+                                                            if @state.ordermaplist == null
+                                                                arraynew = []
+                                                                arraynew.push result
+                                                                @setState
+                                                                    ordermap: result
+                                                                    ordermaplist: arraynew
+                                                                    pmphase: null
+                                                                setTimeout (->
+                                                                    $(APP).trigger('reloadData')
+                                                                ), 500
+                                                            else
+                                                                records = React.addons.update(@state.ordermaplist, { $unshift: [result] })
+                                                                @setState
+                                                                    ordermap: result
+                                                                    ordermaplist: records
+                                                                    pmphase: null
+                                                                setTimeout (->
+                                                                    $(APP).trigger('reloadData')
+                                                                ), 500
+                                                            return
+                                                        ).bind(this)
+                                                when 2#back
+                                                    @setState pmphase: null
+                                        else
+                                            switch record.code
+                                                when 1 # create ordermap form
+                                                    @setState
+                                                        pmphase: 2
+                                                        ordermap: null
+                                                when 2 #find list ordermap
+                                                    formData = new FormData
+                                                    formData.append 'customer_id', @state.customer.id
+                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    message = "thông tin phiếu khám"
+                                                    link = "/order_map/find"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'POST'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Tải " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Tải " + message + " thành công",1)
+                                                            if result.length > 0
+                                                                @setState
+                                                                    ordermaplist: result
+                                                                    ordermap: null
+                                                                $(APP).trigger('reloadData')
+                                                            else
+                                                                @showtoast("Không có " + message, 2)
+                                                            return
+                                                        ).bind(this)
+                                                when 3 # edit customer info
+                                                    @setState pmphase: 1 #edit
+                                                when 4 #del
+                                                    formData = new FormData
+                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    formData.append 'id', @state.customer.id
+                                                    message = "thông tin bệnh nhân"
+                                                    link = "/customer_record"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'DELETE'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Xóa " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Xóa " + message + " thành công",1)
+                                                            @setState
+                                                                ordermap: null
+                                                                ordermaplist: null
+                                                                pmphase: null
+                                                                pmpm: null
+                                                                customer: null
+                                                                pmtask: null
+                                                            return
+                                                        ).bind(this)
+                                                when 5#back
+                                                    @setState
+                                                        pmphase: null
+                                                        customer: null
+                                                        pmtask: null
+                                                        ordermap: null
+                                                        ordermaplist: null
+                                                        pmpm: null
+                                                when 6#view ordermap
+                                                    @setState pmphase: 3 #edit ordermap
+    
+                                                
+    triggerButtonAtpmpm: (record) ->
+        switch @state.currentpermission.table_id
+            when 1
+                switch @state.ptask
+                    when 1
+                        switch @state.pmtask
+                            when 1    
+                                if @state.customer != null
+                                    switch @state.pmphase
+                                        when 1
+                                            console.log 1
+                                        when 2
+                                            console.log 2
+                                        when 3
+                                            if @state.ordermap != null
+                                                switch @state.pmpm
+                                                    when 1
+                                                        switch record.code
+                                                            when 1#luu
+                                                                formData = new FormData
+                                                                formData.append 'id_station', @state.currentstation.station.id
+                                                                formData.append 'id', @state.ordermap.id
+                                                                if $('#form_status').val() == 'Tình trạng'
+                                                                    formData.append 'status', @state.ordermap.status
+                                                                else
+                                                                    formData.append 'status', $('#form_status').val()
+                                                                formData.append 'remark', $('#form_remark').val()
+                                                                formData.append 'customer_id', @state.customer.id
+                                                                formData.append 'cname', @state.customer.cname
+                                                                formData.append 'service_id', $('#form_s_id').val()
+                                                                formData.append 'sername', $('#form_sname').val()
+                                                                formData.append 'tpayment', $('#form_tpayment').val()
+                                                                formData.append 'discount', $('#form_discount').val()
+                                                                formData.append 'tpayout', $('#form_tpayout').val()
+                                                                formData.append 'code', @generateRandom(5)
+                                                                message = "thông tin phiếu khám"
+                                                                link = "/order_map"
+                                                                $.ajax
+                                                                    url: link
+                                                                    type: 'PUT'
+                                                                    data: formData
+                                                                    async: false
+                                                                    cache: false
+                                                                    contentType: false
+                                                                    processData: false
+                                                                    error: ((result) ->
+                                                                        @showtoast("Thay đổi " + message + " thất bại",3)
+                                                                        return
+                                                                    ).bind(this)
+                                                                    success: ((result) ->
+                                                                        @showtoast("Thay đổi " + message + " thành công",1)
+                                                                        for record in @state.ordermaplist
+                                                                            if record.id == result.id
+                                                                                index = @state.ordermaplist.indexOf record
+                                                                                records = React.addons.update(@state.ordermaplist, { $splice: [[index, 1, result]] })
+                                                                                @setState
+                                                                                    ordermap: result
+                                                                                    ordermaplist: records
+                                                                                    pmphase: null
+                                                                                    pmpm: null
+                                                                                break
+                                                                        setTimeout (->
+                                                                            $(APP).trigger('reloadData')
+                                                                        ), 500
+                                                                        return
+                                                                    ).bind(this)
+                                                            when 2#back
+                                                                @setState pmpm: null
+                                                    else
+                                                        switch record.code
+                                                            when 1#edit
+                                                                @setState pmpm: 1
+                                                            when 2#xoa
+                                                                formData = new FormData
+                                                                formData.append 'id_station', @state.currentstation.station.id
+                                                                formData.append 'id', @state.ordermap.id
+                                                                message = "thông tin phiếu khám"
+                                                                link = "/order_map"
+                                                                $.ajax
+                                                                    url: link
+                                                                    type: 'DELETE'
+                                                                    data: formData
+                                                                    async: false
+                                                                    cache: false
+                                                                    contentType: false
+                                                                    processData: false
+                                                                    error: ((result) ->
+                                                                        @showtoast("Xóa " + message + " thất bại",3)
+                                                                        return
+                                                                    ).bind(this)
+                                                                    success: ((result) ->
+                                                                        @showtoast("Xóa " + message + " thành công",1)
+                                                                        if @state.ordermaplist.length == 1
+                                                                            @setState
+                                                                                ordermap: null
+                                                                                ordermaplist: null
+                                                                                pmphase: null
+                                                                                pmpm: null
+                                                                            setTimeout (->
+                                                                                $(APP).trigger('reloadData')
+                                                                            ), 500
+                                                                        else
+                                                                            index = @state.records.indexOf @state.ordermap
+                                                                            records = React.addons.update(@state.ordermaplist, { $splice: [[index, 1]] })
+                                                                            @setState
+                                                                                ordermap: null
+                                                                                ordermaplist: records
+                                                                                pmphase: null
+                                                                                pmpm: null
+                                                                            setTimeout (->
+                                                                                $(APP).trigger('reloadData')
+                                                                            ), 500
+                                                                        return
+                                                                    ).bind(this)
+                                                            when 3#back
+                                                                @setState pmphase: null
+                                        else
+                                            console.log 'else'
     triggerRecord: (record) ->
         switch @state.currentpermission.table_id
             when 1
@@ -964,204 +1194,21 @@
                                                                 when 1#Chose to go add customer
                                                                     if @state.customer != null
                                                                         switch @state.pmphase
-                                                                            when 1
-                                                                                React.DOM.div className: 'row',
-                                                                                    React.DOM.div className: 'row',
-                                                                                        React.DOM.div className: 'col-md-7',
-                                                                                            React.DOM.form className: 'form-horizontal content-app-alt', autoComplete: 'off',
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Họ và Tên'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_name', type: 'text', className: 'form-control', placeholder: 'Họ và tên', defaultValue: @state.customer.cname
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Ngày sinh'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_dob', type: 'text', className: 'form-control', placeholder: '31/01/1990', defaultValue:
-                                                                                                            try
-                                                                                                                @state.customer.dob.substring(8, 10) + "/" + @state.customer.dob.substring(5, 7) + "/" + @state.customer.dob.substring(0, 4)
-                                                                                                            catch error
-                                                                                                                ""
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Địa chỉ'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_address', type: 'text', className: 'form-control', placeholder: 'Địa chỉ', defaultValue: @state.customer.address
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Số ĐT'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_pnumber', type: 'number', className: 'form-control', placeholder: 'Số ĐT', defaultValue: @state.customer.pnumber
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'CMTND'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_noid', type: 'number', className: 'form-control', placeholder: 'Số CMTND', defaultValue: @state.customer.noid
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Ngày cấp'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_issue_date', type: 'text', className: 'form-control', placeholder: '31/01/2016', defaultValue:
-                                                                                                            try
-                                                                                                                @state.customer.issue_date.substring(8, 10) + "/" + @state.customer.issue_date.substring(5, 7) + "/" + @state.customer.issue_date.substring(0, 4)
-                                                                                                            catch error
-                                                                                                                ""
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Nơi cấp'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_issue_place', type: 'text', className: 'form-control', placeholder: 'Nơi cấp', defaultValue: @state.customer.issue_place
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Nơi làm việc'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_work_place', type: 'text', className: 'form-control', placeholder: 'Nơi làm việc', defaultValue: @state.customer.work_place
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử bệnh bản thân'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.textarea id: 'form_self_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử bệnh bản thân', defaultValue: @state.customer.self_history
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử bệnh gia đình'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.textarea id: 'form_family_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử bệnh gia đình', defaultValue: @state.customer.family_history
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử dị ứng thuốc'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.textarea id: 'form_drug_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử dị ứng thuốc', defaultValue: @state.customer.drug_history
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'Giới tính'
-                                                                                                    React.DOM.div className: 'col-sm-3',
-                                                                                                        switch @state.customer.gender
-                                                                                                            when 2
-                                                                                                                React.DOM.select id: 'form_gender', className: 'form-control',
-                                                                                                                    React.DOM.option value: '2', 'Nữ'
-                                                                                                                    React.DOM.option value: '1', 'Nam'
-                                                                                                            else
-                                                                                                                React.DOM.select id: 'form_gender', className: 'form-control',
-                                                                                                                    React.DOM.option value: '1', 'Nam'
-                                                                                                                    React.DOM.option value: '2', 'Nữ'
-                                                                                                    React.DOM.label className: 'col-sm-2 hidden-xs control-label', 'Ảnh đại diện'
-                                                                                                    React.DOM.div className: 'col-sm-4',
-                                                                                                        React.DOM.input id: 'form_avatar', type: 'file', className: 'form-control'
-                                                                                        React.DOM.div className: 'col-md-5 hidden-xs', style: {'alignContent': 'center'},
-                                                                                            React.DOM.div className: 'content-app-alt',
-                                                                                                React.DOM.div id: 'results',
-                                                                                                    React.DOM.img id: 'sample_avatar', style: {'maxWidth': '100%', 'maxHeight': '240px'}, src: @state.customer.avatar
-                                                                                                React.DOM.div id: 'my_camera'
-                                                                                                React.DOM.div className: 'spacer20'
-                                                                                                React.DOM.button type: 'button', className: 'btn btn-secondary-docapp', onClick: @setup_webcam, 'Khởi tạo'
-                                                                                                React.DOM.button type: 'button', className: 'btn btn-primary-docapp', value: 'take Large Snapshot', onClick: @take_snapshot, 'Chụp'
-                                                                                        React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
-                                                                                            React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 3}, Clicked: @triggerpmphase
-                                                                                            React.DOM.button onClick: @handleSubmit, className: 'btn btn-secondary-docapp pull-right', 'Lưu'    
+                                                                            when 1 #edit form customer record
+                                                                                React.createElement StationContentApp, customer: @state.customer, datatype: 7, trigger: @triggerButtonAtpmphase
                                                                             when 2 # add ordermap form
-                                                                                React.DOM.div className: 'row',
-                                                                                    React.DOM.div className: 'row',
-                                                                                        React.DOM.div className: 'col-md-12',
-                                                                                            React.DOM.div className: 'spacer20'
-                                                                                            React.DOM.form className: 'form-horizontal content-app-alt', style: {'paddingLeft': '40px', 'paddingRight': '40px'}, autoComplete: 'off',
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Chưa thanh toán, chưa khám bệnh'},{id: 2, name: 'Đã thanh toán, đang chờ khám'},{id: 3, name: 'Đã thanh toán, đã khám bệnh'},{id: 4, name: 'Chưa thanh toán, đã khám bệnh'}], text: 'Tình trạng'
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên dịch vụ'
-                                                                                                    React.DOM.div className: 'col-sm-8',
-                                                                                                        React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'sid'
-                                                                                                        React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
-                                                                                                        React.DOM.div className: "auto-complete", id: "sname_autocomplete",
-                                                                                                            if @state.autoComplete != null and @state.code == 'sname'
-                                                                                                                React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
-                                                                                                React.DOM.div className: 'form-group',
-                                                                                                    React.DOM.div className: 'col-md-8',
-                                                                                                        React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Ghi chú'
-                                                                                                        React.DOM.div className: 'col-sm-8',
-                                                                                                            React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú'
-                                                                                                    React.DOM.div className: 'col-md-4',
-                                                                                                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
-                                                                                                        React.DOM.div className: 'col-sm-6',
-                                                                                                            React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggersafe
-                                                                                                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
-                                                                                                        React.DOM.div className: 'col-sm-6',
-                                                                                                            React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
-                                                                                                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
-                                                                                                        React.DOM.div className: 'col-sm-6',
-                                                                                                            React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', step: 'any', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
-                                                                                                        React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
-                                                                                                        React.DOM.div className: 'col-sm-6',
-                                                                                                            React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
-                                                                                        React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
-                                                                                            React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 3}, Clicked: @triggerpmphase
-                                                                                            React.DOM.button onClick: @handleSubmit, className: 'btn btn-secondary-docapp pull-right', 'Lưu'    
+                                                                                React.createElement StationContentApp, ordermap: null, customer: @state.customer, station: @state.currentstation.station, datatype: 5, trigger: @triggerButtonAtpmphase
                                                                             when 3 # vew form with 
                                                                                 if @state.ordermap != null
-                                                                                    #print edit form with filled in
-                                                                                else
-                                                                                    #print addform
-                                                                            else
-                                                                                React.createElement StationContentApp, record: @state.customer, order: @state.ordermap, orderlist: @state.ordermaplist, datatype: 4, trigger: @triggerpmphaseminor, triggerRecord: @triggerRecord
-                                                                    else
-                                                                        React.DOM.div className: 'row',
-                                                                            React.DOM.div className: 'row',
-                                                                                React.DOM.div className: 'col-md-7',
-                                                                                    React.DOM.form className: 'form-horizontal content-app-alt', autoComplete: 'off',
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Họ và Tên'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.input id: 'form_name', type: 'text', className: 'form-control', placeholder: 'Họ và tên'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Ngày sinh'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.input id: 'form_dob', type: 'text', className: 'form-control', placeholder: '31/01/1990'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Địa chỉ'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.input id: 'form_address', type: 'text', className: 'form-control', placeholder: 'Địa chỉ'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Số ĐT'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.input id: 'form_pnumber', type: 'number', className: 'form-control', placeholder: 'Số ĐT'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'CMTND'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.input id: 'form_noid', type: 'number', className: 'form-control', placeholder: 'Số CMTND'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Ngày cấp'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.input id: 'form_issue_date', type: 'text', className: 'form-control', placeholder: '31/01/2016'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Nơi cấp'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.input id: 'form_issue_place', type: 'text', className: 'form-control', placeholder: 'Nơi cấp'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Nơi làm việc'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.input id: 'form_work_place', type: 'text', className: 'form-control', placeholder: 'Nơi làm việc'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử bệnh bản thân'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.textarea id: 'form_self_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử bệnh bản thân'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử bệnh gia đình'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.textarea id: 'form_family_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử bệnh gia đình'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử dị ứng thuốc'
-                                                                                            React.DOM.div className: 'col-sm-8',
-                                                                                                React.DOM.textarea id: 'form_drug_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử dị ứng thuốc'
-                                                                                        React.DOM.div className: 'form-group',
-                                                                                            React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'Giới tính'
-                                                                                            React.DOM.div className: 'col-sm-3',
-                                                                                                React.DOM.select id: 'form_gender', className: 'form-control',
-                                                                                                    React.DOM.option value: '1', 'Nam'
-                                                                                                    React.DOM.option value: '2', 'Nữ'
-                                                                                            React.DOM.label className: 'col-sm-2 hidden-xs control-label', 'Ảnh đại diện'
-                                                                                            React.DOM.div className: 'col-sm-4',
-                                                                                                React.DOM.input id: 'form_avatar', type: 'file', className: 'form-control'
-                                                                                React.DOM.div className: 'col-md-5 hidden-xs', style: {'alignContent': 'center'},
-                                                                                    React.DOM.div className: 'content-app-alt',
-                                                                                        React.DOM.div id: 'results',
-                                                                                            React.DOM.img id: 'sample_avatar', style: {'maxWidth': '100%', 'maxHeight': '240px'}, src: '/assets/avatar_missing.png'
-                                                                                        React.DOM.div id: 'my_camera'
-                                                                                        React.DOM.div className: 'spacer20'
-                                                                                        React.DOM.button type: 'button', className: 'btn btn-secondary-docapp', onClick: @setup_webcam, 'Khởi tạo'
-                                                                                        React.DOM.button type: 'button', className: 'btn btn-primary-docapp', value: 'take Large Snapshot', onClick: @take_snapshot, 'Chụp'
-                                                                                React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
-                                                                                    React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 3}, Clicked: @triggerpmphase
-                                                                                    React.DOM.button onClick: @handleSubmit, className: 'btn btn-secondary-docapp pull-right', 'Lưu'    
+                                                                                    switch @state.pmpm
+                                                                                        when 1#edit form
+                                                                                            React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, station: @state.currentstation.station, datatype: 5, trigger: @triggerButtonAtpmpm
+                                                                                        else #view form
+                                                                                            React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, className: 'col-md-12', datatype: 6, trigger: @triggerButtonAtpmpm
+                                                                            else #customer view
+                                                                                React.createElement StationContentApp, record: @state.customer, order: @state.ordermap, orderlist: @state.ordermaplist, datatype: 4, trigger: @triggerButtonAtpmphase, triggerRecord: @triggerRecord
+                                                                    else#add customer form
+                                                                        React.createElement StationContentApp, customer: null, datatype: 7, trigger: @triggerButtonAtpmtask
                                                                 when 2
                                                                     console.log 1
                                                                 else
@@ -1395,6 +1442,27 @@
         currentpage: 1
         firstcount: 0
         lastcount: 0
+        autoComplete: null
+        code: null
+    setup_webcam: ->
+        $('#webcamout').remove()
+        Webcam.set
+            width: 320
+            height: 240
+            dest_width: 320
+            dest_height: 240
+            crop_width: 320
+            crop_height: 240
+            image_format: 'jpeg'
+            jpeg_quality: 100
+        Webcam.attach '#my_camera'
+    take_snapshot: ->
+        Webcam.snap (data_uri) ->
+            document.getElementById('results').innerHTML = '<img id="webcamout" class="" src="' + data_uri + '"/>'
+            Webcam.reset()
+            $('#my_camera').css('height':'0px')
+            return
+        return
     showtoast: (message,toasttype) ->
 	    toastr.options =
             closeButton: true
@@ -1412,8 +1480,7 @@
         return
     componentWillMount: ->
         $(APP).on 'reloadData', ((e) ->
-            if @props.orderlist != null and @props.orderlist != undefined
-                console.log @props.orderlist
+            if @props.orderlist != null and @props.orderlist != undefined and @props.datatype == 4
                 try
                     @setState
                         records: @props.orderlist
@@ -1428,6 +1495,19 @@
                                 @props.orderlist.length
                             else
                                 10
+                catch error
+                    console.log error
+            else if @props.orderlist == null and @props.datatype == 4
+                try
+                    @setState
+                        records: null
+                        filteredRecord: null
+                        record: null
+                        lastsorted: null
+                        viewperpage: 10
+                        currentpage: 1
+                        firstcount: 0
+                        lastcount: 0
                 catch error
                     console.log error
         ).bind(this)
@@ -1472,6 +1552,9 @@
     triggercode: (code) ->
         @props.trigger code
     trigger: ->
+    triggersafe: ->
+    triggerbutton: (e) ->
+        @props.trigger e
     dynamicSort: (property) ->
         sortOrder = 1
         if property[0] == '-'
@@ -1551,6 +1634,339 @@
                 @triggerPage(Number($('#page_number').val()))
             else
                 @showtoast("Số trang bạn muốn chuyển tới không phù hợp", 3)
+    triggerAutoCompleteInputAlt: (code) ->
+        if code == 'cname'
+            if $('#form_cname').val().length > 3
+                formData = new FormData
+                formData.append 'cname', $('#form_cname').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/customer_record/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'ename'
+            if $('#form_ename').val().length > 1
+                formData = new FormData
+                formData.append 'ename', $('#form_ename').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/employee/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'epname'
+            if $('#form_epname').val().length > 1
+                formData = new FormData
+                formData.append 'ename', $('#form_epname').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/employee/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'sname'
+            if $('#form_sname').val().length > 1
+                formData = new FormData
+                formData.append 'sname', $('#form_sname').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/service/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'pname'
+            if $('#form_pname').val().length > 1
+                formData = new FormData
+                formData.append 'pname', $('#form_pname').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/position/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'rname'
+            if $('#form_rname').val().length > 1
+                formData = new FormData
+                formData.append 'name', $('#form_rname').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/room/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'company'
+            if $('#form_company').val().length > 1
+                formData = new FormData
+                formData.append 'name', $('#form_company').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/medicine_company/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'supplier'
+            if $('#form_supplier').val().length > 1
+                formData = new FormData
+                formData.append 'name', $('#form_supplier').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/medicine_supplier/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'sample'
+            if $('#form_sample').val().length > 1
+                formData = new FormData
+                formData.append 'name', $('#form_sample').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/medicine_sample/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'billcode'
+            if $('#form_billcode').val().length > 1
+                formData = new FormData
+                formData.append 'billcode', $('#form_billcode').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/medicine_bill_in/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'sample_sell'
+            if $('#form_sample').val().length > 1
+                formData = new FormData
+                formData.append 'name_sell', $('#form_sample').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/medicine_sample/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'script_ex'
+            if $('#form_script_code').val().length > 1
+                formData = new FormData
+                formData.append 'code', $('#form_script_code').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/medicine_prescript_external/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)
+        else if code == 'script_in'
+            if $('#form_script_code').val().length > 1
+                formData = new FormData
+                formData.append 'code', $('#form_script_code').val().toLowerCase()
+                formData.append 'id_station', @props.station.id
+                $.ajax
+                    url: '/medicine_prescript_internal/find'
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    success: ((result) ->
+                        @setState
+                            autoComplete: result
+                            code: code
+                        return
+                    ).bind(this)                       
+    triggerAutoComplete: (record) ->
+        if @state.code == 'cname'
+            $('#form_cname').val(record.cname)
+            $('#form_c_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'ename'
+            $('#form_ename').val(record.ename)
+            $('#form_e_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'epname'
+            $('#form_epname').val(record.ename)
+            $('#form_e_p_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'sname'
+            $('#form_sname').val(record.sname)
+            $('#form_tpayment').val(record.price)
+            $('#form_tpayout').val(record.price)
+            $('#form_s_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'pname'
+            $('#form_pname').val(record.pname)
+            $('#form_p_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'rname'
+            $('#form_rname').val(record.name)
+            $('#form_r_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'company'
+            $('#form_company').val(record.name)
+            $('#form_company_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'supplier'
+            $('#form_supplier').val(record.name)
+            $('#form_supplier_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'sample'
+            $('#form_sample').val(record.name)
+            $('#form_sample_id').val(record.id)
+            $('#form_company').val(record.company)
+            $('#form_company_id').val(record.company_id)
+            $('#form_price').val(record.price)
+            @setState autoComplete: null
+        else if @state.code == 'sample_sell'
+            $('#form_sample').val(record.name)
+            $('#form_sample_id').val(record.id)
+            $('#form_company').val(record.company)
+            $('#form_company_id').val(record.company_id)
+            $('#form_price').val(record.price)
+            @setState autoComplete: null
+        else if @state.code == 'billcode'
+            $('#form_billcode').val(record.billcode)
+            $('#form_billcode_id').val(record.id)
+            @setState autoComplete: null
+        else if @state.code == 'script_ex'
+            $('#form_script_code').val(record.code)
+            $('#form_script_id').val(record.id)
+            $('#form_c_id').val(record.customer_id)
+            $('#form_cname').val(record.cname)
+            @setState autoComplete: null
+        else if @state.code == 'script_in'
+            $('#form_script_code').val(record.code)
+            $('#form_script_id').val(record.id)
+            $('#form_c_id').val(record.customer_id)
+            $('#form_cname').val(record.cname)
+            @setState autoComplete: null
+    triggerRecalPayment: (e) ->
+        switch @state.currentpermission.table_id
+            when 1
+                switch @state.ptask
+                    when 1
+                        switch @state.pmtask
+                            when 1    
+                                if @state.customer != null
+                                    switch @state.pmphase
+                                        when 2
+                                            if $('#form_tpayment').val() > 0
+                                                if $('#form_discount').val() > 0
+                                                    $('#form_discount_percent').val(Math.round(Number($('#form_discount').val())/Number($('#form_tpayment').val())*100))
+                                                    $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+                                                else
+                                                    if $('#form_discount_percent').val() > 0
+                                                        $('#form_discount').val(Math.round(Number($('#form_discount_percent').val()) * Number($('#form_tpayment').val()) / 100))
+                                                        $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+                                                    else
+                                                        $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
     stationRender: ->
         if @props.hidden    
             React.DOM.div className: @props.className + ' hidden-xs',
@@ -1729,8 +2145,326 @@
                         React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp col-md-3 pull-right', icon: 'zmdi zmdi-accounts-list', type: 3, text: ' Tải phiếu khám', code: {code: 2}, Clicked: @triggercode
                         React.createElement ButtonGeneral, className: 'btn btn-primary-docapp col-md-3 pull-right', icon: 'zmdi zmdi-edit', type: 3, text: ' Sửa thông tin', code: {code: 3}, Clicked: @triggercode
                         React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về ', code: {code: 5}, Clicked: @triggercode
-                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Xóa bệnh nhân', code: {code: 4}, Clicked: @triggercode
-                        
+                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Xóa bệnh nhân', code: {code: 4}, Clicked: @triggercode                       
+    editCustomerForm: ->
+        if @props.customer != null
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-7',
+                        React.DOM.form className: 'form-horizontal content-app-alt', autoComplete: 'off',
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Họ và Tên'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_name', type: 'text', className: 'form-control', placeholder: 'Họ và tên', defaultValue: @props.customer.cname
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Ngày sinh'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_dob', type: 'text', className: 'form-control', placeholder: '31/01/1990', defaultValue:
+                                        try
+                                            @props.customer.dob.substring(8, 10) + "/" + @props.customer.dob.substring(5, 7) + "/" + @props.customer.dob.substring(0, 4)
+                                        catch error
+                                            ""
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Địa chỉ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_address', type: 'text', className: 'form-control', placeholder: 'Địa chỉ', defaultValue: @props.customer.address
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Số ĐT'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_pnumber', type: 'number', className: 'form-control', placeholder: 'Số ĐT', defaultValue: @props.customer.pnumber
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'CMTND'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_noid', type: 'number', className: 'form-control', placeholder: 'Số CMTND', defaultValue: @props.customer.noid
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Ngày cấp'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_issue_date', type: 'text', className: 'form-control', placeholder: '31/01/2016', defaultValue:
+                                        try
+                                            @props.customer.issue_date.substring(8, 10) + "/" + @props.customer.issue_date.substring(5, 7) + "/" + @props.customer.issue_date.substring(0, 4)
+                                        catch error
+                                            ""
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Nơi cấp'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_issue_place', type: 'text', className: 'form-control', placeholder: 'Nơi cấp', defaultValue: @props.customer.issue_place
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Nơi làm việc'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_work_place', type: 'text', className: 'form-control', placeholder: 'Nơi làm việc', defaultValue: @props.customer.work_place
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử bệnh bản thân'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.textarea id: 'form_self_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử bệnh bản thân', defaultValue: @props.customer.self_history
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử bệnh gia đình'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.textarea id: 'form_family_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử bệnh gia đình', defaultValue: @props.customer.family_history
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử dị ứng thuốc'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.textarea id: 'form_drug_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử dị ứng thuốc', defaultValue: @props.customer.drug_history
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'Giới tính'
+                                React.DOM.div className: 'col-sm-3',
+                                    switch @props.customer.gender
+                                        when 2
+                                            React.DOM.select id: 'form_gender', className: 'form-control',
+                                                React.DOM.option value: '2', 'Nữ'
+                                                React.DOM.option value: '1', 'Nam'
+                                        else
+                                            React.DOM.select id: 'form_gender', className: 'form-control',
+                                                React.DOM.option value: '1', 'Nam'
+                                                React.DOM.option value: '2', 'Nữ'
+                                React.DOM.label className: 'col-sm-2 hidden-xs control-label', 'Ảnh đại diện'
+                                React.DOM.div className: 'col-sm-4',
+                                    React.DOM.input id: 'form_avatar', type: 'file', className: 'form-control'
+                    React.DOM.div className: 'col-md-5 hidden-xs', style: {'alignContent': 'center'},
+                        React.DOM.div className: 'content-app-alt',
+                            React.DOM.div id: 'results',
+                                React.DOM.img id: 'sample_avatar', style: {'maxWidth': '100%', 'maxHeight': '240px'}, src: @props.customer.avatar
+                            React.DOM.div id: 'my_camera'
+                            React.DOM.div className: 'spacer20'
+                            React.DOM.button type: 'button', className: 'btn btn-secondary-docapp', onClick: @setup_webcam, 'Khởi tạo'
+                            React.DOM.button type: 'button', className: 'btn btn-primary-docapp', value: 'take Large Snapshot', onClick: @take_snapshot, 'Chụp'
+                    React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                        React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+        else
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-7',
+                        React.DOM.form className: 'form-horizontal content-app-alt', autoComplete: 'off',
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Họ và Tên'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_name', type: 'text', className: 'form-control', placeholder: 'Họ và tên'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Ngày sinh'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_dob', type: 'text', className: 'form-control', placeholder: '31/01/1990'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Địa chỉ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_address', type: 'text', className: 'form-control', placeholder: 'Địa chỉ'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Số ĐT'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_pnumber', type: 'number', className: 'form-control', placeholder: 'Số ĐT'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'CMTND'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_noid', type: 'number', className: 'form-control', placeholder: 'Số CMTND'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Ngày cấp'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_issue_date', type: 'text', className: 'form-control', placeholder: '31/01/2016'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Nơi cấp'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_issue_place', type: 'text', className: 'form-control', placeholder: 'Nơi cấp'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Nơi làm việc'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_work_place', type: 'text', className: 'form-control', placeholder: 'Nơi làm việc'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử bệnh bản thân'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.textarea id: 'form_self_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử bệnh bản thân'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử bệnh gia đình'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.textarea id: 'form_family_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử bệnh gia đình'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-4 hidden-xs control-label', 'Tiền sử dị ứng thuốc'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.textarea id: 'form_drug_history', type: 'text', className: 'form-control', placeholder: 'Tiền sử dị ứng thuốc'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 hidden-xs control-label', 'Giới tính'
+                                React.DOM.div className: 'col-sm-3',
+                                    React.DOM.select id: 'form_gender', className: 'form-control',
+                                        React.DOM.option value: '1', 'Nam'
+                                        React.DOM.option value: '2', 'Nữ'
+                                React.DOM.label className: 'col-sm-2 hidden-xs control-label', 'Ảnh đại diện'
+                                React.DOM.div className: 'col-sm-4',
+                                    React.DOM.input id: 'form_avatar', type: 'file', className: 'form-control'
+                    React.DOM.div className: 'col-md-5 hidden-xs', style: {'alignContent': 'center'},
+                        React.DOM.div className: 'content-app-alt',
+                            React.DOM.div id: 'results',
+                                React.DOM.img id: 'sample_avatar', style: {'maxWidth': '100%', 'maxHeight': '240px'}, src: '/assets/avatar_missing.png'
+                            React.DOM.div id: 'my_camera'
+                            React.DOM.div className: 'spacer20'
+                            React.DOM.button type: 'button', className: 'btn btn-secondary-docapp', onClick: @setup_webcam, 'Khởi tạo'
+                            React.DOM.button type: 'button', className: 'btn btn-primary-docapp', value: 'take Large Snapshot', onClick: @take_snapshot, 'Chụp'
+                    React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                        React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+    editOrderMapForm: ->
+        if @props.customer != null and @props.ordermap != null
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-12',
+                        React.DOM.div className: 'spacer20'
+                        React.DOM.form className: 'form-horizontal content-app-alt', style: {'paddingLeft': '40px', 'paddingRight': '40px'}, autoComplete: 'off',
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Chưa thanh toán, chưa khám bệnh'},{id: 2, name: 'Đã thanh toán, đang chờ khám'},{id: 3, name: 'Đã thanh toán, đã khám bệnh'},{id: 4, name: 'Chưa thanh toán, đã khám bệnh'}], text: 'Tình trạng'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên dịch vụ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'sid', defaultValue: @props.ordermap.service_id
+                                    React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', defaultValue: @props.ordermap.sername, trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                                    React.DOM.div className: "auto-complete", id: "sname_autocomplete",
+                                        if @state.autoComplete != null and @state.code == 'sname'
+                                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
+                            React.DOM.div className: 'form-group',
+                                React.DOM.div className: 'col-md-8',
+                                    React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Ghi chú'
+                                    React.DOM.div className: 'col-sm-8',
+                                        React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue: @props.ordermap.remark
+                                React.DOM.div className: 'col-md-4',
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', defaultValue: @props.ordermap.tpayment, trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggersafe
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', defaultValue: @props.ordermap.discount, trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', step: 'any', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', defaultValue: @props.ordermap.tpayout, trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                        React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                            React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+        else if @props.customer != null and @props.ordermap == null
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-12',
+                        React.DOM.div className: 'spacer20'
+                        React.DOM.form className: 'form-horizontal content-app-alt', style: {'paddingLeft': '40px', 'paddingRight': '40px'}, autoComplete: 'off',
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Chưa thanh toán, chưa khám bệnh'},{id: 2, name: 'Đã thanh toán, đang chờ khám'},{id: 3, name: 'Đã thanh toán, đã khám bệnh'},{id: 4, name: 'Chưa thanh toán, đã khám bệnh'}], text: 'Tình trạng'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên dịch vụ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'sid'
+                                    React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                                    React.DOM.div className: "auto-complete", id: "sname_autocomplete",
+                                        if @state.autoComplete != null and @state.code == 'sname'
+                                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
+                            React.DOM.div className: 'form-group',
+                                React.DOM.div className: 'col-md-8',
+                                    React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Ghi chú'
+                                    React.DOM.div className: 'col-sm-8',
+                                        React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú'
+                                React.DOM.div className: 'col-md-4',
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggersafe
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', step: 'any', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                        React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                            React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+    viewOrderMap: ->
+        if @props.customer != null and @props.ordermap != null
+            React.DOM.div className: @props.className,
+                React.DOM.div className: 'col-md-4',
+                    React.DOM.div className: 'content-app-alt',
+                        React.DOM.h4 style: {'color': '#fff'}, @props.customer.cname
+                        React.DOM.img alt: 'pic1', src: @props.customer.avatar , className: 'img-responsive'
+                        React.DOM.div className: 'content-info-block',
+                            React.DOM.p null,
+                                React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                try
+                                    @props.customer.dob.substring(8, 10) + "/" + @props.customer.dob.substring(5, 7) + "/" + @props.customer.dob.substring(0, 4)
+                                catch error
+                                    console.log error
+                            React.DOM.p null,
+                                React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                try
+                                    @calAge(@props.customer.dob,2).years + " Tuổi " + @calAge(@props.customer.dob,2).months + "Tháng"
+                                catch error
+                                    console.log error
+                            React.DOM.p null,
+                                React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                switch @props.customer.gender
+                                    when 1
+                                        "Nam"
+                                    when 2
+                                        "Nữ"
+                                    else
+                                        "Chưa định"
+                            React.DOM.p null,
+                                React.DOM.i className: 'fa fa-map', style: {'marginRight' : '10px'}
+                                @props.customer.address
+                            React.DOM.p null,
+                                React.DOM.i className: 'fa fa-barcode', style: {'marginRight' : '10px'}
+                                @props.customer.noid
+                            React.DOM.p null,
+                                React.DOM.i className: 'fa fa-phone', style: {'marginRight' : '10px'}
+                                @props.customer.pnumber
+                React.DOM.div className: 'col-md-8',
+                    React.DOM.div className: 'row',
+                        React.DOM.div className: 'content-app-alt',
+                            React.DOM.div className: 'content-info-block', style: {'marginTop':'40px'},
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Số khám bệnh'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.ordermap.id
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Mã bệnh án'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.ordermap.code
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Dịch vụ đăng ký'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.ordermap.sername
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Ghi chú'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.ordermap.remark
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Thanh toán'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.ordermap.tpayout
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Tình trạng'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null,
+                                            switch @props.ordermap.status
+                                                when 1
+                                                    'Chưa thanh toán, chưa khám bệnh'
+                                                when 2
+                                                    'Đã thanh toán, đang chờ khám'
+                                                when 3
+                                                    'Đã thanh toán, đã khám bệnh'
+                                                when 4
+                                                    'Chưa thanh toán, đã khám bệnh'
+                    React.DOM.div className: 'row', style:{'paddingRight':'35px', 'paddingBottom':'20px'},
+                        React.DOM.div className: 'spacer10'
+                        React.DOM.div className: 'row',
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode                       
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Xóa', code: {code: 2}, Clicked: @triggercode
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Sửa', code: {code: 1}, Clicked: @triggercode                            
     render: ->
         switch @props.datatype
             when 1
@@ -1741,3 +2475,9 @@
                 @PtaskBlockRender()
             when 4
                 @customerInfoShow()
+            when 5
+                @editOrderMapForm()
+            when 6
+                @viewOrderMap()
+            when 7
+                @editCustomerForm()
