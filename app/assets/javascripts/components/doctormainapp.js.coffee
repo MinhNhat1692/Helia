@@ -220,7 +220,38 @@
                             customer: null
                             ordermap: null
                     when 2
-                        console.log 2
+                        formData = new FormData
+                        formData.append 'id_station', @state.currentstation.station.id
+                        message = "danh sách bệnh nhân trong ngày"
+                        link = "/customer_record/list"
+                        @showtoast("Bắt đầu tải " + message,2)
+                        $.ajax
+                            url: link
+                            type: 'POST'
+                            data: formData
+                            async: false
+                            cache: false
+                            contentType: false
+                            processData: false
+                            error: ((result) ->
+                                @showtoast("Tải " + message + " thất bại",3)
+                                return
+                            ).bind(this)
+                            success: ((result) ->
+                                @showtoast("Tải " + message + " thành công",1)
+                                @setState
+                                    customer: null
+                                    customerlist: null
+                                    ordermap: null
+                                    ordermaplist: null
+                                    pmtask: 2
+                                    pmphase: null
+                                    pmpm: null
+                                setTimeout (->
+                                    $(APP).trigger('reloadData')
+                                ), 500
+                                return
+                            ).bind(this)
                     when 3
                         @setState
                             currentpermission: null
@@ -240,6 +271,39 @@
                                     currentpmphase: 0
                                     customer: null
                                     ordermap: null
+                            when 2
+                                formData = new FormData
+                                formData.append 'id_station', @state.currentstation.station.id
+                                message = "danh sách bệnh nhân trong ngày"
+                                link = "/customer_record/list"
+                                @showtoast("Bắt đầu tải " + message,2)
+                                $.ajax
+                                    url: link
+                                    type: 'POST'
+                                    data: formData
+                                    async: false
+                                    cache: false
+                                    contentType: false
+                                    processData: false
+                                    error: ((result) ->
+                                        @showtoast("Tải " + message + " thất bại",3)
+                                        return
+                                    ).bind(this)
+                                    success: ((result) ->
+                                        @showtoast("Tải " + message + " thành công",1)
+                                        @setState
+                                            customer: null
+                                            customerlist: result[0]
+                                            ordermap: null
+                                            ordermaplist: null
+                                            pmtask: 2
+                                            pmphase: null
+                                            pmpm: null
+                                        setTimeout (->
+                                            $(APP).trigger('reloadData')
+                                        ), 500
+                                        return
+                                    ).bind(this)
                     when 2
                         console.log 2
                     when 3
@@ -571,9 +635,7 @@
                                                         ordermaplist: null
                                                         pmpm: null
                                                 when 6#view ordermap
-                                                    @setState pmphase: 3 #edit ordermap
-    
-                                                
+                                                    @setState pmphase: 3 #edit ordermap                                            
     triggerButtonAtpmpm: (record) ->
         switch @state.currentpermission.table_id
             when 1
@@ -1209,8 +1271,15 @@
                                                                                 React.createElement StationContentApp, record: @state.customer, order: @state.ordermap, orderlist: @state.ordermaplist, datatype: 4, trigger: @triggerButtonAtpmphase, triggerRecord: @triggerRecord
                                                                     else#add customer form
                                                                         React.createElement StationContentApp, customer: null, datatype: 7, trigger: @triggerButtonAtpmtask
-                                                                when 2
-                                                                    console.log 1
+                                                                when 2#Chose to go customer list
+                                                                    if @state.customerlist != null
+                                                                        switch @state.pmphase
+                                                                            when 1#add record
+                                                                                console.log 1
+                                                                            when 2#view record
+                                                                                console.log 2
+                                                                            else# view list
+                                                                                console.log 3
                                                                 else
                                                                     count = 0
                                                                     i = @state.currentpmtaskview - 1
@@ -1971,21 +2040,31 @@
         if @props.hidden    
             React.DOM.div className: @props.className + ' hidden-xs',
                 React.DOM.div className: 'content-app', style: {'cursor':'pointer'}, onClick: @triggerRecord,
-                    React.DOM.h4 null, @props.record.station.sname
-                    React.DOM.img alt: 'pic1', src: @props.record.station.logo , className: 'img-responsive'
+                    #React.DOM.h4 null, @props.record.station.sname
+                    #React.DOM.img alt: 'pic1', src: @props.record.station.logo , className: 'img-responsive'
+                    React.DOM.h4 null, @props.record.sname
+                    React.DOM.img alt: 'pic1', src: @props.record.logo , className: 'img-responsive'
                     React.DOM.div className: 'content-info-block',
-                        React.DOM.p null, @props.record.station.address
-                        React.DOM.p null, @props.record.station.pnumber
-                        React.DOM.p null, @props.record.station.hpage
+                        #React.DOM.p null, @props.record.station.address
+                        #React.DOM.p null, @props.record.station.pnumber
+                        #React.DOM.p null, @props.record.station.hpage
+                        React.DOM.p null, @props.record.address
+                        React.DOM.p null, @props.record.pnumber
+                        React.DOM.p null, @props.record.hpage
         else
             React.DOM.div className: @props.className,
                 React.DOM.div className: 'content-app', style: {'cursor':'pointer'}, onClick: @triggerRecord,
-                    React.DOM.h4 null, @props.record.station.sname
-                    React.DOM.img alt: 'pic1', src: @props.record.station.logo , className: 'img-responsive'
+                    #React.DOM.h4 null, @props.record.station.sname
+                    #React.DOM.img alt: 'pic1', src: @props.record.station.logo , className: 'img-responsive'
+                    React.DOM.h4 null, @props.record.sname
+                    React.DOM.img alt: 'pic1', src: @props.record.logo , className: 'img-responsive'
                     React.DOM.div className: 'content-info-block',
-                        React.DOM.p null, @props.record.station.address
-                        React.DOM.p null, @props.record.station.pnumber
-                        React.DOM.p null, @props.record.station.hpage
+                        #React.DOM.p null, @props.record.station.address
+                        #React.DOM.p null, @props.record.station.pnumber
+                        #React.DOM.p null, @props.record.station.hpage
+                        React.DOM.p null, @props.record.address
+                        React.DOM.p null, @props.record.pnumber
+                        React.DOM.p null, @props.record.hpage
     permissionRender: ->
         switch Number(@props.record.table_id)
             when 1
@@ -2481,3 +2560,103 @@
                 @viewOrderMap()
             when 7
                 @editCustomerForm()
+                
+                
+
+@StationRollMenu = React.createClass
+    getInitialState: ->
+        style: 1
+        curentview: 0
+    getData: ->
+        dataSet = []
+        switch @props.datatype
+            when 1#station list
+                for record in @props.record
+                    dataSet.push record.station
+        return dataSet
+    moveup: ->
+        dataSet = @getData
+        newview = @state.curentview + 1
+        try
+            if newview >= dataSet.length
+                newview = newview - dataSet.length
+        catch error
+            console.log error
+        @setState curentview: newview
+    movedown: ->
+        dataSet = @getData
+        newview = @state.curentview - 1
+        try
+            if newview < 0
+                newview = dataSet.length - 1
+        catch error
+            console.log error
+        @setState curentview: newview
+    triggerCode: (record) ->
+        @props.trigger record
+    normalRender: ->
+        dataSet = @getData()
+        switch dataSet.length
+            when 0
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-sm-12',
+                        React.DOM.div className: 'content-app', style: {'display':'table', 'color': '#fff', 'width': '100%'},
+                            React.DOM.p style: {'display': 'table-cell', 'verticalAlign': 'middle', 'textAlign': 'center'}, "Không có mục lựa chọn nào"
+            when 1
+                React.DOM.div className: 'row',
+                    React.createElement StationContentApp, datatype: 1, record: dataSet[0], className: 'col-sm-12 animated fadeIn', hidden: false, trigger: @triggerCode
+            when 2
+                count = 0
+                i = @state.curentview - 1
+                React.DOM.div className: 'row',    
+                    while count < 2
+                        count = count + 1
+                        i = i + 1
+                        if i >= dataSet.length
+                            i = i - dataSet.length
+                        if i == @state.curentview
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: false, trigger: @triggerCode
+                        else
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: true, trigger: @triggerCode
+                    React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
+                        React.DOM.i className: 'zmdi zmdi-chevron-left'
+                    React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
+                        React.DOM.i className: 'zmdi zmdi-chevron-right'
+            when 3
+                count = 0
+                i = @state.curentview - 1
+                React.DOM.div className: 'row',
+                    while count < 3
+                        count = count + 1
+                        i = i + 1
+                        if i >= dataSet.length
+                            i = i - dataSet.length
+                        if i == @state.curentview
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
+                        else
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
+                    React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
+                        React.DOM.i className: 'zmdi zmdi-chevron-left'
+                    React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
+                        React.DOM.i className: 'zmdi zmdi-chevron-right'
+            else
+                count = 0
+                i = @state.curentview - 1
+                React.DOM.div className: 'row',    
+                    while count < 3
+                        count = count + 1
+                        i = i + 1
+                        if i >= dataSet.length
+                            i = i - dataSet.length
+                        if i == @state.curentview
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
+                        else
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
+                    React.DOM.div className: 'side-left-button', onClick: @movedown,
+                        React.DOM.i className: 'zmdi zmdi-chevron-left'
+                    React.DOM.div className: 'side-right-button', onClick: @moveup,
+                        React.DOM.i className: 'zmdi zmdi-chevron-right'
+    render: ->
+        switch @props.datatype
+            when 1
+                @normalRander()

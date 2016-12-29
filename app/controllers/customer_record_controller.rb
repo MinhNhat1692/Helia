@@ -150,30 +150,52 @@ class CustomerRecordController < ApplicationController
 			end
 		end
 	end
-
+  
   def list
-		if has_station?
-			@station = Station.find_by(user_id: current_user.id)
-			@data = []
-      if params.has_key?(:date)
-        n = params[:date].to_i
-        start = n.days.ago.beginning_of_day
-        fin = Time.now
-        @data[0] = CustomerRecord.where(station_id: @station.id, created_at: start..fin).order(updated_at: :desc).limit(1000)
-        @data[1] = Gender.where(lang: 'vi')
-      elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
-        start = params[:begin_date].to_date.beginning_of_day
-        fin = params[:end_date].to_date.end_of_day
-        @data[0] = CustomerRecord.where(station_id: @station.id, created_at: start..fin).order(updated_at: :desc).limit(1000)
-        @data[1] = Gender.where(lang: 'vi')
+		if params.has_key?(:id_station)
+      if current_user.check_permission params[:id_station], 1, 4
+  			@station = Station.find params[:id_station]
+	  		@data = []
+			  if params.has_key?(:date)
+			    n = params[:date].to_i
+			    start = n.days.ago.beginning_of_day
+			    fin = Time.now
+			    @data[0] = CustomerRecord.where(station_id: @station.id, created_at: start..fin).order(updated_at: :desc).limit(1000)
+			  elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+			    start = params[:begin_date].to_date.beginning_of_day
+			    fin = params[:end_date].to_date.end_of_day
+			    @data[0] = CustomerRecord.where(station_id: @station.id, created_at: start..fin).order(updated_at: :desc).limit(1000)
+			  else
+			    @data[0] = CustomerRecord.where(station_id: @station.id).order(updated_at: :desc).limit(1000)
+			  end
+				render json: @data
       else
-        @data[0] = CustomerRecord.where(station_id: @station.id).order(updated_at: :desc).limit(1000)
-        @data[1] = Gender.where(lang: 'vi')
+				head :no_content, :status => :bad_request
       end
-			render json: @data
-		else
-      redirect_to root_path
-    end
+    else
+			if has_station?
+				@station = Station.find_by(user_id: current_user.id)
+				@data = []
+			  if params.has_key?(:date)
+			    n = params[:date].to_i
+			    start = n.days.ago.beginning_of_day
+			    fin = Time.now
+			    @data[0] = CustomerRecord.where(station_id: @station.id, created_at: start..fin).order(updated_at: :desc).limit(1000)
+			    @data[1] = Gender.where(lang: 'vi')
+			  elsif params.has_key?(:begin_date) && params.has_key?(:end_date)
+			    start = params[:begin_date].to_date.beginning_of_day
+			    fin = params[:end_date].to_date.end_of_day
+			    @data[0] = CustomerRecord.where(station_id: @station.id, created_at: start..fin).order(updated_at: :desc).limit(1000)
+			    @data[1] = Gender.where(lang: 'vi')
+			  else
+			    @data[0] = CustomerRecord.where(station_id: @station.id).order(updated_at: :desc).limit(1000)
+			    @data[1] = Gender.where(lang: 'vi')
+			  end
+				render json: @data
+			else
+			  redirect_to root_path
+			end
+		end
 	end
   
   
