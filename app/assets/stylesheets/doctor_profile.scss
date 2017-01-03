@@ -3024,3 +3024,44 @@ h4, .h4 {
 .content-app-alt img{
     margin: 0 auto;
 }
+
+.p-15{
+    padding: 15px;
+}
+
+.p-t-15{
+    padding-top: 15px;
+}
+
+.p-b-15{
+    padding-bottom: 15px;
+}
+
+.p-l-25{
+    padding-left: 25px;
+}
+
+.p-r-25{
+    padding-right: 25px;
+}
+
+.filter-form .form-control{
+    border-radius: 2em;
+    border: solid 2px rgba(129, 145, 177, 0.8);
+    padding-left: 15px;
+    transition: all 0.5s;
+}
+
+.filter-form .form-control:hover, .filter-form .form-control:active{
+    border: solid 2px #8191B1;
+}
+
+.btn-group-middle {
+    font-size: 12px;
+    color: #8191B1;
+    background: transparent;
+    border-radius: 0;
+    border: solid 2px #8191B1;
+    text-transform: none;
+    padding: 3px 10px;
+}

@@ -6,18 +6,13 @@
         permissionlist: null
         currentpermission: null
         ptask: null
-        currentptaskview: 0
         pmtask: null
-        currentpmtaskview: 0
         pmphase: null
-        currentpmphase: 0
         pmpm: 0
         customer: null
         ordermap: null
         customerlist: null
         ordermaplist: null
-        currentstationview: 0
-        currentpermissionview: 0
         tabheader: "Settings"
         headertextcolor: "fff"
         backgroundimg: "http://www.diqiushijie.com/uploads/2015/10/56251_0.jpg"
@@ -31,82 +26,6 @@
         code: null
         customerRecordTask: [{id:1, name: 'Bệnh nhân', icon: '/assets/patient.png', text: 'Sử dụng để quản lý và thêm bớt danh sách bệnh nhân trong hệ thông', code: 1},{id: 2, name: 'Phiếu khám', icon: '/assets/choice.png', text: 'Sử dụng để quản lý và thêm bớt danh sách phiếu khám trong hệ thông', code: 2}, {id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         customerRecordMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm bệnh nhân vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách bệnh nhân trong ngày', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
-    moveuppmtaskView: ->
-        switch @state.currentpermission.table_id
-            when 1
-                switch @state.ptask
-                    when 1
-                        newview = @state.currentpmtaskview + 1
-                        try
-                            if newview >= @state.customerRecordMinorTask.length
-                                newview = newview - @state.customerRecordMinorTask.length
-                        catch error
-                            console.log error
-                        @setState currentpmtaskview: newview
-    movedownpmtaskView: ->
-        switch @state.currentpermission.table_id
-            when 1
-                switch @state.ptask
-                    when 1
-                        newview = @state.currentpmtaskview - 1
-                        try
-                            if newview < 0
-                                newview = @state.customerRecordMinorTask.length - 1
-                        catch error
-                            console.log error
-                        @setState currentpmtaskview: newview
-    moveupptaskView: ->
-        switch @state.currentpermission.table_id
-            when 1
-                newview = @state.currentptaskview + 1
-                try
-                    if newview >= @state.customerRecordTask.length
-                        newview = newview - @state.customerRecordTask.length
-                catch error
-                    console.log error
-                @setState currentptaskview: newview
-    movedownptaskView: ->
-        switch @state.currentpermission.table_id
-            when 1
-                newview = @state.currentptaskview - 1
-                try
-                    if newview < 0
-                        newview = @state.customerRecordTask.length - 1
-                catch error
-                    console.log error
-                @setState currentptaskview: newview
-    moveupStationView: ->
-        newview = @state.currentstationview + 1
-        try
-            if newview >= @state.stationlist.length
-                newview = newview - @state.stationlist.length
-        catch error
-            console.log error
-        @setState currentstationview: newview
-    movedownStationView: ->
-        newview = @state.currentstationview - 1
-        try
-            if newview < 0
-                newview = @state.stationlist.length - 1
-        catch error
-            console.log error
-        @setState currentstationview: newview
-    moveupPermissionView: ->
-        newview = @state.currentpermissionview + 1
-        try
-            if newview >= @state.permissionlist.length
-                newview = newview - @state.permissionlist.length
-        catch error
-            console.log error
-        @setState currentpermissionview: newview
-    movedownPermissionView: ->
-        newview = @state.currentpermissionview - 1
-        try
-            if newview < 0
-                newview = @state.permissionlist.length - 1
-        catch error
-            console.log error
-        @setState currentpermissionview: newview
     showtoast: (message,toasttype) ->
 	    toastr.options =
             closeButton: true
@@ -144,7 +63,7 @@
     selectStation: (station) ->
         permissionarray = []
         for permiss in @state.permissionlist
-            if permiss.station_id == station.station.id
+            if permiss.station_id == station.id
                 permissionarray.push permiss
         @setState
             currentstation: station
@@ -196,8 +115,6 @@
                             stationlist: result[1]
                             permissionlist: result[0]
                             currentpermission: null
-                            currentpermissionview: 0
-                            currentstationview: 0
                     ).bind(this)
             when 2
                 @setState
@@ -214,14 +131,11 @@
                         @setState
                             ptask: 1
                             tabheader: 'Bệnh nhân'
-                            currentptaskview: 0
-                            currentpmtaskview: 0
-                            currentpmphase: 0
                             customer: null
                             ordermap: null
                     when 2
                         formData = new FormData
-                        formData.append 'id_station', @state.currentstation.station.id
+                        formData.append 'id_station', @state.currentstation.id
                         message = "danh sách bệnh nhân trong ngày"
                         link = "/customer_record/list"
                         @showtoast("Bắt đầu tải " + message,2)
@@ -255,7 +169,6 @@
                     when 3
                         @setState
                             currentpermission: null
-                            currentptaskview: 0
     triggerpmtask: (record) ->
         switch @state.currentpermission.table_id
             when 1
@@ -266,14 +179,11 @@
                                 @setState
                                     pmtask: 1
                                     tabheader: 'Bệnh nhân'
-                                    currentptaskview: 0
-                                    currentpmtaskview: 0
-                                    currentpmphase: 0
                                     customer: null
                                     ordermap: null
                             when 2
                                 formData = new FormData
-                                formData.append 'id_station', @state.currentstation.station.id
+                                formData.append 'id_station', @state.currentstation.id
                                 message = "danh sách bệnh nhân trong ngày"
                                 link = "/customer_record/list"
                                 @showtoast("Bắt đầu tải " + message,2)
@@ -304,6 +214,8 @@
                                         ), 500
                                         return
                                     ).bind(this)
+                            when 3
+                                @setState ptask: null
                     when 2
                         console.log 2
                     when 3
@@ -331,9 +243,6 @@
                                             @setState
                                                 pmtask: null
                                                 tabheader: 'Bệnh nhân'
-                                                currentptaskview: 0
-                                                currentpmtaskview: 0
-                                                currentpmphase: 0
                                                 customer: null
                                                 ordermap: null
                     when 2
@@ -362,7 +271,7 @@
                                                 when 2
                                                     formData = new FormData
                                                     formData.append 'customer_id', @state.customer.id
-                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    formData.append 'id_station', @state.currentstation.id
                                                     message = "thông tin phiếu khám"
                                                     link = "/order_map/find"
                                                     $.ajax
@@ -406,7 +315,7 @@
                                     switch record.code
                                         when 1#submit
                                             formData = new FormData
-                                            formData.append 'id_station', @state.currentstation.station.id
+                                            formData.append 'id_station', @state.currentstation.id
                                             formData.append 'gender', $('#form_gender').val()
                                             formData.append 'cname', $('#form_name').val()
                                             formData.append 'dob', $('#form_dob').val()
@@ -446,9 +355,6 @@
                                             @setState
                                                 pmtask: null
                                                 tabheader: 'Bệnh nhân'
-                                                currentptaskview: 0
-                                                currentpmtaskview: 0
-                                                currentpmphase: 0
                                                 customer: null
                                                 ordermap: null                    
     triggerButtonAtpmphase: (record) ->
@@ -466,7 +372,7 @@
                                                     formData = new FormData
                                                     formData.append 'id', @state.customer.id
                                                     formData.append 'gender', $('#form_gender').val()
-                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    formData.append 'id_station', @state.currentstation.id
                                                     formData.append 'gender', $('#form_gender').val()
                                                     formData.append 'cname', $('#form_name').val()
                                                     formData.append 'dob', $('#form_dob').val()
@@ -510,7 +416,7 @@
                                             switch record.code
                                                 when 1#submit
                                                     formData = new FormData
-                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    formData.append 'id_station', @state.currentstation.id
                                                     formData.append 'status', $('#form_status').val()
                                                     formData.append 'remark', $('#form_remark').val()
                                                     formData.append 'customer_id', @state.customer.id
@@ -569,7 +475,7 @@
                                                 when 2 #find list ordermap
                                                     formData = new FormData
                                                     formData.append 'customer_id', @state.customer.id
-                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    formData.append 'id_station', @state.currentstation.id
                                                     message = "thông tin phiếu khám"
                                                     link = "/order_map/find"
                                                     $.ajax
@@ -599,7 +505,7 @@
                                                     @setState pmphase: 1 #edit
                                                 when 4 #del
                                                     formData = new FormData
-                                                    formData.append 'id_station', @state.currentstation.station.id
+                                                    formData.append 'id_station', @state.currentstation.id
                                                     formData.append 'id', @state.customer.id
                                                     message = "thông tin bệnh nhân"
                                                     link = "/customer_record"
@@ -656,7 +562,7 @@
                                                         switch record.code
                                                             when 1#luu
                                                                 formData = new FormData
-                                                                formData.append 'id_station', @state.currentstation.station.id
+                                                                formData.append 'id_station', @state.currentstation.id
                                                                 formData.append 'id', @state.ordermap.id
                                                                 if $('#form_status').val() == 'Tình trạng'
                                                                     formData.append 'status', @state.ordermap.status
@@ -710,7 +616,7 @@
                                                                 @setState pmpm: 1
                                                             when 2#xoa
                                                                 formData = new FormData
-                                                                formData.append 'id_station', @state.currentstation.station.id
+                                                                formData.append 'id_station', @state.currentstation.id
                                                                 formData.append 'id', @state.ordermap.id
                                                                 message = "thông tin phiếu khám"
                                                                 link = "/order_map"
@@ -738,7 +644,7 @@
                                                                                 $(APP).trigger('reloadData')
                                                                             ), 500
                                                                         else
-                                                                            index = @state.records.indexOf @state.ordermap
+                                                                            index = @state.ordermaplist.indexOf @state.ordermap
                                                                             records = React.addons.update(@state.ordermaplist, { $splice: [[index, 1]] })
                                                                             @setState
                                                                                 ordermap: null
@@ -766,13 +672,14 @@
                                         when 1
                                             console.log 1
                                         else
+                                            console.log record
                                             @setState ordermap: record
     triggerAutoCompleteInputAlt: (code) ->
         if code == 'cname'
             if $('#form_cname').val().length > 3
                 formData = new FormData
                 formData.append 'cname', $('#form_cname').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/customer_record/find'
                     type: 'POST'
@@ -791,7 +698,7 @@
             if $('#form_ename').val().length > 1
                 formData = new FormData
                 formData.append 'ename', $('#form_ename').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/employee/find'
                     type: 'POST'
@@ -810,7 +717,7 @@
             if $('#form_epname').val().length > 1
                 formData = new FormData
                 formData.append 'ename', $('#form_epname').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/employee/find'
                     type: 'POST'
@@ -829,7 +736,7 @@
             if $('#form_sname').val().length > 1
                 formData = new FormData
                 formData.append 'sname', $('#form_sname').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/service/find'
                     type: 'POST'
@@ -848,7 +755,7 @@
             if $('#form_pname').val().length > 1
                 formData = new FormData
                 formData.append 'pname', $('#form_pname').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/position/find'
                     type: 'POST'
@@ -867,7 +774,7 @@
             if $('#form_rname').val().length > 1
                 formData = new FormData
                 formData.append 'name', $('#form_rname').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/room/find'
                     type: 'POST'
@@ -886,7 +793,7 @@
             if $('#form_company').val().length > 1
                 formData = new FormData
                 formData.append 'name', $('#form_company').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/medicine_company/find'
                     type: 'POST'
@@ -905,7 +812,7 @@
             if $('#form_supplier').val().length > 1
                 formData = new FormData
                 formData.append 'name', $('#form_supplier').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/medicine_supplier/find'
                     type: 'POST'
@@ -924,7 +831,7 @@
             if $('#form_sample').val().length > 1
                 formData = new FormData
                 formData.append 'name', $('#form_sample').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/medicine_sample/find'
                     type: 'POST'
@@ -943,7 +850,7 @@
             if $('#form_billcode').val().length > 1
                 formData = new FormData
                 formData.append 'billcode', $('#form_billcode').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/medicine_bill_in/find'
                     type: 'POST'
@@ -962,7 +869,7 @@
             if $('#form_sample').val().length > 1
                 formData = new FormData
                 formData.append 'name_sell', $('#form_sample').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/medicine_sample/find'
                     type: 'POST'
@@ -981,7 +888,7 @@
             if $('#form_script_code').val().length > 1
                 formData = new FormData
                 formData.append 'code', $('#form_script_code').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/medicine_prescript_external/find'
                     type: 'POST'
@@ -1000,7 +907,7 @@
             if $('#form_script_code').val().length > 1
                 formData = new FormData
                 formData.append 'code', $('#form_script_code').val().toLowerCase()
-                formData.append 'id_station', @state.currentstation.station.id
+                formData.append 'id_station', @state.currentstation.id
                 $.ajax
                     url: '/medicine_prescript_internal/find'
                     type: 'POST'
@@ -1184,66 +1091,7 @@
                                 React.DOM.div className: "tabcontainer-content",
                                     if @state.currentstation == null
                                         try
-                                            switch @state.stationlist.length
-                                                when 0
-                                                    React.DOM.div className: 'row',
-                                                        React.DOM.div className: 'col-sm-12',
-                                                            React.DOM.div className: 'content-app', style: {'display':'table', 'color': '#fff', 'width': '100%'},
-                                                                React.DOM.p style: {'display': 'table-cell', 'verticalAlign': 'middle', 'textAlign': 'center'}, "Bạn không có quyền truy cập vào dữ liệu làm việc của bất kỳ phòng khám nào. Bạn nên liên lạc với chủ cơ sở để được cấp quyền truy cập"
-                                                when 1
-                                                    React.DOM.div className: 'row',
-                                                        React.createElement StationContentApp, datatype: 1, record: @state.stationlist[0], className: 'col-sm-12 animated fadeIn', hidden: false, trigger: @selectStation
-                                                when 2
-                                                    count = 0
-                                                    i = @state.currentstationview - 1
-                                                    React.DOM.div className: 'row',    
-                                                        while count < 2
-                                                            count = count + 1
-                                                            i = i + 1
-                                                            if i >= @state.stationlist.length
-                                                                i = i - @state.stationlist.length
-                                                            if i == @state.currentstationview
-                                                                React.createElement StationContentApp, key: @state.stationlist[i].station.id, datatype: 1, record: @state.stationlist[i], className: 'col-sm-6 animated fadeIn', hidden: false, trigger: @selectStation
-                                                            else
-                                                                React.createElement StationContentApp, key: @state.stationlist[i].station.id, datatype: 1, record: @state.stationlist[i], className: 'col-sm-6 animated fadeIn', hidden: true, trigger: @selectStation
-                                                        React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedownStationView,
-                                                            React.DOM.i className: 'zmdi zmdi-chevron-left'
-                                                        React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveupStationView,
-                                                            React.DOM.i className: 'zmdi zmdi-chevron-right'
-                                                when 3
-                                                    count = 0
-                                                    i = @state.currentstationview - 1
-                                                    React.DOM.div className: 'row',    
-                                                        while count < 3
-                                                            count = count + 1
-                                                            i = i + 1
-                                                            if i >= @state.stationlist.length
-                                                                i = i - @state.stationlist.length
-                                                            if i == @state.currentstationview
-                                                                React.createElement StationContentApp, key: @state.stationlist[i].station.id, datatype: 1, record: @state.stationlist[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @selectStation
-                                                            else
-                                                                React.createElement StationContentApp, key: @state.stationlist[i].station.id, datatype: 1, record: @state.stationlist[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @selectStation
-                                                        React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedownStationView,
-                                                            React.DOM.i className: 'zmdi zmdi-chevron-left'
-                                                        React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveupStationView,
-                                                            React.DOM.i className: 'zmdi zmdi-chevron-right'
-                                                else
-                                                    count = 0
-                                                    i = @state.currentstationview - 1
-                                                    React.DOM.div className: 'row',    
-                                                        while count < 3
-                                                            count = count + 1
-                                                            i = i + 1
-                                                            if i >= @state.stationlist.length
-                                                                i = i - @state.stationlist.length
-                                                            if i == @state.currentstationview
-                                                                React.createElement StationContentApp, key: @state.stationlist[i].station.id, datatype: 1, record: @state.stationlist[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @selectStation
-                                                            else
-                                                                React.createElement StationContentApp, key: @state.stationlist[i].station.id, datatype: 1, record: @state.stationlist[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @selectStation
-                                                        React.DOM.div className: 'side-left-button', onClick: @movedownStationView,
-                                                            React.DOM.i className: 'zmdi zmdi-chevron-left'
-                                                        React.DOM.div className: 'side-right-button', onClick: @moveupStationView,
-                                                            React.DOM.i className: 'zmdi zmdi-chevron-right'
+                                            React.createElement StationRollMenu, datatype: 1, trigger: @selectStation, record: @state.stationlist
                                         catch error
                                             console.log error
                                     else
@@ -1259,12 +1107,12 @@
                                                                             when 1 #edit form customer record
                                                                                 React.createElement StationContentApp, customer: @state.customer, datatype: 7, trigger: @triggerButtonAtpmphase
                                                                             when 2 # add ordermap form
-                                                                                React.createElement StationContentApp, ordermap: null, customer: @state.customer, station: @state.currentstation.station, datatype: 5, trigger: @triggerButtonAtpmphase
+                                                                                React.createElement StationContentApp, ordermap: null, customer: @state.customer, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmphase
                                                                             when 3 # vew form with 
                                                                                 if @state.ordermap != null
                                                                                     switch @state.pmpm
                                                                                         when 1#edit form
-                                                                                            React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, station: @state.currentstation.station, datatype: 5, trigger: @triggerButtonAtpmpm
+                                                                                            React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmpm
                                                                                         else #view form
                                                                                             React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, className: 'col-md-12', datatype: 6, trigger: @triggerButtonAtpmpm
                                                                             else #customer view
@@ -1279,109 +1127,20 @@
                                                                             when 2#view record
                                                                                 console.log 2
                                                                             else# view list
-                                                                                console.log 3
+                                                                                React.createElement StationContentApp, datatype: 8
                                                                 else
-                                                                    count = 0
-                                                                    i = @state.currentpmtaskview - 1
-                                                                    React.DOM.div className: 'row',    
-                                                                        while count < 3
-                                                                            count = count + 1
-                                                                            i = i + 1
-                                                                            if i >= @state.customerRecordMinorTask.length
-                                                                                i = i - @state.customerRecordMinorTask.length
-                                                                            if i == @state.currentpmtaskview
-                                                                                React.createElement StationContentApp, key: @state.customerRecordMinorTask[i].id, datatype: 3, record: @state.customerRecordMinorTask[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerpmtask
-                                                                            else
-                                                                                React.createElement StationContentApp, key: @state.customerRecordMinorTask[i].id, datatype: 3, record: @state.customerRecordMinorTask[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerpmtask
-                                                                        React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedownpmtaskView,
-                                                                            React.DOM.i className: 'zmdi zmdi-chevron-left'
-                                                                        React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveuppmtaskView,
-                                                                            React.DOM.i className: 'zmdi zmdi-chevron-right'
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerpmtask, record: @state.customerRecordMinorTask
                                                         when 2
                                                             console.log 1
                                                         else
-                                                            count = 0
-                                                            i = @state.currentptaskview - 1
-                                                            React.DOM.div className: 'row',    
-                                                                while count < 3
-                                                                    count = count + 1
-                                                                    i = i + 1
-                                                                    if i >= @state.customerRecordTask.length
-                                                                        i = i - @state.customerRecordTask.length
-                                                                    if i == @state.currentptaskview
-                                                                        React.createElement StationContentApp, key: @state.customerRecordTask[i].id, datatype: 3, record: @state.customerRecordTask[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerptask
-                                                                    else
-                                                                        React.createElement StationContentApp, key: @state.customerRecordTask[i].id, datatype: 3, record: @state.customerRecordTask[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerptask
-                                                                React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedownptaskView,
-                                                                    React.DOM.i className: 'zmdi zmdi-chevron-left'
-                                                                React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveupptaskView,
-                                                                    React.DOM.i className: 'zmdi zmdi-chevron-right'
+                                                            React.createElement StationRollMenu, datatype: 3, trigger: @triggerptask, record: @state.customerRecordTask
                                                 when 2
                                                     console.log 1
                                                 when 3
                                                     console.log 1
                                         else
                                             try
-                                                switch @state.permissionlist.length
-                                                    when 0
-                                                        React.DOM.div className: 'row',
-                                                            React.DOM.div className: 'col-sm-12',
-                                                                React.DOM.div className: 'content-app', style: {'display':'table', 'color': '#fff', 'width': '100%'},
-                                                                    React.DOM.p style: {'display': 'table-cell', 'verticalAlign': 'middle', 'textAlign': 'center'}, "Bạn không có quyền truy cập vào dữ liệu làm việc nào của phòng khám này. Bạn nên liên lạc với chủ cơ sở để được cấp quyền truy cập"
-                                                    when 1
-                                                        React.DOM.div className: 'row',
-                                                            React.createElement StationContentApp, datatype: 2, record: @state.permissionlist[0], className: 'col-sm-12 animated fadeIn', hidden: false, trigger: @selectPermission
-                                                    when 2
-                                                        count = 0
-                                                        i = @state.currentpermissionview - 1
-                                                        React.DOM.div className: 'row',    
-                                                            while count < 2
-                                                                count = count + 1
-                                                                i = i + 1
-                                                                if i >= @state.permissionlist.length
-                                                                    i = i - @state.permissionlist.length
-                                                                if i == @state.currentpermissionview
-                                                                    React.createElement StationContentApp, key: @state.permissionlist[i].id, datatype: 2, record: @state.permissionlist[i], className: 'col-sm-6 animated fadeIn', hidden: false, trigger: @selectPermission
-                                                                else
-                                                                    React.createElement StationContentApp, key: @state.permissionlist[i].id, datatype: 2, record: @state.permissionlist[i], className: 'col-sm-6 animated fadeIn', hidden: true, trigger: @selectPermission
-                                                            React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedownPermissionView,
-                                                                React.DOM.i className: 'zmdi zmdi-chevron-left'
-                                                            React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveupPermissionView,
-                                                                React.DOM.i className: 'zmdi zmdi-chevron-right'
-                                                    when 3
-                                                        count = 0
-                                                        i = @state.currentpermissionview - 1
-                                                        React.DOM.div className: 'row',    
-                                                            while count < 3
-                                                                count = count + 1
-                                                                i = i + 1
-                                                                if i >= @state.permissionlist.length
-                                                                    i = i - @state.permissionlist.length
-                                                                if i == @state.currentpermissionview
-                                                                    React.createElement StationContentApp, key: @state.permissionlist[i].id, datatype: 2, record: @state.permissionlist[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @selectPermission
-                                                                else
-                                                                    React.createElement StationContentApp, key: @state.permissionlist[i].id, datatype: 2, record: @state.permissionlist[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @selectPermission
-                                                            React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedownPermissionView,
-                                                                React.DOM.i className: 'zmdi zmdi-chevron-left'
-                                                            React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveupPermissionView,
-                                                                React.DOM.i className: 'zmdi zmdi-chevron-right'
-                                                    else
-                                                        count = 0
-                                                        i = @state.currentpermissionview - 1
-                                                        React.DOM.div className: 'row',    
-                                                            while count < 3
-                                                                count = count + 1
-                                                                i = i + 1
-                                                                if i >= @state.permissionlist.length
-                                                                    i = i - @state.permissionlist.length
-                                                                if i == Number(@state.currentpermissionview)
-                                                                    React.createElement StationContentApp, key: @state.permissionlist[i].id, datatype: 2, record: @state.permissionlist[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @selectPermission
-                                                                else
-                                                                    React.createElement StationContentApp, key: @state.permissionlist[i].id, datatype: 2, record: @state.permissionlist[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @selectPermission
-                                                            React.DOM.div className: 'side-left-button', onClick: @movedownPermissionView,
-                                                                React.DOM.i className: 'zmdi zmdi-chevron-left'
-                                                            React.DOM.div className: 'side-right-button', onClick: @moveupPermissionView,
-                                                                React.DOM.i className: 'zmdi zmdi-chevron-right'
+                                                React.createElement StationRollMenu, datatype: 2, trigger: @selectPermission, record: @state.permissionlist
                                             catch error
                                                 console.log error
                         when 2
@@ -2124,7 +1883,7 @@
                         React.DOM.p null,
                             React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
                             try
-                                @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + "Tháng"
+                                @calAge(@props.record.dob,2).years + " Tuổi " + @calAge(@props.record.dob,2).months + " Tháng"
                             catch error
                                 console.log error
                         React.DOM.p null,
@@ -2544,6 +2303,52 @@
                             React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode                       
                             React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Xóa', code: {code: 2}, Clicked: @triggercode
                             React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Sửa', code: {code: 1}, Clicked: @triggercode                            
+    viewListCustomer: ->
+        React.DOM.div className: 'row',
+            React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25 filter-form',
+                React.DOM.form className: 'form-horizontal row', autoComplete: 'off',
+                    React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+                        React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
+                            React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+                                React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+                                React.DOM.option value: 1, 'Mã'
+                                React.DOM.option value: 2, 'Tên doanh nghiệp'
+                                React.DOM.option value: 3, 'Số ĐT'
+                                React.DOM.option value: 4, 'Địa chỉ'
+                                React.DOM.option value: 5, 'Email'
+                                React.DOM.option value: 6, 'Website'
+                                React.DOM.option value: 7, 'Mã số thuế'
+                        React.DOM.div className: 'col-sm-8',
+                            React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+                            React.DOM.div className: "auto-complete"
+                            #if @props.autoComplete != null
+                            #    for record in @props.autoComplete
+                            #        switch Number($('#filter_type_select').val())
+                            #            when 1
+                            #                React.createElement AutoComplete, key: record.id, text: record.noid, record: record, trigger: @triggerAutoComplete
+                            #            when 2
+                            #                React.createElement AutoComplete, key: record.id, text: record.name, record: record, trigger: @triggerAutoComplete
+                            #            when 3
+                            #                React.createElement AutoComplete, key: record.id, text: record.pnumber, record: record, trigger: @triggerAutoComplete
+                    React.DOM.div className: 'col-lg-6 text-center',
+                        React.DOM.div className: 'btn-group col-sm-6 text-center', style: {'marginBottom': '10px'},
+                            React.DOM.button type: 'button', className: 'btn btn-group-left',
+                                React.DOM.i className: 'zmdi zmdi-search'
+                                ' Tìm kiếm'
+                            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+                                React.DOM.i className: 'zmdi zmdi-close'
+                                ' Về ban đầu'
+                        React.DOM.div className: 'btn-group col-sm-6 text-center', style: {'marginBottom': '10px'},
+                            React.DOM.button type: 'button', className: 'btn btn-group-left',
+                                React.DOM.i className: 'zmdi zmdi-search'
+                                ' Tìm kiếm'
+                            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
+                                React.DOM.i className: 'zmdi zmdi-close'
+                                ' Về ban đầu'
+                        React.DOM.div className: 'form-group col-sm-3',
+                            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+                                React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+                                "Gợi ý"
     render: ->
         switch @props.datatype
             when 1
@@ -2560,6 +2365,8 @@
                 @viewOrderMap()
             when 7
                 @editCustomerForm()
+            when 8
+                @viewListCustomer()
                 
                 
 
@@ -2573,9 +2380,15 @@
             when 1#station list
                 for record in @props.record
                     dataSet.push record.station
+            when 2#permissionlist
+                for record in @props.record
+                    dataSet.push record
+            when 3#list task
+                for record in @props.record
+                    dataSet.push record
         return dataSet
     moveup: ->
-        dataSet = @getData
+        dataSet = @getData()
         newview = @state.curentview + 1
         try
             if newview >= dataSet.length
@@ -2584,7 +2397,7 @@
             console.log error
         @setState curentview: newview
     movedown: ->
-        dataSet = @getData
+        dataSet = @getData()
         newview = @state.curentview - 1
         try
             if newview < 0
@@ -2604,7 +2417,7 @@
                             React.DOM.p style: {'display': 'table-cell', 'verticalAlign': 'middle', 'textAlign': 'center'}, "Không có mục lựa chọn nào"
             when 1
                 React.DOM.div className: 'row',
-                    React.createElement StationContentApp, datatype: 1, record: dataSet[0], className: 'col-sm-12 animated fadeIn', hidden: false, trigger: @triggerCode
+                    React.createElement StationContentApp, datatype: @props.datatype, record: dataSet[0], className: 'col-sm-12 animated fadeIn', hidden: false, trigger: @triggerCode
             when 2
                 count = 0
                 i = @state.curentview - 1
@@ -2615,9 +2428,9 @@
                         if i >= dataSet.length
                             i = i - dataSet.length
                         if i == @state.curentview
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: false, trigger: @triggerCode
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: false, trigger: @triggerCode
                         else
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: true, trigger: @triggerCode
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: true, trigger: @triggerCode
                     React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
                         React.DOM.i className: 'zmdi zmdi-chevron-left'
                     React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
@@ -2632,9 +2445,9 @@
                         if i >= dataSet.length
                             i = i - dataSet.length
                         if i == @state.curentview
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
                         else
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
                     React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
                         React.DOM.i className: 'zmdi zmdi-chevron-left'
                     React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
@@ -2649,14 +2462,18 @@
                         if i >= dataSet.length
                             i = i - dataSet.length
                         if i == @state.curentview
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
                         else
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: 1, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
+                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
                     React.DOM.div className: 'side-left-button', onClick: @movedown,
                         React.DOM.i className: 'zmdi zmdi-chevron-left'
                     React.DOM.div className: 'side-right-button', onClick: @moveup,
                         React.DOM.i className: 'zmdi zmdi-chevron-right'
     render: ->
         switch @props.datatype
-            when 1
-                @normalRander()
+            when 1# station
+                @normalRender()
+            when 2# permission
+                @normalRender()
+            when 3#list task
+                @normalRender()
