@@ -533,7 +533,7 @@
             $('#filter_text').val(record.internal_record_code)
           when 7
             $('#filter_text').val(record.remark)
-      else if @props.datatype == "patient_record"
+      else if @props.datatype == "customer_record"
         switch Number($('#filter_type_select').val())
           when 1
             if record.dob != null
@@ -668,7 +668,7 @@
             @setState selectList:[{id: 1, name: "Nhập"},{id: 2, name: "Xuất"},{id: 3, name: "Vô hiệu"}]
           else
             @setState selectList: null
-      else if @props.datatype == "patient_record"
+      else if @props.datatype == "customer_record"
         switch Number($('#filter_type_select').val())
           when 3
             @setState selectList:[{id: 1, name: "Nam"},{id: 2, name: "Nữ"}]

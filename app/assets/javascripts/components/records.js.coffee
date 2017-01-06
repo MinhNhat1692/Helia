@@ -2915,7 +2915,7 @@
                 React.DOM.div className: 'spacer10'
                 React.DOM.table className: 'table table-hover table-condensed',
                   React.createElement TableHeader, csc: @state.lastsorted, triggerClick: @triggerSort,  header: [
-                    {id:1, name: 'Họ và tên', code: 'ename'}
+                    {id:1, name: 'Họ và tên', code: 'cname'}
                     {id:2, name: 'Ngày sinh', code: 'dob'}
                     {id:3, name: 'Tuổi', code: 'dob'}
                     {id:4, name: 'Giới tính', code: 'gender'}

@@ -26,6 +26,8 @@
         code: null
         customerRecordTask: [{id:1, name: 'Bệnh nhân', icon: '/assets/patient.png', text: 'Sử dụng để quản lý và thêm bớt danh sách bệnh nhân trong hệ thông', code: 1},{id: 2, name: 'Phiếu khám', icon: '/assets/choice.png', text: 'Sử dụng để quản lý và thêm bớt danh sách phiếu khám trong hệ thông', code: 2}, {id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         customerRecordMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm bệnh nhân vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách bệnh nhân trong ngày', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
+        orderMapMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm yêu cầu khám', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách yêu cầu khám trong ngày', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
+        backupState: null
     showtoast: (message,toasttype) ->
 	    toastr.options =
             closeButton: true
@@ -69,7 +71,6 @@
             currentstation: station
             permissionlist: permissionarray
     selectPermission: (permission) ->
-        console.log @state.currentstation
         switch permission.table_id
             when 3
                 @setState currentpermission: permission
@@ -123,52 +124,6 @@
                     currentsidebarmenu: 2
             when 3
                 window.location.href = "/logout"
-    triggerptask: (record) ->
-        switch @state.currentpermission.table_id
-            when 1
-                switch record.code
-                    when 1
-                        @setState
-                            ptask: 1
-                            tabheader: 'Bệnh nhân'
-                            customer: null
-                            ordermap: null
-                    when 2
-                        formData = new FormData
-                        formData.append 'id_station', @state.currentstation.id
-                        message = "danh sách bệnh nhân trong ngày"
-                        link = "/customer_record/list"
-                        @showtoast("Bắt đầu tải " + message,2)
-                        $.ajax
-                            url: link
-                            type: 'POST'
-                            data: formData
-                            async: false
-                            cache: false
-                            contentType: false
-                            processData: false
-                            error: ((result) ->
-                                @showtoast("Tải " + message + " thất bại",3)
-                                return
-                            ).bind(this)
-                            success: ((result) ->
-                                @showtoast("Tải " + message + " thành công",1)
-                                @setState
-                                    customer: null
-                                    customerlist: null
-                                    ordermap: null
-                                    ordermaplist: null
-                                    pmtask: 2
-                                    pmphase: null
-                                    pmpm: null
-                                setTimeout (->
-                                    $(APP).trigger('reloadData')
-                                ), 500
-                                return
-                            ).bind(this)
-                    when 3
-                        @setState
-                            currentpermission: null
     triggerpmtask: (record) ->
         switch @state.currentpermission.table_id
             when 1
@@ -303,6 +258,65 @@
                                                     console.log 5
                                                 when 6
                                                     @setState pmphase: 3 #edit ordermap
+    triggerButtonAtFirst: (record) ->
+        switch @state.currentpermission.table_id
+            when 1
+                switch record.code
+                    when 1
+                        @setState
+                            ptask: 1
+                            tabheader: 'Bệnh nhân'
+                            customer: null
+                            ordermap: null
+                    when 2
+                        @setState
+                            ptask: 2
+                            tabheader: 'Phiếu khám'
+                            customer: null
+                            ordermap: null
+                    when 3
+                        @setState
+                            currentpermission: null
+    triggerButtonAtptask: (record) ->
+        switch @state.currentpermission.table_id
+            when 1
+                switch @state.ptask
+                    when 1#customer record
+                        switch record.code
+                            when 1    
+                                @setState
+                                    pmtask: 1
+                                    tabheader: 'Bệnh nhân'
+                                    customer: null
+                                    ordermap: null
+                            when 2
+                                @setState
+                                    pmtask: 2
+                                    pmphase: null
+                                    pmpm: null
+                                setTimeout (->
+                                    $(APP).trigger('reloadData')
+                                ), 500
+                            when 3
+                                @setState ptask: null
+                    when 2#order map
+                        switch record.code
+                            when 1#add ordermap
+                                @setState
+                                    pmtask: 1
+                                    tabheader: 'Yêu cầu'
+                                    customer: null
+                                    ordermap: null
+                            when 2#list ordermap
+                                @setState
+                                    pmtask: 2
+                                    pmphase: null
+                                    pmpm: null
+                                setTimeout (->
+                                    $(APP).trigger('reloadData')
+                                ), 500
+                            when 3#back
+                                @setState ptask: null
     triggerButtonAtpmtask: (record) ->
         switch @state.currentpermission.table_id
             when 1
@@ -356,12 +370,80 @@
                                                 pmtask: null
                                                 tabheader: 'Bệnh nhân'
                                                 customer: null
-                                                ordermap: null                    
+                                                ordermap: null
+                            when 2
+                                if @state.customer != null
+                                    console.log 1
+                                else
+                                    switch record.code
+                                        when 3#back
+                                            @setState
+                                                pmtask: null
+                                                tabheader: 'Bệnh nhân'
+                                                customer: null
+                                                ordermap: null
+                                                backupState: null
+                    when 2#ordermap
+                        switch @state.pmtask
+                            when 1#add ordermap    
+                                if @state.ordermap != null#added
+                                else#not add yet
+                                    switch record.code
+                                        when 1#submit
+                                            formData = new FormData
+                                            formData.append 'id_station', @state.currentstation.id
+                                            formData.append 'status', $('#form_status').val()
+                                            formData.append 'remark', $('#form_remark').val()
+                                            formData.append 'customer_id', $('#form_c_id').val()
+                                            formData.append 'cname', $('#form_cname').val()
+                                            formData.append 'service_id', $('#form_s_id').val()
+                                            formData.append 'sername', $('#form_sname').val()
+                                            formData.append 'tpayment', $('#form_tpayment').val()
+                                            formData.append 'discount', $('#form_discount').val()
+                                            formData.append 'tpayout', $('#form_tpayout').val()
+                                            formData.append 'code', @generateRandom(5)
+                                            message = "thông tin phiếu khám"
+                                            link = "/order_map"
+                                            $.ajax
+                                                url: link
+                                                type: 'POST'
+                                                data: formData
+                                                async: false
+                                                cache: false
+                                                contentType: false
+                                                processData: false
+                                                error: ((result) ->
+                                                    @showtoast("Thêm " + message + " thất bại",3)
+                                                    return
+                                                ).bind(this)
+                                                success: ((result) ->
+                                                    @showtoast("Thêm " + message + " thành công",1)
+                                                    @setState ordermap: result
+                                                    return
+                                                ).bind(this)
+                                        when 2#back
+                                            @setState
+                                                pmtask: null
+                                                tabheader: 'Phiếu khám'
+                                                customer: null
+                                                ordermap: null
+                            when 2
+                                if @state.customer != null
+                                    console.log 1
+                                else
+                                    switch record.code
+                                        when 3#back
+                                            @setState
+                                                pmtask: null
+                                                tabheader: 'Bệnh nhân'
+                                                customer: null
+                                                ordermap: null
+                                                backupState: null
     triggerButtonAtpmphase: (record) ->
         switch @state.currentpermission.table_id
             when 1
                 switch @state.ptask
-                    when 1
+                    when 1#customer record
                         switch @state.pmtask
                             when 1    
                                 if @state.customer != null
@@ -496,7 +578,9 @@
                                                                 @setState
                                                                     ordermaplist: result
                                                                     ordermap: null
-                                                                $(APP).trigger('reloadData')
+                                                                setTimeout (->
+                                                                    $(APP).trigger('reloadData')
+                                                                ), 500
                                                             else
                                                                 @showtoast("Không có " + message, 2)
                                                             return
@@ -532,7 +616,7 @@
                                                                 pmtask: null
                                                             return
                                                         ).bind(this)
-                                                when 5#back
+                                                when 5 #back
                                                     @setState
                                                         pmphase: null
                                                         customer: null
@@ -540,8 +624,278 @@
                                                         ordermap: null
                                                         ordermaplist: null
                                                         pmpm: null
-                                                when 6#view ordermap
+                                                when 6 #view ordermap
                                                     @setState pmphase: 3 #edit ordermap                                            
+                            when 2
+                                if @state.customer != null
+                                    switch @state.pmphase
+                                        when 1
+                                            switch record.code
+                                                when 1
+                                                    formData = new FormData
+                                                    formData.append 'id', @state.customer.id
+                                                    formData.append 'gender', $('#form_gender').val()
+                                                    formData.append 'id_station', @state.currentstation.id
+                                                    formData.append 'gender', $('#form_gender').val()
+                                                    formData.append 'cname', $('#form_name').val()
+                                                    formData.append 'dob', $('#form_dob').val()
+                                                    formData.append 'address', $('#form_address').val()
+                                                    formData.append 'pnumber', $('#form_pnumber').val()
+                                                    formData.append 'noid', $('#form_noid').val()
+                                                    formData.append 'issue_date', $('#form_issue_date').val()
+                                                    formData.append 'issue_place', $('#form_issue_place').val()
+                                                    formData.append 'work_place', $('#form_work_place').val()
+                                                    formData.append 'self_history', $('#form_self_history').val()
+                                                    formData.append 'family_history', $('#form_family_history').val()
+                                                    formData.append 'drug_history', $('#form_drug_history').val()
+                                                    if $('#form_avatar')[0].files[0] != undefined
+                                                        formData.append 'avatar', $('#form_avatar')[0].files[0]
+                                                    else if $('#webcamout').attr('src') != undefined
+                                                        formData.append 'avatar', $('#webcamout').attr('src')
+                                                    message = "thông tin bệnh nhân"
+                                                    link = "/customer_record"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'PUT'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Cập nhật " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Cập nhật " + message + " thành công",1)
+                                                            @setState
+                                                                customer: result
+                                                                pmphase: null
+                                                            return
+                                                        ).bind(this)
+                                                when 2
+                                                    @setState pmphase: null
+                                        when 2
+                                            switch record.code
+                                                when 1#submit
+                                                    formData = new FormData
+                                                    formData.append 'id_station', @state.currentstation.id
+                                                    formData.append 'status', $('#form_status').val()
+                                                    formData.append 'remark', $('#form_remark').val()
+                                                    formData.append 'customer_id', @state.customer.id
+                                                    formData.append 'cname', @state.customer.cname
+                                                    formData.append 'service_id', $('#form_s_id').val()
+                                                    formData.append 'sername', $('#form_sname').val()
+                                                    formData.append 'tpayment', $('#form_tpayment').val()
+                                                    formData.append 'discount', $('#form_discount').val()
+                                                    formData.append 'tpayout', $('#form_tpayout').val()
+                                                    formData.append 'code', @generateRandom(5)
+                                                    message = "thông tin phiếu khám"
+                                                    link = "/order_map"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'POST'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Thêm " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Thêm " + message + " thành công",1)
+                                                            if @state.ordermaplist == null
+                                                                arraynew = []
+                                                                arraynew.push result
+                                                                @setState
+                                                                    ordermap: result
+                                                                    ordermaplist: arraynew
+                                                                    pmphase: null
+                                                                setTimeout (->
+                                                                    $(APP).trigger('reloadData')
+                                                                ), 500
+                                                            else
+                                                                records = React.addons.update(@state.ordermaplist, { $unshift: [result] })
+                                                                @setState
+                                                                    ordermap: result
+                                                                    ordermaplist: records
+                                                                    pmphase: null
+                                                                setTimeout (->
+                                                                    $(APP).trigger('reloadData')
+                                                                ), 500
+                                                            return
+                                                        ).bind(this)
+                                                when 2#back
+                                                    @setState pmphase: null
+                                        else
+                                            switch record.code
+                                                when 1 # create ordermap form
+                                                    @setState
+                                                        pmphase: 2
+                                                        ordermap: null
+                                                when 2 #find list ordermap
+                                                    formData = new FormData
+                                                    formData.append 'customer_id', @state.customer.id
+                                                    formData.append 'id_station', @state.currentstation.id
+                                                    message = "thông tin phiếu khám"
+                                                    link = "/order_map/find"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'POST'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Tải " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Tải " + message + " thành công",1)
+                                                            if result.length > 0
+                                                                @setState
+                                                                    ordermaplist: result
+                                                                    ordermap: null
+                                                                setTimeout (->
+                                                                    $(APP).trigger('reloadData')
+                                                                ), 500
+                                                            else
+                                                                @showtoast("Không có " + message, 2)
+                                                            return
+                                                        ).bind(this)
+                                                when 3 # edit customer info
+                                                    @setState pmphase: 1 #edit
+                                                when 4 #del
+                                                    formData = new FormData
+                                                    formData.append 'id_station', @state.currentstation.id
+                                                    formData.append 'id', @state.customer.id
+                                                    message = "thông tin bệnh nhân"
+                                                    link = "/customer_record"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'DELETE'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Xóa " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Xóa " + message + " thành công",1)
+                                                            @setState
+                                                                ordermap: null
+                                                                ordermaplist: null
+                                                                pmphase: null
+                                                                pmpm: null
+                                                                customer: null
+                                                            setTimeout (->
+                                                                $(APP).trigger('reloadData')
+                                                            ), 500
+                                                            return
+                                                        ).bind(this)
+                                                when 5 #back
+                                                    @setState
+                                                        pmphase: null
+                                                        customer: null
+                                                        ordermap: null
+                                                        ordermaplist: null
+                                                        pmpm: null
+                                                    setTimeout (->
+                                                        $(APP).trigger('reloadData')
+                                                    ), 500
+                                                when 6 #view ordermap
+                                                    @setState pmphase: 3 #edit ordermap
+                    when 2#ordermap
+                        switch @state.pmtask
+                            when 1#add ordermap
+                                if @state.ordermap != null #added
+                                    switch @state.pmphase
+                                        when 1#edit form
+                                            switch record.code
+                                                when 1#luu
+                                                    formData = new FormData
+                                                    formData.append 'id_station', @state.currentstation.id
+                                                    formData.append 'id', @state.ordermap.id
+                                                    if $('#form_status').val() == 'Tình trạng'
+                                                        formData.append 'status', @state.ordermap.status
+                                                    else
+                                                        formData.append 'status', $('#form_status').val()
+                                                    formData.append 'remark', $('#form_remark').val()
+                                                    formData.append 'customer_id', $('#form_c_id').val()
+                                                    formData.append 'cname', $('#form_cname').val()
+                                                    formData.append 'service_id', $('#form_s_id').val()
+                                                    formData.append 'sername', $('#form_sname').val()
+                                                    formData.append 'tpayment', $('#form_tpayment').val()
+                                                    formData.append 'discount', $('#form_discount').val()
+                                                    formData.append 'tpayout', $('#form_tpayout').val()
+                                                    formData.append 'code', @generateRandom(5)
+                                                    message = "thông tin phiếu khám"
+                                                    link = "/order_map"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'PUT'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Thay đổi " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Thay đổi " + message + " thành công",1)
+                                                            @setState
+                                                                ordermap: result
+                                                                pmphase: null
+                                                                pmpm: null
+                                                            return
+                                                        ).bind(this)
+                                                when 2#back
+                                                    @setState pmphase: null
+                                        else#view form
+                                            switch record.code
+                                                when 1#edit
+                                                    @setState pmphase: 1
+                                                when 2#xoa
+                                                    formData = new FormData
+                                                    formData.append 'id_station', @state.currentstation.id
+                                                    formData.append 'id', @state.ordermap.id
+                                                    message = "thông tin phiếu khám"
+                                                    link = "/order_map"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'DELETE'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Xóa " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Xóa " + message + " thành công",1)
+                                                            @setState
+                                                                ordermap: null
+                                                                pmtask: null
+                                                                pmphase: null
+                                                                pmpm: null
+                                                            return
+                                                        ).bind(this)
+                                                when 3#back
+                                                    @setState
+                                                        pmtask: null
+                                                        ordermap: null
+                            when 2#listordermap
+                                console.log 2
     triggerButtonAtpmpm: (record) ->
         switch @state.currentpermission.table_id
             when 1
@@ -549,6 +903,118 @@
                     when 1
                         switch @state.pmtask
                             when 1    
+                                if @state.customer != null
+                                    switch @state.pmphase
+                                        when 1
+                                            console.log 1
+                                        when 2
+                                            console.log 2
+                                        when 3
+                                            if @state.ordermap != null
+                                                switch @state.pmpm
+                                                    when 1
+                                                        switch record.code
+                                                            when 1#luu
+                                                                formData = new FormData
+                                                                formData.append 'id_station', @state.currentstation.id
+                                                                formData.append 'id', @state.ordermap.id
+                                                                if $('#form_status').val() == 'Tình trạng'
+                                                                    formData.append 'status', @state.ordermap.status
+                                                                else
+                                                                    formData.append 'status', $('#form_status').val()
+                                                                formData.append 'remark', $('#form_remark').val()
+                                                                formData.append 'customer_id', @state.customer.id
+                                                                formData.append 'cname', @state.customer.cname
+                                                                formData.append 'service_id', $('#form_s_id').val()
+                                                                formData.append 'sername', $('#form_sname').val()
+                                                                formData.append 'tpayment', $('#form_tpayment').val()
+                                                                formData.append 'discount', $('#form_discount').val()
+                                                                formData.append 'tpayout', $('#form_tpayout').val()
+                                                                formData.append 'code', @generateRandom(5)
+                                                                message = "thông tin phiếu khám"
+                                                                link = "/order_map"
+                                                                $.ajax
+                                                                    url: link
+                                                                    type: 'PUT'
+                                                                    data: formData
+                                                                    async: false
+                                                                    cache: false
+                                                                    contentType: false
+                                                                    processData: false
+                                                                    error: ((result) ->
+                                                                        @showtoast("Thay đổi " + message + " thất bại",3)
+                                                                        return
+                                                                    ).bind(this)
+                                                                    success: ((result) ->
+                                                                        @showtoast("Thay đổi " + message + " thành công",1)
+                                                                        for record in @state.ordermaplist
+                                                                            if record.id == result.id
+                                                                                index = @state.ordermaplist.indexOf record
+                                                                                records = React.addons.update(@state.ordermaplist, { $splice: [[index, 1, result]] })
+                                                                                @setState
+                                                                                    ordermap: result
+                                                                                    ordermaplist: records
+                                                                                    pmphase: null
+                                                                                    pmpm: null
+                                                                                break
+                                                                        setTimeout (->
+                                                                            $(APP).trigger('reloadData')
+                                                                        ), 500
+                                                                        return
+                                                                    ).bind(this)
+                                                            when 2#back
+                                                                @setState pmpm: null
+                                                    else
+                                                        switch record.code
+                                                            when 1#edit
+                                                                @setState pmpm: 1
+                                                            when 2#xoa
+                                                                formData = new FormData
+                                                                formData.append 'id_station', @state.currentstation.id
+                                                                formData.append 'id', @state.ordermap.id
+                                                                message = "thông tin phiếu khám"
+                                                                link = "/order_map"
+                                                                $.ajax
+                                                                    url: link
+                                                                    type: 'DELETE'
+                                                                    data: formData
+                                                                    async: false
+                                                                    cache: false
+                                                                    contentType: false
+                                                                    processData: false
+                                                                    error: ((result) ->
+                                                                        @showtoast("Xóa " + message + " thất bại",3)
+                                                                        return
+                                                                    ).bind(this)
+                                                                    success: ((result) ->
+                                                                        @showtoast("Xóa " + message + " thành công",1)
+                                                                        if @state.ordermaplist.length == 1
+                                                                            @setState
+                                                                                ordermap: null
+                                                                                ordermaplist: null
+                                                                                pmphase: null
+                                                                                pmpm: null
+                                                                            setTimeout (->
+                                                                                $(APP).trigger('reloadData')
+                                                                            ), 500
+                                                                        else
+                                                                            index = @state.ordermaplist.indexOf @state.ordermap
+                                                                            records = React.addons.update(@state.ordermaplist, { $splice: [[index, 1]] })
+                                                                            @setState
+                                                                                ordermap: null
+                                                                                ordermaplist: records
+                                                                                pmphase: null
+                                                                                pmpm: null
+                                                                            setTimeout (->
+                                                                                $(APP).trigger('reloadData')
+                                                                            ), 500
+                                                                        return
+                                                                    ).bind(this)
+                                                            when 3#back
+                                                                @setState pmphase: null
+                                        else
+                                            console.log 'else'
+                            when 2
                                 if @state.customer != null
                                     switch @state.pmphase
                                         when 1
@@ -672,8 +1138,21 @@
                                         when 1
                                             console.log 1
                                         else
-                                            console.log record
                                             @setState ordermap: record
+                            when 2
+                                if @state.customer != null
+                                    switch @state.pmphase
+                                        when 1
+                                            console.log 1
+                                        else
+                                            @setState ordermap: record
+                                else
+                                    @setState customer: record
+                                    setTimeout (->
+                                        $(APP).trigger('reloadData')
+                                    ), 500
+    triggerBackup: (state) ->
+        @setState backupState: state
     triggerAutoCompleteInputAlt: (code) ->
         if code == 'cname'
             if $('#form_cname').val().length > 3
@@ -1108,7 +1587,7 @@
                                                                                 React.createElement StationContentApp, customer: @state.customer, datatype: 7, trigger: @triggerButtonAtpmphase
                                                                             when 2 # add ordermap form
                                                                                 React.createElement StationContentApp, ordermap: null, customer: @state.customer, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmphase
-                                                                            when 3 # vew form with 
+                                                                            when 3 # view form with 
                                                                                 if @state.ordermap != null
                                                                                     switch @state.pmpm
                                                                                         when 1#edit form
@@ -1120,20 +1599,43 @@
                                                                     else#add customer form
                                                                         React.createElement StationContentApp, customer: null, datatype: 7, trigger: @triggerButtonAtpmtask
                                                                 when 2#Chose to go customer list
-                                                                    if @state.customerlist != null
+                                                                    if @state.customer != null
                                                                         switch @state.pmphase
-                                                                            when 1#add record
-                                                                                console.log 1
-                                                                            when 2#view record
-                                                                                console.log 2
-                                                                            else# view list
-                                                                                React.createElement StationContentApp, datatype: 8
+                                                                            when 1#edit form customer record
+                                                                                React.createElement StationContentApp, customer: @state.customer, datatype: 7, trigger: @triggerButtonAtpmphase
+                                                                            when 2#add ordermap form
+                                                                                React.createElement StationContentApp, ordermap: null, customer: @state.customer, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmphase
+                                                                            when 3#ordermap
+                                                                                if @state.ordermap != null
+                                                                                    switch @state.pmpm
+                                                                                        when 1#edit form
+                                                                                            React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmpm
+                                                                                        else #view form
+                                                                                            React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, className: 'col-md-12', datatype: 6, trigger: @triggerButtonAtpmpm
+                                                                            else#customer view
+                                                                                React.createElement StationContentApp, record: @state.customer, order: @state.ordermap, orderlist: @state.ordermaplist, datatype: 4, trigger: @triggerButtonAtpmphase, triggerRecord: @triggerRecord
+                                                                    else
+                                                                        React.createElement StationContentApp, datatype: 8, backup: @state.backupState, station: @state.currentstation, triggerRecord: @triggerRecord, trigger: @triggerButtonAtpmtask, triggerbackup: @triggerBackup
                                                                 else
-                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerpmtask, record: @state.customerRecordMinorTask
-                                                        when 2
-                                                            console.log 1
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtptask, record: @state.customerRecordMinorTask
+                                                        when 2#chose to go to ordermap
+                                                            switch @state.pmtask
+                                                                when 1#chose to go add ordermap - finished
+                                                                    if @state.ordermap != null
+                                                                        switch @state.pmphase
+                                                                            when 1 #edit form ordermap
+                                                                                React.createElement StationContentApp, ordermap: @state.ordermap, customer: null, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmphase
+                                                                            else #ordermap view
+                                                                                React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, className: 'col-md-12', datatype: 6, trigger: @triggerButtonAtpmphase
+                                                                    else#add ordermap form
+                                                                        React.createElement StationContentApp, ordermap: null, customer: null, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmtask
+                                                                when 2#chose to go ordermap list
+                                                                    React.createElement StationContentApp, datatype: 9
+                                                                    #React.createElement StationContentApp, datatype: 8, backup: @state.backupState, station: @state.currentstation, triggerRecord: @triggerRecord, trigger: @triggerButtonAtpmtask, triggerbackup: @triggerBackup
+                                                                else
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtptask, record: @state.orderMapMinorTask
                                                         else
-                                                            React.createElement StationRollMenu, datatype: 3, trigger: @triggerptask, record: @state.customerRecordTask
+                                                            React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtFirst, record: @state.customerRecordTask
                                                 when 2
                                                     console.log 1
                                                 when 3
@@ -1272,6 +1774,9 @@
         lastcount: 0
         autoComplete: null
         code: null
+        selectList: null
+        storeRecords: null
+        minorRecord: null
     setup_webcam: ->
         $('#webcamout').remove()
         Webcam.set
@@ -1338,9 +1843,44 @@
                         lastcount: 0
                 catch error
                     console.log error
+            else if @props.backup == null and @props.datatype == 8
+                @loadData()
+            else if @props.backup != null and @props.backup != undefined and @props.datatype == 8
+                @setState @props.backup
         ).bind(this)
     componentWillUnmount: ->
         $(APP).off 'reloadData'
+    loadData: ->
+        switch @props.datatype
+            when 8
+                formData = new FormData
+                formData.append 'id_station', @props.station.id
+                message = "thông tin bệnh nhân"
+                link = "/customer_record/list"
+                $.ajax
+                    url: link
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    error: ((result) ->
+                        @showtoast("Tải " + message + " thất bại",3)
+                        return
+                    ).bind(this)
+                    success: ((result) ->
+                        @showtoast("Tải " + message + " thành công",1)
+                        @setState
+                            records: result[0]
+                            filteredRecord: null
+                            lastcount:
+                                if result[0].length < 10
+                                    result[0].length
+                                else
+                                    10
+                        return
+                    ).bind(this)
     calAge: (dob, style) ->
         now = new Date
         today = new Date(now.getYear(), now.getMonth(), now.getDate())
@@ -1377,10 +1917,55 @@
         @props.trigger @props.record
     triggerRecordOut: (record) ->
         @props.triggerRecord record
+    triggerRecordOutAndBackUp: (record) ->
+        @triggerRecordOut record
+        @props.triggerbackup @state
     triggercode: (code) ->
         @props.trigger code
     trigger: ->
     triggersafe: ->
+    triggerSortAltUp: ->
+        switch @props.datatype
+            when 8
+                switch Number($('#filter_type_select').val())
+                    when 1
+                        @triggerSort('cname')
+                    when 2
+                        @triggerSort('dob')
+                    when 3
+                        @triggerSort('gender')
+                    when 4
+                        @triggerSort('address')
+                    when 5
+                        @triggerSort('pnumber')
+                    when 6
+                        @triggerSort('noid')
+    triggerSortAltDown: ->
+        switch @props.datatype
+            when 8
+                switch Number($('#filter_type_select').val())
+                    when 1
+                        @triggerSort('-cname')
+                    when 2
+                        @triggerSort('-dob')
+                    when 3
+                        @triggerSort('-gender')
+                    when 4
+                        @triggerSort('-address')
+                    when 5
+                        @triggerSort('-pnumber')
+                    when 6
+                        @triggerSort('-noid')
+    triggerStoreRecord: ->
+        if @state.storeRecords == null
+            if @state.filteredRecord != null
+                @setState storeRecords: @state.filteredRecord
+            else
+                @setState storeRecords: @state.records
+        else
+            @setState storeRecords: null
+    triggerbackup: ->
+        @props.backup @state
     triggerbutton: (e) ->
         @props.trigger e
     dynamicSort: (property) ->
@@ -1392,14 +1977,19 @@
             result = if a[property] < b[property] then -1 else if a[property] > b[property] then 1 else 0
             result * sortOrder
     triggerSort: (code) ->
-        if @state.filteredRecord != null
+        if @state.storeRecords != null
             @setState
-                filteredRecord: @state.filteredRecord.sort(@dynamicSort(code))
+                filteredRecord: @state.storeRecords.sort(@dynamicSort(code))
                 lastsorted: code
         else
-            @setState
-                filteredRecord: @state.records.sort(@dynamicSort(code))
-                lastsorted: code
+            if @state.filteredRecord != null
+                @setState
+                    filteredRecord: @state.filteredRecord.sort(@dynamicSort(code))
+                    lastsorted: code
+            else
+                @setState
+                    filteredRecord: @state.records.sort(@dynamicSort(code))
+                    lastsorted: code
     triggerPage: (page) ->
         @setState
             currentpage: page
@@ -1714,7 +2304,9 @@
         if @state.code == 'cname'
             $('#form_cname').val(record.cname)
             $('#form_c_id').val(record.id)
-            @setState autoComplete: null
+            @setState
+                autoComplete: null
+                minorRecord: record
         else if @state.code == 'ename'
             $('#form_ename').val(record.ename)
             $('#form_e_id').val(record.id)
@@ -1795,32 +2387,189 @@
                                                         $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
                                                     else
                                                         $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+    triggerAutoCompleteInput: ->
+        if $('#filter_type_select').val() != '' && $('#filter_text').val().length > 1
+            if !$('#checkbox_db').is(':checked')
+                if @state.storeRecords != null
+                    filtered = []
+                    for record in @state.storeRecords
+                        if @checkContain($('#filter_type_select').val(),$('#filter_text').val(),record)
+                            filtered.push record
+                    @setState
+                        filteredRecord: filtered
+                        lastcount:
+                            if filtered.length < 10
+                                filtered.length
+                            else
+                                10
+                else
+                    filtered = []
+                    for record in @state.records
+                        if @checkContain($('#filter_type_select').val(),$('#filter_text').val(),record)
+                            filtered.push record
+                    @setState
+                        filteredRecord: filtered
+                        lastcount:
+                            if filtered.length < 10
+                                filtered.length
+                            else
+                                10
+            else
+                switch @props.datatype
+                    when 8
+                        formData = new FormData
+                        link = 'customer_record'
+                        formData.append 'id_station', @props.station.id
+                        switch Number($('#filter_type_select').val())
+                            when 1
+                                formData.append 'namestring', $('#filter_text').val().toLowerCase()
+                            when 2
+                                formData.append 'dob', $('#filter_text').val().toLowerCase()
+                            when 3
+                                formData.append 'gender', Number($('#filter_text').val())
+                            when 4
+                                formData.append 'address', $('#filter_text').val().toLowerCase()
+                            when 5
+                                formData.append 'pnumber', $('#filter_text').val().toLowerCase()
+                            when 6
+                                formData.append 'noid', $('#filter_text').val().toLowerCase()
+                if formData != undefined
+                    $.ajax
+                        url: '/' + link + '/search'
+                        type: 'POST'
+                        data: formData
+                        async: false
+                        cache: false
+                        contentType: false
+                        processData: false
+                        success: ((result) ->
+                            @setState autoComplete: result
+                            return
+                        ).bind(this)
+    checkContain: (type,text,record) ->
+        switch @props.datatype
+            when 8
+                switch Number(type)
+                    when 1
+                        if record.cname.toLowerCase().search(text.toLowerCase()) > -1
+                            return true
+                        else
+                            return false
+                    when 2
+                        if (record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4)).search(text.toLowerCase()) > -1
+                            return true
+                        else
+                            return false
+                    when 3
+                        if record.gender == Number(text)
+                            return true
+                        else
+                            return false
+                    when 4
+                        if record.address.toLowerCase().search(text.toLowerCase()) > -1
+                            return true
+                        else
+                            return false
+                    when 5
+                        if record.pnumber.toLowerCase().search(text.toLowerCase()) > -1
+                            return true
+                        else
+                            return false
+                    when 6
+                        if record.noid.toLowerCase().search(text.toLowerCase()) > -1
+                            return true
+                        else
+                            return false
+    triggerAutoCompleteAlt: (record) ->
+        switch @props.datatype
+            when 8
+                switch Number($('#filter_type_select').val())
+                    when 1
+                        $('#filter_text').val(record.cname)
+                    when 2
+                        try
+                            $('#filter_text').val(record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4))
+                        catch error
+                            console.log error
+                    when 4
+                        $('#filter_text').val(record.address)
+                    when 5
+                        $('#filter_text').val(record.pnumber)
+                    when 6
+                        $('#filter_text').val(record.noid)
+        @setState autoComplete: null
+    triggerChangeType: ->
+        switch @props.datatype
+            when 8
+                switch Number($('#filter_type_select').val())
+                    when 3
+                        @setState selectList:[{id: 1, name: "Nam"},{id: 2, name: "Nữ"}]
+                    else
+                        @setState selectList: null
+    triggerSubmitSearch: ->
+        formData = new FormData
+        switch @props.datatype
+            when 8
+                link = "customer_record"
+                formData.append 'date', 30
+                formData.append 'id_station', @props.station.id
+                switch Number($('#filter_type_select').val())
+                    when 1
+                        formData.append 'namestring', $('#filter_text').val().toLowerCase()
+                    when 2
+                        formData.append 'dob', $('#filter_text').val()
+                    when 3
+                        formData.append 'gender', $('#filter_text').val()
+                    when 4
+                        formData.append 'address', $('#filter_text').val().toLowerCase()
+                    when 5
+                        formData.append 'pnumber', $('#filter_text').val().toLowerCase()
+                    when 6
+                        formData.append 'noid', $('#filter_text').val().toLowerCase()
+        $.ajax
+            url: '/' + link + '/find'
+            type: 'POST'
+            data: formData
+            async: false
+            cache: false
+            contentType: false
+            processData: false
+            success: ((result) ->
+                @setState
+                    filteredRecord: result
+                    lastcount:
+                        if result.length < 10
+                            result.length
+                        else
+                            10
+                return
+            ).bind(this)
+    triggerClear: ->
+        console.log @state.records
+        $('#filter_text').val("")
+        @setState
+            filteredRecord: null
+            lastcount:
+                if @state.records.length < 10
+                    @state.records.length
+                else
+                    10
     stationRender: ->
         if @props.hidden    
             React.DOM.div className: @props.className + ' hidden-xs',
                 React.DOM.div className: 'content-app', style: {'cursor':'pointer'}, onClick: @triggerRecord,
-                    #React.DOM.h4 null, @props.record.station.sname
-                    #React.DOM.img alt: 'pic1', src: @props.record.station.logo , className: 'img-responsive'
                     React.DOM.h4 null, @props.record.sname
                     React.DOM.img alt: 'pic1', src: @props.record.logo , className: 'img-responsive'
                     React.DOM.div className: 'content-info-block',
-                        #React.DOM.p null, @props.record.station.address
-                        #React.DOM.p null, @props.record.station.pnumber
-                        #React.DOM.p null, @props.record.station.hpage
                         React.DOM.p null, @props.record.address
                         React.DOM.p null, @props.record.pnumber
                         React.DOM.p null, @props.record.hpage
         else
             React.DOM.div className: @props.className,
                 React.DOM.div className: 'content-app', style: {'cursor':'pointer'}, onClick: @triggerRecord,
-                    #React.DOM.h4 null, @props.record.station.sname
-                    #React.DOM.img alt: 'pic1', src: @props.record.station.logo , className: 'img-responsive'
                     React.DOM.h4 null, @props.record.sname
                     React.DOM.img alt: 'pic1', src: @props.record.logo , className: 'img-responsive'
                     React.DOM.div className: 'content-info-block',
-                        #React.DOM.p null, @props.record.station.address
-                        #React.DOM.p null, @props.record.station.pnumber
-                        #React.DOM.p null, @props.record.station.hpage
                         React.DOM.p null, @props.record.address
                         React.DOM.p null, @props.record.pnumber
                         React.DOM.p null, @props.record.hpage
@@ -2067,7 +2816,7 @@
                             React.DOM.button type: 'button', className: 'btn btn-primary-docapp', value: 'take Large Snapshot', onClick: @take_snapshot, 'Chụp'
                     React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
                         React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
-                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
         else
             React.DOM.div className: 'row',
                 React.DOM.div className: 'row',
@@ -2136,11 +2885,11 @@
                             React.DOM.button type: 'button', className: 'btn btn-primary-docapp', value: 'take Large Snapshot', onClick: @take_snapshot, 'Chụp'
                     React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
                         React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
-                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
     editOrderMapForm: ->
         if @props.customer != null and @props.ordermap != null
             React.DOM.div className: 'row',
-                React.DOM.div className: 'row',
+                React.DOM.div className: 'col-sm-12',
                     React.DOM.div className: 'col-md-12',
                         React.DOM.div className: 'spacer20'
                         React.DOM.form className: 'form-horizontal content-app-alt', style: {'paddingLeft': '40px', 'paddingRight': '40px'}, autoComplete: 'off',
@@ -2176,10 +2925,10 @@
                                         React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', defaultValue: @props.ordermap.tpayout, trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
                         React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
                             React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
-                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
         else if @props.customer != null and @props.ordermap == null
             React.DOM.div className: 'row',
-                React.DOM.div className: 'row',
+                React.DOM.div className: 'col-sm-12',
                     React.DOM.div className: 'col-md-12',
                         React.DOM.div className: 'spacer20'
                         React.DOM.form className: 'form-horizontal content-app-alt', style: {'paddingLeft': '40px', 'paddingRight': '40px'}, autoComplete: 'off',
@@ -2215,45 +2964,250 @@
                                         React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
                         React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
                             React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
-                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+        else if @props.customer == null and @props.ordermap == null
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'col-sm-12',
+                    React.DOM.div className: 'col-md-4',
+                        if @state.minorRecord != null
+                            React.DOM.div className: 'content-app-alt animated fadeIn hidden-xs', style: {'paddingLeft':'50px'},
+                                React.DOM.h4 style: {'color': '#fff'}, @state.minorRecord.cname
+                                React.DOM.img alt: 'pic1', src: @state.minorRecord.avatar , className: 'img-responsive'
+                                React.DOM.div className: 'content-info-block',
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        try
+                                            @state.minorRecord.dob.substring(8, 10) + "/" + @state.minorRecord.dob.substring(5, 7) + "/" + @state.minorRecord.dob.substring(0, 4)
+                                        catch error
+                                            "Chưa nhập"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        try
+                                            @calAge(@state.minorRecord.dob,2).years + " Tuổi " + @calAge(@state.minorRecord.dob,2).months + " Tháng"
+                                        catch error
+                                            "Không tính được"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        switch @state.minorRecord.gender
+                                            when 1
+                                                "Nam"
+                                            when 2
+                                                "Nữ"
+                                            else
+                                                "Chưa định"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-map', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.address
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-barcode', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.noid
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-phone', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.pnumber
+                    React.DOM.div className: 'col-md-8',
+                        React.DOM.div className: 'spacer20'
+                        React.DOM.form className: 'form-horizontal content-app-alt', style: {'paddingLeft': '40px', 'paddingRight': '40px'}, autoComplete: 'off',
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên bệnh nhân'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                                    React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                                    React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                                        if @state.autoComplete != null and @state.code == 'cname'
+                                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Chưa thanh toán, chưa khám bệnh'},{id: 2, name: 'Đã thanh toán, đang chờ khám'},{id: 3, name: 'Đã thanh toán, đã khám bệnh'},{id: 4, name: 'Chưa thanh toán, đã khám bệnh'}], text: 'Tình trạng'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên dịch vụ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'sid'
+                                    React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                                    React.DOM.div className: "auto-complete", id: "sname_autocomplete",
+                                        if @state.autoComplete != null and @state.code == 'sname'
+                                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
+                            React.DOM.div className: 'form-group',
+                                React.DOM.div className: 'col-md-6',
+                                    React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Ghi chú'
+                                    React.DOM.div className: 'col-sm-8',
+                                        React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú'
+                                React.DOM.div className: 'col-md-6',
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggersafe
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', step: 'any', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                        React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                            React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+        else if @props.customer == null and @props.ordermap != null
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'col-sm-12',
+                    React.DOM.div className: 'col-md-4',
+                        if @state.minorRecord != null
+                            React.DOM.div className: 'content-app-alt animated fadeIn hidden-xs', style: {'paddingLeft':'50px'},
+                                React.DOM.h4 style: {'color': '#fff'}, @state.minorRecord.cname
+                                React.DOM.img alt: 'pic1', src: @state.minorRecord.avatar , className: 'img-responsive'
+                                React.DOM.div className: 'content-info-block',
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        try
+                                            @state.minorRecord.dob.substring(8, 10) + "/" + @state.minorRecord.dob.substring(5, 7) + "/" + @state.minorRecord.dob.substring(0, 4)
+                                        catch error
+                                            "Chưa nhập"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        try
+                                            @calAge(@state.minorRecord.dob,2).years + " Tuổi " + @calAge(@state.minorRecord.dob,2).months + " Tháng"
+                                        catch error
+                                            "Không tính được"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        switch @state.minorRecord.gender
+                                            when 1
+                                                "Nam"
+                                            when 2
+                                                "Nữ"
+                                            else
+                                                "Chưa định"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-map', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.address
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-barcode', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.noid
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-phone', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.pnumber
+                    React.DOM.div className: 'col-md-8',
+                        React.DOM.div className: 'spacer20'
+                        React.DOM.form className: 'form-horizontal content-app-alt', style: {'paddingLeft': '40px', 'paddingRight': '40px'}, autoComplete: 'off',
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên bệnh nhân'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_c_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue: @props.ordermap.customer_record_id
+                                    React.createElement InputField, id: 'form_cname', className: 'form-control', type: 'text', code: 'cname', placeholder: 'Tên bệnh nhân', style: '', defaultValue: @props.ordermap.cname, trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                                    React.DOM.div className: "auto-complete", id: "cname_autocomplete",
+                                        if @state.autoComplete != null and @state.code == 'cname'
+                                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'customer_record_mini', header: [{id: 1,name: "Họ và tên"},{id: 2,name: "Ngày sinh"},{id: 3, name: "Tuổi"},{id: 4, name: "Giới tính"},{id: 5, name: "Địa chỉ"},{id: 6, name: "SĐT"},{id: 7, name: "CMTND"}], extra: [{id:1, name: "Nam"},{id:2,name: "Nữ"}], trigger: @triggerAutoComplete
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tình trạng hóa đơn dịch vụ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Chưa thanh toán, chưa khám bệnh'},{id: 2, name: 'Đã thanh toán, đang chờ khám'},{id: 3, name: 'Đã thanh toán, đã khám bệnh'},{id: 4, name: 'Chưa thanh toán, đã khám bệnh'}], text: 'Tình trạng'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Tên dịch vụ'
+                                React.DOM.div className: 'col-sm-8',
+                                    React.DOM.input id: 'form_s_id', className: 'form-control', type: 'text', style: {'display': 'none'}, placeholder: 'sid', defaultValue: @props.ordermap.service_id
+                                    React.createElement InputField, id: 'form_sname', className: 'form-control', type: 'text', code: 'sname', placeholder: 'Tên dịch vụ', style: '', defaultValue: @props.ordermap.sername, trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                                    React.DOM.div className: "auto-complete", id: "sname_autocomplete",
+                                        if @state.autoComplete != null and @state.code == 'sname'
+                                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'service_mini', header: [{id: 1,name: "Tên dịch vụ"},{id: 2, name: "Giá"},{id: 3, name: "Đơn vị"}], trigger: @triggerAutoComplete
+                            React.DOM.div className: 'form-group',
+                                React.DOM.div className: 'col-md-6',
+                                    React.DOM.label className: 'col-sm-4 control-label hidden-xs', 'Ghi chú'
+                                    React.DOM.div className: 'col-sm-8',
+                                        React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú', defaultValue: @props.ordermap.remark
+                                React.DOM.div className: 'col-md-6',
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', defaultValue: @props.ordermap.tpayment, trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggersafe
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', defaultValue: @props.ordermap.discount, trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', step: 'any', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
+                                    React.DOM.div className: 'col-sm-6',
+                                        React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', defaultValue: @props.ordermap.tpayout, trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                        React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                            React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
     viewOrderMap: ->
-        if @props.customer != null and @props.ordermap != null
+        if @props.ordermap != null
             React.DOM.div className: @props.className,
                 React.DOM.div className: 'col-md-4',
-                    React.DOM.div className: 'content-app-alt',
-                        React.DOM.h4 style: {'color': '#fff'}, @props.customer.cname
-                        React.DOM.img alt: 'pic1', src: @props.customer.avatar , className: 'img-responsive'
-                        React.DOM.div className: 'content-info-block',
-                            React.DOM.p null,
-                                React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
-                                try
-                                    @props.customer.dob.substring(8, 10) + "/" + @props.customer.dob.substring(5, 7) + "/" + @props.customer.dob.substring(0, 4)
-                                catch error
-                                    console.log error
-                            React.DOM.p null,
-                                React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
-                                try
-                                    @calAge(@props.customer.dob,2).years + " Tuổi " + @calAge(@props.customer.dob,2).months + "Tháng"
-                                catch error
-                                    console.log error
-                            React.DOM.p null,
-                                React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
-                                switch @props.customer.gender
-                                    when 1
-                                        "Nam"
-                                    when 2
-                                        "Nữ"
-                                    else
-                                        "Chưa định"
-                            React.DOM.p null,
-                                React.DOM.i className: 'fa fa-map', style: {'marginRight' : '10px'}
-                                @props.customer.address
-                            React.DOM.p null,
-                                React.DOM.i className: 'fa fa-barcode', style: {'marginRight' : '10px'}
-                                @props.customer.noid
-                            React.DOM.p null,
-                                React.DOM.i className: 'fa fa-phone', style: {'marginRight' : '10px'}
-                                @props.customer.pnumber
+                    if @props.customer != null
+                        React.DOM.div className: 'content-app-alt',
+                            React.DOM.h4 style: {'color': '#fff'}, @props.customer.cname
+                            React.DOM.img alt: 'pic1', src: @props.customer.avatar , className: 'img-responsive'
+                            React.DOM.div className: 'content-info-block',
+                                React.DOM.p null,
+                                    React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                    try
+                                        @props.customer.dob.substring(8, 10) + "/" + @props.customer.dob.substring(5, 7) + "/" + @props.customer.dob.substring(0, 4)
+                                    catch error
+                                        console.log error
+                                React.DOM.p null,
+                                    React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                    try
+                                        @calAge(@props.customer.dob,2).years + " Tuổi " + @calAge(@props.customer.dob,2).months + "Tháng"
+                                    catch error
+                                        console.log error
+                                React.DOM.p null,
+                                    React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                    switch @props.customer.gender
+                                        when 1
+                                            "Nam"
+                                        when 2
+                                            "Nữ"
+                                        else
+                                            "Chưa định"
+                                React.DOM.p null,
+                                    React.DOM.i className: 'fa fa-map', style: {'marginRight' : '10px'}
+                                    @props.customer.address
+                                React.DOM.p null,
+                                    React.DOM.i className: 'fa fa-barcode', style: {'marginRight' : '10px'}
+                                    @props.customer.noid
+                                React.DOM.p null,
+                                    React.DOM.i className: 'fa fa-phone', style: {'marginRight' : '10px'}
+                                    @props.customer.pnumber
+                    else if @state.minorRecord != null
+                        try
+                            React.DOM.div className: 'content-app-alt animated fadeIn hidden-xs',
+                                React.DOM.h4 style: {'color': '#fff'}, @state.minorRecord.cname
+                                React.DOM.img alt: 'pic1', src: @state.minorRecord.avatar , className: 'img-responsive'
+                                React.DOM.div className: 'content-info-block',
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        try
+                                            @state.minorRecord.dob.substring(8, 10) + "/" + @state.minorRecord.dob.substring(5, 7) + "/" + @state.minorRecord.dob.substring(0, 4)
+                                        catch error
+                                            "Chưa nhập"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        try
+                                            @calAge(@state.minorRecord.dob,2).years + " Tuổi " + @calAge(@state.minorRecord.dob,2).months + " Tháng"
+                                        catch error
+                                            "Không tính được"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-birthday-cake', style: {'marginRight' : '10px'}
+                                        switch @state.minorRecord.gender
+                                            when 1
+                                                "Nam"
+                                            when 2
+                                                "Nữ"
+                                            else
+                                                "Chưa định"
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-map', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.address
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-barcode', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.noid
+                                    React.DOM.p null,
+                                        React.DOM.i className: 'fa fa-phone', style: {'marginRight' : '10px'}
+                                        @state.minorRecord.pnumber
+                        catch error
+                            console.log error
                 React.DOM.div className: 'col-md-8',
                     React.DOM.div className: 'row',
                         React.DOM.div className: 'content-app-alt',
@@ -2300,9 +3254,9 @@
                     React.DOM.div className: 'row', style:{'paddingRight':'35px', 'paddingBottom':'20px'},
                         React.DOM.div className: 'spacer10'
                         React.DOM.div className: 'row',
-                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode                       
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode                       
                             React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Xóa', code: {code: 2}, Clicked: @triggercode
-                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Sửa', code: {code: 1}, Clicked: @triggercode                            
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-edit', type: 3, text: ' Sửa', code: {code: 1}, Clicked: @triggercode                            
     viewListCustomer: ->
         React.DOM.div className: 'row',
             React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25 filter-form',
@@ -2311,44 +3265,87 @@
                         React.DOM.div className: 'col-sm-4', style: {'marginBottom': '15px'},
                             React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
                                 React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
-                                React.DOM.option value: 1, 'Mã'
-                                React.DOM.option value: 2, 'Tên doanh nghiệp'
-                                React.DOM.option value: 3, 'Số ĐT'
+                                React.DOM.option value: 1, 'Tên bệnh nhân'
+                                React.DOM.option value: 2, 'Ngày sinh'
+                                React.DOM.option value: 3, 'Giới tính'
                                 React.DOM.option value: 4, 'Địa chỉ'
-                                React.DOM.option value: 5, 'Email'
-                                React.DOM.option value: 6, 'Website'
-                                React.DOM.option value: 7, 'Mã số thuế'
+                                React.DOM.option value: 5, 'Số điện thoại'
+                                React.DOM.option value: 6, 'CMTND'
                         React.DOM.div className: 'col-sm-8',
-                            React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
-                            React.DOM.div className: "auto-complete"
-                            #if @props.autoComplete != null
-                            #    for record in @props.autoComplete
-                            #        switch Number($('#filter_type_select').val())
-                            #            when 1
-                            #                React.createElement AutoComplete, key: record.id, text: record.noid, record: record, trigger: @triggerAutoComplete
-                            #            when 2
-                            #                React.createElement AutoComplete, key: record.id, text: record.name, record: record, trigger: @triggerAutoComplete
-                            #            when 3
-                            #                React.createElement AutoComplete, key: record.id, text: record.pnumber, record: record, trigger: @triggerAutoComplete
+                            if @state.selectList == null
+                                React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Type here ...'
+                            else
+                                React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+                            React.DOM.div className: "auto-complete",
+                                if @state.autoComplete != null
+                                    for record in @state.autoComplete
+                                        switch Number($('#filter_type_select').val())
+                                            when 1
+                                                React.createElement AutoComplete, key: record.id, text: record.cname, record: record, trigger: @triggerAutoCompleteAlt
+                                            when 2
+                                                React.createElement AutoComplete, key: record.id, record: record, trigger: @triggerAutoCompleteAlt, text:
+                                                    try
+                                                        record.dob.substring(8, 10) + "/" + record.dob.substring(5, 7) + "/" + record.dob.substring(0, 4)
+                                                    catch error
+                                                        ""
+                                            when 4
+                                                React.createElement AutoComplete, key: record.id, text: record.address, record: record, trigger: @triggerAutoCompleteAlt
+                                            when 5
+                                                React.createElement AutoComplete, key: record.id, text: record.pnumber, record: record, trigger: @triggerAutoCompleteAlt
+                                            when 6
+                                                React.createElement AutoComplete, key: record.id, text: record.noid, record: record, trigger: @triggerAutoCompleteAlt
                     React.DOM.div className: 'col-lg-6 text-center',
                         React.DOM.div className: 'btn-group col-sm-6 text-center', style: {'marginBottom': '10px'},
-                            React.DOM.button type: 'button', className: 'btn btn-group-left',
+                            React.DOM.button type: 'button', className: 'btn btn-group-left', onClick: @triggerSubmitSearch,
                                 React.DOM.i className: 'zmdi zmdi-search'
                                 ' Tìm kiếm'
                             React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
                                 React.DOM.i className: 'zmdi zmdi-close'
                                 ' Về ban đầu'
                         React.DOM.div className: 'btn-group col-sm-6 text-center', style: {'marginBottom': '10px'},
-                            React.DOM.button type: 'button', className: 'btn btn-group-left',
-                                React.DOM.i className: 'zmdi zmdi-search'
-                                ' Tìm kiếm'
-                            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerClear,
-                                React.DOM.i className: 'zmdi zmdi-close'
-                                ' Về ban đầu'
+                            React.DOM.button type: 'button', className: 'btn btn-group-left', onClick: @triggerSortAltDown,
+                                React.DOM.i className: 'zmdi zmdi-sort-amount-desc'
+                                ' Giảm dần'
+                            React.DOM.button type: 'button', className: 'btn btn-group-right', onClick: @triggerSortAltUp,
+                                React.DOM.i className: 'zmdi zmdi-sort-amount-asc'
+                                ' Tăng dần'
                         React.DOM.div className: 'form-group col-sm-3',
                             React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
                                 React.DOM.input id: 'checkbox_db', type: 'checkbox'  
                                 "Gợi ý"
+                        React.DOM.div className: 'form-group col-sm-6',
+                            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+                                React.DOM.input id: 'checkbox_db_2', type: 'checkbox', onChange: @triggerStoreRecord
+                                "Dữ liệu hiện tại"
+            React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25 filter-form',
+                React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                    React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+                React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                    React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+                if @state.filteredRecord != null
+                    React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                else
+                    React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+            React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25 customer-list-block',
+                if @state.filteredRecord != null
+                    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                        React.createElement CustomerRecordBlock, key: record.id, record: record, trigger: @triggerRecordOutAndBackUp        
+                else
+                    for record in @state.records[@state.firstcount...@state.lastcount]
+                        React.createElement CustomerRecordBlock, key: record.id, record: record, trigger: @triggerRecordOutAndBackUp
+            React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25',
+                React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode
+    listRecordRender: ->
+        React.DOM.div className: 'row',
+            React.createElement FilterFormAppView, datatype: 1, options: [
+                {id: 1, text: 'Tên dịch vụ', code: 'sername'}
+                {id: 2, text: 'Tên khách hàng', code: 'cname'}
+                {id: 3, text: 'Tình trạng', code: 'status'}
+                {id: 4, text: 'Tổng đơn giá', code: 'tpayment'}
+                {id: 5, text: 'Giảm giá', code: 'discount'}
+                {id: 6, text: 'Tổng thanh toán', code: 'tpayout'}
+                {id: 7, text: 'Ghi chú', code: 'remark'}
+            ]
     render: ->
         switch @props.datatype
             when 1
@@ -2366,9 +3363,44 @@
             when 7
                 @editCustomerForm()
             when 8
-                @viewListCustomer()
+                try
+                    @viewListCustomer()
+                catch error
+                    console.log error
+                    React.DOM.div className: 'row'
+            when 9
+                @listRecordRender()
                 
-                
+@CustomerRecordBlock = React.createClass
+    getInitialState: ->
+        style: 1
+    triggerRecord: ->
+        @props.trigger @props.record
+    normalRender: ->
+        React.DOM.div className: 'customer-block', onClick: @triggerRecord,
+            React.DOM.img className: 'customer-block-img', src: @props.record.avatar
+            React.DOM.span className: 'customer-info-block',
+                React.DOM.p null, @props.record.cname
+                React.DOM.p null,
+                    try
+                        @props.record.dob.substring(8, 10) + "/" + @props.record.dob.substring(5, 7) + "/" + @props.record.dob.substring(0, 4)
+                    catch error
+                        "Không có"
+    headerTabBlockRender: ->
+        if @props.current == @props.record.id
+            React.DOM.div className: "header-tab-container active", onClick: @triggerRecord,
+                React.DOM.i className: @props.record.icon
+                React.DOM.p className: 'hidden-xs', @props.record.text
+        else
+            React.DOM.div className: "header-tab-container", onClick: @triggerRecord,
+                React.DOM.i className: @props.record.icon
+                React.DOM.p className: 'hidden-xs', @props.record.text
+    render: ->
+        switch @props.datatype
+            when 1
+                @headerTabBlockRender()
+            else
+                @normalRender()
 
 @StationRollMenu = React.createClass
     getInitialState: ->
@@ -2476,4 +3508,194 @@
             when 2# permission
                 @normalRender()
             when 3#list task
+                @normalRender()
+                
+@FilterFormAppView = React.createClass
+    getInitialState: ->
+        style: 1
+        task: 1
+        selectList: null
+        autoComplete: null
+        normalTask: [{id: 1, icon: "zmdi zmdi-search", code: 1, text: "Tìm kiếm"},{id: 2, icon: "fa fa-cogs", code: 2, text: "Tùy chọn"},{id: 3, icon: "fa fa-sort", code: 3, text: "Sắp xếp"}]
+    changeTask: (record) ->
+        @setState task: record.code
+    getOption: ->
+        optionOut = 0
+        for option in @props.option
+            if option.id == Number($('#filter_type_select').val())
+                optionOut = option
+                break
+        return optionOut
+    getOption2: ->
+        optionOut = 0
+        for option in @props.option
+            if option.id == Number($('#filter_type_select2').val())
+                optionOut = option
+                break
+        return optionOut
+    normalRender: ->
+        React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25 filter-form',
+            React.DOM.div className: 'input-form-app-header',
+                for tabrecord in @state.normalTask
+                    React.createElement CustomerRecordBlock, record: tabrecord, current: @state.task, datatype: 1, key: tabrecord.id, trigger: @changeTask
+            switch @state.task
+                when 1
+                    React.DOM.div className: 'input-form-app-filter',
+                        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+                                    React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+                                    for option in @props.options
+                                        React.DOM.option key: option.id, value: option.id, option.text
+                        React.DOM.div className: 'form-group col-lg-6 col-sm-12',
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                if @state.selectList == null
+                                    React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Input'
+                                else
+                                    React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+                                React.DOM.div className: "auto-complete",
+                                    if @state.autoComplete != null
+                                        for record in @state.autoComplete
+                                            try
+                                                React.createElement AutoComplete, key: record.id, text: record[@getOption.code], record: record, trigger: @triggerAutoCompleteAlt
+                                            catch error
+                                                console.log error
+                        React.DOM.div className: 'col-lg-12 text-center',
+                            React.DOM.div className: 'btn-group text-center', style: {'marginBottom':'10px','paddingLeft':'15px', 'paddingRight':'15px','width':'100%'},
+                                React.DOM.button type: 'button', className: 'btn btn-group-left', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSubmitSearch,
+                                    React.DOM.i className: 'zmdi zmdi-search'
+                                    ' Tìm kiếm'
+                                React.DOM.button type: 'button', className: 'btn btn-group-right', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerClear,
+                                    React.DOM.i className: 'zmdi zmdi-close'
+                                    ' Về ban đầu'
+                        React.DOM.div className: 'form-group col-sm-12', style: {'display':'none'},
+                            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+                                React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+                                "Gợi ý"
+                        React.DOM.div className: 'form-group col-sm-12', style: {'display':'none'},
+                            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+                                React.DOM.input id: 'checkbox_db_2', type: 'checkbox', onChange: @triggerStoreRecord
+                                "Dữ liệu hiện tại"
+                        React.DOM.div className: 'form-group col-lg-12 col-sm-12', style: {'display':'none'},
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                React.DOM.select id: 'filter_type_select2', className: 'form-control', onChange: @triggerChangeType,
+                                    React.DOM.option value: '', 'Chọn tiêu chuẩn sắp xếp'
+                                    for option in @props.options
+                                        React.DOM.option key: option.id, value: option.id, option.text
+                        React.DOM.div className: 'col-lg-12 text-center', style: {'display':'none'},
+                            React.DOM.div className: 'btn-group text-center', style: {'marginBottom':'10px','paddingLeft':'15px', 'paddingRight':'15px','width':'100%'},
+                                React.DOM.button type: 'button', className: 'btn btn-group-left', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSortAltDown,
+                                    React.DOM.i className: 'zmdi zmdi-sort-amount-desc'
+                                    ' Giảm dần'
+                                React.DOM.button type: 'button', className: 'btn btn-group-right', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSortAltUp,
+                                    React.DOM.i className: 'zmdi zmdi-sort-amount-asc'
+                                    ' Tăng dần'
+                when 2
+                    React.DOM.div className: 'input-form-app-filter',
+                        React.DOM.div className: 'form-group col-lg-6 col-sm-12', style: {'display':'none'},
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+                                    React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+                                    for option in @props.options
+                                        React.DOM.option key: option.id, value: option.id, option.text
+                        React.DOM.div className: 'form-group col-lg-6 col-sm-12', style: {'display':'none'},
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                if @state.selectList == null
+                                    React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Input'
+                                else
+                                    React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+                                React.DOM.div className: "auto-complete",
+                                    if @state.autoComplete != null
+                                        for record in @state.autoComplete
+                                            try
+                                                React.createElement AutoComplete, key: record.id, text: record[@getOption.code], record: record, trigger: @triggerAutoCompleteAlt
+                                            catch error
+                                                console.log error
+                        React.DOM.div className: 'col-lg-12 text-center', style: {'display':'none'},
+                            React.DOM.div className: 'btn-group text-center', style: {'marginBottom':'10px','paddingLeft':'15px', 'paddingRight':'15px','width':'100%'},
+                                React.DOM.button type: 'button', className: 'btn btn-group-left', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSubmitSearch,
+                                    React.DOM.i className: 'zmdi zmdi-search'
+                                    ' Tìm kiếm'
+                                React.DOM.button type: 'button', className: 'btn btn-group-right', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerClear,
+                                    React.DOM.i className: 'zmdi zmdi-close'
+                                    ' Về ban đầu'
+                        React.DOM.div className: 'form-group col-sm-12', style: {,'textAlign':'justify'},
+                            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+                                React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+                                "Gợi ý"
+                        React.DOM.div className: 'form-group col-sm-12', style: {,'textAlign':'justify'},
+                            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+                                React.DOM.input id: 'checkbox_db_2', type: 'checkbox', onChange: @triggerStoreRecord
+                                "Dữ liệu hiện tại"
+                        React.DOM.div className: 'form-group col-lg-12 col-sm-12', style: {'display':'none'},
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                React.DOM.select id: 'filter_type_select2', className: 'form-control', onChange: @triggerChangeType,
+                                    React.DOM.option value: '', 'Chọn tiêu chuẩn sắp xếp'
+                                    for option in @props.options
+                                        React.DOM.option key: option.id, value: option.id, option.text
+                        React.DOM.div className: 'col-lg-12 text-center', style: {'display':'none'},
+                            React.DOM.div className: 'btn-group text-center', style: {'marginBottom':'10px','paddingLeft':'15px', 'paddingRight':'15px','width':'100%'},
+                                React.DOM.button type: 'button', className: 'btn btn-group-left', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSortAltDown,
+                                    React.DOM.i className: 'zmdi zmdi-sort-amount-desc'
+                                    ' Giảm dần'
+                                React.DOM.button type: 'button', className: 'btn btn-group-right', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSortAltUp,
+                                    React.DOM.i className: 'zmdi zmdi-sort-amount-asc'
+                                    ' Tăng dần'
+                when 3
+                    React.DOM.div className: 'input-form-app-filter',
+                        React.DOM.div className: 'form-group col-lg-6 col-sm-12', style: {'display':'none'},
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                React.DOM.select id: 'filter_type_select', className: 'form-control', onChange: @triggerChangeType,
+                                    React.DOM.option value: '', 'Chọn tiêu chuẩn lọc'
+                                    for option in @props.options
+                                        React.DOM.option key: option.id, value: option.id, option.text
+                        React.DOM.div className: 'form-group col-lg-6 col-sm-12', style: {'display':'none'},
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                if @state.selectList == null
+                                    React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Input'
+                                else
+                                    React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+                                React.DOM.div className: "auto-complete",
+                                    if @state.autoComplete != null
+                                        for record in @state.autoComplete
+                                            try
+                                                React.createElement AutoComplete, key: record.id, text: record[@getOption.code], record: record, trigger: @triggerAutoCompleteAlt
+                                            catch error
+                                                console.log error
+                        React.DOM.div className: 'col-lg-12 text-center', style: {'display':'none'},
+                            React.DOM.div className: 'btn-group text-center', style: {'marginBottom':'10px','paddingLeft':'15px', 'paddingRight':'15px','width':'100%'},
+                                React.DOM.button type: 'button', className: 'btn btn-group-left', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSubmitSearch,
+                                    React.DOM.i className: 'zmdi zmdi-search'
+                                    ' Tìm kiếm'
+                                React.DOM.button type: 'button', className: 'btn btn-group-right', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerClear,
+                                    React.DOM.i className: 'zmdi zmdi-close'
+                                    ' Về ban đầu'
+                        React.DOM.div className: 'form-group col-sm-12', style: {'display':'none'},
+                            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+                                React.DOM.input id: 'checkbox_db', type: 'checkbox'  
+                                "Gợi ý"
+                        React.DOM.div className: 'form-group col-sm-12', style: {'display':'none'},
+                            React.DOM.label className: 'checkbox checkbox-inline m-r-20', style: {'color': '#8191B1'},
+                                React.DOM.input id: 'checkbox_db_2', type: 'checkbox', onChange: @triggerStoreRecord
+                                "Dữ liệu hiện tại"
+                        React.DOM.div className: 'form-group col-lg-12 col-sm-12',
+                            React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
+                                React.DOM.select id: 'filter_type_select2', className: 'form-control', onChange: @triggerChangeType,
+                                    React.DOM.option value: '', 'Chọn tiêu chuẩn sắp xếp'
+                                    for option in @props.options
+                                        React.DOM.option key: option.id, value: option.id, option.text
+                        React.DOM.div className: 'col-lg-12 text-center',
+                            React.DOM.div className: 'btn-group text-center', style: {'marginBottom':'10px','paddingLeft':'15px', 'paddingRight':'15px','width':'100%'},
+                                React.DOM.button type: 'button', className: 'btn btn-group-left', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSortAltDown,
+                                    React.DOM.i className: 'zmdi zmdi-sort-amount-desc'
+                                    ' Giảm dần'
+                                React.DOM.button type: 'button', className: 'btn btn-group-right', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSortAltUp,
+                                    React.DOM.i className: 'zmdi zmdi-sort-amount-asc'
+                                    ' Tăng dần'
+            
+    render: ->
+        switch @props.datatype
+            when 1
+                @normalRender()
+            else
                 @normalRender()
