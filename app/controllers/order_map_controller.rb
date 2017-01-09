@@ -261,7 +261,7 @@ class OrderMapController < ApplicationController
   
   def search
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 1, 4
         @station = Station.find params[:id_station]
         if params.has_key?(:cname)
           @supplier = OrderMap.where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).group(:cname).limit(5)

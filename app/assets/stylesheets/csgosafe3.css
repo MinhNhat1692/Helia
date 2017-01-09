@@ -1,0 +1,1662 @@
+body {font-family: mainfont;color: #fff;}
+
+@font-face {font-family: mainfont;src: url(../fonts/Esphimere.otf);}
+
+a {color: #E7E7E7;text-decoration: none;}
+a:focus, a:hover {color: #E5E5E5;text-decoration: none;}
+
+h2,h3,h4{
+	font-size:1.3em;
+}
+
+.mainbackground {
+    z-index: -2;
+    background: url(../img/winter.jpg);
+    background-color: #0D0D0D;
+    background-repeat: no-repeat;
+    background-size: 100%;
+	position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    -webkit-filter: blur(8px);
+    filter: blur(8px);
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: #0D0D0D;
+    border: 1px solid #151515;
+}
+
+.label-success {
+    background-color: #745522;
+}
+
+.offer-table-image{
+	max-width: 40px;
+}
+
+.offer-table-image2{
+	width: 15%;
+	min-width: 50px;
+	max-width: 80px;
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    margin-right: 5px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+.userpro {
+ 	margin-bottom:25px;
+}
+
+.usern {
+	font-size: 20px;
+	color: #CA9643;
+}
+
+.userd {
+	list-style: none;
+	display: inline-block;
+	float: right;
+	text-align:right;
+}
+
+.social-feed-box {
+    /* padding: 15px; */
+    margin-bottom: 15px;
+}
+
+.social-action {
+    margin: 15px;
+}
+
+.social-avatar {
+    padding: 15px 15px 0 15px;
+}
+
+.feed-element, .media-body {
+    overflow: hidden;
+}
+
+.media-body {
+    display: block;
+    width: auto;
+}
+
+.social-avatar .media-body a {
+    font-size: 14px;
+    display: block;
+}
+
+.text-muted {
+    color: #888888;
+}
+
+.social-body {
+    padding: 15px;
+}
+
+.social-footer {
+    padding: 10px 15px;
+}
+
+.social-comment {
+    margin-top: 15px;
+}
+
+.background-table{
+	background-color: #0D0D0D;
+}
+
+.border-table{
+	border: 1px solid #151515;
+}
+
+.text-center{
+	text-align:center;
+}
+
+.padding-td{
+	padding:5px 5px 5px 0px;
+}
+
+.padding-td-1st{
+	padding:5px 0px 5px 10px;
+}
+
+.offer-table-image{
+	height:25px;
+}
+
+/* Containers */
+.container {
+	width: 75%;
+}
+
+.top-contain-left{
+	top: 180px;
+	padding-right: 10px!important;
+}
+
+.top-contain-right{
+	top: 60px;
+}
+
+.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-left:7px;
+    padding-right:7px;
+}
+
+/* Containers End */
+
+/* Progress */
+.progress {
+	width: 100%;
+    border-radius:1px;
+    height: 10px;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.6);
+    border: 1px solid #383d40;
+}
+
+.progress-bar {
+	height: 100%;
+    background-image: -webkit-linear-gradient(left,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    background-image: linear-gradient(to right,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    max-width: 100%!important;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+    outline: 0!important;
+    display: block;
+    border: none;
+    color: #f8f8f8;
+    transition: width .6s ease;
+}
+
+.progress-info{
+	position:absolute;
+	left:0px;
+	width:100%;
+	text-align:center;
+	line-height: 20px;
+	font-size: 1.2em;
+}
+
+.progress-jackpot {
+	position: relative;
+	width: 100%;
+    border-radius:5px;
+    height: 25px;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.6);
+    border: 2px solid #94b8ea;
+}
+
+/* Progress End */
+
+/* Navbars */
+.navbar-default {
+    background-color: rgba(0,0,0,0.6);
+    border-bottom: none;
+    -webkit-box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
+    border-radius: 0px;
+}
+
+.navbar-nav {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.navbar,.nav{
+	height:55px;
+}
+
+.navbar-nav>li{
+	height:55px;
+}
+
+.li-button {
+	width: 200px;
+	display: flex;
+	align-items: center;
+	height: 50px;
+	font-weight: 900;
+	display: inline-block;
+	border-left: 3px solid #1B1B1B;
+	text-transform: uppercase;
+	white-space: nowrap;
+	letter-spacing: 2px;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #D1D1D1;
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.31);
+    background-color: transparent;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+    color: #fff240;
+    background-color: transparent;
+}
+
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+    color: #FFF;
+    background-color: transparent;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    color: #FFF;
+    background-color: transparent;
+}
+
+.navbar-nav>li:active {
+    background-color: #b8b8b8;
+    -webkit-box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.75);
+}
+
+.notification-navbar {
+	font-size: 0.8em;
+	position: absolute;
+	height: 20px;
+	background-color: #b8b8b8;
+	top: 38px;
+	left: 5px;
+	right: 5px;
+	border-radius: 5px;
+	background: -webkit-linear-gradient(#d8c238, #c09c08, #d8c238); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#d8c238, #c09c08, #d8c238); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#d8c238, #c09c08 , #d8c238); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#d8c238, #c09c08 , #d8c238); /* Standard syntax */
+	line-height: 20px;
+	-webkit-box-shadow: 1px 0px 10px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 1px 0px 10px 1px rgba(0,0,0,0.75);
+    box-shadow: 1px 0px 10px 1px rgba(0,0,0,0.75);
+    letter-spacing: 1px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: rgba(17,23,37,0.8);
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #1F1F1F;
+    /* border: 1px solid rgba(0,0,0,.15); */
+    border-radius: 4px;
+    -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+    border-top: none;
+    min-width: 350px;
+}
+
+.dropdown-menu li{
+	height: 50px;
+	border-width: 2px 0 2px 0px;
+    border-style: solid;
+    -webkit-border-image: -webkit-gradient(linear, 100% 0, 0 0, from(rgba(50,50,50,.4)), to(rgba(248,248,248,0.1))) 1;
+    -webkit-border-image: -webkit-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+    -moz-border-image:-moz-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;  
+    -o-border-image: -o-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+    border-image: linear-gradient(to right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+}
+
+.dropdown-menu>li>a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    line-height: 1.42857143;
+    color: #8eb1d1;
+    white-space: nowrap;
+    font-weight: 900;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    line-height: 50px; 
+}
+
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.1);
+    -webkit-transition: 0.5s;
+}
+
+/* Navbars End */
+
+/* =====================================PROFILE PLACE============================================================================================*/
+.profile-panel{
+	border-radius: 4px;
+	height: 180px;
+	overflow: hidden;
+	-webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+}
+
+.profile-panel-top{
+	padding: 10px 20px 10px 20px;
+	height: 63%;
+	background-color: rgba(0,0,0,0.6);
+    -webkit-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+	-moz-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+	box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+}
+
+.profile-panel-bot{
+	height: 37%;
+	padding: 5px 20px 10px 25px;
+	background-color: rgba(0,0,0,0.73);
+    position: relative;
+}
+
+.profile-rank{
+	height: 100%;
+	padding:8px;
+}
+
+.profile-rank-name{
+	display: inline-block;
+	color: #9bb6d3;
+}
+
+.profile-profit{
+	color: #9bb6d3;
+	margin: 0;
+	position: absolute;          
+	right: 20px;
+	top: 50%;                      
+	transform: translate(0, -50%)
+}
+
+.profile-top1{
+	float:left;
+	height: 95%;
+	width: 20%;
+	text-align: center;
+}
+
+.profile-top2{
+	float:left;
+	height:95%;
+	width: 80%;
+}
+
+.profile-progressbar-panel{
+	float:left;
+	height:30%;
+	width:100%;
+	padding:10px 0px 0px 20px;
+}
+
+.profile-leveltext{
+	float: left;
+	color: #96a6bf;
+	margin-bottom:3px;
+}
+
+.profile-leveltext2{
+	float: right;
+	color: #96a6bf;
+	margin-bottom:3px;
+}
+
+.profile-avatar{
+	float: left;
+	height: 65%;
+}
+
+.profile-minirank{
+	float: left;
+	height: 35%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.profile-name-and-archieve{
+	float: left;
+	height: 65%;
+	width: 65%;
+	overflow: hidden;
+	margin-left:20px;
+}
+
+.profile-name{
+	display:block;
+	margin-bottom: 5px;
+	white-space: nowrap;
+	font-size: 1.5em;
+}
+
+.profile-name:hover{
+	animation: marquee 20s linear infinite;
+}
+
+.profile-coinarchieve{
+	height: 60%;
+	max-height: 60px;
+}
+
+.profile-stats{
+	height:65%;
+	float: right;
+	width: 22%;
+	overflow: hidden;
+	margin-left:5px;
+}
+
+.profile-stats img{
+	float:left;
+	height: 25%;
+}
+
+.profile-stat{
+	color: #bcbbbb;
+	margin-left: 15px;
+	float:left;
+	height: 10px;
+	line-height:10px;
+	margin-bottom:5px;
+}
+
+/*=====================================PROFILE PLACE END============================================================================================*/
+
+
+
+/* =====================================CHAT PLACE============================================================================================*/
+
+.chat-panel{
+	margin-top: 10px;
+	border-radius: 4px;
+	height: 550px;
+	overflow: hidden;
+	-webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	position: relative;
+}
+
+.chat-panel-top{
+	padding: 5px 10px 5px 10px;
+	height: 30px;
+	line-height:20px;
+	color: #9bb6d3;
+	background-color: rgba(0,0,0,0.73);
+    -webkit-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+	-moz-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+	box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+}
+
+.chat-panel-bot{
+	float:left;
+	padding-bottom: 100px;
+	height: 95%;
+	width: 100%;
+	background-color: rgba(0,0,0,0.6);
+	overflow-y: scroll;
+}
+
+.chatinput{
+	padding-bottom: 3px;
+    padding-top: 3px;
+    bottom:0;
+    position: absolute;
+    width:100%;
+}
+
+.form-control1 {
+	margin: 10px 15px 10px 15px;
+	display: block;
+    width: 92%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #FBF5F5 !important;
+    background-color: rgba(0,0,0,0.73);
+    background-image: none;
+    border: 1px solid #464646;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.22);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.message{
+	overflow:auto;
+	padding:8px;
+	border-width: 0px 0 2px 0px;
+    border-style: solid;
+    -webkit-border-image: -webkit-gradient(linear, 100% 0, 0 0, from(rgba(50,50,50,.4)), to(rgba(248,248,248,0.1))) 1;
+    -webkit-border-image: -webkit-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+    -moz-border-image:-moz-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;  
+    -o-border-image: -o-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+    border-image: linear-gradient(to right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1; 
+}
+
+.message .avatar-place{
+	width: 25%;
+}
+
+.message .chat-sample .name{
+	float:left;
+	color: #a1c271;
+}
+
+.message .chat-sample .chat-text{
+	float:left;
+	color: #96a6bf;
+	text-align:justify;
+}
+
+.message img{
+	float: left;
+	width: 60px;
+	border: 2px solid #a1c271;
+}
+
+.message .chat-sample{
+	margin-left: 10px;
+	width: 270px;
+	float:left;
+	/*color: #a1c271;*/
+}
+
+/*=======================================Notification Panel START============================================*/
+
+.notification-panel{
+	border-radius: 4px;
+	height: 80px;
+	overflow: hidden;
+	background-color: rgba(17,23,37,0.85);
+	-webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+}
+
+.notification-panel-top{
+	padding: 5px 10px 5px 10px;
+    font-weight: bold;
+    height: 30px;
+    line-height:20px;
+    color: #9bb6d3;
+    background-color: rgba(34,59,100,0.23);
+    -webkit-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+}
+
+.notification-panel-bottom{
+	position: relative;
+	padding: 10px 20px 10px 20px;
+    height: 50px;
+    line-height: 30px;
+    color: #9bb6d3;
+    overflow: hidden;
+}
+
+.notification-panel-bottom p{
+	color: #9bb6d3;
+    margin: 0;
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+}
+
+.notification-panel-bottom p:hover{
+	animation: marquee 20s linear infinite;
+}
+
+/*=======================================Notification Panel END============================================*/ 
+
+/*=======================================PotGame Panel START============================================*/
+
+.potgame-container{
+	margin-top: 10px;
+    height: 875px;
+    border-radius: 4px;
+}
+
+.inventory-container{
+	height: 650px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+}
+
+.inventory-top{
+	padding: 0px;
+	padding-left: 10px;
+    height: 35px;
+    line-height:35px;
+    color: #9bb6d3;
+    background-color: rgba(0,0,0,0.43);
+    -webkit-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+}
+
+.extra-part-inventory{
+	height: 100px;
+	padding: 10px;
+	display:block;
+}
+
+.main-inventory{
+	height: 515px;
+	padding: 20px;
+	background-color: rgba(0,0,0,0.43);
+	overflow-x:hidden;
+	overflow-y:scroll;
+}
+
+.main-inventory {
+	width:110px;
+	height:110px;
+}
+
+.main-inventory .item .bot {
+    position: absolute;
+    background-color: rgba(0,0,0,0.5);
+    padding: 2px 5px 2px 5px;
+    top: 2px;
+    right: 3px;
+    color: #ffffff;
+    -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+}
+
+.itemlist-container{
+	height: 200px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.6);
+    padding: 15px 15px 0px 15px;
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space: nowrap;
+}
+
+.mainpotgame-container{
+	margin-top: 10px;
+	height: 650px;
+    border-radius: 4px;
+    font-size:0.9em;
+    background-color: rgba(0,0,0,0.65);
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+}
+
+.mainpotgame-top{
+	padding: 5px 10px 5px 10px;
+    height: 30px;
+    line-height:20px;
+    color: #9bb6d3;
+    background-color: rgba(0,0,0,0.43);
+    -webkit-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+}
+
+.mainpotgame-bot{
+	padding: 15px 10px 5px 10px;
+    height: 430px;
+}
+
+.potgameinfo{
+	border-radius: 8px;
+	margin-top:15px;
+	width: 100%;
+	height: 520px;
+	background-color: rgba(0,0,0,0.43);
+	/*background-image: -webkit-linear-gradient(left,rgba(0,0,0,.4),rgba(50,50,50,.1));
+    background-image: linear-gradient(to right,rgba(0,0,0,.4),rgba(50,50,50,.1));*/
+	-webkit-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    padding: 10px 20px 10px 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.round{
+	border-width: 3px 3px 3px 3px;
+    border-style: solid;
+    border-color: #a1c271;
+    -moz-transition: height 1s ease;
+    -webkit-transition: height 1s ease;
+    -o-transition: height 1s ease;
+    transition: height 1s ease;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+.winnerpad{
+	text-align: center;
+	margin: 5px 10px 5px 10px;
+	height: 50px;
+	border-radius: 5px;
+	background-color: #337ab7;
+    border: 2px solid #94b8ea;
+    background-image: -webkit-linear-gradient(left,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    background-image: linear-gradient(to right,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    font-size: 1.2em;
+    line-height: 50px;
+    -webkit-box-shadow: inset 0px 0px 25px 5px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 25px 5px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 25px 5px rgba(0,0,0,0.75);
+}
+
+.winnerprice{
+	color: #a1c271;
+}
+
+.infopad{
+	padding: 0px 15px 0px 15px;
+	margin: 5px 10px 5px 10px;
+	height: 30px;
+	border-radius:4px;
+	background-image: -webkit-linear-gradient(left,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    background-image: linear-gradient(to right,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    -webkit-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    font-size: 1em;
+    line-height: 30px;
+}
+
+.betpad{
+	padding: 0px 15px 0px 15px;
+	margin: 5px 10px 5px 10px;
+	height: 40px;
+	border-radius:4px;
+	-webkit-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    -moz-box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    box-shadow: -2px 10px 15px -5px rgba(0,0,0,0.75);
+    font-size: 1.1em;
+    line-height: 40px;
+}
+
+.winnerpad img{
+	height: 35px;	
+}
+
+.betpad img{
+	height: 30px;
+}
+
+/* Item code start*/
+
+.item{
+	position: relative;
+	width: 170px;
+	height: 170px;
+	background-image: url(../img/itembackground.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-width: 4px 4px 4px 4px;
+    border-style: solid;
+    border-color: #272c2f;
+    border-radius: 5px;
+    margin-right: 3px;
+	-webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+}
+
+.itemname-panel{
+	text-align: left;
+	padding: 3px 10px 3px 15px;
+	overflow:hidden;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 45px;
+	opacity: 0.9;
+	border-width: 1px 0px 0px 0px;
+    border-style: solid;
+    border-color:#272c2f;
+    background-image: -webkit-linear-gradient(left,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    background-image: linear-gradient(to right,rgba(50,50,50,.4),rgba(248,248,248,.1));
+}
+
+/*rank orange*/
+.itemrank1{
+	background-image: -webkit-linear-gradient(left,#CF6A32,#562c2c)!important;
+    background-image: linear-gradient(to right,#CF6A32,#562c2c)!important;
+}
+
+/*rank pink*/
+.itemrank2{
+	background-image: -webkit-linear-gradient(left,#9d25aa,#512155)!important;
+    background-image: linear-gradient(to right,#9d25aa,#512155)!important;
+}
+
+/*rank purple*/
+.itemrank3{
+	background-image: -webkit-linear-gradient(left,#643bb4,#3c2b5c)!important;
+    background-image: linear-gradient(to right,#643bb4,#3c2b5c)!important;
+}
+
+/*rank blue1*/
+.itemrank4{
+	background-image: -webkit-linear-gradient(left,#3e52b1,#2f3557)!important;
+    background-image: linear-gradient(to right,#3e52b1,#2f3557)!important;
+}
+
+/*rank blue2*/
+.itemrank5{
+	background-image: -webkit-linear-gradient(left,#4574a8,#324353)!important;
+    background-image: linear-gradient(to right,#4574a8,#324353)!important;
+}
+
+/*rank gray*/
+.itemrank6{
+	background-image: -webkit-linear-gradient(left,#86909f,#484d51)!important;
+    background-image: linear-gradient(to right,#86909f,#484d51)!important;
+}
+
+.itemname{
+	font-weight: 900;
+	margin-bottom:0px;
+}
+
+.item .price{
+	position: absolute;
+	background-color: #486720;
+	padding: 2px 5px 2px 5px;
+	top: 2px;
+	left: 3px;
+	color: #ffffff;
+	-webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+}
+
+/*=========================Item code end=====================================*/
+.responsive-for-mobile{
+	display:none;
+}
+
+.totalprice{
+	text-align: center;
+	font-weight: 800;
+	font-size: 2.5em;
+	border-radius: 5px;
+	height: 80px;
+	background-image: -webkit-linear-gradient(left,rgba(5,8,15,0.6),rgba(31,34,41,0.5));
+    background-image: linear-gradient(to right,rgba(5,8,15,0.6),rgba(31,34,41,0.5));
+    line-height: 80px;
+    margin-bottom: 10px;
+}
+
+.btn-deposit{
+	width: 100%;
+	text-align: center;
+	font-weight: 800;
+	font-size: 1.2em;
+	border-radius: 5px;
+	height: 80px;
+	background-image: -webkit-linear-gradient(left,#a1c271,#486720);
+    background-image: linear-gradient(to right,#a1c271,#486720);
+    line-height: 80px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+/*=======================================PotGame Panel End============================================*/
+
+/*=======================================FLIPCOIN game start==========================================*/
+
+.coinflip-container-info{
+	height: 0px;
+	padding:10px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-transition: height 1s ease;
+    -webkit-transition: height 1s ease;
+    -o-transition: height 1s ease;
+    transition: height 1s ease;
+	overflow: hidden;
+	text-align: center;
+}
+
+.coinflip-container{
+	height: 120px;
+	padding: 5px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+	overflow-x: scroll;
+	overflow-y: hidden;
+	white-space:nowrap;
+}
+
+.flipcoingame-pad{
+	padding:10px 10px;
+	height: 110px;
+	width: 22%;
+	margin-left: 5px;
+	border-width: 2px 0px 2px 0px;
+    border-style: solid;
+    -webkit-border-image: -webkit-gradient(linear, 100% 0, 0 0, from(rgba(50,50,50,.4)), to(rgba(248,248,248,0.1))) 1;
+    -webkit-border-image: -webkit-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+    -moz-border-image: -moz-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+    -o-border-image: -o-linear-gradient(right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+    border-image: linear-gradient(to right, rgba(50,50,50,.4), rgba(248,248,248,0.1)) 1;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.flipcoingame-pad:active{
+	-webkit-box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.75) !important;
+    -moz-box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.75) !important;
+    box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.75) !important;
+}
+
+.coinflip-container .active{
+	-webkit-box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.6);
+    -moz-box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.6);
+    box-shadow: inset 0px 0px 100px 13px rgba(0,0,0,0.6);
+}
+
+.coinflip-container-info>.left{
+	padding-top:10px;
+	font-size: 0.9em;
+	border-width: 0 3px 0 0;
+    border-style: solid;
+    height:320px;
+    -webkit-border-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(150,214,255,1)), to(rgba(0, 0, 0, 0))) 1 100%;
+    -webkit-border-image: -webkit-linear-gradient(rgba(150,214,255,1), rgba(0, 0, 0, 0)) 1 100%;
+    -moz-border-image: -moz-linear-gradient(rgba(150,214,255,1), rgba(0, 0, 0, 0)) 1 100%;    
+    -o-border-image: -o-linear-gradient(rgba(150,214,255,1), rgba(0, 0, 0, 0)) 1 100%;
+    border-image: linear-gradient(to bottom, rgba(150,214,255,1), rgba(0, 0, 0, 0)) 1 100%;
+    text-align: center;	
+    overflow-y: scroll;
+    overflow-x: hidden;
+    letter-spacing: 1px;
+}
+
+.coinflip-container-info>.left>.makerinfo>a>img,.coinflip-container-info>.right>.joinerinfo>a>img{
+	height: 40px;
+	border-radius: 20px;
+}
+
+.coinflip-container-info>.left>.makerinfo>span{
+	font-size: 0.9em;
+	position: absolute;
+	background-color: #486720;
+	padding: 2px 5px 2px 5px;
+	top: 17px;
+	right: 3px;
+	color: #ffffff;
+	-webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+}
+
+.coinflip-container-info>.right>.joinerinfo>span{
+	font-size: 0.9em;
+	position: absolute;
+	background-color: #486720;
+	padding: 2px 5px 2px 5px;
+	top: 17px;
+	left: 3px;
+	color: #ffffff;
+	-webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
+}
+
+.coinflip-container-info>.right{
+	padding-top:10px;
+	font-size: 0.9em;
+	border-width: 0 0px 0 0;
+    border-style: solid;
+    height:320px;
+    -webkit-border-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(150,214,255,1)), to(rgba(0, 0, 0, 0))) 1 100%;
+    -webkit-border-image: -webkit-linear-gradient(rgba(150,214,255,1), rgba(0, 0, 0, 0)) 1 100%;
+    -moz-border-image: -moz-linear-gradient(rgba(150,214,255,1), rgba(0, 0, 0, 0)) 1 100%;    
+    -o-border-image: -o-linear-gradient(rgba(150,214,255,1), rgba(0, 0, 0, 0)) 1 100%;
+    border-image: linear-gradient(to bottom, rgba(150,214,255,1), rgba(0, 0, 0, 0)) 1 100%;
+    text-align: center;	
+    overflow-y: scroll;
+    overflow-x: hidden;
+    letter-spacing: 1px;
+}
+
+.winnerplace{
+	font-size: 1.2em;
+	height: 0px;
+	float:left;
+	margin: 0;
+    width: 100%;
+    text-align: center;
+    border-radius: 25px;
+	border: 2px solid #94b8ea;
+	background-image: -webkit-linear-gradient(left,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    background-image: linear-gradient(to right,rgba(50,50,50,.4),rgba(248,248,248,.1));
+    background-color: #337ab7;
+    -moz-transition: height 1s ease;
+    -webkit-transition: height 1s ease;
+    -o-transition: height 1s ease;
+    transition: height 1s ease;
+    overflow: hidden; 
+}
+
+.winnerplace>a>img{
+	height: 30px;
+}
+
+/*height: 200px*/
+.coinflipbuttonplace{
+	height:0px;
+	-moz-transition: height 1s ease;
+    -webkit-transition: height 1s ease;
+    -o-transition: height 1s ease;
+    transition: height 1s ease;
+    overflow: hidden;
+}
+/*=======================================FLIPCOIN game end==========================================*/
+
+.itemaddpanel{
+	width:100%;
+	height: 210px;
+}
+
+.itemfreeslot{
+	width: 100px;
+	height: 100px;
+	margin: 5px;
+	background-color:rgba(0,0,0,0.5);
+	display:inline-block;
+}
+
+.itemfreeslot .item{
+	width: 100%;
+	height:100%;
+}
+
+.inventorymodalpanel{
+	width:100%;
+	height: 150px;
+	overflow-x:scroll;
+	overflow-y:hidden;
+	white-space:nowrap;
+}
+
+.inventorymodalpanel .item{
+	width: 100px;
+	height: 100px;
+	margin: 5px;
+}
+
+/*=========================================INVENTORY END==========================================*/
+
+.rpsgamepanel{
+	margin-bottom: 5px;
+}
+
+.rpsgamepanel>img{
+	width: 25px;
+	display:inline-block;
+}
+
+.rpsgamepanel>.itemfreeslot{
+	width: 65px;
+	height: 65px;
+	margin: 5px;
+	background-color:rgba(0,0,0,0.5);
+	display:inline-block;
+}
+
+.rpsgamepanel>.itemfreeslot>.item{
+	width: 100%;
+	height:100%;
+	font-size:0.7em;
+}
+
+.rpsgamepanel>.itemfreeslot>.item>.itemname-panel{
+	height:26px;
+	padding: 0px 3px;
+}
+
+.rpsgamepanel>.inventorymodalpanel{
+	width:100%;
+	height: 120px;
+	overflow-x:scroll;
+	overflow-y:hidden;
+	white-space:nowrap;
+}
+
+.rpsgamepanel>.inventorymodalpanel>.item{
+	width: 65px;
+	height: 65px;
+	margin: 5px;
+	font-size: 0.7em;
+}
+
+.rpsgamepanel>.inventorymodalpanel>.item>.itemname-panel{
+	height:26px;
+	padding: 0px 3px;
+}
+
+.rpsgamepanel>.btn,.rpsgamepanel>#buttonrpsplace>.btn,.rpsgamepanel>#buttonrpsplaceother>.btn{
+	width:100%;
+	margin-bottom:5px;
+	overflow:hidden;
+	transition: height .6s ease;
+}
+
+.rpsgamepanel>#buttonrpsplace{
+	height:144px;
+	overflow:hidden;
+	transition: height .6s ease;
+}
+
+.rpsgamepanel>.padder{
+	border-radius:5px;
+	border: 1px solid #8aea10;
+	margin-bottom:5px;
+	width:100%;
+	padding: 6px 12px;
+}
+
+/*=========================================RPS END==========================================*/
+
+
+.btn.focus, .btn:focus, .btn:hover {
+    text-decoration: none;
+    -webkit-transition: 0.5s;
+    border: 1px solid #9B793B;
+    background-color: #775C2B;
+    -webkit-transition: 0.5s;
+    color: #fff;
+}
+
+/* Landing Page */
+.modal-content {
+  position: relative;
+  background-color: rgb(15, 15, 15);
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #999;
+  border: 1px solid rgba(23, 23, 23, 0.78);
+  border-radius: 6px;
+  outline: 0;
+  -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+  box-shadow: 0 0px 9px rgba(0,0,0,.5);
+}
+
+.modal-header {
+    min-height: 16.43px;
+    padding: 15px;
+    border-bottom: 1px solid #191919;
+    BACKGROUND-COLOR: #131313;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12);
+}
+
+.modal-footer {
+  padding: 15px;
+  text-align: right;
+  border-top: 1px solid #191919;
+  BACKGROUND-COLOR: #131313;
+  box-shadow: 0px -3px 5px rgba(0, 0, 0, 0.12);
+}
+
+.btn-normal{
+	color: #fff;
+    background-color: #354d6c;
+    border-color: #28364a;
+    border-radius: 0px;
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+	text-shadow: 3px 1px 5px rgba(0, 0, 0, 1);
+}
+
+.btn-normal:hover {
+    text-decoration: none;
+    -webkit-transition: 0.5s;
+    border: 1px solid #3176d9;
+    background-color: #2b65b8;
+    -webkit-transition: 0.5s;
+    color: #fff;
+}
+
+.btn-normal:focus {
+    text-decoration: none;
+    -webkit-transition: 0.5s;
+    border: 1px solid #1933bb;
+    background-color: #2a3c99;
+    -webkit-transition: 0.5s;
+    color: #fff;
+}
+
+.btn-special{
+	color: #fff;
+    background-color: #527625;
+    border-color: #39511a;
+    border-radius: 0px;
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+	text-shadow: 3px 1px 5px rgba(0, 0, 0, 1);
+}
+
+.btn-special:hover {
+    text-decoration: none;
+    -webkit-transition: 0.5s;
+    border: 1px solid #8aea10;
+    background-color: #6fa12f;
+    -webkit-transition: 0.5s;
+    color: #fff;
+}
+
+.btn-special:focus {
+    text-decoration: none;
+    -webkit-transition: 0.5s;
+    border: 1px solid #6ead1d;
+    background-color: #5d8c21;
+    -webkit-transition: 0.5s;
+    color: #fff;
+}
+
+.btn-white {
+  	background: #527625;
+	border: 1px solid #947031;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #232323;
+    border-color: #2A2A2A;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #4F4F4F;
+    border-color: #575757;
+}
+
+.modal-body {
+	position: relative;
+    padding: 40px;
+    text-align: left;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #A7A7A7;
+    background-color: #252525;
+    background-image: none;
+    border: 1px solid #383838;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.flipcoingame-info-top-left>.item>.itemname-panel,.flipcoingame-info-top-right>.item>.itemname-panel{height: 50px}
+
+::-webkit-scrollbar {width: 6px;height: 1px;}
+::-webkit-scrollbar-track {background: rgba(0,0,0,0.1);}
+::-webkit-scrollbar-thumb {border-radius:10px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);}
+
+@keyframes marquee {
+    0%   { text-indent: 0em }
+    100% { text-indent: -30em }
+}
+
+@media screen
+	and (min-device-width: 320px) 
+  	and (max-device-width: 766px) 
+  	and (-webkit-min-device-pixel-ratio: 1){
+	.li-button{width: 80px;font-size:0.6em;height:35px}
+	.navbar,.nav,.navbar-nav>li,.navbar-nav > li > a,.navbar-header{height:35px;}
+	.navbar-toggle{margin:2px}
+	.navbar-nav>li{float: left;width:80%;padding: 5px;background-color: rgba(17,23,37,0.9);-webkit-background-clip: padding-box;background-clip: padding-box;-webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);}
+	.navbar-nav > li > a{padding:0px 10px 0px 10px;line-height:35px}
+	.navbar{min-height:35px}
+	.notification-navbar{top:30px;height:15px;line-height:15px;font-size:0.7em}
+	.dropdown-menu {min-width:250px}
+	.dropdown-menu li,.dropdown-menu>li>a{height:35px;font-size:0.9em;line-height:35px}.dropdown-menu>li>a {padding: 3px 10px;}
+	.container{width:100%}
+	.notification-panel{font-size:0.8em;height:70px;display:none}.notification-panel-top{padding: 5px 10px 5px 10px;height: 25px;line-height: 15px;}.notification-panel-bottom {padding: 10px 20px 10px 20px;height: 45px;line-height: 25px;}
+	.container .top-contain-left{display:none}
+	.container .top-contain-right{top:45px;width:100%!important;display:block;float:left}
+	.profile-panel{height: 140px;}
+	.profile-panel-top {padding: 5px;}.profile-avatar{max-width: 40px;max-height:40px}
+	.profile-name-and-archieve{margin-left: 5px;width:80%}.profile-stats,.profile-coinarchieve{display:none}
+	.profile-name{font-size:1em}.profile-stats,.profile-progressbar-panel,.profile-panel-bot{font-size:0.6em}
+	.profile-progressbar-panel {padding:1px}
+	.progress{height:8px}
+	.profile-panel-bot{padding:5px 2px}.profile-rank{height:40px}
+	.chat-panel,.form-control1 {font-size:0.8em}.form-control1{height:25px}
+	.chat-panel-top{height:25px;line-height:15px}.chat-panel-bot{height:440px;padding-bottom:50px}.form-control1{width:85%}
+	.message img {max-width:30px}.message .chat-sample{width:145px;margin-left:3px}
+	.itemlist-container{height: 100px;padding: 5px 10px;font-size: 0.7em}
+	.item{height:90px;width:90px}
+	.potgame-container{margin-top:0px}
+	.potgame-container .itemlist-container .item .itemname-panel{height: 35px}
+	.chat-panel,.mainpotgame-container,.potgame-container {height: 465px;}
+	.mainpotgame-top{font-size:0.9em;height:25px;line-height:15px}
+	.mainpotgame-bot{padding:5px}.mainpotgame-bot .col-md-8{width:100%;display:block;padding:2px;}
+	.mainpotgame-bot{padding:5px}.mainpotgame-bot .col-md-4{display:none}.mainpotgame-bot .responsive-for-mobile{display:block;width:100%;height:135px}
+	.progress-jackpot{height:15px}.progress-info{line-height:15px;font-size:0.8em}
+	.potgameinfo{height:260px;margin-top:8px;padding:5px}
+	.round{padding-top:5px;padding-bottom:5px}
+	.winnerpad{height: 40px;font-size:0.8em;line-height:40px;margin:5px;overflow:hidden;}.winnerpad img {height:20px}
+	.winnerplace:hover,.winnerpad:hover,.betpad:hover,.btn-deposit:hover,.flipcoingame-info-top-right>.item>.itemname-panel:hover,.flipcoingame-info-top-left>.item>.itemname-panel:hover,.flipcoingame-pad .col-sm-8:hover{animation: marquee 20s linear infinite;}
+	.infopad{height: 20px;font-size:0.7em;line-height:20px}
+	.betpad{height: 30px;font-size:0.8em;line-height:30px;overflow:hidden}.betpad img {height: 15px;}
+	.btn-deposit{height:35px;line-height:35px;font-size:0.9em;overflow:hidden}.totalprice{height:35px;line-height:35px;font-size:1em}
+	.container .col-md-12{width:100%!important}
+	.flipcoin-container,.flipcoingame-container{height:510px;margin-top:0px}
+	.flipcoingame-top{font-size:0.7em;height:25px}
+	.flipcoingame-bot .col-md-2{width: 30%;display:inline-block;float:left}
+	.flipcoingame-bot .col-md-10{width: 70%;;display:inline-block;float:left}
+	.flipcoingame-left{padding:0px 1px}
+	.flipcoingame-left .btn-deposit{font-size:0em;height:30px!important}
+	.flipcoingame-pad{height:70px;}
+	.flipcoingame-pad .col-sm-4{display:none}
+	.flipcoingame-pad .col-sm-8{padding-left:0px!important;font-size:0.7em;white-space:nowrap;overflow:hidden}
+	.flipcoingame-right{height:485px}.flipcoingame-bot {height:485px}
+	.flipcoingame-info-top .col-md-6,.flipcoingame-info-bot .col-md-6{width:50%;display:inline-block;float:left;padding:0}
+	.flipcoingame-info-top-left>.item,.flipcoingame-info-top-right>.item{display:none}
+	.flipcoingame-info-top-left>.item>.itemname-panel,.flipcoingame-info-top-right>.item>.itemname-panel{height: 25px;font-size: 0.6em;overflow:hidden}
+	.winnerplace{font-size:0.8em;line-height:40px;height:40px;overflow:hidden}
+	.winnerplace>a>img{height:20px}
+	.winner{display:none}
+	.flipcoingame-info-top{height:120px}
+	.flipcoingame-info-top-left,.flipcoingame-info-top-right{font-size:0.6em;height:70px;padding-top:5px!important}
+	.flipcoingame-info-bot .col-md-6{width:100%;border-width:0px;display:inline-block;float:left;padding:5px 0px}
+	.flipcoingame-info-top-left .item,.flipcoingame-info-top-right .item{height:60px;width:60px;}
+	.flipcoingame-info-bot-left>.col-md-5,.flipcoingame-info-bot-right>.col-md-5 {width:100%}
+	.flipcoingame-info-bot-left>.col-md-7,.flipcoingame-info-bot-right>.col-md-7 {display:none}
+	.inventory-container{height: 565px;}
+	.inventory-top{height: 35px;line-height:35px;}
+	.extra-part-inventory{height: 100px;}
+	.main-inventory{height: 430px;}
+	.main-inventory .item{width:110px;height:110px;}
+}
+
+@media screen
+	and (min-device-width: 767px) 
+  	and (max-device-width: 1023px) 
+  	and (-webkit-min-device-pixel-ratio: 1){
+	.li-button{width: 80px;font-size:0.6em;height:35px}
+	.navbar,.nav,.navbar-nav>li,.navbar-nav > li > a{height:35px;}
+	.navbar-nav > li > a{padding:0px 10px 0px 10px;line-height:35px}
+	.navbar{min-height:35px}
+	.notification-navbar{top:30px;height:15px;line-height:15px;font-size:0.7em}
+	.dropdown-menu {min-width:250px}
+	.dropdown-menu li,.dropdown-menu>li>a{height:35px;font-size:0.9em;line-height:35px}.dropdown-menu>li>a {padding: 3px 10px;}
+	.container{width:100%}
+	.notification-panel{font-size:0.8em;height:70px;display:none}.notification-panel-top{padding: 5px 10px 5px 10px;height: 25px;line-height: 15px;}.notification-panel-bottom {padding: 10px 20px 10px 20px;height: 45px;line-height: 25px;}
+	.container .top-contain-left{top: 45px;padding-right:5px!important;width:30%!important;padding-left:0px!important;display:inline-block;float:left}
+	.container .top-contain-right{top:45px;width:70%!important;display:inline-block;float:left}
+	.profile-panel{height: 140px;}
+	.profile-panel-top {padding: 5px;}.profile-avatar{max-width: 40px;max-height:40px}
+	.profile-name-and-archieve{margin-left: 5px;width:80%}.profile-stats,.profile-coinarchieve{display:none}
+	.profile-name{font-size:1em}.profile-stats,.profile-progressbar-panel,.profile-panel-bot{font-size:0.6em}
+	.profile-progressbar-panel {padding:1px}
+	.progress{height:8px}
+	.profile-panel-bot{padding:5px 2px}.profile-rank{height:40px}
+	.chat-panel,.form-control1 {font-size:0.8em}.form-control1{height:25px}
+	.chat-panel-top{height:25px;line-height:15px}.chat-panel-bot{height:440px;padding-bottom:50px}.form-control1{width:85%}
+	.message img {max-width:30px}.message .chat-sample{width:145px;margin-left:3px}
+	.itemlist-container{height: 140px;padding: 5px 10px;font-size: 0.7em}
+	.item{height:130px;width:130px}
+	.potgame-container{margin-top:0px}
+	.potgame-container .itemlist-container .item .itemname-panel{height: 35px}
+	.chat-panel,.mainpotgame-container,.potgame-container {height: 465px;}
+	.mainpotgame-top{font-size:0.9em;height:25px;line-height:15px}
+	.mainpotgame-bot{padding:5px}.mainpotgame-bot .col-md-8{width:70%;display:inline-block;padding:2px;float:left}
+	.mainpotgame-bot{padding:5px}.mainpotgame-bot .col-md-4{width:30%;display:inline-block;padding:2px;float:left}
+	.progress-jackpot{height:20px}.progress-info{line-height:20px;font-size:0.9em}
+	.potgameinfo{height:395px;margin-top:8px;padding:5px}
+	.round{padding-top:5px;padding-bottom:5px}
+	.winnerpad{height: 40px;font-size:0.8em;line-height:40px;margin:5px;overflow:hidden;}.winnerpad img {height:20px}
+	.winnerpad:hover,.betpad:hover,.btn-deposit:hover,.flipcoingame-info-top-right>.item>.itemname-panel:hover,.flipcoingame-info-top-left>.item>.itemname-panel:hover,.flipcoingame-pad .col-sm-8:hover{animation: marquee 20s linear infinite;}
+	.infopad{height: 20px;font-size:0.7em;line-height:20px}
+	.betpad{height: 30px;font-size:0.8em;line-height:30px;overflow:hidden}.betpad img {height: 15px;}
+	.btn-deposit{height:55px;line-height:55px;font-size:1em;overflow:hidden}.totalprice{height:55px;line-height:55px;font-size:1.2em}
+	.container .col-md-12{width:100%!important}
+	.flipcoin-container,.flipcoingame-container{height:615px;margin-top:0px}
+	.flipcoingame-top{font-size:0.9em;height:30px}
+	.flipcoingame-bot .col-md-2{width: 25%;display:inline-block;float:left}
+	.flipcoingame-bot .col-md-10{width: 75%;;display:inline-block;float:left}
+	.flipcoingame-left{padding:0px 1px}
+	.flipcoingame-pad{height:80px;}
+	.flipcoingame-pad .col-sm-8{padding-left:5px!important;font-size:0.8em;overflow:hidden}
+	.flipcoingame-right{height:585px}.flipcoingame-bot {height:585px}
+	.flipcoingame-info-top .col-md-6,.flipcoingame-info-bot .col-md-6{width:50%;display:inline-block;float:left}
+	.flipcoingame-info-top-left>.item>.itemname-panel,.flipcoingame-info-top-right>.item>.itemname-panel{height: 25px;font-size: 0.6em;overflow:hidden}
+	.winnerplace{font-size:1em;line-height:45px;height:45px}
+	.winner{display:none}
+	.flipcoingame-info-top{height:420px}
+	.flipcoingame-info-top-left,.flipcoingame-info-top-right{font-size:0.9em;height:350px}
+	.flipcoingame-info-top-left .item,.flipcoingame-info-top-right .item{height:95px;width:95px;}
+	.flipcoingame-info-bot-left>.col-md-5,.flipcoingame-info-bot-right>.col-md-5 {width:100%}
+	.flipcoingame-info-bot-left>.col-md-7,.flipcoingame-info-bot-right>.col-md-7 {display:none}
+	.inventory-container{height: 615px;}
+	.inventory-top{height: 35px;line-height:35px;}
+	.extra-part-inventory{height: 100px;}
+	.main-inventory{height: 480px;}
+	.main-inventory .item{width:110px;height:110px;}
+}
+
+@media screen
+	and (min-device-width: 1024px) 
+  	and (max-device-width: 1399px) 
+  	and (-webkit-min-device-pixel-ratio: 1){
+	.li-button{width: 120px;font-size:0.7em;height:35px}
+	.navbar,.nav,.navbar-nav>li,.navbar-nav > li > a{height:35px;}
+	.navbar-nav > li > a{padding:0px 10px 0px 10px;line-height:35px}
+	.navbar{min-height:35px}
+	.notification-navbar{top:30px;height:15px;line-height:15px;font-size:0.7em}
+	.dropdown-menu {min-width:250px}
+	.dropdown-menu li,.dropdown-menu>li>a{height:35px;font-size:0.9em;line-height:35px}.dropdown-menu>li>a {padding: 3px 10px;}
+	.notification-panel{font-size:0.8em;height:70px}.notification-panel-top{padding: 5px 10px 5px 10px;height: 25px;line-height: 15px;}.notification-panel-bottom {padding: 10px 20px 10px 20px;height: 45px;line-height: 25px;}
+	.top-contain-left{top: 125px;padding-right:10px!important}
+	.top-contain-right {top:45px}
+	.profile-panel{height: 160px;}
+	.profile-panel-top {padding: 5px;}.profile-avatar{max-width: 50px;max-height:50px}
+	.profile-name-and-archieve{margin-left: 10px;width:80%}.profile-stats{display:none}
+	.profile-name{font-size:1em}.profile-stats,.profile-progressbar-panel,.profile-panel-bot{font-size:0.7em}
+	.progress{height:10px}
+	.profile-panel-bot{padding:10px 5px}.profile-rank{height:45px}
+	.chat-panel,.form-control1 {font-size:0.8em}.form-control1{height:25px}
+	.chat-panel-top{height:25px;line-height:15px}.chat-panel-bot{height:440px;padding-bottom:50px}.form-control1{width:90%}
+	.message img {max-width:30px}.message .chat-sample{width:165px;margin-left:5px}
+	.itemlist-container{height: 160px;padding: 5px 10px;font-size: 0.8em}
+	.item{height:150px;width:150px}
+	.potgame-container .itemlist-container .item .itemname-panel{height: 35px}
+	.chat-panel,.mainpotgame-container,.potgame-container {height: 465px;}
+	.mainpotgame-top{font-size:0.9em;height:25px;line-height:15px}
+	.mainpotgame-bot{padding:5px}
+	.progress-jackpot{height:20px}.progress-info{line-height:20px;font-size:0.9em}
+	.potgameinfo{height:395px;margin-top:8px;padding:5px}
+	.round{padding-top:5px;padding-bottom:5px}
+	.winnerpad{height: 40px;font-size:0.8em;line-height:40px;margin:5px;overflow:hidden;}.winnerpad img {height:20px}
+	.winnerpad:hover,.betpad:hover,.btn-deposit:hover,.flipcoingame-info-top-right>.item>.itemname-panel:hover,.flipcoingame-info-top-left>.item>.itemname-panel:hover,.flipcoingame-pad .col-sm-8:hover{animation: marquee 20s linear infinite;}
+	.infopad{height: 20px;font-size:0.7em;line-height:20px}
+	.betpad{height: 30px;font-size:0.8em;line-height:30px;overflow:hidden}.betpad img {height: 15px;}
+	.btn-deposit{height:55px;line-height:55px;font-size:1em;overflow:hidden}.totalprice{height:55px;line-height:55px;font-size:1.2em}
+	.flipcoin-container{height:635px}.flipcoingame-container{height:635px}
+	.flipcoingame-top{font-size:0.9em;height:35px}
+	.flipcoingame-bot .col-md-2{width: 25%}
+	.flipcoingame-bot .col-md-10{width: 75%}
+	.flipcoingame-left{padding:0px 1px}
+	.flipcoingame-pad{height:80px;}
+	.flipcoingame-pad .col-sm-8{padding-left:5px!important;font-size:0.8em;overflow:hidden}
+	.flipcoingame-right{height:600px}.flipcoingame-bot {height:600px}
+	.flipcoingame-info-top-left>.item>.itemname-panel,.flipcoingame-info-top-right>.item>.itemname-panel{height: 25px;font-size: 0.6em;overflow:hidden}
+	.winnerplace{font-size:1em;line-height:45px;height:45px}
+	.winner{display:none}
+	.flipcoingame-info-top{height:420px}
+	.flipcoingame-info-top-left,.flipcoingame-info-top-right{font-size:0.9em;height:350px}
+	.flipcoingame-info-top-left .item,.flipcoingame-info-top-right .item{height:95px;width:95px;}
+	.flipcoingame-info-bot-left>.col-md-5,.flipcoingame-info-bot-right>.col-md-5 {width:100%}
+	.flipcoingame-info-bot-left>.col-md-7,.flipcoingame-info-bot-right>.col-md-7 {display:none}
+	.inventory-container{height: 635px;}
+	.inventory-top{height: 35px;line-height:35px;}
+	.extra-part-inventory{height: 100px;}
+	.main-inventory{height: 500px;}
+	.main-inventory .item{width:110px;height:110px;}
+}
+
+@media screen 
+  and (min-device-width: 1400px) 
+  and (max-device-width: 1600px) {
+	.li-button{width: 200px;font-size:0.8em;height:35px}
+	.navbar,.nav,.navbar-nav>li,.navbar-nav > li > a{height:35px;}
+	.navbar-nav > li > a{padding:0px 10px 0px 10px;line-height:35px}
+	.navbar{min-height:35px}
+	.notification-navbar{top:30px;height:15px;line-height:15px;font-size:0.7em}
+	.dropdown-menu {min-width:250px}
+	.dropdown-menu li,.dropdown-menu>li>a{height:35px;font-size:0.9em;line-height:35px}.dropdown-menu>li>a {padding: 3px 10px;}
+	.notification-panel{font-size:1em;height:80px}.notification-panel-top{padding: 5px 10px 5px 10px;height: 30px;line-height: 20px;}.notification-panel-bottom {padding: 10px 20px 10px 20px;height: 50px;line-height: 30px;}
+	.top-contain-left{top: 135px;padding-right:10px!important}
+	.top-contain-right {top:45px}
+	.profile-panel{height: 180px;}
+	.profile-name{font-size:1em}.profile-stats,.profile-progressbar-panel,.profile-panel-bot{font-size:0.8em}
+	.progress{height:10px}
+	.chat-panel,.form-control1 {font-size:0.9em}.form-control1{height:25px}
+	.message img {max-width:50px}
+	.itemlist-container{height: 180px;padding: 5px 10px;font-size: 1em}
+	.item{height:170px;width:170px}
+	.potgame-container .itemlist-container .item .itemname-panel{height: 45px}
+	.chat-panel,.mainpotgame-container,.potgame-container {height: 460px;}
+	.mainpotgame-top{font-size:0.9em}
+	.progress-jackpot{height:25px}.progress-info{line-height:25px;font-size:0.9em}
+	.potgameinfo{height:365px}
+	.round{padding-top:5px;padding-bottom:5px}
+	.winnerpad{height: 50px;font-size:0.9em;line-height:50px;overflow:hidden}.winnerpad img {height:25px}
+	.infopad{height: 25px;font-size:0.7em;line-height:25px}
+	.betpad{height: 35px;font-size:0.8em;line-height:35px}.betpad img {height: 20px;}
+	.btn-deposit{height:55px;line-height:55px}.totalprice{height:55px;line-height:55px;font-size:1.5em}
+	.flipcoin-container{height:650px}.flipcoingame-container{height:650px}
+	.flipcoingame-top{font-size:0.9em;height:35px}
+	.flipcoingame-pad .col-sm-8{padding-left:5px!important;font-size:0.9em}
+	.flipcoingame-right{height:615px}.flipcoingame-bot {height:615px}
+	.flipcoingame-info-top-left>.item>.itemname-panel,.flipcoingame-info-top-right>.item>.itemname-panel{height: 30px;font-size: 0.8em}
+	.winnerplace{font-size:1.2em;line-height:50px}
+	.flipcoingame-info-top-left,.flipcoingame-info-top-right{font-size:0.9em}
+	.flipcoingame-info-top-left .item,.flipcoingame-info-top-right .item{height:105px;width:105px}
+	.inventory-container{height: 650px;}
+	.inventory-top{height: 35px;line-height:35px;}
+	.extra-part-inventory{height: 100px;}
+	.main-inventory{height: 515px;}
+	.main-inventory .item{width:110px;height:110px;}
+}
+
+@media screen 
+  and (min-device-width: 1601px) {
+	.li-button{width: 250px;font-size:1em;height:45px}
+	.navbar,.nav,.navbar-nav>li,.navbar-nav > li > a{height:45px;}
+	.navbar-nav > li > a{padding:0px 10px 0px 10px;line-height:45px}
+	.navbar{min-height:45px}
+	.notification-navbar{top:35px;height:20px;line-height:20px;font-size:0.8em}
+	.dropdown-menu {min-width:250px}
+	.dropdown-menu li,.dropdown-menu>li>a{height:45px;font-size:1em;line-height:45px}.dropdown-menu>li>a {padding: 3px 10px;}
+	.notification-panel{font-size:1em;height:80px}.notification-panel-top{padding: 5px 10px 5px 10px;height: 30px;line-height: 20px;}.notification-panel-bottom {padding: 10px 20px 10px 20px;height: 50px;line-height: 30px;}
+	.top-contain-left{top: 150px;padding-right:10px!important}
+	.top-contain-right {top:60px}
+	.profile-panel{height: 200px;}
+	.profile-name{font-size:1.2em}.profile-stats,.profile-progressbar-panel,.profile-panel-bot{font-size:1em}
+	.progress{height:14px}
+	.chat-panel,.form-control1 {font-size:1.2em}.form-control1{height:35px}
+	.message img {max-width:70px}
+	.message .chat-sample{width: 400px}
+	.chat-panel-top, .mainpotgame-top{height: 45px;line-height:45px}
+	.itemlist-container{height: 200px;padding: 15px;font-size: 1em}
+	.item{height:170px;width:170px}
+	.potgame-container .itemlist-container .item .itemname-panel{height: 45px}
+	.chat-panel,.mainpotgame-container,.potgame-container {height: 690px;}
+	.mainpotgame-top{font-size:1.5em}
+	.progress-jackpot{height:40px}.progress-info{line-height:40px;font-size:1.5em}
+	.potgameinfo{height:555px}
+	.round{padding: 30px}
+	.winnerpad{height: 70px;font-size:1.4em;line-height:70px;overflow:hidden}.winnerpad img {height:45px}
+	.infopad{height: 40px;font-size:1.2em;line-height:40px}
+	.betpad{height: 55px;font-size:1.3em;line-height:55px}.betpad img {height: 30px;}
+	.btn-deposit{height:65px;line-height:65px}.totalprice{height:65px;line-height:65px;font-size:1.8em}
+	.flipcoin-container{height:900px}.flipcoingame-container{height:900px}
+	.flipcoingame-top{font-size:1.5em;height:55px;line-height: 55px}
+	.flipcoingame-info-top{height: 670px}
+	.flipcoingame-info-top-left{height:570px}
+	.flipcoingame-pad {height: 120px}
+	.flipcoingame-pad .col-sm-8{padding-left:5px!important;font-size:1.3em}
+	.flipcoingame-right{height:845px}.flipcoingame-bot {height:845px}
+	.flipcoingame-info-top-left>.item>.itemname-panel,.flipcoingame-info-top-right>.item>.itemname-panel{height: 60px;font-size: 1.1em}
+	.winnerplace{font-size:1.6em;line-height:70px;height:70px}
+	.flipcoingame-info-top-left,.flipcoingame-info-top-right{font-size:1.1em}
+	.flipcoingame-info-top-left .item,.flipcoingame-info-top-right .item{height:170px;width:170px}
+	.inventory-container{height: 900px;}
+	.inventory-top{height: 35px;line-height:35px;}
+	.extra-part-inventory{height: 100px;}
+	.main-inventory{height: 765px;}
+	.main-inventory .item{width:170px;height:170px;}
+}

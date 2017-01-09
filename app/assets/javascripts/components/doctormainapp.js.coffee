@@ -1630,7 +1630,7 @@
                                                                     else#add ordermap form
                                                                         React.createElement StationContentApp, ordermap: null, customer: null, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmtask
                                                                 when 2#chose to go ordermap list
-                                                                    React.createElement StationContentApp, datatype: 9
+                                                                    React.createElement StationContentApp, datatype: 9, station: @state.currentstation
                                                                     #React.createElement StationContentApp, datatype: 8, backup: @state.backupState, station: @state.currentstation, triggerRecord: @triggerRecord, trigger: @triggerButtonAtpmtask, triggerbackup: @triggerBackup
                                                                 else
                                                                     React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtptask, record: @state.orderMapMinorTask
@@ -1956,8 +1956,22 @@
                         @triggerSort('-pnumber')
                     when 6
                         @triggerSort('-noid')
+    triggerSortAltUpNext: (option) ->
+        if option.id != 0
+            @triggerSort(option.code)
+    triggerSortAltDownNext: (option) ->
+        if option.id != 0
+            @triggerSort("-" + option.code)
     triggerStoreRecord: ->
         if @state.storeRecords == null
+            if @state.filteredRecord != null
+                @setState storeRecords: @state.filteredRecord
+            else
+                @setState storeRecords: @state.records
+        else
+            @setState storeRecords: null
+    triggerStoreRecordNext: (boo) ->
+        if boo
             if @state.filteredRecord != null
                 @setState storeRecords: @state.filteredRecord
             else
@@ -2544,11 +2558,45 @@
                             10
                 return
             ).bind(this)
+    triggerSubmitSearchAlt: (option, searchtext) ->
+        if option.id != 0
+            formData = new FormData
+            formData.append 'date', 30
+            formData.append 'id_station', @props.station.id
+            formData.append option.code, searchtext
+            $.ajax
+                url: '/' + option.linkfind
+                type: 'POST'
+                data: formData
+                async: false
+                cache: false
+                contentType: false
+                processData: false
+                success: ((result) ->
+                    @setState
+                        filteredRecord: result
+                        lastcount:
+                            if result.length < 10
+                                result.length
+                            else
+                                10
+                    return
+                ).bind(this)
     triggerClear: ->
-        console.log @state.records
         $('#filter_text').val("")
         @setState
             filteredRecord: null
+            storeRecords: null
+            lastcount:
+                if @state.records.length < 10
+                    @state.records.length
+                else
+                    10
+    triggerClearAlt: (option) ->
+        $('#filter_text').val("")
+        @setState
+            filteredRecord: null
+            storeRecords: null
             lastcount:
                 if @state.records.length < 10
                     @state.records.length
@@ -3337,15 +3385,48 @@
                 React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode
     listRecordRender: ->
         React.DOM.div className: 'row',
-            React.createElement FilterFormAppView, datatype: 1, options: [
-                {id: 1, text: 'Tên dịch vụ', code: 'sername'}
-                {id: 2, text: 'Tên khách hàng', code: 'cname'}
-                {id: 3, text: 'Tình trạng', code: 'status'}
-                {id: 4, text: 'Tổng đơn giá', code: 'tpayment'}
-                {id: 5, text: 'Giảm giá', code: 'discount'}
-                {id: 6, text: 'Tổng thanh toán', code: 'tpayout'}
-                {id: 7, text: 'Ghi chú', code: 'remark'}
+            React.createElement FilterFormAppView, station: @props.station, datatype: 1, triggerStoreRecord: @triggerStoreRecordNext, triggerSortAltUpNext: @triggerSortAltUpNext, triggerSortAltDown: @triggerSortAltDownNext, triggerClear: @triggerClearAlt, triggerSubmitSearch: @triggerSubmitSearchAlt, triggerAutoCompleteFast: @trigger, options: [
+                {id: 1, text: 'Tên dịch vụ', linksearch: 'order_map/search', linkfind: 'order_map/find', code: 'sername'}
+                {id: 2, text: 'Tên khách hàng', linksearch: 'order_map/search', linkfind: 'order_map/find', code: 'cname'}
+                {id: 3, text: 'Tình trạng', linksearch: 'order_map/search', linkfind: 'order_map/find', code: 'status', list: [
+                    {id: 1, name: "Chưa thanh toán, chưa khám bệnh"}
+                    {id: 2, name: "Đã thanh toán, đang chờ khám"}
+                    {id: 3, name: "Đã thanh toán, đã khám bệnh"}
+                    {id: 4, name: "Chưa thanh toán, đã khám bệnh"}
+                ]}
+                {id: 4, text: 'Tổng đơn giá', linksearch: 'order_map/search', linkfind: 'order_map/find', code: 'tpayment'}
+                {id: 5, text: 'Giảm giá', linksearch: 'order_map/search', linkfind: 'order_map/find', code: 'discount'}
+                {id: 6, text: 'Tổng thanh toán', linksearch: 'order_map/search', linkfind: 'order_map/find', code: 'tpayout'}
+                {id: 7, text: 'Ghi chú', linksearch: 'order_map/search', linkfind: 'order_map/find', code: 'remark'}
             ]
+            try
+                React.DOM.div className: 'col-sm-8 p-15 p-l-25 p-r-25 filter-form',
+                    React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                        React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+                    React.DOM.div className: 'col-sm-2 pull-right', style: {'paddingBottom': '5px'},
+                        React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+                    if @state.filteredRecord != null
+                        React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                    else
+                        React.createElement Paginate, className: 'col-sm-8 pull-right', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+            catch error
+                console.log error
+            React.DOM.div className: 'col-sm-8 p-15 p-l-25 p-r-25',
+                React.DOM.div className: 'data-list-container',
+                    React.DOM.div className: 'data-list-child',
+                        React.DOM.div className: 'ticketid', "11234452"
+                        React.DOM.div className: 'info',
+                            React.DOM.div className: 'textline1', "Trần Minh Hoàng - Khám xxxx"
+                            React.DOM.div className: 'textline2', "120.000 - Đã thanh toán, đang chờ khám"
+                #if @state.filteredRecord != null
+                #    for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                #        React.createElement CustomerRecordBlock, key: record.id, record: record, trigger: @triggerRecordOutAndBackUp        
+                #else
+                #    for record in @state.records[@state.firstcount...@state.lastcount]
+                #        React.createElement CustomerRecordBlock, key: record.id, record: record, trigger: @triggerRecordOutAndBackUp
+            React.DOM.div className: 'col-sm-4'
+            React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25',
+                React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode
     render: ->
         switch @props.datatype
             when 1
@@ -3514,21 +3595,79 @@
     getInitialState: ->
         style: 1
         task: 1
+        storeRecords: null
         selectList: null
         autoComplete: null
         normalTask: [{id: 1, icon: "zmdi zmdi-search", code: 1, text: "Tìm kiếm"},{id: 2, icon: "fa fa-cogs", code: 2, text: "Tùy chọn"},{id: 3, icon: "fa fa-sort", code: 3, text: "Sắp xếp"}]
     changeTask: (record) ->
         @setState task: record.code
+    triggerChangeType: ->
+        option = @getOption()
+        if option.id != 0
+            if option.list != undefined
+                @setState selectList: option.list
+            else
+                @setState selectList: null
+    triggerAutoCompleteInput: ->
+        optionRecord = @getOption()
+        if optionRecord.list != undefined
+            valueSearch = Number($('#filter_text').val())
+        else
+            valueSearch = $('#filter_text').val().toLowerCase()
+        option1 = $('#checkbox_db').is(':checked')
+        option2 = $('#checkbox_db_2').is(':checked')
+        if !option1
+            @props.triggerAutoCompleteFast optionRecord, valueSearch
+        else
+            formData = new FormData
+            formData.append 'id_station', @props.station.id
+            formData.append optionRecord.code, valueSearch
+            $.ajax
+                url: '/' + optionRecord.linksearch
+                type: 'POST'
+                data: formData
+                async: false
+                cache: false
+                contentType: false
+                processData: false
+                success: ((result) ->
+                    @setState autoComplete: result
+                    return
+                ).bind(this)
+    triggerAutoCompleteAlt: (record) ->
+        option = @getOption()
+        if option.id != 0
+            $('#filter_text').val(record[option.code])
+        @setState autoComplete: null
+    triggerSubmitSearch: ->
+        optionRecord = @getOption()
+        if optionRecord.list != undefined
+            valueSearch = Number($('#filter_text').val())
+        else
+            valueSearch = $('#filter_text').val().toLowerCase()
+        @props.triggerSubmitSearch optionRecord, valueSearch
+    triggerClear: ->
+        optionRecord = @getOption()
+        @props.triggerClear optionRecord
+    triggerSortAltDown: ->
+        optionRecord = @getOption2()
+        @props.triggerSortAltDown optionRecord
+    triggerSortAltUp: ->
+        optionRecord = @getOption2()
+        @props.triggerSortAltUp optionRecord
+    triggerStoreRecord: ->
+        option2 = $('#checkbox_db_2').is(':checked')
+        @props.triggerStoreRecord option2
     getOption: ->
-        optionOut = 0
-        for option in @props.option
+        optionOut = {id: 0, text: 'none', code: 'none'}
+        for option in @props.options
             if option.id == Number($('#filter_type_select').val())
                 optionOut = option
                 break
         return optionOut
     getOption2: ->
         optionOut = 0
-        for option in @props.option
+        for option in @props.options
             if option.id == Number($('#filter_type_select2').val())
                 optionOut = option
                 break
@@ -3550,14 +3689,14 @@
                         React.DOM.div className: 'form-group col-lg-6 col-sm-12',
                             React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
                                 if @state.selectList == null
-                                    React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Input'
+                                    React.DOM.input id: 'filter_text', type: 'text', className: 'form-control', defaultValue: '', onChange: @triggerAutoCompleteInput, placeholder: 'Nhập thông tin'
                                 else
-                                    React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "", records: @state.selectList, blurOut: @triggerAutoCompleteInput
+                                    React.createElement SelectBox, id: 'filter_text', className: 'form-control', type: 4, text: "Click để chọn", records: @state.selectList, blurOut: @triggerAutoCompleteInput
                                 React.DOM.div className: "auto-complete",
                                     if @state.autoComplete != null
                                         for record in @state.autoComplete
                                             try
-                                                React.createElement AutoComplete, key: record.id, text: record[@getOption.code], record: record, trigger: @triggerAutoCompleteAlt
+                                                React.createElement AutoComplete, key: record.id, text: record[@getOption().code], record: record, trigger: @triggerAutoCompleteAlt
                                             catch error
                                                 console.log error
                         React.DOM.div className: 'col-lg-12 text-center',
@@ -3578,7 +3717,7 @@
                                 "Dữ liệu hiện tại"
                         React.DOM.div className: 'form-group col-lg-12 col-sm-12', style: {'display':'none'},
                             React.DOM.div className: 'col-sm-12', style: {'marginBottom': '15px'},
-                                React.DOM.select id: 'filter_type_select2', className: 'form-control', onChange: @triggerChangeType,
+                                React.DOM.select id: 'filter_type_select2', className: 'form-control',
                                     React.DOM.option value: '', 'Chọn tiêu chuẩn sắp xếp'
                                     for option in @props.options
                                         React.DOM.option key: option.id, value: option.id, option.text
@@ -3608,7 +3747,7 @@
                                     if @state.autoComplete != null
                                         for record in @state.autoComplete
                                             try
-                                                React.createElement AutoComplete, key: record.id, text: record[@getOption.code], record: record, trigger: @triggerAutoCompleteAlt
+                                                React.createElement AutoComplete, key: record.id, text: record[@getOption().code], record: record, trigger: @triggerAutoCompleteAlt
                                             catch error
                                                 console.log error
                         React.DOM.div className: 'col-lg-12 text-center', style: {'display':'none'},
@@ -3659,7 +3798,7 @@
                                     if @state.autoComplete != null
                                         for record in @state.autoComplete
                                             try
-                                                React.createElement AutoComplete, key: record.id, text: record[@getOption.code], record: record, trigger: @triggerAutoCompleteAlt
+                                                React.createElement AutoComplete, key: record.id, text: record[@getOption().code], record: record, trigger: @triggerAutoCompleteAlt
                                             catch error
                                                 console.log error
                         React.DOM.div className: 'col-lg-12 text-center', style: {'display':'none'},
@@ -3692,7 +3831,6 @@
                                 React.DOM.button type: 'button', className: 'btn btn-group-right', style: {'width':'50%', 'overflow':'hidden', 'textOverflow':'ellipsis'}, onClick: @triggerSortAltUp,
                                     React.DOM.i className: 'zmdi zmdi-sort-amount-asc'
                                     ' Tăng dần'
-            
     render: ->
         switch @props.datatype
             when 1
