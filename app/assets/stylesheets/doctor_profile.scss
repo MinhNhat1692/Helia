@@ -3043,6 +3043,16 @@ h4, .h4 {
     padding-left: 25px;
 }
 
+.p-l-res-25{
+    padding-left: 25px;
+}
+
+@media (min-width: 768px){
+    .p-l-res-25 {
+        padding-left: 0px;
+    }
+}
+
 .p-r-25{
     padding-right: 25px;
 }
@@ -3203,7 +3213,7 @@ h4, .h4 {
 }
 
 .data-list-child .info .textline1 {
-	margin: 8px 0px 0px 10px !important;
+	margin: 6px 0px 0px 10px !important;
 	font-size: 12px;
 	float: left;
 	color: #D8D6D6;
@@ -3237,6 +3247,38 @@ h4, .h4 {
     0%   { text-indent: -30em }
     100% { text-indent: 0em }
 }
+
+.btn-newdesign {
+    padding: 10px;
+    color: #B79049;
+    font-size: 20px;
+    /* color: #EDEDED; */
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    text-transform: uppercase;
+    background-color: #151515;
+    border: 1px solid #191919;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.17);
+    width: 100%;
+    letter-spacing: 1px;
+    -webkit-transition:0.5s;
+}
+
+.btn-newdesign:hover {
+    border: 1px solid #9B793B;
+    background-color: #775C2B;
+    -webkit-transition: 0.5s;
+    color: #fff
+}
+
+
+
+
+
+
+
+
+
 
 //List active sel color
 

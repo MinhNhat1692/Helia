@@ -407,6 +407,9 @@ class CustomerRecordController < ApplicationController
         if params.has_key?(:cname)
 					@customer_record = CustomerRecord.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:cname]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
+			  elsif params.has_key?(:id)
+				  @customer_record = CustomerRecord.where("id = ? and station_id = ?" , params[:id], @station.id)
+			    render json:@customer_record
         elsif params.has_key?(:namestring)
 				  @customer_record = CustomerRecord.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:namestring]}%", @station.id).order(updated_at: :desc)
 			    render json:@customer_record
@@ -458,6 +461,9 @@ class CustomerRecordController < ApplicationController
 			    render json:@customer_record
         elsif params.has_key?(:namestring)
 				  @customer_record = CustomerRecord.where(created_at: start..fin).where("cname LIKE ? and station_id = ?" , "%#{params[:namestring]}%", @station.id).order(updated_at: :desc)
+			    render json:@customer_record
+			  elsif params.has_key?(:id)
+				  @customer_record = CustomerRecord.where("id = ? and station_id = ?" , params[:id], @station.id)
 			    render json:@customer_record
         elsif params.has_key?(:address)
 				  @customer_record = CustomerRecord.where(created_at: start..fin).where("address LIKE ? and station_id = ?" , "%#{params[:address]}%", @station.id).order(updated_at: :desc)

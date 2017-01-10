@@ -117,7 +117,7 @@ class OrderMapController < ApplicationController
 
   def list
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 1, 4
 			  @station = Station.find params[:id_station]
 			  @data = []
         if params.has_key?(:date)
