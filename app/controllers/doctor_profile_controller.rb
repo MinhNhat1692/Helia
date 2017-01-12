@@ -4,6 +4,8 @@ class DoctorProfileController < ApplicationController
   def new
     if has_doctor_profile?
 			@doctor_profile = DoctorProfile.find_by(user_id: current_user.id)
+			@medicinegroup = MedicineGroup.all
+      @medicinetype = MedicineType.all
 			render 'show'
 		else
       if has_profile?
@@ -23,6 +25,8 @@ class DoctorProfileController < ApplicationController
 			@doctor_profile = DoctorProfile.new(user_id: current_user.id, fname: params[:doctor_profile][:fname], lname: params[:doctor_profile][:lname], dob: params[:doctor_profile][:dob], gender: params[:doctor_profile][:gender], address: params[:doctor_profile][:address], pnumber: params[:doctor_profile][:pnumber], noid: params[:doctor_profile][:noid], issue_date: params[:doctor_profile][:issue_date], issue_place: params[:doctor_profile][:issue_place], avatar: params[:doctor_profile][:avatar])
 			if @doctor_profile.save
 				@dprofile = @doctor_profile
+				@medicinegroup = MedicineGroup.all
+				@medicinetype = MedicineType.all
 				render 'show'
 			else
 				render 'new'
@@ -53,6 +57,8 @@ class DoctorProfileController < ApplicationController
 
   def show
 		@doctor_profile = DoctorProfile.find_by(user_id: current_user.id)
+		@medicinegroup = MedicineGroup.all
+    @medicinetype = MedicineType.all
   end
   
   private

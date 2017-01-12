@@ -9,10 +9,20 @@
         pmtask: null
         pmphase: null
         pmpm: 0
+        
         customer: null
         ordermap: null
         customerlist: null
         ordermaplist: null
+        
+        sample: null
+        company: null
+        supplier: null
+        price: null
+        billin: null
+        prescript: null
+        stockrecord: null
+        
         tabheader: "Settings"
         headertextcolor: "fff"
         backgroundimg: "http://www.diqiushijie.com/uploads/2015/10/56251_0.jpg"
@@ -28,6 +38,7 @@
         medicineTask: [{id:1, name: 'Mẫu thuốc', icon: '/assets/pill.png', text: 'Quản lý danh mục thuốc của cơ sở y tế', code: 1},{id: 2, name: 'Doanh nghiệp', icon: '/assets/medicine.png', text: 'Danh sách các doanh nghiệp sản xuất các loại thuốc có trong danh mục thuốc của cơ sở y tế', code: 2}, {id: 3, name: 'Nguồn',icon: '/assets/medicine2.png', text: 'Danh mục nguồn cung cấp thuốc và các thông tin cần thiết', code: 3},{id: 4, name: 'Giá thuốc',icon: '/assets/tag.png', text: 'Danh mục giá của từng loại thuốc trong cơ sở y tế', code: 4},{id: 5, name: 'Hóa đơn nhập thuốc',icon: '/assets/receipt.png', text: 'Danh mục hóa đơn và thuốc được nhập', code: 5},{id: 6, name: 'Đơn thuốc',icon: '/assets/invoice.png', text: 'Danh mục đơn thuốc có sử dụng trong cơ sở y tế', code: 6},{id: 7, name: 'Thống kê kho',icon: '/assets/factory-stock-house.png', text: 'Danh mục thống kê thuốc trong kho', code: 7}, {id: 8, name: 'Quay lại',icon: '/assets/back_icon.png', text: 'Trở lại màn hình chọn', code: 8}]
         customerRecordMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm bệnh nhân vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách bệnh nhân trong ngày', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         orderMapMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm yêu cầu khám', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách yêu cầu khám trong ngày', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
+        medicineSampleMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm thuốc vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách bệnh nhân trong ngày', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         backupState: null
     showtoast: (message,toasttype) ->
 	    toastr.options =
@@ -261,7 +272,7 @@
                                                     @setState pmphase: 3 #edit ordermap
     triggerButtonAtFirst: (record) ->
         switch @state.currentpermission.table_id
-            when 1
+            when 1#customer record and ordermap
                 switch record.code
                     when 1
                         @setState
@@ -278,6 +289,47 @@
                     when 3
                         @setState
                             currentpermission: null
+            when 2#medicine
+                switch @state.ptask
+                    when 1
+                        console.log 1
+                    else
+                        switch record.code
+                            when 1
+                                @setState
+                                    ptask: 1
+                                    tabheader: 'Mẫu thuốc'
+                                    sample: null
+                            when 2
+                                @setState
+                                    ptask: 2
+                                    tabheader: 'Doanh nghiệp SX'
+                                    company: null
+                            when 3
+                                @setState
+                                    ptask: 3
+                                    tabheader: 'Nguồn'
+                                    supplier: null
+                            when 4
+                                @setState
+                                    ptask: 4
+                                    tabheader: 'Biểu giá'
+                                    price: null
+                            when 5
+                                @setState
+                                    ptask: 5
+                                    tabheader: 'Hóa đơn nhập'
+                                    billin: null
+                            when 6
+                                @setState
+                                    ptask: 6
+                                    tabheader: 'Đơn thuốc xuất'
+                                    prescript: null
+                            when 7
+                                @setState
+                                    ptask: 7
+                                    tabheader: 'Kho thuốc'
+                                    stockrecord: null
     triggerButtonAtptask: (record) ->
         switch @state.currentpermission.table_id
             when 1
@@ -452,7 +504,7 @@
                                                 backupState: null
     triggerButtonAtpmphase: (record) ->
         switch @state.currentpermission.table_id
-            when 1
+            when 1#customer record and ordermap
                 switch @state.ptask
                     when 1#customer record
                         switch @state.pmtask
@@ -1051,6 +1103,165 @@
                                                     customer: null
                                                     ordermap: null
                                                     backupState: null                              
+            when 2# medicine
+                switch @state.ptask
+                    when 1#sample
+                        switch @state.pmtask
+                            when 1#add sample
+                                if @state.sample != null
+                                    switch @state.pmphase
+                                        when 1#edit form
+                                            switch record.code
+                                                when 1#luu
+                                                    formData = new FormData
+                                                    formData.append 'id_station', @state.currentstation.id
+                                                    formData.append 'id', @state.sample.id
+                                                    if $('#form_typemedicine').val() == 'Loại thuốc'
+                                                        formData.append 'typemedicine', @state.sample.typemedicine
+                                                    else
+                                                        formData.append 'typemedicine', $('#form_typemedicine').val()
+                                                    if $('#form_groupmedicine').val() == 'Nhóm thuốc'
+                                                        formData.append 'groupmedicine', @state.sample.groupmedicine
+                                                    else
+                                                        formData.append 'groupmedicine', $('#form_groupmedicine').val()
+                                                    formData.append 'noid', $('#form_noid').val()
+                                                    formData.append 'name', $('#form_name').val()
+                                                    formData.append 'company_id', $('#form_company_id').val()
+                                                    formData.append 'company', $('#form_company').val()
+                                                    formData.append 'price', $('#form_price').val()
+                                                    formData.append 'weight', $('#form_weight').val()
+                                                    formData.append 'remark', $('#form_remark').val()
+                                                    formData.append 'expire', $('#form_expire').val()
+                                                    message = "thông tin mẫu thuốc"
+                                                    link = "/medicine_sample"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'PUT'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Thay đổi " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Thay đổi " + message + " thành công",1)
+                                                            @setState
+                                                                sample: result
+                                                                pmphase: null
+                                                                pmpm: null
+                                                            return
+                                                        ).bind(this)
+                                                when 2#back
+                                                    @setState pmphase: null
+                                        else#view form
+                                            switch record.code
+                                                when 1#edit
+                                                    @setState pmphase: 1
+                                                when 2#xoa
+                                                    formData = new FormData
+                                                    formData.append 'id_station', @state.currentstation.id
+                                                    formData.append 'id', @state.sample.id
+                                                    message = "thông tin mẫu thuốc"
+                                                    link = "/medicine_sample"
+                                                    $.ajax
+                                                        url: link
+                                                        type: 'DELETE'
+                                                        data: formData
+                                                        async: false
+                                                        cache: false
+                                                        contentType: false
+                                                        processData: false
+                                                        error: ((result) ->
+                                                            @showtoast("Xóa " + message + " thất bại",3)
+                                                            return
+                                                        ).bind(this)
+                                                        success: ((result) ->
+                                                            @showtoast("Xóa " + message + " thành công",1)
+                                                            @setState
+                                                                sample: null
+                                                                pmtask: null
+                                                                pmphase: null
+                                                                pmpm: null
+                                                            return
+                                                        ).bind(this)
+                                                when 3#back
+                                                    @setState
+                                                        pmtask: null
+                                                        sample: null
+                                else
+                                    switch record.code
+                                        when 1#save
+                                            formData = new FormData
+                                            formData.append 'id_station', @state.currentstation.id
+                                            formData.append 'typemedicine', $('#form_typemedicine').val()
+                                            formData.append 'groupmedicine', $('#form_groupmedicine').val()
+                                            formData.append 'noid', $('#form_noid').val()
+                                            formData.append 'name', $('#form_name').val()
+                                            formData.append 'company_id', $('#form_company_id').val()
+                                            formData.append 'company', $('#form_company').val()
+                                            formData.append 'price', $('#form_price').val()
+                                            formData.append 'weight', $('#form_weight').val()
+                                            formData.append 'remark', $('#form_remark').val()
+                                            formData.append 'expire', $('#form_expire').val()
+                                            message = "thông tin mẫu thuốc"
+                                            link = "/medicine_sample"
+                                            $.ajax
+                                                url: link
+                                                type: 'POST'
+                                                data: formData
+                                                async: false
+                                                cache: false
+                                                contentType: false
+                                                processData: false
+                                                error: ((result) ->
+                                                    @showtoast("Thêm " + message + " thất bại",3)
+                                                    return
+                                                ).bind(this)
+                                                success: ((result) ->
+                                                    @showtoast("Thêm " + message + " thành công",1)
+                                                    @setState sample: result
+                                                    return
+                                                ).bind(this)
+                                        when 2#back
+                                            @setState
+                                                pmtask: null
+                                                tabheader: 'Mẫu thuốc'
+                                                sample: null
+                            when 2#sample list
+                                switch @state.pmphase
+                                    when 1
+                                        console.log 1
+                                    else
+                                        switch record.code
+                                            when 2
+                                                @setState
+                                                    pmphase: 1
+                                            when 3
+                                                @setState
+                                                    pmtask: null
+                                                    tabheader: 'Mẫu thuốc'
+                                                    sample: null
+                                                    backupState: null
+                            else#menu to chose
+                                switch record.code
+                                    when 1#add
+                                        @setState
+                                            pmtask: 1
+                                            tabheader: 'Mẫu thuốc'
+                                            sample: null
+                                    when 2#list
+                                        @setState
+                                            pmtask: 2
+                                            pmphase: null
+                                            pmpm: null
+                                        setTimeout (->
+                                            $(APP).trigger('reloadData')
+                                        ), 500
+                                    else#back
+                                        @setState ptask: null
     triggerButtonAtpmpm: (record) ->
         switch @state.currentpermission.table_id
             when 1#customer record and ordermap
@@ -1284,7 +1495,7 @@
         
     triggerRecord: (record) ->
         switch @state.currentpermission.table_id
-            when 1
+            when 1#customer record and ỏdermap
                 switch @state.ptask
                     when 1#customer record
                         switch @state.pmtask
@@ -1319,6 +1530,16 @@
                                         @setState ordermap: record
                             else
                                 console.log 3
+            when 2#medicine
+                switch @state.ptask
+                    when 1#medicine sample
+                        switch @state.pmtask
+                            when 2#list view
+                                switch @state.pmphase
+                                    when 1
+                                        console.log 1
+                                    else
+                                        @setState sample: record
     triggerBackup: (state) ->
         @setState backupState: state
     triggerAutoCompleteInputAlt: (code) ->
@@ -1814,7 +2035,30 @@
                                                 when 2#medicine
                                                     switch @state.ptask
                                                         when 1#sample
-                                                            console.log 1
+                                                            switch @state.pmtask
+                                                                when 1#chose to go add sample
+                                                                    if @state.sample != null
+                                                                        switch @state.pmphase
+                                                                            when 1 #edit form sample
+                                                                                React.createElement StationContentApp, sample: @state.sample, datatype: 10, trigger: @triggerButtonAtpmphase, typemedicine: @props.medicinetype, groupmedicine: @props.medicinegroup, station: @state.currentstation
+                                                                            else #sample view (make it simple)
+                                                                                React.createElement StationContentApp, sample: @state.sample, datatype: 11, trigger: @triggerButtonAtpmphase, typemedicine: @props.medicinetype, groupmedicine: @props.medicinegroup
+                                                                    else#add customer form
+                                                                        React.createElement StationContentApp, sample: null, datatype: 10, trigger: @triggerButtonAtpmphase, typemedicine: @props.medicinetype, groupmedicine: @props.medicinegroup, station: @state.currentstation
+                                                                when 2#chose to go to sample list
+                                                                    switch @state.pmphase
+                                                                        when 1 #sample view
+                                                                            switch @state.pmpm
+                                                                                when 1#sample edit
+                                                                                    React.createElement StationContentApp, sample: @state.sample, datatype: 10, trigger: @triggerButtonAtpmphase, typemedicine: @props.medicinetype, groupmedicine: @props.medicinegroup, station: @state.currentstation
+                                                                                    #React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, station: @state.currentstation, datatype: 5, trigger: @triggerButtonAtpmphase
+                                                                                else#sample view
+                                                                                    React.createElement StationContentApp, sample: @state.sample, datatype: 11, trigger: @triggerButtonAtpmphase, typemedicine: @props.medicinetype, groupmedicine: @props.medicinegroup
+                                                                                    #React.createElement StationContentApp, ordermap: @state.ordermap, customer: @state.customer, className: 'col-md-12', datatype: 6, trigger: @triggerButtonAtpmphase
+                                                                        else #sample list view
+                                                                            React.createElement StationContentApp, datatype: 12, station: @state.currentstation, backup: @state.backupState, trigger: @triggerButtonAtpmphase, triggerbackup: @triggerBackup, triggerRecord: @triggerRecord, medicinetype: @props.medicinetype, medicinegroup: @props.medicinegroup
+                                                                else#menu to chose
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineSampleMinorTask
                                                         when 2#company
                                                             console.log 2
                                                         when 3#supplier
@@ -2047,6 +2291,11 @@
                         @loadData()
                     else if @props.backup != null and @props.backup != undefined
                         @setState @props.backup
+                when 12
+                    if @props.backup == null
+                        @loadData()
+                    else if @props.backup != null and @props.backup != undefined
+                        @setState @props.backup
         ).bind(this)
     componentWillUnmount: ->
         $(APP).off 'reloadData'
@@ -2086,6 +2335,35 @@
                 formData.append 'id_station', @props.station.id
                 message = "thông tin phiếu khám"
                 link = "/order_map/list"
+                $.ajax
+                    url: link
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    error: ((result) ->
+                        @showtoast("Tải " + message + " thất bại",3)
+                        return
+                    ).bind(this)
+                    success: ((result) ->
+                        @showtoast("Tải " + message + " thành công",1)
+                        @setState
+                            records: result[0]
+                            filteredRecord: null
+                            lastcount:
+                                if result[0].length < 10
+                                    result[0].length
+                                else
+                                    10
+                        return
+                    ).bind(this)
+            when 12
+                formData = new FormData
+                formData.append 'id_station', @props.station.id
+                message = "thông tin mẫu thuốc"
+                link = "/medicine_sample/list"
                 $.ajax
                     url: link
                     type: 'POST'
@@ -3652,7 +3930,7 @@
                         if @state.filteredRecord != null
                             for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
                                 status = ""
-                                expand = ""
+                                expand = "activeselt5"
                                 switch Number(record.status)
                                     when 1
                                         status = "Chưa thanh toán, chưa khám bệnh"
@@ -3678,7 +3956,7 @@
                         else
                             for record in @state.records[@state.firstcount...@state.lastcount]
                                 status = ""
-                                expand = ""
+                                expand = "activeselt5"
                                 switch Number(record.status)
                                     when 1
                                         status = "Chưa thanh toán, chưa khám bệnh"
@@ -3748,6 +4026,233 @@
                     console.log error
             React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25',
                 React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode
+    editMedicineSampleForm: ->
+        if @props.sample != null
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-12',
+                        React.DOM.form className: 'form-horizontal content-app-alt', autoComplete: 'off',
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Mã số'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.DOM.input id: 'form_noid', type: 'text', className: 'form-control', placeholder: 'Mã số', defaultValue: @props.sample.noid
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên thuốc'
+                                React.DOM.div className: 'col-sm-10',
+                                    React.DOM.input id: 'form_name', type: 'text', className: 'form-control', placeholder: 'Tên thuốc', defaultValue: @props.sample.name
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Loại thuốc'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement SelectBox, id: 'form_typemedicine', records: @props.typemedicine, className: 'form-control', type: 4, text: 'Loại thuốc'
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhóm thuốc'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement SelectBox, id: 'form_groupmedicine', records: @props.groupmedicine, className: 'form-control', type: 4, text: 'Nhóm thuốc'
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Giá thuốc'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.DOM.input id: 'form_price', type: 'number', className: 'form-control', placeholder: 'Giá thuốc', defaultValue: @props.sample.price
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', "Ghi chú"
+                                React.DOM.div className: 'col-sm-9',
+                                    React.DOM.textarea id: 'form_remark', type: 'text', className: 'form-control', placeholder: 'Ghi chú', defaultValue: @props.sample.remark
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Khối lượng'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.DOM.input id: 'form_weight', type: 'number', className: 'form-control', placeholder: 'Khối lượng', defaultValue: @props.sample.weight
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hạn sử dụng'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.DOM.input id: 'form_expire', type: 'number', className: 'form-control', placeholder: 'Hạn sử dụng (số ngày)', defaultValue: @props.sample.expire
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Công ty sản xuất'
+                                React.DOM.div className: 'col-sm-9',
+                                    React.DOM.input id: 'form_company_id', className: 'form-control', type: 'text', style: {'display': 'none'}, defaultValue: @props.sample.company_id
+                                    React.createElement InputField, id: 'form_company', className: 'form-control', type: 'text', code: 'company', placeholder: 'Tên nhà sản xuất', style: '', defaultValue: @props.sample.company, trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                                    React.DOM.div className: "auto-complete",
+                                        if @state.autoComplete != null and @state.code == 'company'
+                                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_company_mini', header: [{id: 1,name: "Mã công ty"},{id: 2, name: "Tên công ty"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                        React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+        else
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-12',
+                        React.DOM.form className: 'form-horizontal content-app-alt', autoComplete: 'off',
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Mã số'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.DOM.input id: 'form_noid', type: 'text', className: 'form-control', placeholder: 'Mã số'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tên thuốc'
+                                React.DOM.div className: 'col-sm-10',
+                                    React.DOM.input id: 'form_name', type: 'text', className: 'form-control', placeholder: 'Tên thuốc'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Loại thuốc'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement SelectBox, id: 'form_typemedicine', records: @props.typemedicine, className: 'form-control', type: 4, text: "Loại thuốc"
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Nhóm thuốc'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement SelectBox, id: 'form_groupmedicine', records: @props.groupmedicine, className: 'form-control', type: 4, text: "Nhóm thuốc"
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Giá thuốc'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.DOM.input id: 'form_price', type: 'number', className: 'form-control', placeholder: 'Giá thuốc'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', "Ghi chú"
+                                React.DOM.div className: 'col-sm-9',
+                                    React.DOM.textarea id: 'form_remark', type: 'text', className: 'form-control', placeholder: 'Ghi chú'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Khối lượng'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.DOM.input id: 'form_weight', type: 'number', className: 'form-control', placeholder: 'Khối lượng'
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Hạn sử dụng'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.DOM.input id: 'form_expire', type: 'number', className: 'form-control', placeholder: 'Hạn sử dụng (số ngày)'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Công ty sản xuất'
+                                React.DOM.div className: 'col-sm-9',
+                                    React.DOM.input id: 'form_company_id', className: 'form-control', type: 'text', style: {'display': 'none'}
+                                    React.createElement InputField, id: 'form_company', className: 'form-control', type: 'text', code: 'company', placeholder: 'Tên nhà sản xuất', style: '', trigger: @triggerAutoCompleteInputAlt, trigger2: @triggersafe, trigger3: @triggersafe
+                                    React.DOM.div className: "auto-complete",
+                                        if @state.autoComplete != null and @state.code == 'company'
+                                            React.createElement AutoCompleteTable, records: @state.autoComplete, datatype: 'medicine_company_mini', header: [{id: 1,name: "Mã công ty"},{id: 2, name: "Tên công ty"}], trigger: @triggerAutoComplete
+                    React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                        React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
+    viewMedicineSampleForm: ->
+        if @props.sample != null
+            typemedicinename = ""
+            groupmedicinename = ""
+            for record in @props.typemedicine
+                if record.id == @props.sample.typemedicine
+                    typemedicinename = record.name
+                    break
+            for record in @props.groupmedicine
+                if record.id == @props.sample.groupmedicine
+                    groupmedicinename = record.name
+            React.DOM.div className: @props.className,
+                React.DOM.div className: 'col-md-12',
+                    React.DOM.div className: 'row',
+                        React.DOM.div className: 'content-app-alt',
+                            React.DOM.div className: 'content-info-block', style: {'marginTop':'40px'},
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Số thứ tự'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.sample.id
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Mã thuốc'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.sample.noid
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Tên thuốc'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.sample.name
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Doanh nghiệp sản xuất'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.sample.company
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Ghi chú'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.sample.remark
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Khối lượng (mg)'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.sample.weight
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Hạn sử dụng (số ngày)'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.sample.expire
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Giá nhập'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, @props.sample.price
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Loại thuốc'
+                                    React.DOM.div className: 'col-md-8',
+                                        React.DOM.p null, typemedicinename
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-4 hidden-xs',
+                                        React.DOM.p null, 'Loại thuốc'
+                                    React.DOM.div className: 'col-md-8',                    
+                                        React.DOM.p null, groupmedicinename
+                    React.DOM.div className: 'row', style:{'paddingRight':'35px', 'paddingBottom':'20px'},
+                        React.DOM.div className: 'spacer10'
+                        React.DOM.div className: 'row',
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode                       
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Xóa', code: {code: 2}, Clicked: @triggercode
+                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-edit', type: 3, text: ' Sửa', code: {code: 1}, Clicked: @triggercode                            
+    listMedicineSample: ->
+        React.DOM.div className: 'row',
+            React.createElement FilterFormAppView, station: @props.station, datatype: 1, triggerStoreRecord: @triggerStoreRecordNext, triggerSortAltUp: @triggerSortAltUpNext, triggerSortAltDown: @triggerSortAltDownNext, triggerClear: @triggerClearAlt, triggerSubmitSearch: @triggerSubmitSearchAlt, triggerAutoCompleteFast: @trigger, options: [
+                {id: 1, text: 'Mã thuốc', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'noid'}
+                {id: 2, text: 'Tên thuốc', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'name'}
+                {id: 3, text: 'Loại thuốc', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'typemedicine', list: @props.medicinetype}
+                {id: 4, text: 'Nhóm thuốc', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'groupmedicine', list: @props.medicinegroup}
+                {id: 5, text: 'Doanh nghiệp SX', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'company'}
+                {id: 6, text: 'Giá nhập', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'price'}
+                {id: 7, text: 'Khối lượng', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'weight'}
+                {id: 8, text: 'Ghi chú', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'remark'}
+                {id: 9, text: 'Hạn sử dụng', linksearch: 'medicine_sample/search', linkfind: 'medicine_sample/find', code: 'expire'}
+            ]
+            try
+                React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25 filter-form', style: {'paddingTop': '0', 'paddingBottom': '0', 'overflow':'hidden'},
+                    if @state.filteredRecord != null
+                        React.createElement Paginate, className: 'col-sm-8', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                    else
+                        React.createElement Paginate, className: 'col-sm-8', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                    React.DOM.div className: 'col-sm-2', style: {'paddingBottom': '5px'},
+                        React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+                    React.DOM.div className: 'col-sm-2', style: {'paddingBottom': '5px'},
+                        React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+            catch error
+                console.log error
+            React.DOM.div className: 'col-sm-8 p-15 p-l-25 p-r-25',
+                try
+                    React.DOM.div className: 'data-list-container',    
+                        if @state.filteredRecord != null
+                            for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                                expand = "activeselt1"
+                                React.createElement CustomerRecordBlock, key: record.id, record: record, selectExpand: expand, textline1: record.name + " - " + record.noid, textline2: record.company , datatype: 2, trigger: @triggerSelectRecord
+                        else
+                            for record in @state.records[@state.firstcount...@state.lastcount]
+                                expand = "activeselt1"
+                                React.createElement CustomerRecordBlock, key: record.id, record: record, selectExpand: expand, textline1: record.name + " - " + record.noid, textline2: record.company , datatype: 2, trigger: @triggerSelectRecord
+                catch error
+                    console.log error
+            React.DOM.div className: 'col-sm-4',
+                try
+                    React.DOM.div className: 'row animated flipInY',
+                        React.DOM.div className: 'col-sm-12 p-r-25', style: {'paddingLeft':'0', 'marginBottom': '3px'},
+                            React.DOM.div className: 'content-info-block',
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-6 hidden-xs',
+                                        React.DOM.p null, 'Tên thuốc'
+                                    React.DOM.div className: 'col-md-6',
+                                        React.DOM.p null, @state.record.name
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-6 hidden-xs',
+                                        React.DOM.p null, 'Mã thuốc'
+                                    React.DOM.div className: 'col-md-6',
+                                        React.DOM.p null, @state.record.noid
+                                React.DOM.div className: 'row',
+                                    React.DOM.div className: 'col-md-6 hidden-xs',
+                                        React.DOM.p null, 'Doanh nghiệp SX'
+                                    React.DOM.div className: 'col-md-6',
+                                        React.DOM.p null, @state.record.company
+                        React.DOM.div className: 'col-sm-12 p-l-res-25 p-r-25', 
+                            React.createElement ButtonGeneral, className: 'btn btn-newdesign', icon: 'zmdi zmdi-eye', type: 3, text: ' chi tiết', code: {code: 2}, Clicked: @triggerCodeAndBackUp
+                catch error
+                    console.log error
+            React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25',
+                React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode    
     render: ->
         switch @props.datatype
             when 1
@@ -3772,6 +4277,12 @@
                     React.DOM.div className: 'row'
             when 9
                 @listRecordRender()
+            when 10#medicinesample form
+                @editMedicineSampleForm()
+            when 11#medicinesample view form
+                @viewMedicineSampleForm()
+            when 12#medicinesample list view
+                @listMedicineSample()
                 
 @CustomerRecordBlock = React.createClass
     getInitialState: ->
