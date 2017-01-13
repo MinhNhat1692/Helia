@@ -353,7 +353,7 @@ class MedicineBillRecordController < ApplicationController
           @supplier = MedicineBillRecord.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
           render json: @supplier
         elsif params.has_key?(:bill_id)
-          @supplier = MedicineBillRecord.where(created_at: start..fin).where("bill_id = ? and station_id = ?" , params[:bill_id], @station.id)
+          @supplier = MedicineBillRecord.where("bill_id = ? and station_id = ?" , params[:bill_id], @station.id)
           render json: @supplier
         end
       else
@@ -404,7 +404,7 @@ class MedicineBillRecordController < ApplicationController
 				  @supplier = MedicineBillRecord.where(created_at: start..fin).where("remark LIKE ? and station_id = ?" , "%#{params[:remark]}%", @station.id)
 			    render json:@supplier
 			  elsif params.has_key?(:bill_id)
-				  @supplier = MedicineBillRecord.where(created_at: start..fin).where("bill_id = ? and station_id = ?" , params[:bill_id], @station.id)
+				  @supplier = MedicineBillRecord.where("bill_id = ? and station_id = ?" , params[:bill_id], @station.id)
 			    render json:@supplier
 			  end
       else

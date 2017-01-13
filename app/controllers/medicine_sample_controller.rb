@@ -249,9 +249,9 @@ class MedicineSampleController < ApplicationController
 			  elsif params.has_key?(:name_sell)
 				  @supplier = MedicineSample.where(created_at: start..fin).where("name LIKE ? and station_id = ?" , "%#{params[:name_sell]}%", @station.id)
 				  for sample in @supplier do
-						@sellprice = MedicinePrice.find_by(sample_id: sample.id, station_id: sample.station_id)
-						if !@sellprice.nil?
-							sample.price = @sellprice.price
+						@sellprice = MedicinePrice.where(sample_id: sample.id, station_id: sample.station_id).order(updated_at: :desc)
+						if !@sellprice[0].nil?
+							sample.price = @sellprice[0].price
 						end
 					end
 			    render json:@supplier
@@ -303,9 +303,9 @@ class MedicineSampleController < ApplicationController
 			  elsif params.has_key?(:name_sell)
 				  @supplier = MedicineSample.where(created_at: start..fin).where("name LIKE ? and station_id = ?" , "%#{params[:name_sell]}%", @station.id)
 				  for sample in @supplier do
-						@sellprice = MedicinePrice.find_by(sample_id: sample.id, station_id: sample.station_id)
-						if !@sellprice.nil?
-							sample.price = @sellprice.price
+						@sellprice = MedicinePrice.where(sample_id: sample.id, station_id: sample.station_id).order(updated_at: :desc)
+						if !@sellprice[0].nil?
+							sample.price = @sellprice[0].price
 						end
 					end
 			    render json:@supplier

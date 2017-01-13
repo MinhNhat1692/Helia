@@ -34,9 +34,7 @@
           React.createElement OptionSelect, key: record.id, value: record.id, text: record.pname
     selectBoxGeneral: ->
       React.DOM.select className: @props.className, id: @props.id, onChange: @props.Change, onBlur: @props.blurOut,
-        React.DOM.option
-          defaultValue: ""
-          @state.text
+        React.DOM.option defaultValue: "", @state.text
         for record in @props.records
           React.createElement OptionSelect, key: record.id, value: record.id, text: record.name
     render: ->
@@ -51,11 +49,8 @@
         
 @OptionSelect = React.createClass
     getInitialState: ->
-      value: @props.value
-      text: @props.text
+      style: 1
     renderOption: ->
-      React.DOM.option
-        value: @state.value
-        @state.text
+      React.DOM.option value: @props.value, @props.text
     render: ->
       @renderOption()
