@@ -2151,6 +2151,14 @@
                                                     formData = new FormData
                                                     formData.append 'id_station', @state.currentstation.id
                                                     formData.append 'id', @state.billin.id
+                                                    if $('#bill_in_form #form_pmethod').val() == "Cách thanh toán"
+                                                        formData.append 'pmethod', @state.billin.pmethod
+                                                    else
+                                                        formData.append 'pmethod', $('#bill_in_form #form_pmethod').val()
+                                                    if $('#bill_in_form #form_status').val() == ""
+                                                        formData.append 'status', @state.billin.status
+                                                    else
+                                                        formData.append 'status', $('#bill_in_form #form_status').val()
                                                     formData.append 'billcode', $('#bill_in_form #form_billcode').val()
                                                     formData.append 'supplier_id', $('#bill_in_form #form_supplier_id').val()
                                                     formData.append 'supplier', $('#bill_in_form #form_supplier').val()
@@ -2160,7 +2168,7 @@
                                                     formData.append 'discount', $('#bill_in_form #form_discount').val()
                                                     formData.append 'tpayout', $('#bill_in_form #form_tpayout').val()
                                                     formData.append 'remark', $('#bill_in_form #form_remark').val()
-                                                    formData.append 'list_bill_record', JSON.stringify(@props.bill_record)
+                                                    formData.append 'list_bill_record', JSON.stringify(@state.recordChild)
                                                     message = "thông tin hóa đơn nhập thuốc"
                                                     link = "/medicine_bill_in"
                                                     $.ajax
@@ -2185,6 +2193,61 @@
                                                         ).bind(this)
                                                 when 2#back
                                                     @setState pmphase: null
+                                                when 3#trigger delete selected record (still in fake list but we need a fomal here for sample)
+                                                    if @state.recordChildSelect != null
+                                                        if @state.recordChildSelect.created_at != undefined#have created at -> delete from DB
+                                                            formData = new FormData
+                                                            formData.append 'id_station', @state.currentstation.id
+                                                            formData.append 'id', @state.recordChildSelect.id
+                                                            message = "thông tin thuốc nhập"
+                                                            link = "/medicine_bill_record"
+                                                            $.ajax
+                                                                url: link
+                                                                type: 'DELETE'
+                                                                data: formData
+                                                                async: false
+                                                                cache: false
+                                                                contentType: false
+                                                                processData: false
+                                                                error: ((result) ->
+                                                                    @showtoast("Xóa " + message + " thất bại",3)
+                                                                    return
+                                                                ).bind(this)
+                                                                success: ((result) ->
+                                                                    @showtoast("Xóa " + message + " thành công",1)
+                                                                    @triggerDeleteRecordChild @state.recordChildSelect
+                                                                    return
+                                                                ).bind(this)
+                                                        else#delete in fake list only
+                                                            @triggerDeleteRecordChild @state.recordChildSelect
+                                                    else
+                                                        @showtoast("Bạn phải chọn đối tượng cần xóa",3)
+                                                when 4#trigger load list childRecord
+                                                    if @props.billin != null
+                                                        formData = new FormData
+                                                        formData.append 'id_station', @state.currentstation.id
+                                                        formData.append 'bill_id', @state.billin.id
+                                                        message = "thông tin thuốc nhập"
+                                                        link = "/medicine_bill_record/find"
+                                                        $.ajax
+                                                            url: link
+                                                            type: 'DELETE'
+                                                            data: formData
+                                                            async: false
+                                                            cache: false
+                                                            contentType: false
+                                                            processData: false
+                                                            error: ((result) ->
+                                                                @showtoast("Tải " + message + " thất bại",3)
+                                                                return
+                                                            ).bind(this)
+                                                            success: ((result) ->
+                                                                @showtoast("Tải " + message + " thành công",1)
+                                                                @setState recordChild: result
+                                                                return
+                                                            ).bind(this)
+                                                    else
+                                                        @showtoast("Hiện tại không có hóa đơn được lựa chọn",3)
                                         else#view form
                                             switch record.code
                                                 when 1#edit
@@ -2194,7 +2257,7 @@
                                                     formData.append 'id_station', @state.currentstation.id
                                                     formData.append 'id', @state.billin.id
                                                     message = "thông tin hóa đơn nhập thuốc"
-                                                    link = "/medicine_billin"
+                                                    link = "/medicine_bill_in"
                                                     $.ajax
                                                         url: link
                                                         type: 'DELETE'
@@ -2211,6 +2274,8 @@
                                                             @showtoast("Xóa " + message + " thành công",1)
                                                             @setState
                                                                 billin: null
+                                                                recordChild: []
+                                                                recordChildSelect: null
                                                                 pmtask: null
                                                                 pmphase: null
                                                                 pmpm: null
@@ -2220,6 +2285,8 @@
                                                     @setState
                                                         pmtask: null
                                                         billin: null
+                                                        recordChild: []
+                                                        recordChildSelect: null
                                 else
                                     switch record.code
                                         when 1#save
@@ -2236,7 +2303,7 @@
                                             formData.append 'discount', $('#bill_in_form #form_discount').val()
                                             formData.append 'tpayout', $('#bill_in_form #form_tpayout').val()
                                             formData.append 'remark', $('#bill_in_form #form_remark').val()
-                                            formData.append 'list_bill_record', JSON.stringify(@props.bill_record)
+                                            formData.append 'list_bill_record', JSON.stringify(@state.recordChild)
                                             message = "thông tin hóa đơn nhập thuốc"
                                             link = "/medicine_bill_in"
                                             $.ajax
@@ -2422,6 +2489,8 @@
                                                     when 3#back
                                                         @setState
                                                             billin: null
+                                                            recordChild: []
+                                                            recordChildSelect: null
                                                             pmphase: null
                                                         setTimeout (->
                                                             $(APP).trigger('reloadData')
@@ -2444,6 +2513,8 @@
                                             pmtask: 1
                                             tabheader: 'Hóa đơn nhập thuốc'
                                             billin: null
+                                            recordChild: []
+                                            recordChildSelect: null
                                     when 2#list
                                         @setState
                                             pmtask: 2
@@ -2453,8 +2524,7 @@
                                             $(APP).trigger('reloadData')
                                         ), 500
                                     else#back
-                                        @setState ptask: null
-                    
+                                        @setState ptask: null      
     triggerButtonAtpmpm: (record) ->
         switch @state.currentpermission.table_id
             when 1#customer record and ordermap
