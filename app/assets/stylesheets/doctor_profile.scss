@@ -1210,7 +1210,6 @@ tbody>.toggled{
 
 .modal-header, .modal-footer {
     background-color: #fff;
-    border: 1px solid #e5e5e5;
 }
 
 .modal-header small{
@@ -3360,4 +3359,42 @@ h4, .h4 {
 	-webkit-transition: .6s ease;
 	-o-transition: .6s ease;
 	transition: .6s ease;
+}
+
+//Modal redesign
+
+.modal-content {
+    position: relative;
+    background-color: rgb(15, 15, 15);
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #999;
+    border: 1px solid rgba(23, 23, 23, 0.78);
+    border-radius: 6px;
+    outline: 0;
+    color: #fff;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+    box-shadow: 0 0px 9px rgba(0,0,0,.5);
+}
+
+.modal-header {
+    min-height: 16.43px;
+    padding: 15px;
+    border-bottom: 1px solid #191919;
+    BACKGROUND-COLOR: #131313;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.12);
+}
+
+.modal-footer {
+    padding: 15px;
+    text-align: right;
+    border-top: 1px solid #191919;
+    BACKGROUND-COLOR: #131313;
+    box-shadow: 0px -3px 5px rgba(0, 0, 0, 0.12);
+}
+
+.modal-body {
+    position: relative;
+    padding: 40px;
+    text-align: left;
 }

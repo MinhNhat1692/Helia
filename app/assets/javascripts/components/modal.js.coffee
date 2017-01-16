@@ -604,240 +604,489 @@
         $('#' + @props.id + ' #form_billcode_id').val('')
         $('#' + @props.id + ' #form_billcode').val('')
     triggerAutoCompleteInputAlt: (code) ->
-      if code == 'cname'
-        if $('#' + @props.id + ' #form_cname').val().length > 3
-          formData = new FormData
-          formData.append 'cname', $('#' + @props.id + ' #form_cname').val().toLowerCase()
-          $.ajax
-            url: '/customer_record/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'ename'
-        if $('#' + @props.id + ' #form_ename').val().length > 1
-          formData = new FormData
-          formData.append 'ename', $('#' + @props.id + ' #form_ename').val().toLowerCase()
-          $.ajax
-            url: '/employee/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'epname'
-        if $('#' + @props.id + ' #form_epname').val().length > 1
-          formData = new FormData
-          formData.append 'ename', $('#' + @props.id + ' #form_epname').val().toLowerCase()
-          $.ajax
-            url: '/employee/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'sname'
-        if $('#' + @props.id + ' #form_sname').val().length > 1
-          formData = new FormData
-          formData.append 'sname', $('#' + @props.id + ' #form_sname').val().toLowerCase()
-          $.ajax
-            url: '/service/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'pname'
-        if $('#' + @props.id + ' #form_pname').val().length > 1
-          formData = new FormData
-          formData.append 'pname', $('#' + @props.id + ' #form_pname').val().toLowerCase()
-          $.ajax
-            url: '/position/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'rname'
-        if $('#' + @props.id + ' #form_rname').val().length > 1
-          formData = new FormData
-          formData.append 'name', $('#' + @props.id + ' #form_rname').val().toLowerCase()
-          $.ajax
-            url: '/room/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'company'
-        if $('#' + @props.id + ' #form_company').val().length > 1
-          formData = new FormData
-          formData.append 'name', $('#' + @props.id + ' #form_company').val().toLowerCase()
-          $.ajax
-            url: '/medicine_company/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'supplier'
-        if $('#' + @props.id + ' #form_supplier').val().length > 1
-          formData = new FormData
-          formData.append 'name', $('#' + @props.id + ' #form_supplier').val().toLowerCase()
-          $.ajax
-            url: '/medicine_supplier/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'sample'
-        if $('#' + @props.id + ' #form_sample').val().length > 1
-          formData = new FormData
-          formData.append 'name', $('#' + @props.id + ' #form_sample').val().toLowerCase()
-          $.ajax
-            url: '/medicine_sample/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'billcode'
-        if $('#' + @props.id + ' #form_billcode').val().length > 1
-          formData = new FormData
-          formData.append 'billcode', $('#' + @props.id + ' #form_billcode').val().toLowerCase()
-          $.ajax
-            url: '/medicine_bill_in/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'sample_sell'
-        if $('#' + @props.id + ' #form_sample').val().length > 1
-          formData = new FormData
-          formData.append 'name_sell', $('#' + @props.id + ' #form_sample').val().toLowerCase()
-          $.ajax
-            url: '/medicine_sample/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'script_ex'
-        if $('#' + @props.id + ' #form_script_code').val().length > 1
-          formData = new FormData
-          formData.append 'code', $('#' + @props.id + ' #form_script_code').val().toLowerCase()
-          $.ajax
-            url: '/medicine_prescript_external/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
-      else if code == 'script_in'
-        if $('#' + @props.id + ' #form_script_code').val().length > 1
-          formData = new FormData
-          formData.append 'code', $('#' + @props.id + ' #form_script_code').val().toLowerCase()
-          $.ajax
-            url: '/medicine_prescript_internal/find'
-            type: 'POST'
-            data: formData
-            async: false
-            cache: false
-            contentType: false
-            processData: false
-            success: ((result) ->
-              @setState
-                autoComplete: result
-                code: code
-              return
-            ).bind(this)
+      if @props.currentstation != undefined
+        if code == 'cname'
+          if $('#' + @props.id + ' #form_cname').val().length > 3
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'cname', $('#' + @props.id + ' #form_cname').val().toLowerCase()
+            $.ajax
+              url: '/customer_record/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'ename'
+          if $('#' + @props.id + ' #form_ename').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'ename', $('#' + @props.id + ' #form_ename').val().toLowerCase()
+            $.ajax
+              url: '/employee/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'epname'
+          if $('#' + @props.id + ' #form_epname').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'ename', $('#' + @props.id + ' #form_epname').val().toLowerCase()
+            $.ajax
+              url: '/employee/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'sname'
+          if $('#' + @props.id + ' #form_sname').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'sname', $('#' + @props.id + ' #form_sname').val().toLowerCase()
+            $.ajax
+              url: '/service/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'pname'
+          if $('#' + @props.id + ' #form_pname').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'pname', $('#' + @props.id + ' #form_pname').val().toLowerCase()
+            $.ajax
+              url: '/position/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'rname'
+          if $('#' + @props.id + ' #form_rname').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'name', $('#' + @props.id + ' #form_rname').val().toLowerCase()
+            $.ajax
+              url: '/room/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'company'
+          if $('#' + @props.id + ' #form_company').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'name', $('#' + @props.id + ' #form_company').val().toLowerCase()
+            $.ajax
+              url: '/medicine_company/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'supplier'
+          if $('#' + @props.id + ' #form_supplier').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'name', $('#' + @props.id + ' #form_supplier').val().toLowerCase()
+            $.ajax
+              url: '/medicine_supplier/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'sample'
+          if $('#' + @props.id + ' #form_sample').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'name', $('#' + @props.id + ' #form_sample').val().toLowerCase()
+            $.ajax
+              url: '/medicine_sample/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'billcode'
+          if $('#' + @props.id + ' #form_billcode').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'billcode', $('#' + @props.id + ' #form_billcode').val().toLowerCase()
+            $.ajax
+              url: '/medicine_bill_in/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'sample_sell'
+          if $('#' + @props.id + ' #form_sample').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'name_sell', $('#' + @props.id + ' #form_sample').val().toLowerCase()
+            $.ajax
+              url: '/medicine_sample/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'script_ex'
+          if $('#' + @props.id + ' #form_script_code').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'code', $('#' + @props.id + ' #form_script_code').val().toLowerCase()
+            $.ajax
+              url: '/medicine_prescript_external/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'script_in'
+          if $('#' + @props.id + ' #form_script_code').val().length > 1
+            formData = new FormData
+            formData.append 'id_station', @props.currentstation.id
+            formData.append 'code', $('#' + @props.id + ' #form_script_code').val().toLowerCase()
+            $.ajax
+              url: '/medicine_prescript_internal/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+      else
+        if code == 'cname'
+          if $('#' + @props.id + ' #form_cname').val().length > 3
+            formData = new FormData
+            formData.append 'cname', $('#' + @props.id + ' #form_cname').val().toLowerCase()
+            $.ajax
+              url: '/customer_record/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'ename'
+          if $('#' + @props.id + ' #form_ename').val().length > 1
+            formData = new FormData
+            formData.append 'ename', $('#' + @props.id + ' #form_ename').val().toLowerCase()
+            $.ajax
+              url: '/employee/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'epname'
+          if $('#' + @props.id + ' #form_epname').val().length > 1
+            formData = new FormData
+            formData.append 'ename', $('#' + @props.id + ' #form_epname').val().toLowerCase()
+            $.ajax
+              url: '/employee/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'sname'
+          if $('#' + @props.id + ' #form_sname').val().length > 1
+            formData = new FormData
+            formData.append 'sname', $('#' + @props.id + ' #form_sname').val().toLowerCase()
+            $.ajax
+              url: '/service/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'pname'
+          if $('#' + @props.id + ' #form_pname').val().length > 1
+            formData = new FormData
+            formData.append 'pname', $('#' + @props.id + ' #form_pname').val().toLowerCase()
+            $.ajax
+              url: '/position/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'rname'
+          if $('#' + @props.id + ' #form_rname').val().length > 1
+            formData = new FormData
+            formData.append 'name', $('#' + @props.id + ' #form_rname').val().toLowerCase()
+            $.ajax
+              url: '/room/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'company'
+          if $('#' + @props.id + ' #form_company').val().length > 1
+            formData = new FormData
+            formData.append 'name', $('#' + @props.id + ' #form_company').val().toLowerCase()
+            $.ajax
+              url: '/medicine_company/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'supplier'
+          if $('#' + @props.id + ' #form_supplier').val().length > 1
+            formData = new FormData
+            formData.append 'name', $('#' + @props.id + ' #form_supplier').val().toLowerCase()
+            $.ajax
+              url: '/medicine_supplier/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'sample'
+          if $('#' + @props.id + ' #form_sample').val().length > 1
+            formData = new FormData
+            formData.append 'name', $('#' + @props.id + ' #form_sample').val().toLowerCase()
+            $.ajax
+              url: '/medicine_sample/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'billcode'
+          if $('#' + @props.id + ' #form_billcode').val().length > 1
+            formData = new FormData
+            formData.append 'billcode', $('#' + @props.id + ' #form_billcode').val().toLowerCase()
+            $.ajax
+              url: '/medicine_bill_in/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'sample_sell'
+          if $('#' + @props.id + ' #form_sample').val().length > 1
+            formData = new FormData
+            formData.append 'name_sell', $('#' + @props.id + ' #form_sample').val().toLowerCase()
+            $.ajax
+              url: '/medicine_sample/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'script_ex'
+          if $('#' + @props.id + ' #form_script_code').val().length > 1
+            formData = new FormData
+            formData.append 'code', $('#' + @props.id + ' #form_script_code').val().toLowerCase()
+            $.ajax
+              url: '/medicine_prescript_external/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
+        else if code == 'script_in'
+          if $('#' + @props.id + ' #form_script_code').val().length > 1
+            formData = new FormData
+            formData.append 'code', $('#' + @props.id + ' #form_script_code').val().toLowerCase()
+            $.ajax
+              url: '/medicine_prescript_internal/find'
+              type: 'POST'
+              data: formData
+              async: false
+              cache: false
+              contentType: false
+              processData: false
+              success: ((result) ->
+                @setState
+                  autoComplete: result
+                  code: code
+                return
+              ).bind(this)
     triggerAutoComplete: (record) ->
       if @state.code == 'cname'
         $('#' + @props.id + ' #form_cname').val(record.cname)
@@ -2091,11 +2340,11 @@
                         React.DOM.input id: 'form_expire', type: 'text', className: 'form-control', placeholder: '30/01/1990'
                     React.DOM.div className: 'form-group',
                       React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Cách mua'
-                      React.DOM.div className: 'col-sm-1',
+                      React.DOM.div className: 'col-sm-3',
                         React.createElement SelectBox, id: 'form_pmethod', className: 'form-control', text: "Cách mua", type: 4, records: [{id: 1, name: "Hộp"},{id: 2, name: "Lẻ"}]
-                      React.DOM.div className: 'col-sm-3',
+                      React.DOM.div className: 'col-sm-2',
                         React.DOM.input id: 'form_qty', type: 'number', className: 'form-control', placeholder: 'Số lượng'
-                      React.DOM.div className: 'col-sm-3',
+                      React.DOM.div className: 'col-sm-2',
                         React.DOM.input id: 'form_taxrate', type: 'number', className: 'form-control', placeholder: 'Thuế suất'
                       React.DOM.div className: 'col-sm-3',
                         React.DOM.input id: 'form_price', type: 'number', className: 'form-control', placeholder: 'Biểu giá'

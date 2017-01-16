@@ -3,7 +3,7 @@ class MedicineBillRecordController < ApplicationController
   
   def list
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
 			  @station = Station.find params[:id_station]
 			  @data = []
         if params.has_key?(:date)
@@ -59,7 +59,7 @@ class MedicineBillRecordController < ApplicationController
   
   def summary
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
         @station = Station.find params[:id_station]
         @data = []
         if params.has_key?(:date)
@@ -119,7 +119,7 @@ class MedicineBillRecordController < ApplicationController
 
   def create
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 1
+      if current_user.check_permission params[:id_station], 2, 1
 			  @station = Station.find params[:id_station]
 			  @sample_id = MedicineSample.find_by(id: params[:sample_id], name: params[:name], station_id: @station.id)
 		    if !@sample_id.nil?
@@ -171,7 +171,7 @@ class MedicineBillRecordController < ApplicationController
 
   def update
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 2
+      if current_user.check_permission params[:id_station], 2, 2
         @station = Station.find params[:id_station]
         if params.has_key?(:id)
           @supplier = MedicineBillRecord.find(params[:id])
@@ -231,7 +231,7 @@ class MedicineBillRecordController < ApplicationController
 
   def destroy
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 3
+      if current_user.check_permission params[:id_station], 2, 3
 			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = MedicineBillRecord.find(params[:id])
@@ -261,7 +261,7 @@ class MedicineBillRecordController < ApplicationController
 
   def search
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
         @station = Station.find params[:id_station]
         if params.has_key?(:name)
           @supplier = MedicineBillRecord.where("name LIKE ? and station_id = ?" , "%#{params[:name]}%", @station.id).group(:name).limit(3)
@@ -309,7 +309,7 @@ class MedicineBillRecordController < ApplicationController
 
   def find
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
         @station = Station.find params[:id_station]
         if params.has_key?(:date)
           n = params[:date].to_i

@@ -545,10 +545,13 @@
           React.DOM.td null, @props.record.name
           React.DOM.td null, @props.record.company
           React.DOM.td null,
-            if @props.record.expire != null and @props.record.expire != undefined
-              @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+            if @props.record.expire.indexOf("/") != -1
+              @props.record.expire
             else
-              ""
+              try
+                @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+              catch error
+                ""
           React.DOM.td null, @props.record.qty
           React.DOM.td null, @props.record.taxrate
           React.DOM.td null, @props.record.price
@@ -562,10 +565,13 @@
           React.DOM.td null, @props.record.name
           React.DOM.td null, @props.record.company
           React.DOM.td null,
-            if @props.record.expire != null and @props.record.expire != undefined
-              @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+            if @props.record.expire.indexOf("/") != -1
+              @props.record.expire
             else
-              ""
+              try
+                @props.record.expire.substring(8, 10) + "/" + @props.record.expire.substring(5, 7) + "/" + @props.record.expire.substring(0, 4)
+              catch error
+                ""
           React.DOM.td null, @props.record.qty
           React.DOM.td null, @props.record.taxrate
           React.DOM.td null, @props.record.price
