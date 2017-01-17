@@ -207,14 +207,26 @@ class MedicinePrescriptInternalController < ApplicationController
           @prescript = MedicinePrescriptInternal.find(params[:id])
 			    if @prescript.station_id == @station.id
 						if params.has_key?(:prep)
-							#@preparer_id = Employee.find_by(id: params[:preparer_id], ename: params[:preparer], station_id: @station.id)
+							#@preparer_id = Employee.find_by(id: params[:preparer_id], ename: params[:preparer], station_id: @station.id) - still need to add preparer id here
 							#if !@preparer_id.nil?
 							#	@preparer_id = @preparer_id.id
 							#end
-		        if @prescript.update(remark: params[:remark], payer: params[:payer], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], pmethod: params[:pmethod])
-				      render json: @prescript
-				    else
-				      render json: @prescript.errors, status: :unprocessable_entity
+							if @prescript.update(remark: params[:remark], payer: params[:payer], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], pmethod: params[:pmethod])
+								for internal_record in JSON.parse(params[:list_internal_record]) do
+									puts internal_record
+									@internalRecord = MedicineInternalRecord.find_by(id: internal_record["id"])
+									if @internalRecord.station_id == @station.id and @internalRecord.script_id == @prescript.id
+										@internalRecord.update(noid: internal_record["noid"], signid: internal_record["signid"], status: internal_record["status"], remark: internal_record["remark"], amount: internal_record["amount"], price: internal_record["price"], tpayment: internal_record["tpayment"])
+										if @prescript.discount.present?
+											discount = @prescript.discount * (@internalRecord[:tpayment].to_f / @prescript.tpayment)
+											@internalRecord.update(discount: discount.to_i)
+										end
+									end
+								end
+								render json: @prescript
+							else
+								render json: @prescript.errors, status: :unprocessable_entity
+							end
 				    end
           end
         end
