@@ -42,6 +42,10 @@
         orderMapMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm yêu cầu khám', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách yêu cầu khám trong ngày', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         medicineSampleMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm thuốc vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách thuốc', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         medicineCompanyMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm doanh nghiệp sản xuất thuốc vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách doanh nghiệp sản xuất thuốc', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
+        medicineSupplierMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm nguồn cung cấp thuốc vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách nguồn cấp thuốc', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
+        medicinePriceMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm giá bán thuốc vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách giá bán thuốc', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
+        medicineBillInMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm hóa đơn nhập thuốc vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách hóa đơn nhập thuốc', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
+        medicinePrescriptMinorTask: [{id: 1, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách đơn thuốc', code: 2},{id: 2, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         backupState: null
     showtoast: (message,toasttype) ->
 	    toastr.options =
@@ -2652,26 +2656,19 @@
                                                         formData = new FormData
                                                         formData.append 'id_station', @state.currentstation.id
                                                         formData.append 'id', @state.prescript.id
-                                                        if $('#bill_in_form #form_pmethod').val() == "Cách thanh toán"
+                                                        formData.append 'prep', 1#mean preparer update -> gonna search for that employee name in list any auto fillin
+                                                        if $('#prescript_form #form_pmethod').val() == "Cách thanh toán"
                                                             formData.append 'pmethod', @state.prescript.pmethod
                                                         else
                                                             formData.append 'pmethod', $('#bill_in_form #form_pmethod').val()
-                                                        if $('#bill_in_form #form_status').val() == "Tình trạng hóa đơn"
-                                                            formData.append 'status', @state.prescript.status
-                                                        else
-                                                            formData.append 'status', $('#bill_in_form #form_status').val()
-                                                        formData.append 'billcode', $('#bill_in_form #form_billcode').val()
-                                                        formData.append 'supplier_id', $('#bill_in_form #form_supplier_id').val()
-                                                        formData.append 'supplier', $('#bill_in_form #form_supplier').val()
-                                                        formData.append 'dayin', $('#bill_in_form #form_dayin').val()
-                                                        formData.append 'daybook', $('#bill_in_form #form_daybook').val()
-                                                        formData.append 'tpayment', $('#bill_in_form #form_tpayment').val()
-                                                        formData.append 'discount', $('#bill_in_form #form_discount').val()
-                                                        formData.append 'tpayout', $('#bill_in_form #form_tpayout').val()
-                                                        formData.append 'remark', $('#bill_in_form #form_remark').val()
-                                                        formData.append 'list_bill_record', JSON.stringify(@state.recordChild)
+                                                        formData.append 'remark', $('#prescript_form #form_remark').val()
+                                                        formData.append 'payer', $('#prescript_form #form_payer').val()
+                                                        formData.append 'tpayment', $('#prescript_form #form_tpayment').val()
+                                                        formData.append 'discount', $('#prescript_form #form_discount').val()
+                                                        formData.append 'tpayout', $('#prescript_form #form_tpayout').val()
+                                                        formData.append 'list_internal_record', JSON.stringify(@state.recordChild)
                                                         message = "thông tin đơn thuốc"
-                                                        link = "/medicine_bill_in"
+                                                        link = "/medicine_prescript_internal"
                                                         $.ajax
                                                             url: link
                                                             type: 'PUT'
@@ -2694,15 +2691,8 @@
                                                                         break
                                                                 stateBackup.records = records
                                                                 stateBackup.record = result
-                                                                recordChild = @state.recordChild
-                                                                for recordlife in recordChild
-                                                                    if recordlife.created_at == undefined
-                                                                        index = recordChild.indexOf recordlife
-                                                                        recordlife["created_at"] = "12"
-                                                                        recordChild = React.addons.update(recordChild, { $splice: [[index, 1, recordlife]] })
                                                                 @setState
                                                                     backupState: stateBackup
-                                                                    recordChild: recordChild
                                                                     prescript: result
                                                                     pmpm: null
                                                                 return
@@ -2735,6 +2725,32 @@
                                                                 ).bind(this)
                                                         else
                                                             @showtoast("Hiện tại không có đơn thuốc được lựa chọn",3)   
+                                                    when 5#move to internal record edit
+                                                        @setState pmpm: 2
+                                            when 2#internalrecord edit
+                                                switch record.code
+                                                    when 1#save
+                                                        tmp = @state.recordChildSelect
+                                                        tmp.noid = $('#form_noid').val()
+                                                        tmp.signid = $('#form_signid').val()
+                                                        tmp.amount = $('#form_amount').val()
+                                                        tmp.price = $('#form_price').val()
+                                                        tmp.tpayment = $('#form_tpayment').val()
+                                                        if $('#form_status').val() != "Tình trạng"
+                                                            tmp.status = $('#form_status').val()
+                                                        tmp.remark = $('#form_remark').val()
+                                                        recordChild = @state.recordChild
+                                                        for recordlife in recordChild
+                                                            if recordlife.id == tmp.id
+                                                                index = recordChild.indexOf recordlife
+                                                                recordChild = React.addons.update(recordChild, { $splice: [[index, 1, tmp]] })
+                                                                break
+                                                        @setState
+                                                            recordChildSelect: tmp
+                                                            recordChild: recordChild
+                                                            pmpm: 1
+                                                    when 2#back
+                                                        @setState pmpm: 1
                                             else#view mode
                                                 switch record.code
                                                     when 1#edit
@@ -2756,7 +2772,7 @@
                                                 if @props.prescript != null
                                                     formData = new FormData
                                                     formData.append 'id_station', @state.currentstation.id
-                                                    formData.append 'bill_id', @state.prescript.id
+                                                    formData.append 'script_id', @state.prescript.id
                                                     message = "thông tin thuốc trong đơn"
                                                     link = "/medicine_internal_record/find"
                                                     $.ajax
@@ -3033,7 +3049,7 @@
                                             console.log 'else'
     triggerRecord: (record) ->
         switch @state.currentpermission.table_id
-            when 1#customer record and ỏdermap
+            when 1#customer record and ordermap
                 switch @state.ptask
                     when 1#customer record
                         switch @state.pmtask
@@ -3110,6 +3126,14 @@
                                         console.log 1
                                     else
                                         @setState billin: record
+                    when 6#medicine prescript
+                        switch @state.pmtask
+                            when 2#list view
+                                switch @state.pmphase
+                                    when 1
+                                        console.log 1
+                                    else
+                                        @setState prescript: record
     triggerRecordChild: (record) ->
         records = React.addons.update(@state.recordChild, { $push: [record] })
         @setState recordChild: records
@@ -3710,7 +3734,7 @@
                                                                         else #supplier list view
                                                                             React.createElement StationContentApp, datatype: 18, station: @state.currentstation, backup: @state.backupState, trigger: @triggerButtonAtpmphase, triggerbackup: @triggerBackup, triggerRecord: @triggerRecord
                                                                 else#menu to chose
-                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineCompanyMinorTask
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineSupplierMinorTask
                                                         when 4#price
                                                             switch @state.pmtask
                                                                 when 1#chose to go add price
@@ -3733,7 +3757,7 @@
                                                                         else #price list view
                                                                             React.createElement StationContentApp, datatype: 21, station: @state.currentstation, backup: @state.backupState, trigger: @triggerButtonAtpmphase, triggerbackup: @triggerBackup, triggerRecord: @triggerRecord
                                                                 else#menu to chose
-                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineCompanyMinorTask
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicinePriceMinorTask
                                                         when 5#billin
                                                             switch @state.pmtask
                                                                 when 1#chose to go add billin
@@ -3758,30 +3782,32 @@
                                                                         else #billin list view
                                                                             React.createElement StationContentApp, datatype: 24, station: @state.currentstation, backup: @state.backupState, trigger: @triggerButtonAtpmphase, triggerbackup: @triggerBackup, triggerRecord: @triggerRecord
                                                                 else#menu to chose
-                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineCompanyMinorTask
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineBillInMinorTask
                                                         when 6#prescript
                                                             switch @state.pmtask
-                                                                when 1#chose to go add prescript
-                                                                    if @state.prescript != null
-                                                                        switch @state.pmphase
-                                                                            when 1 #edit form prescript
-                                                                                React.createElement StationContentApp, prescript: @state.prescript, grouplist: @props.medicinegroup, typelist: @props.medicinetype, datatype: 25, trigger: @triggerButtonAtpmphase, station: @state.currentstation, triggerAddRecordChild: @triggerRecordChild, selectRecordChild: @triggerSelectRecordChild, RecordChild: @state.recordChild, selectRecord: @state.recordChildSelect, id: "prescript_form"
-                                                                            else #prescript view (make it simple)
-                                                                                React.createElement StationContentApp, prescript: @state.prescript, datatype: 26, trigger: @triggerButtonAtpmphase
-                                                                    else#add prescript form
-                                                                        React.createElement StationContentApp, prescript: null, grouplist: @props.medicinegroup, typelist: @props.medicinetype, datatype: 25, trigger: @triggerButtonAtpmphase, station: @state.currentstation, triggerAddRecordChild: @triggerRecordChild, selectRecordChild: @triggerSelectRecordChild, RecordChild: @state.recordChild, selectRecord: @state.recordChildSelect, id: "prescript_form"
+                                                                #when 1#chose to go add prescript
+                                                                #    if @state.prescript != null
+                                                                #        switch @state.pmphase
+                                                                #            when 1 #edit form prescript
+                                                                #                React.createElement StationContentApp, prescript: @state.prescript, grouplist: @props.medicinegroup, typelist: @props.medicinetype, datatype: 25, trigger: @triggerButtonAtpmphase, station: @state.currentstation, triggerAddRecordChild: @triggerRecordChild, selectRecordChild: @triggerSelectRecordChild, RecordChild: @state.recordChild, selectRecord: @state.recordChildSelect, id: "prescript_form"
+                                                                #            else #prescript view (make it simple)
+                                                                #                React.createElement StationContentApp, prescript: @state.prescript, datatype: 26, trigger: @triggerButtonAtpmphase
+                                                                #    else#add prescript form
+                                                                #        React.createElement StationContentApp, prescript: null, grouplist: @props.medicinegroup, typelist: @props.medicinetype, datatype: 25, trigger: @triggerButtonAtpmphase, station: @state.currentstation, triggerAddRecordChild: @triggerRecordChild, selectRecordChild: @triggerSelectRecordChild, RecordChild: @state.recordChild, selectRecord: @state.recordChildSelect, id: "prescript_form"
                                                                 when 2#chose to go to prescript list
                                                                     switch @state.pmphase
                                                                         when 1 #prescript view
                                                                             switch @state.pmpm
                                                                                 when 1#prescript edit
                                                                                     React.createElement StationContentApp, prescript: @state.prescript, grouplist: @props.medicinegroup, typelist: @props.medicinetype, datatype: 25, trigger: @triggerButtonAtpmphase, station: @state.currentstation, triggerAddRecordChild: @triggerRecordChild, selectRecordChild: @triggerSelectRecordChild, RecordChild: @state.recordChild, selectRecord: @state.recordChildSelect, id: "prescript_form"
+                                                                                when 2#internalrecord edit
+                                                                                    React.createElement StationContentApp, internalrecord: @state.recordChildSelect, datatype: 31, trigger: @triggerButtonAtpmphase
                                                                                 else#prescript view
                                                                                     React.createElement StationContentApp, prescript: @state.prescript, datatype: 26, trigger: @triggerButtonAtpmphase
                                                                         else #prescript list view
                                                                             React.createElement StationContentApp, datatype: 27, station: @state.currentstation, backup: @state.backupState, trigger: @triggerButtonAtpmphase, triggerbackup: @triggerBackup, triggerRecord: @triggerRecord
                                                                 else#menu to chose
-                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineCompanyMinorTask
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicinePrescriptMinorTask
                                                         when 7#stockRecord
                                                             switch @state.pmtask
                                                                 when 1#chose to go add stockrecord
@@ -4837,6 +4863,20 @@
                             $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
                         else
                             $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+            when 25
+                if $('#form_tpayment').val() > 0
+                    if $('#form_discount').val() > 0
+                        $('#form_discount_percent').val(Math.round(Number($('#form_discount').val())/Number($('#form_tpayment').val())*100))
+                        $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+                    else
+                        if $('#form_discount_percent').val() > 0
+                            $('#form_discount').val(Math.round(Number($('#form_discount_percent').val()) * Number($('#form_tpayment').val()) / 100))
+                            $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+                        else
+                            $('#form_tpayout').val(Number($('#form_tpayment').val()) - Number($('#form_discount').val()))
+            when 31
+                if Number($('#form_price').val()) > 0 and Number($('#form_amount').val()) > 0
+                    $('#form_tpayment').val(Number($('#form_price').val()) * Number($('#form_amount').val()))
     triggerAutoCompleteInput: ->
         if $('#filter_type_select').val() != '' && $('#filter_text').val().length > 1
             if !$('#checkbox_db').is(':checked')
@@ -7274,7 +7314,7 @@
                             React.DOM.div className: 'row',
                                 React.DOM.div className: 'col-sm-9',
                                     React.DOM.div className: 'card-body table-responsive',
-                                        React.DOM.table className: 'table table-hover table-condensed',
+                                        React.DOM.table className: 'table table-hover table-condensed', style: {'backgroundColor': '#414141','color': '#fff'},
                                             React.DOM.thead null,
                                                 React.DOM.tr null,
                                                     React.DOM.th null, 'Mã đơn thuốc'
@@ -7303,8 +7343,8 @@
                                                 catch error
                                                     ""
                                 React.DOM.div className: 'col-sm-3',
-                                    React.createElement ButtonGeneral, className: 'col-sm-12 btn btn-secondary-docapp', icon: 'fa fa-trash-o', type: 3, text: ' Xóa', code: {code: 3}, Clicked: @triggercode
-                                    React.createElement ButtonGeneral, className: 'col-sm-12 btn btn-primary-docapp', icon: 'fa fa-plus-square', text: ' Lấy tổng giá', type: 3, code: 'medicine_internal_record', Clicked: @triggerSumChild
+                                    React.createElement ButtonGeneral, className: 'col-sm-12 btn btn-secondary-docapp', icon: 'fa fa-pencil', type: 3, text: ' Sửa', code: {code: 5}, Clicked: @triggercode
+                                    React.createElement ButtonGeneral, className: 'col-sm-12 btn btn-primary-docapp', icon: 'fa fa-plus-square', text: ' Lấy tổng giá', type: 3, code: 'internal_record', Clicked: @triggerSumChild
                                     React.createElement ButtonGeneral, className: 'col-sm-12 btn btn-secondary-docapp', icon: 'fa fa-list', type: 3, text: ' Tải danh sach đã nhập', code: {code: 4}, Clicked: @triggercode
                     React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
                         React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
@@ -7312,75 +7352,12 @@
         else
             React.DOM.div className: 'row',
                 React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-md-12',
-                        React.DOM.form className: 'form-horizontal content-app-alt', autoComplete: 'off', id: @props.id,
-                            React.DOM.div className: 'form-group',
-                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Người thanh toán'
-                                React.DOM.div className: 'col-sm-9',
-                                    React.createElement InputField, id: 'form_payer', className: 'form-control', type: 'text', code: '', placeholder: 'Người thanh toán', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
-                            React.DOM.div className: 'form-group',
-                                React.DOM.div className: 'col-md-8',
-                                    React.DOM.label className: 'col-sm-3 control-label hidden-xs', 'Ghi chú'
-                                    React.DOM.div className: 'col-sm-9',
-                                        React.DOM.textarea id: 'form_remark', className: 'form-control', placeholder: 'Ghi chú'
-                                React.DOM.div className: 'col-md-4',
-                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Cách thanh toán'
-                                    React.DOM.div className: 'col-sm-6',
-                                        React.createElement SelectBox, id: 'form_pmethod', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Tiền mặt'},{id: 2, name: 'Chuyển khoản'},{id: 3, name: 'Khác'}], text: 'Cách thanh toán'
-                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng giá trị'
-                                    React.DOM.div className: 'col-sm-6',
-                                        React.createElement InputField, id: 'form_tpayment', className: 'form-control', type: 'number', placeholder: 'Tổng giá trị', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggersafe
-                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Giảm giá'
-                                    React.DOM.div className: 'col-sm-6',
-                                        React.createElement InputField, id: 'form_discount', className: 'form-control', type: 'number', placeholder: 'Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
-                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', '% Giảm giá'
-                                    React.DOM.div className: 'col-sm-6',
-                                        React.createElement InputField, id: 'form_discount_percent', className: 'form-control', type: 'number', step: 'any', placeholder: '% Giảm giá', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
-                                    React.DOM.label className: 'col-sm-6 control-label hidden-xs', 'Tổng thanh toán'
-                                    React.DOM.div className: 'col-sm-6',
-                                        React.createElement InputField, id: 'form_tpayout', className: 'form-control', type: 'number', placeholder: 'Tổng thanh toán', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
-                            React.DOM.div className: 'row',
-                                React.DOM.div className: 'col-sm-9',
-                                    React.DOM.div className: 'card-body table-responsive',
-                                        React.DOM.table className: 'table table-hover table-condensed',
-                                            React.DOM.thead null,
-                                                React.DOM.tr null,
-                                                    React.DOM.th null, 'Mã đơn thuốc'
-                                                    React.DOM.th null, 'Tên thuốc'
-                                                    React.DOM.th null, 'Tên bệnh nhân'
-                                                    React.DOM.th null, 'Liều lượng'
-                                                    React.DOM.th null, 'Ghi chú'
-                                                    React.DOM.th null, 'Công ty sản xuất'
-                                                    React.DOM.th null, 'Giá'
-                                                    React.DOM.th null, 'Giảm giá'
-                                                    React.DOM.th null, 'Tổng giá trị'
-                                                    React.DOM.th null, 'Tình trạng'
-                                                    React.DOM.th null, 'Số kiệu'
-                                                    React.DOM.th null, 'Ký hiệu'
-                                            React.DOM.tbody null,
-                                                try
-                                                    if @props.RecordChild.length > 0
-                                                        for record in @props.RecordChild
-                                                            if @props.selectRecord != null
-                                                                if record.id == @props.selectRecord.id
-                                                                    React.createElement RecordGeneral, key: record.id, record: record, datatype: 'medicine_internal_record', selected: true, selectRecord: @selectRecordChildOut
-                                                                else
-                                                                    React.createElement RecordGeneral, key: record.id, record: record, datatype: 'medicine_internal_record', selected: false, selectRecord: @selectRecordChildOut
-                                                            else
-                                                                React.createElement RecordGeneral, key: record.id, record: record, datatype: 'medicine_internal_record', selected: false, selectRecord: @selectRecordChildOut
-                                                catch error
-                                                    ""
-                                React.DOM.div className: 'col-sm-3',
-                                    React.createElement ButtonGeneral, className: 'col-sm-12 btn btn-secondary-docapp', icon: 'fa fa-trash-o', type: 3, text: ' Xóa', code: {code: 3}, Clicked: @triggercode
-                                    React.createElement ButtonGeneral, className: 'col-sm-12 btn btn-primary-docapp', icon: 'fa fa-plus-square', text: ' Lấy tổng giá', type: 3, code: 'medicine_internal_record', Clicked: @triggerSumChild
-                                    React.createElement ButtonGeneral, className: 'col-sm-12 btn btn-secondary-docapp', icon: 'fa fa-list', type: 3, text: ' Tải danh sach đã nhập', code: {code: 4}, Clicked: @triggercode
                     React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
-                        React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
                         React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode        
     viewMedicinePrescriptForm: ->
         if @props.prescript != null
             thanhtoan = ""
-            switch @props.billin.pmethod
+            switch @props.prescript.pmethod
                 when 1
                     thanhtoan = "Tiền mặt"
                 when 2
@@ -7540,7 +7517,44 @@
                     console.log error
             React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25',
                 React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode    
-    
+    editMedicineInternalRecordForm: ->
+        if @props.internalrecord != null
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-12',
+                        React.DOM.form className: 'form-horizontal content-app-alt', autoComplete: 'off', id: @props.id,
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ký hiệu'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement InputField, defaultValue: @props.internalrecord.signid, id: 'form_signid', className: 'form-control', type: 'text', code: '', placeholder: 'Ký hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số hiệu'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement InputField, defaultValue: @props.internalrecord.noid, id: 'form_noid', className: 'form-control', type: 'text', code: '', placeholder: 'Số hiệu', trigger: @triggersafe, trigger2: @triggersafe, trigger3: @triggersafe
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tình trạng thuốc'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement SelectBox, id: 'form_status', className: 'form-control', Change: @triggersafe, blurOut: @triggersafe, records: [{id: 1, name: 'Đã chuyển hàng'},{id: 2, name: 'Chưa chuyển hàng'},{id: 3, name: 'Khác'}], text: 'Tình trạng'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Ghi chú'
+                                React.DOM.div className: 'col-sm-9',
+                                    React.DOM.textarea id: 'form_remark', defaultValue: @props.internalrecord.remark, className: 'form-control', placeholder: 'Ghi chú'
+                            React.DOM.div className: 'form-group',
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Số lượng'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement InputField, defaultValue: @props.internalrecord.amount, id: 'form_amount', className: 'form-control', type: 'number', code: '', placeholder: 'Số lượng', trigger: @triggersafe, trigger2: @triggerRecalPayment, trigger3: @triggersafe
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Giá'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement InputField, defaultValue: @props.internalrecord.price, id: 'form_price', className: 'form-control', type: 'number', code: 'form_price', placeholder: 'Tên thuốc', style: '', trigger: @triggersafe, trigger3: @triggersafe, trigger2: @triggerRecalPayment
+                                React.DOM.label className: 'col-sm-2 control-label hidden-xs', 'Tổng'
+                                React.DOM.div className: 'col-sm-2',
+                                    React.createElement InputField, defaultValue: @props.internalrecord.tpayment, id: 'form_tpayment', className: 'form-control', type: 'number', code: '', placeholder: 'Tổng', trigger: @triggersafe, trigger2: @triggerRecalPayment, trigger3: @triggersafe
+                    React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                        React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
+                        React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode        
+        else
+            React.DOM.div className: 'row',
+                React.DOM.div className: 'row',
+                    React.DOM.div className: 'col-md-12', style: {'paddingRight':'50px', 'paddingBottom':'25px'},
+                        React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
     editMedicineStockrecordForm: ->
         if @props.stockrecord != null
             React.DOM.div className: 'row',
@@ -7804,6 +7818,8 @@
                 @viewMedicineStockrecordForm()
             when 30#medicine Stockrecord list view
                 @listMedicineStockrecord()
+            when 31#medicine Internal Record Edit view
+                @editMedicineInternalRecordForm()
                 
 @CustomerRecordBlock = React.createClass
     getInitialState: ->
@@ -7882,67 +7898,130 @@
     triggerCode: (record) ->
         @props.trigger record
     normalRender: ->
-        dataSet = @getData()
-        switch dataSet.length
-            when 0
-                React.DOM.div className: 'row',
-                    React.DOM.div className: 'col-sm-12',
-                        React.DOM.div className: 'content-app', style: {'display':'table', 'color': '#fff', 'width': '100%'},
-                            React.DOM.p style: {'display': 'table-cell', 'verticalAlign': 'middle', 'textAlign': 'center'}, "Không có mục lựa chọn nào"
-            when 1
-                React.DOM.div className: 'row',
-                    React.createElement StationContentApp, datatype: @props.datatype, record: dataSet[0], className: 'col-sm-12 animated fadeIn', hidden: false, trigger: @triggerCode
-            when 2
-                count = 0
-                i = @state.curentview - 1
-                React.DOM.div className: 'row',    
-                    while count < 2
-                        count = count + 1
-                        i = i + 1
-                        if i >= dataSet.length
-                            i = i - dataSet.length
-                        if i == @state.curentview
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: false, trigger: @triggerCode
-                        else
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: true, trigger: @triggerCode
-                    React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
-                        React.DOM.i className: 'zmdi zmdi-chevron-left'
-                    React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
-                        React.DOM.i className: 'zmdi zmdi-chevron-right'
-            when 3
-                count = 0
-                i = @state.curentview - 1
-                React.DOM.div className: 'row',
-                    while count < 3
-                        count = count + 1
-                        i = i + 1
-                        if i >= dataSet.length
-                            i = i - dataSet.length
-                        if i == @state.curentview
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
-                        else
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
-                    React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
-                        React.DOM.i className: 'zmdi zmdi-chevron-left'
-                    React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
-                        React.DOM.i className: 'zmdi zmdi-chevron-right'
-            else
-                count = 0
-                i = @state.curentview - 1
-                React.DOM.div className: 'row',    
-                    while count < 3
-                        count = count + 1
-                        i = i + 1
-                        if i >= dataSet.length
-                            i = i - dataSet.length
-                        if i == @state.curentview
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
-                        else
-                            React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
-                    React.DOM.div className: 'side-left-button', onClick: @movedown,
-                        React.DOM.i className: 'zmdi zmdi-chevron-left'
-                    React.DOM.div className: 'side-right-button', onClick: @moveup,
-                        React.DOM.i className: 'zmdi zmdi-chevron-right'
+        try
+            dataSet = @getData()
+            switch dataSet.length
+                when 0
+                    React.DOM.div className: 'row',
+                        React.DOM.div className: 'col-sm-12',
+                            React.DOM.div className: 'content-app', style: {'display':'table', 'color': '#fff', 'width': '100%'},
+                                React.DOM.p style: {'display': 'table-cell', 'verticalAlign': 'middle', 'textAlign': 'center'}, "Không có mục lựa chọn nào"
+                when 1
+                    React.DOM.div className: 'row',
+                        React.createElement StationContentApp, datatype: @props.datatype, record: dataSet[0], className: 'col-sm-12 animated fadeIn', hidden: false, trigger: @triggerCode
+                when 2
+                    count = 0
+                    i = @state.curentview - 1
+                    React.DOM.div className: 'row',    
+                        while count < 2
+                            count = count + 1
+                            i = i + 1
+                            if i >= dataSet.length
+                                i = i - dataSet.length
+                            if i == @state.curentview
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: false, trigger: @triggerCode
+                            else
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: true, trigger: @triggerCode
+                        React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
+                            React.DOM.i className: 'zmdi zmdi-chevron-left'
+                        React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
+                            React.DOM.i className: 'zmdi zmdi-chevron-right'
+                when 3
+                    count = 0
+                    i = @state.curentview - 1
+                    React.DOM.div className: 'row',
+                        while count < 3
+                            count = count + 1
+                            i = i + 1
+                            if i >= dataSet.length
+                                i = i - dataSet.length
+                            if i == @state.curentview
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
+                            else
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
+                        React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
+                            React.DOM.i className: 'zmdi zmdi-chevron-left'
+                        React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
+                            React.DOM.i className: 'zmdi zmdi-chevron-right'
+                else
+                    count = 0
+                    i = @state.curentview - 1
+                    React.DOM.div className: 'row',    
+                        while count < 3
+                            count = count + 1
+                            i = i + 1
+                            if i >= dataSet.length
+                                i = i - dataSet.length
+                            if i == @state.curentview
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
+                            else
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
+                        React.DOM.div className: 'side-left-button', onClick: @movedown,
+                            React.DOM.i className: 'zmdi zmdi-chevron-left'
+                        React.DOM.div className: 'side-right-button', onClick: @moveup,
+                            React.DOM.i className: 'zmdi zmdi-chevron-right'
+        catch error
+            dataSet = @getData()
+            switch dataSet.length
+                when 0
+                    React.DOM.div className: 'row',
+                        React.DOM.div className: 'col-sm-12',
+                            React.DOM.div className: 'content-app', style: {'display':'table', 'color': '#fff', 'width': '100%'},
+                                React.DOM.p style: {'display': 'table-cell', 'verticalAlign': 'middle', 'textAlign': 'center'}, "Không có mục lựa chọn nào"
+                when 1
+                    React.DOM.div className: 'row',
+                        React.createElement StationContentApp, datatype: @props.datatype, record: dataSet[0], className: 'col-sm-12 animated fadeIn', hidden: false, trigger: @triggerCode
+                when 2
+                    count = 0
+                    i = 0 - 1
+                    React.DOM.div className: 'row',    
+                        while count < 2
+                            count = count + 1
+                            i = i + 1
+                            if i >= dataSet.length
+                                i = i - dataSet.length
+                            if i == 0
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: false, trigger: @triggerCode
+                            else
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-6 animated fadeIn', hidden: true, trigger: @triggerCode
+                        React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
+                            React.DOM.i className: 'zmdi zmdi-chevron-left'
+                        React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
+                            React.DOM.i className: 'zmdi zmdi-chevron-right'
+                when 3
+                    count = 0
+                    i = 0 - 1
+                    React.DOM.div className: 'row',
+                        while count < 3
+                            count = count + 1
+                            i = i + 1
+                            if i >= dataSet.length
+                                i = i - dataSet.length
+                            if i == 0
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
+                            else
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
+                        React.DOM.div className: 'side-left-button visible-table-xs', onClick: @movedown,
+                            React.DOM.i className: 'zmdi zmdi-chevron-left'
+                        React.DOM.div className: 'side-right-button visible-table-xs', onClick: @moveup,
+                            React.DOM.i className: 'zmdi zmdi-chevron-right'
+                else
+                    count = 0
+                    i = 0 - 1
+                    React.DOM.div className: 'row',    
+                        while count < 3
+                            count = count + 1
+                            i = i + 1
+                            if i >= dataSet.length
+                                i = i - dataSet.length
+                            if i == 0
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: false, trigger: @triggerCode
+                            else
+                                React.createElement StationContentApp, key: dataSet[i].id, datatype: @props.datatype, record: dataSet[i], className: 'col-sm-4 animated fadeIn', hidden: true, trigger: @triggerCode
+                        React.DOM.div className: 'side-left-button', onClick: @movedown,
+                            React.DOM.i className: 'zmdi zmdi-chevron-left'
+                        React.DOM.div className: 'side-right-button', onClick: @moveup,
+                            React.DOM.i className: 'zmdi zmdi-chevron-right'
     render: ->
         switch @props.datatype
             when 1# station

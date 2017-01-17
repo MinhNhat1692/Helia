@@ -3,7 +3,7 @@ class MedicinePrescriptInternalController < ApplicationController
 
   def list
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
 			  @station = Station.find params[:id_station]
 			  @data = []
         if params.has_key?(:date)
@@ -59,7 +59,7 @@ class MedicinePrescriptInternalController < ApplicationController
 
   def create
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 1
+      if current_user.check_permission params[:id_station], 2, 1
 			  @station = Station.find params[:id_station]
 		    @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
 		    if !@customer_id.nil?
@@ -201,27 +201,20 @@ class MedicinePrescriptInternalController < ApplicationController
 
   def update
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 2
+      if current_user.check_permission params[:id_station], 2, 2
         @station = Station.find params[:id_station]
         if params.has_key?(:id)
-          @supplier = MedicinePrescriptInternal.find(params[:id])
-			    if @supplier.station_id == @station.id
-            @customer_id = CustomerRecord.find_by(id: params[:customer_id], cname: params[:cname], station_id: @station.id)
-		        if !@customer_id.nil?
-					    @customer_id = @customer_id.id
-				    end
-		        @employee_id = Employee.find_by(id: params[:employee_id], ename: params[:ename], station_id: @station.id)
-		        if !@employee_id.nil?
-					    @employee_id = @employee_id.id
-		        end
-		        @preparer_id = Employee.find_by(id: params[:preparer_id], ename: params[:preparer], station_id: @station.id)
-		        if !@preparer_id.nil?
-					    @preparer_id = @preparer_id.id
-				    end
-		        if @supplier.update(code: params[:code], customer_id: @customer_id, cname: params[:cname], employee_id: @employee_id, ename: params[:ename], result_id: params[:result_id], number_id: params[:number_id], date: params[:date], remark: params[:remark], preparer: params[:preparer], preparer_id: @preparer_id, payer: params[:payer], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], pmethod: params[:pmethod])
-				      render json: @supplier
+          @prescript = MedicinePrescriptInternal.find(params[:id])
+			    if @prescript.station_id == @station.id
+						if params.has_key?(:prep)
+							#@preparer_id = Employee.find_by(id: params[:preparer_id], ename: params[:preparer], station_id: @station.id)
+							#if !@preparer_id.nil?
+							#	@preparer_id = @preparer_id.id
+							#end
+		        if @prescript.update(remark: params[:remark], payer: params[:payer], tpayment: params[:tpayment], discount: params[:discount], tpayout: params[:tpayout], pmethod: params[:pmethod])
+				      render json: @prescript
 				    else
-				      render json: @supplier.errors, status: :unprocessable_entity
+				      render json: @prescript.errors, status: :unprocessable_entity
 				    end
           end
         end
@@ -261,7 +254,7 @@ class MedicinePrescriptInternalController < ApplicationController
 
   def destroy
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 3
+      if current_user.check_permission params[:id_station], 2, 3
 			  @station = Station.find params[:id_station]
 			  if params.has_key?(:id)
 			    @supplier = MedicinePrescriptInternal.find(params[:id])
@@ -289,7 +282,7 @@ class MedicinePrescriptInternalController < ApplicationController
 
   def search
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
         @station = Station.find params[:id_station]
         if params.has_key?(:code)
           @supplier = MedicinePrescriptInternal.where("code LIKE ? and station_id = ?" , "%#{params[:code]}%", @station.id).group(:code).limit(3)
@@ -349,7 +342,7 @@ class MedicinePrescriptInternalController < ApplicationController
 
   def find
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
         @station = Station.find params[:id_station]
         if params.has_key?(:date)
           n = params[:date].to_i
