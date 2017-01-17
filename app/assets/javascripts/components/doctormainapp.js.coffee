@@ -46,6 +46,7 @@
         medicinePriceMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm giá bán thuốc vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách giá bán thuốc', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         medicineBillInMinorTask: [{id: 1, name: 'Thêm', icon: '/assets/add_icon.png', text: 'Thêm hóa đơn nhập thuốc vào danh sách', code: 1},{id: 2, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách hóa đơn nhập thuốc', code: 2},{id: 3, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         medicinePrescriptMinorTask: [{id: 1, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách đơn thuốc', code: 2},{id: 2, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
+        medicineStockRecordMinorTask: [{id: 1, name: 'Danh sách', icon: '/assets/verification-of-delivery-list-clipboard-symbol.png', text: 'Xem tổng hợp danh sách thuốc còn trong kho', code: 2},{id: 2, name: 'Back',icon: '/assets/back_icon.png', text: 'Quay lại menu trước', code: 3}]
         backupState: null
     showtoast: (message,toasttype) ->
 	    toastr.options =
@@ -2817,6 +2818,55 @@
                                         ), 500
                                     else#back
                                         @setState ptask: null     
+                    when 7#stockrecord
+                        switch @state.pmtask
+                            when 2#stockrecord list
+                                switch @state.pmphase
+                                    when 1#view mode
+                                        switch record.code
+                                            when 3#back
+                                                @setState
+                                                    stockrecord: null
+                                                    recordChild: []
+                                                    recordChildSelect: null
+                                                    pmphase: null
+                                                setTimeout (->
+                                                    $(APP).trigger('reloadData')
+                                                ), 500
+                                    else#list view
+                                        switch record.code
+                                            when 2#move to view
+                                                if @props.stockrecord != null
+                                                    @setState
+                                                        pmphase: 1
+                                                    setTimeout (->
+                                                        $(APP).trigger('reloadData')
+                                                    ), 500
+                                            when 3#back
+                                                @setState
+                                                    pmtask: null
+                                                    tabheader: 'Kho thuốc'
+                                                    stockrecord: null
+                                                    backupState: null
+                            else#menu to chose
+                                switch record.code
+                                    when 1#add
+                                        @setState
+                                            pmtask: 1
+                                            tabheader: 'Kho thuốc'
+                                            stockrecord: null
+                                            recordChild: []
+                                            recordChildSelect: null
+                                    when 2#list
+                                        @setState
+                                            pmtask: 2
+                                            pmphase: null
+                                            pmpm: null
+                                        setTimeout (->
+                                            $(APP).trigger('reloadData')
+                                        ), 500
+                                    else#back
+                                        @setState ptask: null
     triggerButtonAtpmpm: (record) ->
         switch @state.currentpermission.table_id
             when 1#customer record and ordermap
@@ -3134,6 +3184,15 @@
                                         console.log 1
                                     else
                                         @setState prescript: record
+                    when 7#medicine stockrecord
+                        switch @state.pmtask
+                            when 2#list view
+                                switch @state.pmphase
+                                    when 1
+                                        @setState recordChildSelect: record
+                                    else
+                                        @setState stockrecord: record
+    
     triggerRecordChild: (record) ->
         records = React.addons.update(@state.recordChild, { $push: [record] })
         @setState recordChild: records
@@ -3785,15 +3844,6 @@
                                                                     React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineBillInMinorTask
                                                         when 6#prescript
                                                             switch @state.pmtask
-                                                                #when 1#chose to go add prescript
-                                                                #    if @state.prescript != null
-                                                                #        switch @state.pmphase
-                                                                #            when 1 #edit form prescript
-                                                                #                React.createElement StationContentApp, prescript: @state.prescript, grouplist: @props.medicinegroup, typelist: @props.medicinetype, datatype: 25, trigger: @triggerButtonAtpmphase, station: @state.currentstation, triggerAddRecordChild: @triggerRecordChild, selectRecordChild: @triggerSelectRecordChild, RecordChild: @state.recordChild, selectRecord: @state.recordChildSelect, id: "prescript_form"
-                                                                #            else #prescript view (make it simple)
-                                                                #                React.createElement StationContentApp, prescript: @state.prescript, datatype: 26, trigger: @triggerButtonAtpmphase
-                                                                #    else#add prescript form
-                                                                #        React.createElement StationContentApp, prescript: null, grouplist: @props.medicinegroup, typelist: @props.medicinetype, datatype: 25, trigger: @triggerButtonAtpmphase, station: @state.currentstation, triggerAddRecordChild: @triggerRecordChild, selectRecordChild: @triggerSelectRecordChild, RecordChild: @state.recordChild, selectRecord: @state.recordChildSelect, id: "prescript_form"
                                                                 when 2#chose to go to prescript list
                                                                     switch @state.pmphase
                                                                         when 1 #prescript view
@@ -3810,27 +3860,14 @@
                                                                     React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicinePrescriptMinorTask
                                                         when 7#stockRecord
                                                             switch @state.pmtask
-                                                                when 1#chose to go add stockrecord
-                                                                    if @state.stockrecord != null
-                                                                        switch @state.pmphase
-                                                                            when 1 #edit form stockrecord
-                                                                                React.createElement StationContentApp, stockrecord: @state.stockrecord, datatype: 28, trigger: @triggerButtonAtpmphase, station: @state.currentstation
-                                                                            else #stockrecord view (make it simple)
-                                                                                React.createElement StationContentApp, stockrecord: @state.stockrecord, datatype: 29, trigger: @triggerButtonAtpmphase
-                                                                    else#add stockrecord form
-                                                                        React.createElement StationContentApp, stockrecord: null, datatype: 28, trigger: @triggerButtonAtpmphase, station: @state.currentstation
                                                                 when 2#chose to go to stockrecord list
                                                                     switch @state.pmphase
                                                                         when 1 #stockrecord view
-                                                                            switch @state.pmpm
-                                                                                when 1#stockrecord edit
-                                                                                    React.createElement StationContentApp, stockrecord: @state.stockrecord, datatype: 28, trigger: @triggerButtonAtpmphase, station: @state.currentstation
-                                                                                else#stockrecord view
-                                                                                    React.createElement StationContentApp, stockrecord: @state.stockrecord, datatype: 29, trigger: @triggerButtonAtpmphase
+                                                                            React.createElement StationContentApp, stockrecord: @state.stockrecord, datatype: 29, station: @state.currentstation, trigger: @triggerButtonAtpmphase, triggerRecord: @triggerRecord
                                                                         else #stockrecord list view
                                                                             React.createElement StationContentApp, datatype: 30, station: @state.currentstation, backup: @state.backupState, trigger: @triggerButtonAtpmphase, triggerbackup: @triggerBackup, triggerRecord: @triggerRecord
                                                                 else#menu to chose
-                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineCompanyMinorTask
+                                                                    React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtpmphase, record: @state.medicineStockRecordMinorTask
                                                         else#list chose
                                                             React.createElement StationRollMenu, datatype: 3, trigger: @triggerButtonAtFirst, record: @state.medicineTask
                                                 when 3#patient check
@@ -4081,6 +4118,13 @@
                         @loadData()
                     else if @props.backup != null and @props.backup != undefined
                         @setState @props.backup
+                when 29
+                    @loadData()
+                when 30
+                    if @props.backup == null
+                        @loadData()
+                    else if @props.backup != null and @props.backup != undefined
+                        @setState @props.backup
         ).bind(this)
     componentWillUnmount: ->
         $(APP).off 'reloadData'
@@ -4294,6 +4338,70 @@
                 formData.append 'id_station', @props.station.id
                 message = "thông tin đơn thuốc"
                 link = "/medicine_prescript_internal/list"
+                $.ajax
+                    url: link
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    error: ((result) ->
+                        @showtoast("Tải " + message + " thất bại",3)
+                        return
+                    ).bind(this)
+                    success: ((result) ->
+                        @showtoast("Tải " + message + " thành công",1)
+                        @setState
+                            records: result[0]
+                            filteredRecord: null
+                            lastcount:
+                                if result[0].length < 10
+                                    result[0].length
+                                else
+                                    10
+                        return
+                    ).bind(this)
+            when 29
+                @setState record: null
+                formData = new FormData
+                formData.append 'id_station', @props.station.id
+                formData.append 'date', 100
+                formData.append 'name', @props.stockrecord.name
+                formData.append 'sample_id', @props.stockrecord.sam_id
+                message = "thông tin"
+                link = "/medicine_summary/stock_record/detail1"
+                $.ajax
+                    url: link
+                    type: 'POST'
+                    data: formData
+                    async: false
+                    cache: false
+                    contentType: false
+                    processData: false
+                    error: ((result) ->
+                        @showtoast("Tải " + message + " thất bại",3)
+                        return
+                    ).bind(this)
+                    success: ((result) ->
+                        @showtoast("Tải " + message + " thành công",1)
+                        @setState
+                            records: result[0]
+                            filteredRecord: null
+                            lastcount:
+                                if result[0].length < 10
+                                    result[0].length
+                                else
+                                    10
+                        return
+                    ).bind(this)
+            when 30
+                @setState record: null
+                formData = new FormData
+                formData.append 'id_station', @props.station.id
+                formData.append 'date', 100
+                message = "thông tin đơn thuốc"
+                link = "/medicine_summary/stock_record"
                 $.ajax
                     url: link
                     type: 'POST'
@@ -7279,7 +7387,6 @@
                     console.log error
             React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25',
                 React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode    
-    
     editMedicinePrescriptForm: ->
         if @props.prescript != null
             React.DOM.div className: 'row',
@@ -7627,68 +7734,80 @@
                         React.createElement ButtonGeneral, className: 'btn btn-primary-docapp pull-right', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Quay lại', code: {code: 2}, Clicked: @triggercode
                         React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right', icon: 'zmdi zmdi-floppy', type: 3, text: ' Lưu', code: {code: 1}, Clicked: @triggercode
     viewMedicineStockrecordForm: ->
-        if @props.stockrecord != null
-            React.DOM.div className: @props.className,
-                React.DOM.div className: 'col-md-12',
-                    React.DOM.div className: 'row',
-                        React.DOM.div className: 'content-app-alt',
-                            React.DOM.div className: 'content-info-block', style: {'marginTop':'40px'},
+        React.DOM.div className: 'row',
+            React.createElement FilterFormAppView, station: @props.station, datatype: 1, triggerStoreRecord: @triggerStoreRecordNext, triggerSortAltUp: @triggerSortAltUpNext, triggerSortAltDown: @triggerSortAltDownNext, triggerClear: @triggerClearAlt, triggerSubmitSearch: @triggerSubmitSearchAlt, triggerAutoCompleteFast: @triggerAutoCompleteFast, options: [
+                {id: 1, text: 'Số hiệu', linksearch: 'medicine_stock_record/search', linkfind: '#', code: 'noid', type: 1}
+                {id: 2, text: 'Ký hiệu', linksearch: 'medicine_stock_record/search', linkfind: '#', code: 'signid', type: 1}
+            ]
+            try
+                React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25 filter-form', style: {'paddingTop': '0', 'paddingBottom': '0', 'overflow':'hidden'},
+                    if @state.filteredRecord != null
+                        React.createElement Paginate, className: 'col-sm-8', tp: Math.ceil(@state.filteredRecord.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                    else
+                        React.createElement Paginate, className: 'col-sm-8', tp: Math.ceil(@state.records.length/@state.viewperpage), cp: @state.currentpage, triggerLeftMax: @triggerLeftMax, triggerLeft: @triggerLeft, triggerRight: @triggerRight, triggerRightMax: @triggerRightMax, triggerPage: @triggerPage
+                    React.DOM.div className: 'col-sm-2', style: {'paddingBottom': '5px'},
+                        React.createElement InputField, id: 'record_per_page', className: 'form-control', type: 'number', step: 1, code: 'rpp', placeholder: 'Số bản ghi mỗi trang', min: 1, style: '', trigger: @trigger, trigger2: @triggerChangeRPP, trigger3: @trigger
+                    React.DOM.div className: 'col-sm-2', style: {'paddingBottom': '5px'},
+                        React.createElement InputField, id: 'page_number', className: 'form-control', type: 'number', code: 'pn', step: 1, placeholder: 'Số trang', style: '', min: 1, trigger: @trigger, trigger2: @triggerChangePage, trigger3: @trigger
+            catch error
+                console.log error
+            React.DOM.div className: 'col-sm-8 p-15 p-l-25 p-r-25',
+                try
+                    React.DOM.div className: 'data-list-container',    
+                        if @state.filteredRecord != null
+                            for record in @state.filteredRecord[@state.firstcount...@state.lastcount]
+                                expand = ""
+                                if @state.record != null
+                                    if record.id == @state.record.id
+                                        expand = "activeselt3"
+                                React.createElement CustomerRecordBlock, key: record.id, record: record, selectExpand: expand, textline1: record.noid + " - " + record.signid, textline2: record.amount, datatype: 2, trigger: @triggerSelectRecord
+                        else
+                            for record in @state.records[@state.firstcount...@state.lastcount]
+                                expand = ""
+                                if @state.record != null
+                                    if record.id == @state.record.id
+                                        expand = "activeselt3"
+                                React.createElement CustomerRecordBlock, key: record.id, record: record, selectExpand: expand, textline1: record.noid + " - " + record.signid, textline2: record.amount, datatype: 2, trigger: @triggerSelectRecord
+                catch error
+                    console.log error
+            React.DOM.div className: 'col-sm-4',
+                try
+                    React.DOM.div className: 'row animated flipInY',
+                        React.DOM.div className: 'col-sm-12 p-r-25', style: {'paddingLeft':'0', 'marginBottom': '3px'},
+                            React.DOM.div className: 'content-info-block',
                                 React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-4 hidden-xs',
-                                        React.DOM.p null, 'Số thứ tự'
-                                    React.DOM.div className: 'col-md-8',
-                                        React.DOM.p null, @props.stockrecord.id
+                                    React.DOM.div className: 'col-md-6 hidden-xs',
+                                        React.DOM.p null, 'ID'
+                                    React.DOM.div className: 'col-md-6',
+                                        React.DOM.p null, @state.record.id
                                 React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-4 hidden-xs',
-                                        React.DOM.p null, 'Mã DN'
-                                    React.DOM.div className: 'col-md-8',
-                                        React.DOM.p null, @props.stockrecord.noid
-                                React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-4 hidden-xs',
-                                        React.DOM.p null, 'Tên doanh nghiệp SX'
-                                    React.DOM.div className: 'col-md-8',
+                                    React.DOM.div className: 'col-md-6 hidden-xs',
+                                        React.DOM.p null, 'Tên thuốc'
+                                    React.DOM.div className: 'col-md-6',
                                         React.DOM.p null, @props.stockrecord.name
                                 React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-4 hidden-xs',
-                                        React.DOM.p null, 'Địa chỉ'
-                                    React.DOM.div className: 'col-md-8',
-                                        React.DOM.p null, @props.stockrecord.address
+                                    React.DOM.div className: 'col-md-6 hidden-xs',
+                                        React.DOM.p null, 'Số hiệu'
+                                    React.DOM.div className: 'col-md-6',
+                                        React.DOM.p null, @state.record.noid
                                 React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-4 hidden-xs',
-                                        React.DOM.p null, 'Số ĐT'
-                                    React.DOM.div className: 'col-md-8',
-                                        React.DOM.p null, @props.stockrecord.pnumber
+                                    React.DOM.div className: 'col-md-6 hidden-xs',
+                                        React.DOM.p null, 'Ký hiệu'
+                                    React.DOM.div className: 'col-md-6',
+                                        React.DOM.p null, @state.record.signid
                                 React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-4 hidden-xs',
-                                        React.DOM.p null, 'Email'
-                                    React.DOM.div className: 'col-md-8',
-                                        React.DOM.p null, @props.stockrecord.email
-                                React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-4 hidden-xs',
-                                        React.DOM.p null, 'Website'
-                                    React.DOM.div className: 'col-md-8',
-                                        React.DOM.p null, @props.stockrecord.website
-                                React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-4 hidden-xs',
-                                        React.DOM.p null, 'Mã số thuêts'
-                                    React.DOM.div className: 'col-md-8',
-                                        React.DOM.p null, @props.stockrecord.taxcode
-                    React.DOM.div className: 'row', style:{'paddingRight':'35px', 'paddingBottom':'20px'},
-                        React.DOM.div className: 'spacer10'
-                        React.DOM.div className: 'row',
-                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode                       
-                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-delete', type: 3, text: ' Xóa', code: {code: 2}, Clicked: @triggercode
-                            React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-edit', type: 3, text: ' Sửa', code: {code: 1}, Clicked: @triggercode                            
+                                    React.DOM.div className: 'col-md-6 hidden-xs',
+                                        React.DOM.p null, 'Số lượng còn'
+                                    React.DOM.div className: 'col-md-6',
+                                        React.DOM.p null, @state.record.amount
+                catch error
+                    console.log error
+            React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25',
+                React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode
     listMedicineStockrecord: ->
         React.DOM.div className: 'row',
             React.createElement FilterFormAppView, station: @props.station, datatype: 1, triggerStoreRecord: @triggerStoreRecordNext, triggerSortAltUp: @triggerSortAltUpNext, triggerSortAltDown: @triggerSortAltDownNext, triggerClear: @triggerClearAlt, triggerSubmitSearch: @triggerSubmitSearchAlt, triggerAutoCompleteFast: @triggerAutoCompleteFast, options: [
-                {id: 1, text: 'Mã DN', linksearch: 'medicine_stockrecord/search', linkfind: 'medicine_stockrecord/find', code: 'noid', type: 1}
-                {id: 2, text: 'Tên doanh nghiệp', linksearch: 'medicine_stockrecord/search', linkfind: 'medicine_stockrecord/find', code: 'name', type: 1}
-                {id: 3, text: 'Số điện thoại', linksearch: 'medicine_stockrecord/search', linkfind: 'medicine_stockrecord/find', code: 'pnumber', type: 1}
-                {id: 4, text: 'Địa chỉ', linksearch: 'medicine_stockrecord/search', linkfind: 'medicine_stockrecord/find', code: 'address', type: 1}
-                {id: 5, text: 'Email', linksearch: 'medicine_stockrecord/search', linkfind: 'medicine_stockrecord/find', code: 'email', type: 1}
-                {id: 6, text: 'Website', linksearch: 'medicine_stockrecord/search', linkfind: 'medicine_stockrecord/find', code: 'website', type: 1}
-                {id: 7, text: 'Mã số thuế', linksearch: 'medicine_stockrecord/search', linkfind: 'medicine_stockrecord/find', code: 'taxcode', type: 1}
+                {id: 1, text: 'Tên thuốc', linksearch: 'medicine_sample/search', linkfind: '#', code: 'name', type: 1}
             ]
             try
                 React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25 filter-form', style: {'paddingTop': '0', 'paddingBottom': '0', 'overflow':'hidden'},
@@ -7711,14 +7830,14 @@
                                 if @state.record != null
                                     if record.id == @state.record.id
                                         expand = "activeselt1"
-                                React.createElement CustomerRecordBlock, key: record.id, record: record, selectExpand: expand, textline1: record.name + " - " + record.noid, textline2: record.address + " - " + record.pnumber, datatype: 2, trigger: @triggerSelectRecord
+                                React.createElement CustomerRecordBlock, key: record.id, record: record, selectExpand: expand, textline1: record.name, textline2: record.qty, datatype: 2, trigger: @triggerSelectRecord
                         else
                             for record in @state.records[@state.firstcount...@state.lastcount]
                                 expand = ""
                                 if @state.record != null
                                     if record.id == @state.record.id
                                         expand = "activeselt1"
-                                React.createElement CustomerRecordBlock, key: record.id, record: record, selectExpand: expand, textline1: record.name + " - " + record.noid, textline2: record.address + " - " + record.pnumber, datatype: 2, trigger: @triggerSelectRecord
+                                React.createElement CustomerRecordBlock, key: record.id, record: record, selectExpand: expand, textline1: record.name, textline2: record.qty, datatype: 2, trigger: @triggerSelectRecord
                 catch error
                     console.log error
             React.DOM.div className: 'col-sm-4',
@@ -7733,25 +7852,20 @@
                                         React.DOM.p null, @state.record.id
                                 React.DOM.div className: 'row',
                                     React.DOM.div className: 'col-md-6 hidden-xs',
-                                        React.DOM.p null, 'Mã DN'
-                                    React.DOM.div className: 'col-md-6',
-                                        React.DOM.p null, @state.record.noid
-                                React.DOM.div className: 'row',
-                                    React.DOM.div className: 'col-md-6 hidden-xs',
-                                        React.DOM.p null, 'Tên doanh nghiệp'
+                                        React.DOM.p null, 'Tên thuốc'
                                     React.DOM.div className: 'col-md-6',
                                         React.DOM.p null, @state.record.name
                                 React.DOM.div className: 'row',
                                     React.DOM.div className: 'col-md-6 hidden-xs',
-                                        React.DOM.p null, 'Số điện thoại'
+                                        React.DOM.p null, 'Số lượng còn lại'
                                     React.DOM.div className: 'col-md-6',
-                                        React.DOM.p null, @state.record.pnumber
+                                        React.DOM.p null, @state.record.qty
                         React.DOM.div className: 'col-sm-12 p-l-res-25 p-r-25', 
                             React.createElement ButtonGeneral, className: 'btn btn-newdesign', icon: 'zmdi zmdi-eye', type: 3, text: ' chi tiết', code: {code: 2}, Clicked: @triggerCodeAndBackUp
                 catch error
                     console.log error
             React.DOM.div className: 'col-sm-12 p-15 p-l-25 p-r-25',
-                React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode    
+                React.createElement ButtonGeneral, className: 'btn btn-secondary-docapp pull-right col-md-3', icon: 'zmdi zmdi-arrow-left', type: 3, text: ' Trở về', code: {code: 3}, Clicked: @triggercode
     render: ->
         switch @props.datatype
             when 1
@@ -7812,8 +7926,8 @@
                 @viewMedicinePrescriptForm()
             when 27#medicine Prescript list view
                 @listMedicinePrescript()
-            when 28#medicine Stockrecord form
-                @editMedicineStockrecordForm()
+            #when 28#medicine Stockrecord form
+            #    @editMedicineStockrecordForm()
             when 29#medicine Stockrecord view form
                 @viewMedicineStockrecordForm()
             when 30#medicine Stockrecord list view

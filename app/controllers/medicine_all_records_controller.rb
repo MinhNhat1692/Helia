@@ -3,7 +3,7 @@ class MedicineAllRecordsController < ApplicationController
 
   def summary
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
 			  @station = Station.find params[:id_station]
         @data = []
         if params.has_key?(:date)
@@ -101,7 +101,7 @@ class MedicineAllRecordsController < ApplicationController
 
   def bill_status
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
         @station = Station.find params[:id_station]
         @data = []
         if params.has_key?(:date)
@@ -171,7 +171,7 @@ class MedicineAllRecordsController < ApplicationController
 
   def sale_record
     if params.has_key?(:id_station)
-      if current_user.check_permission params[:id_station], params[:table_id], 4
+      if current_user.check_permission params[:id_station], 2, 4
         @station = Station.find params[:id_station]
         @data = []
         if params.has_key?(:date)
