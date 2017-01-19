@@ -1,6 +1,6 @@
 @DoctorMainApp = React.createClass
     getInitialState: ->
-        task: null
+        task: 2
         stationlist: null
         currentstation: null
         permissionlist: null
